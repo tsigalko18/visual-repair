@@ -1,0 +1,22 @@
+* Bugs
+  * Add imports for classes added in fix code
+  * Spoon bugs
+    * CtLocalVariable calculates source position incorrectly. It does not include 
+      the type, modifiers (i.e. final), or default expression in the snippet size.
+  * TraceDeclarationsFixer has trouble with nested method invocations   
+  * Fix @Ignore'd tests
+* Add strategies
+  * "Replace variable's value" fix strategy
+  * "Remove try/catch" fix strategy
+  * "Unroll assertion loop" fix strategy
+  * Repair failing @Theory methods
+    * "Split" into example-based tests
+    * Add/Remove assumptions
+    * Change assertThat matcher
+* Enhancements
+  * Round doubles in pretty-printer and add approprate tolerance
+  * Extract expected side of assertEquals if needed
+  * Recompile only changed compilation units
+* Cleanup
+  * Use listener callbacks in TestFixer rather than return values.
+  * Refactor many TEST_DIR constants into one place

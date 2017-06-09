@@ -1,0 +1,119 @@
+<project name="ReAssert" default="dist" basedir=".">	
+	
+	<tstamp/>
+	<property name="project-name" value="ReAssert" />
+	<property name="package-name" value="edu.illinois.reassert" />
+	<property name="version.number" value="0.4.1" />
+    <property name="bundle-name" value="${project-name}_${version.number}" />
+	
+	<!-- input directories -->
+	<property name="src-dir" value="src" />
+	<property name="test-src-dir" value="test" />
+	<property name="lib-dir" value="lib" />
+	<property name="resource-dir" value="resources" />
+	<!-- output directories -->
+	<property name="build-dir" value="bin" />
+	<property name="dist-dir"  value="dist" />
+	<property name="javadoc-dir" value="doc/javadoc" />
+	
+	<property name="jar-name" value="${bundle-name}.jar" />
+	<property name="bin-bundle" value="${bundle-name}.zip" />
+	<property name="src-bundle" value="${bundle-name}-src.zip" />
+	
+	<property name="unjarred" value="edu/illinois/reassert/test/**" />
+
+	<path id="ReAssert.classpath">
+		<pathelement location="${build-dir}" />
+        <pathelement location="${lib-dir}/junit-4.6.jar" />
+        <pathelement location="${lib-dir}/JSAP-2.1.jar" />
+	    <pathelement location="${lib-dir}/spoon-core-1.4.jar" />        
+        <pathelement location="${lib-dir}/commons-io-1.4.jar" />
+        <pathelement location="${lib-dir}/bcel-5.2.x.jar" />
+	</path>
+	
+	<target name="init">
+		<tstamp/>	
+		<mkdir dir="${build-dir}"/>
+	</target>
+
+	<target name="compile" depends="init, compile-src, compile-test, javadoc">
+	</target>
+	
+	<target name="compile-src" depends="init">
+		<javac 
+			destdir="${build-dir}"
+			srcdir="${src-dir}" 
+			classpathref="ReAssert.classpath">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+	
+	<target name="compile-test" depends="init, compile-src">
+		<javac 
+			srcdir="${test-src-dir}" 
+			destdir="${build-dir}"
+			classpathref="ReAssert.classpath">
+        <compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+	
+	<target name="javadoc">
+		<javadoc 
+			sourcepath="${src-dir}" 
+			destdir="${javadoc-dir}"
+			packagenames="${package-name}.*,spoonloader.*"
+			classpathref="ReAssert.classpath" />
+	</target>
+	
+	<!--
+	Ant does not like JUnit 4
+	<target name="test" depends="compile-test">
+		<junit
+			haltonfailure="yes"
+			printsummary="yes">
+			 <classpath refid="ReAssert.classpath" />			
+			 <formatter type="plain" usefile="no"/>
+			 <batchtest>
+			    <fileset dir="${build-dir}">
+			        <include name="**/*Test.class"/>
+			    </fileset>
+			 </batchtest>
+		</junit>
+	</target>-->
+
+	<target name="dist" depends="clean, compile" description="Compile the distribution">
+		<mkdir dir="${dist-dir}"/>
+		<jar 
+			jarfile="${dist-dir}/${jar-name}" 
+			basedir="${build-dir}"
+			excludes="${unjarred}" />
+		<!-- Bundle Binary -->
+		<zip 
+		    destfile="${dist-dir}/${bin-bundle}">
+			<zipfileset prefix="${bundle-name}" dir="${dist-dir}" includes="${jar-name}" />
+			<zipfileset prefix="${bundle-name}" dir="." includes="reassert.sh" />
+			<zipfileset prefix="${bundle-name}" dir="." includes="LICENSE.txt" />
+			<zipfileset prefix="${bundle-name}" dir="." includes="${lib-dir}/*" excludes="**/*src* **/*source*" />
+		</zip>
+		<!-- Bundle Source -->
+		<zip 
+			destfile="${dist-dir}/${src-bundle}">
+			<zipfileset prefix="${bundle-name}" dir=".">
+    			<exclude name="${build-dir}/**" />
+    			<exclude name="${dist-dir}/**" />
+    			<exclude name="${javadoc-dir}/**" />
+    			<exclude name=".*/**" />
+    			<exclude name="${lib-dir}/*src*" />
+    			<exclude name="${lib-dir}/*source*" />
+			</zipfileset>
+   			<zipfileset prefix="${bundle-name}" dir="." includes=".classpath"/>
+			<zipfileset prefix="${bundle-name}" dir="." includes=".project"/>
+		</zip>
+  	</target>
+
+	<target name="clean">
+		<delete dir="${build-dir}"/>
+		<delete dir="${dist-dir}"/>
+		<delete dir="${javadoc-dir}" />
+	</target>
+</project>

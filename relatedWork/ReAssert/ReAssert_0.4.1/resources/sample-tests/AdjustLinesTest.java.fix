@@ -1,0 +1,47 @@
+import static org.junit.Assert.assertEquals;
+
+import java.util.Currency;
+import java.util.Locale;
+
+import org.junit.Test;
+
+public class AdjustLinesTest {
+
+	//TODO: to prevent name qualification
+	Currency c = null;
+	Locale l = null;
+
+	@Test
+	public void test() {
+		assertEquals("actual", "actual");
+		{
+			Currency currency0 = Currency.getInstance(Locale.US);
+			Currency currency1 = Currency.getInstance(Locale.CANADA);
+			assertEquals("CAD", currency1.toString());
+			assertEquals("CAD", currency1.getCurrencyCode());
+			assertEquals("CAD", currency1.getSymbol());
+			assertEquals(currency0.getDefaultFractionDigits(), currency1.getDefaultFractionDigits());
+		}
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+	}
+	
+	@Test	
+	public void test2() {
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		{
+			Currency currency0 = Currency.getInstance(Locale.US);
+			Currency currency1 = Currency.getInstance(Locale.CANADA);
+			assertEquals("CAD", currency1.toString());
+			assertEquals("CAD", currency1.getCurrencyCode());
+			assertEquals("CAD", currency1.getSymbol());
+			assertEquals(currency0.getDefaultFractionDigits(), currency1.getDefaultFractionDigits());
+		}
+		assertEquals("actual", "actual");
+
+	}
+	
+}

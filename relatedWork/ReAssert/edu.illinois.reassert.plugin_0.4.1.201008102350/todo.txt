@@ -1,0 +1,8 @@
+* Better compare UI similar to the Refactoring compare
+* "Confirm Current", "Confirm All" buttons on compare UI
+* Allow user to define custom fixers in current project
+* Add "Run As" > "Fix This Test" menu option
+* Keyboard shortcut
+* Multi-select (control-click) tests to fix
+* Log usage
+* Bug: cannot repair a test that is in a linked folder

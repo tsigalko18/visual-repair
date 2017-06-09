@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="edu.illinois.reassert.plugin.fixstrategy" name="ReAssert Fix Strategy" schema="schema/fixstrategy.exsd"/>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="ReAssertPlugin.ITestCaseElementContribution"
+            objectClass="org.eclipse.jdt.junit.model.ITestCaseElement">
+         <menu
+               id="ReAssertPlugin.ITestElementMenu"
+               label="ReAssert"
+               path="additions">
+         </menu>
+         <action
+               class="edu.illinois.reassert.plugin.FixTestElementAction"
+               enablesFor="1"
+               id="ReAssertPlugin.FixTestAction"
+               label="Repair with ReAssert"
+               menubarPath="ReAssertPlugin.ITestElementMenu">
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="ReAssertPlugin.ITestElementContainerContribution"
+            objectClass="org.eclipse.jdt.junit.model.ITestElementContainer">
+         <menu
+               id="ReAssertPlugin.ITestElementMenu"
+               label="ReAssert"
+               path="additions">
+         </menu>
+         <action
+               class="edu.illinois.reassert.plugin.FixTestElementAction"
+               enablesFor="1"
+               id="ReAssertPlugin.FixTestAction"
+               label="Repair with ReAssert"
+               menubarPath="ReAssertPlugin.ITestElementMenu">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="ReAssertPlugin.jUnitViewContribution"
+            targetID="org.eclipse.jdt.junit.ResultView">
+         <action
+               class="edu.illinois.reassert.plugin.FixAllFailuresAction"
+               enablesFor="1"
+               id="ReAssertPlugin.fixAllFailedAction"
+               label="Repair All with ReAssert"
+               toolbarPath="ReAssert">
+         </action>
+      </viewContribution>
+   </extension>
+
+</plugin>

@@ -1,0 +1,114 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Currency;
+import java.util.List;
+import java.util.Locale;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class JUnit4TestInput {
+	
+	@Test
+	public void succeed() {}
+	
+	@Test
+	public void unfixable() {
+		fail();
+	}
+	
+	@Test
+	public void fixOne() {
+		assertEquals("actual", "actual");
+	}
+	
+	@Test
+	public void fixMultiple() {
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+	}
+	
+	@Test
+	public void multipleStepFix() {
+		List<String> coll = Arrays.asList("a", "b", "c");
+		assertEquals(3, coll.size());
+	}
+
+	@Test
+	public void manyLineFix() {
+		Currency us = Currency.getInstance(Locale.US);
+		Currency uk = Currency.getInstance(Locale.UK);
+		{
+			assertEquals("GBP", uk.toString());
+			assertEquals("GBP", uk.getCurrencyCode());
+			assertEquals("GBP", uk.getSymbol());
+			assertEquals(us.getDefaultFractionDigits(), uk.getDefaultFractionDigits());
+		}
+	}
+	
+	@Test
+	public void semiFixable() {
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		fail();
+	}
+	
+	@Test
+	public void throwsException() {
+		throw new RuntimeException();
+	}
+
+	@Test
+	public void callThrowsException() {
+		try {
+			throwsException();
+			fail();
+		}
+		catch (RuntimeException e) {
+			assertNull(e.getCause());
+			assertEquals("java.lang.RuntimeException", e.toString());
+			assertNull(e.getMessage());
+			assertNull(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void callsMethods() {
+		helper1();
+		helper2();
+	}
+	public void helper1() {
+		assertEquals("actual", "actual");
+	}
+	public void helper2() {
+		assertEquals("actual", "actual");
+	}
+
+	@Test
+	public void usesOtherFixer() {
+		assertFalse(false);
+	}
+
+	@Test
+	public void overFixLimit() {
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("actual", "actual");
+		assertEquals("expected", "actual");
+		assertEquals("expected", "actual");
+		assertEquals("expected", "actual");
+		assertEquals("expected", "actual");
+	}
+	
+}
+
