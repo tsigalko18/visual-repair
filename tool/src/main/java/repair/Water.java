@@ -50,8 +50,8 @@ public class Water {
 
 			// TODO: to manage
 			// repairs.add(checkRepair());
-		} else {
-			// form management
+		} else if (ex.getMessage().contains("Cannot locate element with text")){
+			
 		}
 
 		if (repairs.isEmpty()) {
@@ -68,8 +68,8 @@ public class Water {
 		List<HtmlElement> matches = new LinkedList<HtmlElement>();
 		SeleniumLocator l = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine())).getDomLocator();
 		
-//		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, locator);
-		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l);
+		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, locator);
+//		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l.getValue());
 		
 		HtmlElement el = newTree.searchHtmlDomTreeByAttribute("id", oldNode.getId());
 		if(el != null) matches.add(el);
@@ -89,18 +89,20 @@ public class Water {
 		if(!matches.isEmpty()) {
 			for (HtmlElement candidateElement : matches) {
 				
-				EnhancedTestCase testRepair = broken;
-				Statement st = testRepair.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
-				st.setDomLocator(new SeleniumLocator("xpath", candidateElement.getXPath()));
+				repairs.add(candidateElement);
 				
-				// run test case and if it passes, add it to the repair list
-				try {
-					if(UtilsWater.checkRepair(testRepair)){
-						repairs.add(candidateElement);
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				EnhancedTestCase testRepair = broken;
+//				Statement st = testRepair.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
+//				st.setDomLocator(new SeleniumLocator("xpath", candidateElement.getXPath()));
+//				
+//				// run test case and if it passes, add it to the repair list
+//				try {
+//					if(UtilsWater.checkRepair(testRepair)){
+//						repairs.add(candidateElement);
+//					}
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 				
 			}
 		}

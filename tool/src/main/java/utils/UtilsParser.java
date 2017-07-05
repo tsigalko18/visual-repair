@@ -20,12 +20,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import japa.parser.ast.stmt.Statement;
 import main.java.config.Settings;
 import main.java.datatype.EnhancedException;
 import main.java.datatype.EnhancedTestCase;
 import main.java.datatype.HtmlDomTreeWithRTree;
 import main.java.datatype.SeleniumLocator;
-import japa.parser.ast.stmt.Statement;
 
 public class UtilsParser {
 
@@ -67,17 +67,21 @@ public class UtilsParser {
 	 * @return
 	 * @throws Exception
 	 */
-	public static File getScreenshot(final String name, final int beginLine, final String type) throws Exception {
+	public static File getScreenshot(String name, int beginLine, String type) throws Exception {
 
-		String p = Settings.correctTestSuitePath + name + Settings.separator;
+		String p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator;
+		final String n = name;
+		final String t = type;
+		final String bl = Integer.toString(beginLine);
+		
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
 				// return true;
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.imageExtension)
-						&& n.contains(name) && n.contains(type));
+				return (n.startsWith(bl) && n.endsWith(Settings.imageExtension)
+						&& n.contains(n) && n.contains(t));
 			}
 		});
 
@@ -98,16 +102,20 @@ public class UtilsParser {
 	 * @return
 	 * @throws Exception
 	 */
-	public static File getHTMLDOMfile(final String name, final int beginLine, final String type, String useExtension) throws Exception {
+	public static File getHTMLDOMfile(String name, int beginLine, String type, String useExtension) throws Exception {
 
-		String p = Settings.testSuiteFolder + name + Settings.separator;
+		String p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator;
 		File dir = new File(p);
+		final String n = name;
+		final String t = type;
+		final String bl = Integer.toString(beginLine);
+		
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && new File(n).isDirectory()
-						&& n.contains(name) && n.contains(type));
+				return (n.startsWith(bl) && n.endsWith(Settings.imageExtension)
+						&& n.contains(n) && n.contains(t));
 			}
 		});
 
@@ -149,6 +157,14 @@ public class UtilsParser {
 		value = value.substring(0, value.length() - 1).replaceAll("\"", "").trim();
 
 		return new SeleniumLocator(strategy, value);
+	}
+	
+	public static String getValueFromSelect(Statement st) {
+		
+		String value = st.toString(); // new Select(driver.findElement(By.id("course_category"))).selectByVisibleText("(SC) Sciences");
+		value = value.substring(value.indexOf("selectBy"), value.length()); // selectByVisibleText("(SC) Sciences");
+		value = value.substring(value.indexOf("(") + 1, value.indexOf("\");") + 1); // (SC) Sciences
+		return value;
 	}
 
 	public static String getAssertion(Statement st) {
@@ -196,7 +212,7 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.testSuiteFolder + testName + Settings.separator + testName + Settings.jsonExtension;
+		String newPath = Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator + testName + Settings.jsonExtension;
 		
 		try {
 			FileUtils.write(new File(newPath), gson.toJson(tc));
@@ -245,7 +261,7 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.testSuiteFolder + testName + Settings.separator + "exception"
+		String newPath = Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator + "exception"
 				+ Settings.jsonExtension;
 		return newPath;
 	}
@@ -406,14 +422,24 @@ public class UtilsParser {
 
 	// OK
 	public static String getExceptionFromFailure(Failure f) {
-		String s = f.getException().toString().substring(0, f.getException().toString().indexOf(":", 0));
+		String s = f.getException().toString().substring(0, f.getException().toString().indexOf("For documentation", 0));
 		return s;
 	}
 
 	// OK
 	public static String getMessageFromFailure(Failure f) {
-		String s = f.getMessage().toString().substring(0, f.getException().toString().indexOf("\n", 0));
-		s = s.substring(0, s.indexOf("Command"));
+		
+		String s;
+		
+		if(f.getMessage().contains("Cannot locate element with text:")){
+			s = f.getMessage().toString().substring(0, f.getException().toString().indexOf("For documentation", 0));
+			s = s.substring(0, s.indexOf("For documentation"));
+		} 
+		else {
+			//s = f.getMessage().toString().substring(0, f.getException().toString().indexOf(":", 0));
+			s = f.getMessage().toString().substring(0, f.getMessage().toString().indexOf("Command"));
+		}
+		
 		return s;
 	}
 
@@ -424,6 +450,8 @@ public class UtilsParser {
 		s = s.substring(begin, s.indexOf(System.getProperty("line.separator"), begin));
 		return s.replaceAll("\\D+", "");
 	}
+
+	
 
 	
 

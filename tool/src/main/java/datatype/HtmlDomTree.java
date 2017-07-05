@@ -168,6 +168,7 @@ public class HtmlDomTree {
 			result = result + paths.get(0);
 		}
 
+//		System.out.println(result);
 		return result;
 	}
 

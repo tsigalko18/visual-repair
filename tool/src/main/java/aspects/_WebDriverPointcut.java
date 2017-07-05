@@ -1,5 +1,4 @@
 package main.java.aspects;
-//package aspects;
 //
 //import java.io.File;
 //import java.io.IOException;

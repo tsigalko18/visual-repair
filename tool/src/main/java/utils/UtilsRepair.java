@@ -2,8 +2,6 @@ package main.java.utils;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -11,15 +9,14 @@ import org.junit.runner.notification.Failure;
 
 import main.java.config.Settings;
 import main.java.datatype.EnhancedException;
-import main.java.datatype.EnhancedTestCase;
 
 public class UtilsRepair {
-	
-	public static Result runTestSuite(Class<?> testSuite){
+
+	public static Result runTestSuite(Class<?> testSuite) {
 		Result result = JUnitCore.runClasses(testSuite);
 		return result;
 	}
-	
+
 	public static EnhancedException saveExceptionFromFailure(Failure f) {
 
 		EnhancedException ea = new EnhancedException();
@@ -62,7 +59,7 @@ public class UtilsRepair {
 
 	public static void saveFailures(Failure fail) throws IOException {
 
-		FileWriter bw = new FileWriter(Settings.testSuiteFolder + "exception.txt");
+		FileWriter bw = new FileWriter(Settings.referenceTestSuiteVisualTraceExecutionFolder + "exception.txt");
 
 		bw.write("MESSAGE" + "\n");
 		bw.write("--------------------" + "\n");

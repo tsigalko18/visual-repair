@@ -1,7 +1,5 @@
-package main.java.aspects;
+package aspects;
 
-import java.awt.AWTException;
-import java.awt.HeadlessException;
 import java.io.IOException;
 
 import org.aspectj.lang.JoinPoint;
@@ -11,16 +9,17 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.xml.sax.SAXException;
+import org.openqa.selenium.support.ui.Select;
 
-import main.java.config.Settings;
-import main.java.utils.UtilsAspect;
-import main.java.utils.UtilsScreenshots;
+import config.Settings;
+import utils.UtilsAspect;
+import utils.UtilsScreenshots;
 
 public aspect ScreenshotSaver {
 
 	static WebDriver d;
 	static String testFolderName;
+	static String mainPage;
 	
 	// pointcuts definition
 	
@@ -35,7 +34,9 @@ public aspect ScreenshotSaver {
 	// catch the event calls
 	@Pointcut("call(* org.openqa.selenium.WebElement.click()) || "
 			+ "call(* org.openqa.selenium.WebElement.sendKeys(..)) || "
-			+ "call(* org.openqa.selenium.WebElement.getText())")
+			+ "call(* org.openqa.selenium.WebElement.getText()) || "
+			+ "call(* org.openqa.selenium.WebElement.clear()) || "
+			+ "call(* org.openqa.selenium.support.ui.Select.selectByVisibleText(..))")
 	public void logSeleniumCommands(JoinPoint jp){}
 	
 	// advice definition
@@ -47,7 +48,7 @@ public aspect ScreenshotSaver {
 		d = (WebDriver) jp.getTarget();
 		
 		// for each test, create a folder
-		testFolderName = Settings.testSuiteFolder + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
+		testFolderName = Settings.referenceTestSuiteVisualTraceExecutionFolder + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
 		UtilsAspect.createTestFolder(testFolderName);
 			
 	}
@@ -55,8 +56,16 @@ public aspect ScreenshotSaver {
 	@Before("logSeleniumCommands(JoinPoint)")
 	public void beforeEvent(JoinPoint joinPoint)  {
 		
-		// retrieve the Selenium WebElement
-		WebElement we = (WebElement) joinPoint.getTarget();
+		WebElement we = null;
+		Select sel = null;
+		
+		if(joinPoint.getTarget() instanceof WebElement){
+			we = (WebElement) joinPoint.getTarget();
+		}
+		else if(joinPoint.getTarget() instanceof Select){
+			sel =  (Select) joinPoint.getTarget();
+			we = (WebElement) sel.getOptions().get(0);
+		}
 		
 		// for each statement, get a unique name in the form 
 		String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
@@ -68,6 +77,8 @@ public aspect ScreenshotSaver {
 		String annotatedscreenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-" + statementName + Settings.imageExtension;
 		String visualLocator = testFolderName + Settings.separator + line + "-visualLocator-" + statementName + Settings.imageExtension;
 		String htmlPath = testFolderName + Settings.separator + line + "-1before-" + statementName;
+		
+		mainPage = d.getWindowHandle();
 		
 		// save the screenshot before the execution of the event
 		UtilsScreenshots.saveScreenshot(d, screenshotBeforeEvent);
@@ -99,21 +110,27 @@ public aspect ScreenshotSaver {
 		String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
 		int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint); 
 
+		if(Settings.verbose) System.out.println("[LOG]\t@After " + statementName);
+		
 		// save the screenshot before the execution of the event
 		String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-2after-" + statementName + Settings.imageExtension;
-		UtilsScreenshots.saveScreenshot(d, screenshotBeforeEvent);
 		
 		// save the HTML page
 		String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
-		try {
-			UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		if(UtilsScreenshots.isAlertPresent(d)){
+			return;
+		} else {
+			
+			try {
+				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+					
+			UtilsScreenshots.saveScreenshot(d, screenshotBeforeEvent);
 		}
-		
-		if(Settings.verbose) System.out.println("[LOG]\t@After " + statementName);
-		
+			
 	}
 	
 	@AfterThrowing(pointcut = "logFindElementCalls(JoinPoint)", throwing="exception")
@@ -134,7 +151,6 @@ public aspect ScreenshotSaver {
 		try {
 			UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

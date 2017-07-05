@@ -13,7 +13,7 @@ public class WebDriverSingleton
 	private static WebDriver driver = null;
 	
 	private WebDriverSingleton() {
-		driver = new PhantomJSDriver();
+		driver = new FirefoxDriver();
 //		driver = new FirefoxDriver();
 //		driver.manage().window().setSize(new Dimension(1024,768));
 //		driver.manage().window().maximize();

@@ -5,6 +5,7 @@ import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.JUnitCore;
@@ -19,15 +20,21 @@ import main.java.clarolineDirectBreakage.DirectBreakage;
 import main.java.config.Settings;
 import main.java.datatype.*;
 import main.java.parser.ParseTest;
-import main.java.utils.*;
+import main.java.utils.UtilsParser;
+import main.java.utils.UtilsRepair;
+import main.java.utils.UtilsScreenshots;
 
 public class VisualRepair {
 
 	static EnhancedException exception;
+	static String htmlpage; 
 
 	public static void main(String[] args) throws IOException, SAXException, HeadlessException, AWTException {
 
-		String path = Settings.buggyTestSuitePath + DirectBreakage.class.getSimpleName() + Settings.javaExtension;
+		String brokenTest = "TestLoginAdmin";
+		htmlpage = "index.php.html";
+		
+		String path = Settings.pathToTestSuiteUnderTest + brokenTest + Settings.javaExtension;
 		String jsonPath = UtilsParser.toJsonPath(path);
 
 		if (new File(jsonPath).exists())
@@ -43,9 +50,13 @@ public class VisualRepair {
 
 		// step 3 : create test case model
 
+		Settings.inRecordingMode = false;
+		
 		EnhancedTestCase brokenTestCase = ParseTest.parse(path);
+		
+		Settings.inRecordingMode = true;
 
-		path = Settings.correctTestSuitePath + TestLoginAdmin.class.getSimpleName() + Settings.javaExtension;
+		path = Settings.pathToReferenceTestSuite + TestLoginAdmin.class.getSimpleName() + Settings.javaExtension;
 
 		EnhancedTestCase correctTestCase = ParseTest.parse(path);
 
@@ -70,7 +81,7 @@ public class VisualRepair {
 		// get the visual locator on the old page
 		String template = oldst.getVisualLocator().toString(); // "template2.png";
 
-		File originalFile = new File("testSuite/DirectBreakage/original.png");
+		File originalFile = new File("testSuite/" + brokenTest + "/original.png");
 		File imageFile = new File(image);
 
 		FileUtils.copyFile(imageFile, originalFile);
@@ -80,47 +91,33 @@ public class VisualRepair {
 				.getAnnotatedScreenshot().toString();
 
 		String dir = currentDirectory + Settings.separator + string.replace(".png", "").replace("Annotated", "2after");
-		String htmlFile = dir + Settings.separator + "index.html";
+		String htmlFile = dir + Settings.separator + htmlpage;
 
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
+		
+		System.out.println("Type anything to proceed further");
+		Scanner scanner = new Scanner(System.in);
+		scanner.next();
 
 		// screenshot here
 		String currentScreenshot = currentDirectory + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
 
-		// find a list of visual matches using all matching algorithms
-		// List<Point> matches =
-		// UtilsScreenshots.returnAllMatchesForAllAlgorithms(currentScreenshot,
-		// template);
-		//
-		// HtmlDomTree rt = new HtmlDomTree(driver, htmlFile);
-		// rt.buildHtmlDomTree();
-		// rt.preOrderTraversalRTree();
-		//
-		// for (Point match : matches) {
-		//
-		// System.out.println("Best match = (" + match.x + ", " + match.y +
-		// ")");
-		//
-		// match = UtilsScreenshots.findBestMatchCenter(currentScreenshot,
-		// template);
-		// System.out.println("Best match center at = (" + match.x + ", " +
-		// match.y + ")");
-		//
-		// List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x,
-		// (int) match.y);
-		// printResults(result, rt);
-		// }
-
 		// find best visual match
 		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
 
+		long startTime = System.currentTimeMillis();
+		
 		// build RTree for the HTML page
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
 		rt.buildHtmlDomTree();
-		rt.preOrderTraversalRTree();
+//		rt.preOrderTraversalRTree();
+		
+		long stopTime = System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
+		System.out.println("RTree built in: " + elapsedTime / 1000);
 
 		// search element in the RTree
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
@@ -129,9 +126,18 @@ public class VisualRepair {
 		WebDriverSingleton.closeDriver();
 		FileUtils.copyFile(originalFile, new File(image));
 
-		SeleniumLocator newlocator = new SeleniumLocator("xpath", result.get(0).getData().getXPath());
+		SeleniumLocator newlocator = null; 
+		
+		if(result.get(0).getData().getTagName().equals("option")){
+			Node<HtmlElement> option = result.get(0).getParent();
+			newlocator = new SeleniumLocator("xpath", option.getData().getXPath());
+			newst.setDomLocator(newlocator);
+		} else {
+			newlocator = new SeleniumLocator("xpath", result.get(0).getData().getXPath());
+			newst.setDomLocator(newlocator);
+		}
+		
 		newst.setDomLocator(newlocator);
-
 		brokenTestCase.addStatement(Integer.parseInt(exception.getInvolvedLine()), newst);
 
 		printTestCase(brokenTestCase);

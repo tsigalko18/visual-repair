@@ -82,7 +82,6 @@ public class UtilsAspect {
 	/**
 	 * Save rendered webpage
 	 * path = where to save the html file
-	 * urlString = d.get
 	 */
 	public static File saveHTMLPage(String urlString, String path) throws IOException
 	{

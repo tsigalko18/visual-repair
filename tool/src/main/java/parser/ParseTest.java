@@ -6,11 +6,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.Result;
 
-import main.java.config.Settings;
-import main.java.datatype.DriverGet;
-import main.java.datatype.EnhancedAssertion;
-import main.java.datatype.EnhancedTestCase;
-import main.java.datatype.EnhancedWebElement;
 import japa.parser.ASTHelper;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
@@ -20,6 +15,12 @@ import japa.parser.ast.expr.NameExpr;
 import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.stmt.Statement;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
+import main.java.config.Settings;
+import main.java.datatype.DriverGet;
+import main.java.datatype.EnhancedAssertion;
+import main.java.datatype.EnhancedSelect;
+import main.java.datatype.EnhancedTestCase;
+import main.java.datatype.EnhancedWebElement;
 import main.java.utils.UtilsParser;
 import main.java.utils.UtilsRepair;
 
@@ -45,6 +46,8 @@ public class ParseTest {
 
 		new MethodVisitor().visit(cu, clazz);
 
+//		System.out.println(tc.getStatements().get(35).getDomAfter().getAbsolutePath());
+		
 		UtilsParser.serializeTestCase(tc, clazz);
 			
 		return tc;
@@ -139,8 +142,8 @@ public class ParseTest {
 						
 						tc.addStatement(dg.getLine(), dg);
 
-					// web element not assertion
-					} else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert")) {
+					// web element not assertion not select
+					} else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert") && !st.toString().contains("new Select")) {
 
 						EnhancedWebElement ewe = new EnhancedWebElement();
 						ewe.setLine(st.getBeginLine());
@@ -154,6 +157,9 @@ public class ParseTest {
 							ewe.setValue(UtilsParser.getValueFromSendKeys(st));
 						} else if (st.toString().contains("getText")) {
 							ewe.setAction("getText");
+							ewe.setValue("");
+						} else if (st.toString().contains("clear")) {
+							ewe.setAction("clear");
 							ewe.setValue("");
 						}
 						
@@ -173,6 +179,40 @@ public class ParseTest {
 						
 						tc.addStatement(ewe.getLine(), ewe);
 						
+					} 
+					// select
+					else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert") && st.toString().contains("new Select")) {
+						
+						EnhancedSelect esl = new EnhancedSelect();
+						esl.setLine(st.getBeginLine());
+						esl.setDomLocator(UtilsParser.getDomLocator(st));
+						
+						if (st.toString().contains("selectByVisibleText")) {
+							esl.setAction("selectByVisibleText");
+							esl.setValue(UtilsParser.getValueFromSelect(st));
+						} else if (st.toString().contains("selectByIndex")) {
+							esl.setAction("selectByIndex");
+							esl.setValue(UtilsParser.getValueFromSelect(st));
+						} else if (st.toString().contains("selectByValue")) {
+							esl.setAction("selectByValue");
+							esl.setValue(UtilsParser.getValueFromSelect(st));
+						}
+						
+						try {
+							// get the screenshots
+							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
+							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
+							esl.setVisualLocator(UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+							esl.setAnnotatedScreenshot(UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+							
+							// get the DOMs
+							esl.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
+							esl.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
+						} catch (Exception e) {
+							e.printStackTrace();
+						} 
+						
+						tc.addStatement(esl.getLine(), esl);
 					}
 					// assertion 
 					else if (st.toString().contains("driver.findElement(") && st.toString().contains("assert")) {
@@ -208,12 +248,8 @@ public class ParseTest {
 						
 						tc.addStatement(ea.getLine(), ea);
 						
-					// select
-					} else if (st.toString().contains("Select")) {
-						// TODO: to manage
+					
 					}
-
-//					System.out.println(st.getBeginLine() + ": " + st);
 				}
 			}
 		}

@@ -3,32 +3,32 @@ package main.java.repair;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.openqa.selenium.WebDriver;
 import org.xml.sax.SAXException;
 
-import org.opencv.core.Point;
-
 import main.java.claroline.TestLoginAdmin;
 import main.java.clarolineDirectBreakage.DirectBreakage;
 import main.java.config.Settings;
 import main.java.datatype.*;
-import main.java.parser.ParseTest;
+import main.java.parser.*;
 import main.java.utils.*;
 
 public class DomRepair {
 
 	static EnhancedException exception;
+	static String htmlpage; 
 	
 	public static void main(String[] args) throws IOException, SAXException {
 		
 		// path to the broken test case
-		String path = Settings.buggyTestSuitePath + DirectBreakage.class.getSimpleName() + Settings.javaExtension;
+		String brokenTest = "DirectBreakage";
+		htmlpage = "index.php.html";
+		
+		String path = Settings.pathToTestSuiteUnderTest + brokenTest + Settings.javaExtension;
 		String jsonPath =  UtilsParser.toJsonPath(path);
 		
 		// do not run the test suite again, if the exception has already been saved
@@ -44,7 +44,7 @@ public class DomRepair {
 		}
 		
 		// path to the correct test case
-		path = Settings.correctTestSuitePath + TestLoginAdmin.class.getSimpleName() + Settings.javaExtension;
+		path = Settings.pathToReferenceTestSuite + TestLoginAdmin.class.getSimpleName() + Settings.javaExtension;
 				
 //		// get DOM old (correct version)
 		
@@ -53,7 +53,7 @@ public class DomRepair {
 		String string = correctTestCase.getStatements().get(Integer.parseInt(exception.getInvolvedLine())).getAnnotatedScreenshot().toString();
 		
 		String dir = currentDirectory + Settings.separator + string.replace(".png", "").replace("Annotated", "2after");
-		String htmlFile = dir + Settings.separator + "index.html";
+		String htmlFile = dir + Settings.separator + htmlpage;
 		
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + htmlFile);
@@ -64,6 +64,11 @@ public class DomRepair {
 		oldDom.preOrderTraversalRTree();
 		
 		WebDriverSingleton.closeDriver();
+		
+		if (Settings.verbose) {
+			System.out.println("Breakage at line " + exception.getInvolvedLine());
+			System.out.println(exception.getMessage());
+		}
 			
 //		"/html/body/div[1]/div[2]/div[1]/div/form/fieldset/input[3]" 
 //		"/html/body/div[1]/div[2]/div[1]/div/form/fieldset/button"
@@ -74,21 +79,25 @@ public class DomRepair {
 
 		// get DOM new (broken version)
 		
-		path = Settings.buggyTestSuitePath + DirectBreakage.class.getSimpleName() + Settings.javaExtension;
+		path = Settings.pathToTestSuiteUnderTest + DirectBreakage.class.getSimpleName() + Settings.javaExtension;
 		EnhancedTestCase brokenTestCase = ParseTest.parse(path);
 		string = brokenTestCase.getStatements().get(Integer.parseInt(exception.getInvolvedLine())).getAnnotatedScreenshot().toString();
 		
 		dir = currentDirectory + Settings.separator + string.replace(".png", "").replace("Annotated", "2after");
-		htmlFile = dir + Settings.separator + "index.html";
+		htmlFile = dir + Settings.separator + htmlpage;
 		
 		instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + htmlFile);
 		driver = instance.getDriver();
 		
+//		System.out.println("Type anything to proceed further");
+//		Scanner scanner = new Scanner(System.in);
+//		scanner.next();
+		
 		HtmlDomTree newDom = new HtmlDomTree(driver, htmlFile);
 		newDom.buildHtmlDomTree();
-		newDom.preOrderTraversalRTree();
-			
+//		newDom.preOrderTraversalRTree();
+		
 //		"/html/body/div[1]/div[2]/div[1]/div/form/fieldset/input[3]" 
 //		"/html/body/div[1]/div[2]/div[1]/div/form/fieldset/button"
 //		HtmlElement el = newDom.searchHtmlDomTreeByXPath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/form[1]/fieldset[1]/button[1]");
@@ -105,8 +114,7 @@ public class DomRepair {
 //		System.out.println(UtilsWater.getNodesByProperty(newDom, "id", "login"));
 //		System.out.println(UtilsWater.getNodeByLocator(newDom, "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/form[1]/fieldset[1]/button[1]"));
 		
-		String locator = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/form[1]/fieldset[1]/input[3]";
-		System.out.println(exception.getMessage());
+		String locator = "/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/form[1]/fieldset[1]/input[1]";
 		
 		Water wtr = new Water(brokenTestCase, correctTestCase, exception);
 		wtr.suggestRepair(oldDom, locator, newDom);

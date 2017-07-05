@@ -7,11 +7,7 @@ import java.util.Queue;
 
 import org.junit.runner.Result;
 
-import main.java.datatype.EnhancedTestCase;
-import main.java.datatype.HtmlDomTree;
-import main.java.datatype.HtmlElement;
-import main.java.datatype.Node;
-import main.java.datatype.SeleniumLocator;
+import main.java.datatype.*;
 import main.java.parser.ParseTest;
 
 public class UtilsWater {
@@ -32,7 +28,7 @@ public class UtilsWater {
 		
 	}
 
-	public HtmlElement getNodeByLocator(HtmlDomTree tree, String xpath) {
+	public static HtmlElement getNodeByLocator(HtmlDomTree tree, String xpath) {
 		return tree.searchHtmlDomTreeByXPath(xpath);
 	}
 	

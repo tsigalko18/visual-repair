@@ -1,68 +1,81 @@
 package main.java.repair;
 
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
+import java.util.LinkedList;
+import java.util.List;
 
-import main.java.claroline.Claroline_TestSuite_Selenium;
+import main.java.datatype.*;
 
 public class RepairMain {
-	
-	public void identifyBrekages(){
+
+	static List<HtmlElement> repairs;
+	static EnhancedTestCase broken;
+	static EnhancedTestCase correct;
+	static EnhancedException ex;
+	static HtmlDomTree oldDom;
+	static String locator;
+	static HtmlDomTree newDom;
+
+	public List<HtmlElement> suggestRepair(HtmlDomTree oldDom, String locator, HtmlDomTree newDom) {
+
+		repairs = new LinkedList<HtmlElement>();
+
+		// locator error
+		if (ex.getMessage().contains("Unable to locate element")) {
+
+			// apply strategy 1
+			repairs = searchLocatorWithinTheSameState();
+
+			// apply strategy 2
+			if (repairs.isEmpty())
+				repairs = searchLocatorWithinNeighbouringhStates();
+
 		
-		Result result = JUnitCore.runClasses(Claroline_TestSuite_Selenium.class);
-		
-		if(result.wasSuccessful()) 
-		{
+		} else if (ex.getMessage().contains("Assertion error")) {
+
 			
-			// test has passed, but there might be instances of silent breakages
-			boolean visuallyCorrect = compareVisualExecutionTraces();
+
+			// assertion error
+			if (ex.getMessage().contains("Assertion value")) {
+
+				// repair assertion with the actual value
+				repairs = getNewActualValue();
+
+			} else {
+				// negate assertion?
+			}
 			
-			if(visuallyCorrect) return; // test does not need repair
-			else 
-			{
-				// visual execution traces should have the same length
-				// find the screenshot which is different in the sequence
-				// and an appropriate repair
-			}
-		} 
-		else 
-		{
-			// how to discriminate between direct and propagated?
-			boolean visuallyCorrect = compareVisualExecutionTraces();
-			if(visuallyCorrect) return; // throw an error, there should have been an error or a case not addressed
-			else 
-			{
-				// check the length of the visual execution traces
-				// compare the screenshots from the latest available screenshots
-				// and backwards (because we conjecture that the breakage might be close
-				// to where the test stopped functioning)
-				
-				// get failure message
-				// get involved line
-				
-			}
+			if (!repairs.isEmpty())
+				return repairs;
+
+			// TODO: to manage
+			// repairs.add(checkRepair());
+		} else if (ex.getMessage().contains("Cannot locate element with text")) {
+			
+			// repair dropdownlist
+			repairs = getNewDropdownlistAttributes();
 		}
-		
-		for (Failure fail : result.getFailures()) 
-		{
-			System.out.println(fail.toString());
-		}
-		
+
+		return repairs;
 	}
 
-	private boolean visualExecutionTracesHaveDifferentLenght() 
-	{
-		return false;
+	private List<HtmlElement> searchLocatorWithinNeighbouringhStates() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * should execute a pairwise visual comparison of the screenshots
-	 * @return
-	 */
-	private boolean compareVisualExecutionTraces() 
-	{
-		return false;
+	private List<HtmlElement> searchLocatorWithinTheSameState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<HtmlElement> getNewActualValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<HtmlElement> getNewDropdownlistAttributes() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

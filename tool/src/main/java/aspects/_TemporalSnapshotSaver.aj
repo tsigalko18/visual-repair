@@ -1,4 +1,4 @@
-package main.java.aspects;
+package aspects;
 //package aspects;
 //
 //import java.io.File;
