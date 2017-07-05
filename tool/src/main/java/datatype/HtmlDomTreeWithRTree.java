@@ -21,11 +21,8 @@ import org.xml.sax.SAXException;
 
 import main.java.config.Settings;
 import gnu.trove.procedure.TIntProcedure;
-import net.sf.jsi.Point;
-import net.sf.jsi.Rectangle;
-import net.sf.jsi.SpatialIndex;
-import net.sf.jsi.rtree.RTree;
 import main.java.utils.*;
+import net.sf.jsi.*;
 
 public class HtmlDomTreeWithRTree {
 	
