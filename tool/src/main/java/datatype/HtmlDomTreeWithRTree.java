@@ -23,6 +23,7 @@ import main.java.config.Settings;
 import gnu.trove.procedure.TIntProcedure;
 import main.java.utils.*;
 import net.sf.jsi.*;
+import net.sf.jsi.rtree.RTree;
 
 public class HtmlDomTreeWithRTree {
 	
