@@ -1,4 +1,4 @@
-package claroline190;
+package main.java.claroline190;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;

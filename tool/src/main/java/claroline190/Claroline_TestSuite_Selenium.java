@@ -1,4 +1,4 @@
-package claroline190;
+package  main.java.claroline190;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

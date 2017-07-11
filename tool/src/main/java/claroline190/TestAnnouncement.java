@@ -1,4 +1,4 @@
-package claroline190;
+package main.java.claroline190;
 
 import static org.junit.Assert.fail;
 

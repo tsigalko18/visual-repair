@@ -6,10 +6,10 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-import main.java.config.*;
+import main.java.claroline190.Claroline_TestSuite_Selenium;
 import main.java.datatype.*;
-import main.java.claroline190.*;
 import main.java.utils.*;
+import main.java.config.Settings;
 
 
 public class TestSuiteRunner {

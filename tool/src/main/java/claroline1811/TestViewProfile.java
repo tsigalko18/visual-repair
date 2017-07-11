@@ -1,4 +1,4 @@
-package claroline1811;
+package main.java.claroline1811;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

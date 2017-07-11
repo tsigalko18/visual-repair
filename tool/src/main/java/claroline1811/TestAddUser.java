@@ -1,4 +1,4 @@
-package claroline1811;
+package main.java.claroline1811;
 
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
