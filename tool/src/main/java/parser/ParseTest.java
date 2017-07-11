@@ -6,6 +6,8 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.Result;
 
+import main.java.config.Settings;
+import main.java.datatype.*;
 import japa.parser.ASTHelper;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
@@ -15,12 +17,6 @@ import japa.parser.ast.expr.NameExpr;
 import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.stmt.Statement;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
-import main.java.config.Settings;
-import main.java.datatype.DriverGet;
-import main.java.datatype.EnhancedAssertion;
-import main.java.datatype.EnhancedSelect;
-import main.java.datatype.EnhancedTestCase;
-import main.java.datatype.EnhancedWebElement;
 import main.java.utils.UtilsParser;
 import main.java.utils.UtilsRepair;
 
@@ -45,8 +41,6 @@ public class ParseTest {
 		}
 
 		new MethodVisitor().visit(cu, clazz);
-
-//		System.out.println(tc.getStatements().get(35).getDomAfter().getAbsolutePath());
 		
 		UtilsParser.serializeTestCase(tc, clazz);
 			

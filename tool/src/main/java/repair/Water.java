@@ -5,7 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import main.java.config.Settings;
-import main.java.datatype.*;
+import main.java.datatype.EnhancedException;
+import main.java.datatype.EnhancedTestCase;
+import main.java.datatype.HtmlDomTree;
+import main.java.datatype.HtmlElement;
+import main.java.datatype.SeleniumLocator;
+import main.java.datatype.Statement;
 import main.java.utils.UtilsWater;
 
 public class Water {

@@ -2,6 +2,8 @@ package main.java.utils;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -9,16 +11,17 @@ import org.junit.runner.notification.Failure;
 
 import main.java.config.Settings;
 import main.java.datatype.EnhancedException;
+import main.java.datatype.EnhancedTestCase;
 
 public class UtilsRepair {
-
-	public static Result runTestSuite(Class<?> testSuite) {
+	
+	public static Result runTestSuite(Class<?> testSuite){
 		Result result = JUnitCore.runClasses(testSuite);
 		return result;
 	}
-
+	
 	public static EnhancedException saveExceptionFromFailure(Failure f) {
-
+	
 		EnhancedException ea = new EnhancedException();
 		ea.setException(UtilsParser.getExceptionFromFailure(f));
 		ea.setFailedTest(UtilsParser.getFailedTestFromFailure(f));
@@ -28,7 +31,7 @@ public class UtilsRepair {
 
 	}
 
-	private static void printFailure(Failure failure) {
+	public static void printFailure(Failure failure) {
 
 		System.out.println("MESSAGE");
 		System.out.println("--------------------");
@@ -59,7 +62,7 @@ public class UtilsRepair {
 
 	public static void saveFailures(Failure fail) throws IOException {
 
-		FileWriter bw = new FileWriter(Settings.referenceTestSuiteVisualTraceExecutionFolder + "exception.txt");
+		FileWriter bw = new FileWriter(Settings.pathToTestSuiteUnderTest + "exception.txt");
 
 		bw.write("MESSAGE" + "\n");
 		bw.write("--------------------" + "\n");
@@ -84,6 +87,13 @@ public class UtilsRepair {
 
 		bw.close();
 
+	}
+	
+	public static String capitalizeFirstLetter(String original) {
+	    if (original == null || original.length() == 0) {
+	        return original;
+	    }
+	    return original.substring(0, 1).toUpperCase() + original.substring(1);
 	}
 
 }

@@ -1,9 +1,15 @@
 package main.java.repair;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.java.datatype.*;
+import org.xml.sax.SAXException;
+
+import main.java.datatype.EnhancedException;
+import main.java.datatype.EnhancedTestCase;
+import main.java.datatype.HtmlDomTree;
+import main.java.datatype.HtmlElement;
 
 public class RepairMain {
 
@@ -15,24 +21,22 @@ public class RepairMain {
 	static String locator;
 	static HtmlDomTree newDom;
 
-	public List<HtmlElement> suggestRepair(HtmlDomTree oldDom, String locator, HtmlDomTree newDom) {
+	public static List<HtmlElement> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c) throws SAXException, IOException {
 
 		repairs = new LinkedList<HtmlElement>();
 
 		// locator error
-		if (ex.getMessage().contains("Unable to locate element")) {
+		if (e.getMessage().contains("Unable to locate element")) {
 
 			// apply strategy 1
-			repairs = searchLocatorWithinTheSameState();
+			repairs = ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c);
 
 			// apply strategy 2
 			if (repairs.isEmpty())
 				repairs = searchLocatorWithinNeighbouringhStates();
 
 		
-		} else if (ex.getMessage().contains("Assertion error")) {
-
-			
+		} else if (e.getMessage().contains("Assertion error")) {
 
 			// assertion error
 			if (ex.getMessage().contains("Assertion value")) {
@@ -49,7 +53,7 @@ public class RepairMain {
 
 			// TODO: to manage
 			// repairs.add(checkRepair());
-		} else if (ex.getMessage().contains("Cannot locate element with text")) {
+		} else if (e.getMessage().contains("Cannot locate element with text")) {
 			
 			// repair dropdownlist
 			repairs = getNewDropdownlistAttributes();
@@ -58,22 +62,17 @@ public class RepairMain {
 		return repairs;
 	}
 
-	private List<HtmlElement> searchLocatorWithinNeighbouringhStates() {
+	private static List<HtmlElement> searchLocatorWithinNeighbouringhStates() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private List<HtmlElement> searchLocatorWithinTheSameState() {
+	private static List<HtmlElement> getNewActualValue() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private List<HtmlElement> getNewActualValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private List<HtmlElement> getNewDropdownlistAttributes() {
+	private static List<HtmlElement> getNewDropdownlistAttributes() {
 		// TODO Auto-generated method stub
 		return null;
 	}

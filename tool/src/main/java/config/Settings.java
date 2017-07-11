@@ -4,6 +4,8 @@ import java.io.File;
 
 public class Settings {
 	
+	public static boolean INRECORDING = false;
+	
 	public static String separator = File.separator;
 	
 	// folder containing the visual execution trace of the reference test suite 
@@ -28,9 +30,9 @@ public class Settings {
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 	
-	public static boolean inRecordingMode = false;
+	
 	public static boolean annotate = false;
-	public static boolean verbose = false;
+	public static boolean VERBOSE = true;
 	public static int scale = 10;
 	public static double similarityThreshold = 0.5;
 

@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import org.openqa.selenium.Point;
 
 import main.java.config.Settings;
-import main.java.vision.Util;
 
 public class Detection
 {
@@ -106,7 +105,7 @@ public class Detection
 		PerceptualImageDifferencing pd = builder.build();
 		boolean passed = pd.compare(pool, imgA, imgB, imgDiff);
 		
-		if(Settings.verbose) pd.dump();
+		if(Settings.VERBOSE) pd.dump();
 
 		for(int r = 0; r < imgDiff.getWidth(); r++)
         {
@@ -181,6 +180,6 @@ public class Detection
 					}
 				}
 			}
-		}
+		}     
 	}
 }

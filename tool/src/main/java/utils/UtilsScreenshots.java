@@ -186,10 +186,10 @@ public class UtilsScreenshots {
 		}
 
 		if (matches.size() == 0) {
-			if (Settings.verbose)
+			if (Settings.VERBOSE)
 				System.err.println("[LOG]\tWARNING: No matches found!");
 		} else if (matches.size() > 1) {
-			if (Settings.verbose)
+			if (Settings.VERBOSE)
 				System.err.println("[LOG]\tWARNING: Multiple matches!");
 		}
 
@@ -224,7 +224,7 @@ public class UtilsScreenshots {
 		try {
 			elementCoordinates = element.getLocation();
 		} catch (StaleElementReferenceException e) {
-			if (Settings.verbose)
+			if (Settings.VERBOSE)
 				System.out.println("[LOG]\ttest might have changed its state");
 		}
 
@@ -279,7 +279,7 @@ public class UtilsScreenshots {
 		try {
 			elementCoordinates = element.getLocation();
 		} catch (StaleElementReferenceException e) {
-			if (Settings.verbose)
+			if (Settings.VERBOSE)
 				System.out.println("[LOG]\ttest might have changed its state");
 		}
 
@@ -296,7 +296,7 @@ public class UtilsScreenshots {
 				WebElement thisShouldBeTheSelect = element.findElement(By.xpath(".."));
 				new Actions(driver).moveToElement(thisShouldBeTheSelect).perform();
 
-				if (Settings.verbose) {
+				if (Settings.VERBOSE) {
 					System.err
 							.println("\n\nthisShouldBeTheSelect.getLocation(): " + thisShouldBeTheSelect.getLocation());
 					System.err.println("element.getLocation(): " + element.getLocation());
@@ -321,7 +321,7 @@ public class UtilsScreenshots {
 	public static boolean isUnique(String inFile, String templateFile) {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		if (Settings.verbose) {
+		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED");
 
@@ -367,7 +367,7 @@ public class UtilsScreenshots {
 	public static Point findBestMatch(String inFile, String templateFile) {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		if (Settings.verbose) {
+		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED");
 
@@ -422,7 +422,7 @@ public class UtilsScreenshots {
 	public static Point findBestMatchCenter(String inFile, String templateFile) {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		if (Settings.verbose) {
+		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED");
 
@@ -498,7 +498,7 @@ public class UtilsScreenshots {
 
 		for (int meth : methods) {
 
-			if (Settings.verbose) {
+			if (Settings.VERBOSE) {
 				System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 				System.out.println("[LOG]\tusing image recognition algorithm " + methods[meth]);
 			}
@@ -540,7 +540,7 @@ public class UtilsScreenshots {
 	public static List<Point> matchUsingCanny(String inFile, String templateFile) {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		if (Settings.verbose) {
+		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED");
 

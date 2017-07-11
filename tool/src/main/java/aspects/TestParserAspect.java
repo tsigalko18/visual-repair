@@ -1,14 +1,9 @@
 package main.java.aspects;
 
-import java.io.IOException;
-
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-
-import japa.parser.ParseException;
 
 @Aspect
 public class TestParserAspect {

@@ -51,14 +51,14 @@ public class UtilsAspect {
 		if (!theDir.exists())
 		{
 			
-			if(Settings.verbose) System.out.print("[LOG]\tcreating directory " + path + "...");
+			if(Settings.VERBOSE) System.out.print("[LOG]\tcreating directory " + path + "...");
 			
 			boolean result = theDir.mkdir();
 			if (result)
 			{
-				if(Settings.verbose) System.out.println("done");
+				if(Settings.VERBOSE) System.out.println("done");
 			} else {
-				if(Settings.verbose) System.out.print("failed!");
+				if(Settings.VERBOSE) System.out.print("failed!");
 				System.exit(1);
 			}
 		}

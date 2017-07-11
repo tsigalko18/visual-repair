@@ -1,4 +1,4 @@
-package aspects;
+package main.java.aspects;
 
 import java.io.IOException;
 
@@ -48,7 +48,11 @@ public aspect ScreenshotSaver {
 		d = (WebDriver) jp.getTarget();
 		
 		// for each test, create a folder
-		testFolderName = Settings.referenceTestSuiteVisualTraceExecutionFolder + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
+		if(Settings.INRECORDING) {
+			testFolderName = Settings.referenceTestSuiteVisualTraceExecutionFolder + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
+		} else {
+			testFolderName = Settings.testingTestSuiteVisualTraceExecutionFolder   + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
+		}
 		UtilsAspect.createTestFolder(testFolderName);
 			
 	}
@@ -73,10 +77,10 @@ public aspect ScreenshotSaver {
 		// for each statement, get the line number
 		int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint); 
 
-		String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-1before-" + statementName + Settings.imageExtension;
-		String annotatedscreenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-" + statementName + Settings.imageExtension;
-		String visualLocator = testFolderName + Settings.separator + line + "-visualLocator-" + statementName + Settings.imageExtension;
-		String htmlPath = testFolderName + Settings.separator + line + "-1before-" + statementName;
+		String screenshotBeforeEvent 			= testFolderName + Settings.separator + line + "-1before-" + statementName + Settings.imageExtension;
+		String annotatedscreenshotBeforeEvent 	= testFolderName + Settings.separator + line + "-Annotated-" + statementName + Settings.imageExtension;
+		String visualLocator 					= testFolderName + Settings.separator + line + "-visualLocator-" + statementName + Settings.imageExtension;
+		String htmlPath 						= testFolderName + Settings.separator + line + "-1before-" + statementName;
 		
 		mainPage = d.getWindowHandle();
 		
@@ -100,7 +104,7 @@ public aspect ScreenshotSaver {
 		}
 		
 		
-		if(Settings.verbose) System.out.println("[LOG]\t@Before " + statementName);
+		if(Settings.VERBOSE) System.out.println("[LOG]\t@Before " + statementName);
 	}
 
 	@After("logSeleniumCommands(JoinPoint)")
@@ -110,13 +114,13 @@ public aspect ScreenshotSaver {
 		String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
 		int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint); 
 
-		if(Settings.verbose) System.out.println("[LOG]\t@After " + statementName);
+		if(Settings.VERBOSE) System.out.println("[LOG]\t@After " + statementName);
 		
 		// save the screenshot before the execution of the event
-		String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-2after-" + statementName + Settings.imageExtension;
+		String screenshotBeforeEvent 	= testFolderName + Settings.separator + line + "-2after-" + statementName + Settings.imageExtension;
 		
 		// save the HTML page
-		String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
+		String htmlPath 				= testFolderName + Settings.separator + line + "-2after-" + statementName;
 			
 		if(UtilsScreenshots.isAlertPresent(d)){
 			return;
@@ -154,7 +158,7 @@ public aspect ScreenshotSaver {
 			e.printStackTrace();
 		}
 		
-		if(Settings.verbose) System.out.println("[LOG]\t@AfterThrowing " + statementName);
+		if(Settings.VERBOSE) System.out.println("[LOG]\t@AfterThrowing " + statementName);
 	}
 	
 

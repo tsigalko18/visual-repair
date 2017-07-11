@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,12 +23,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import main.java.config.*;
+import main.java.datatype.*;
 import japa.parser.ast.stmt.Statement;
-import main.java.config.Settings;
-import main.java.datatype.EnhancedException;
-import main.java.datatype.EnhancedTestCase;
-import main.java.datatype.HtmlDomTreeWithRTree;
-import main.java.datatype.SeleniumLocator;
 
 public class UtilsParser {
 
@@ -39,7 +39,7 @@ public class UtilsParser {
 	 */
 	public static String getUrlFromDriverGet(Statement st) {
 		String s = st.toString();
-		s = s.substring(10); 				// remove driver.get(
+		s = s.substring(10); // remove driver.get(
 		s = s.substring(1, s.length() - 2); // remove );
 		return s;
 	}
@@ -70,18 +70,15 @@ public class UtilsParser {
 	public static File getScreenshot(String name, int beginLine, String type) throws Exception {
 
 		String p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator;
-		final String n = name;
-		final String t = type;
-		final String bl = Integer.toString(beginLine);
-		
+
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
 				// return true;
-				return (n.startsWith(bl) && n.endsWith(Settings.imageExtension)
-						&& n.contains(n) && n.contains(t));
+				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.imageExtension)
+						&& n.contains(name) && n.contains(type));
 			}
 		});
 
@@ -104,27 +101,28 @@ public class UtilsParser {
 	 */
 	public static File getHTMLDOMfile(String name, int beginLine, String type, String useExtension) throws Exception {
 
-		String p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator;
-		File dir = new File(p);
-		final String n = name;
-		final String t = type;
-		final String bl = Integer.toString(beginLine);
+		String p;
 		
+		if(Settings.INRECORDING){
+			p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
+		} else {
+			p = Settings.testingTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
+		}
+		
+		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.startsWith(bl) && n.endsWith(Settings.imageExtension)
-						&& n.contains(n) && n.contains(t));
+				return (n.endsWith(".html"));
 			}
 		});
 
-		if (listOfFiles.length == 0) {
+		if (listOfFiles == null || listOfFiles.length == 0) {
 			return null;
-		} else if (listOfFiles.length == 1) {
+		}
+		else {
 			return listOfFiles[0];
-		} else {
-			throw new Exception("[LOG]\tToo many files retrieved");
 		}
 
 	}
@@ -158,12 +156,16 @@ public class UtilsParser {
 
 		return new SeleniumLocator(strategy, value);
 	}
-	
+
 	public static String getValueFromSelect(Statement st) {
-		
-		String value = st.toString(); // new Select(driver.findElement(By.id("course_category"))).selectByVisibleText("(SC) Sciences");
-		value = value.substring(value.indexOf("selectBy"), value.length()); // selectByVisibleText("(SC) Sciences");
-		value = value.substring(value.indexOf("(") + 1, value.indexOf("\");") + 1); // (SC) Sciences
+
+		String value = st.toString(); // new
+										// Select(driver.findElement(By.id("course_category"))).selectByVisibleText("(SC)
+										// Sciences");
+		value = value.substring(value.indexOf("selectBy"), value.length()); // selectByVisibleText("(SC)
+																			// Sciences");
+		value = value.substring(value.indexOf("(") + 1, value.indexOf("\");") + 1); // (SC)
+																					// Sciences
 		return value;
 	}
 
@@ -212,8 +214,10 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator + testName + Settings.jsonExtension;
-		
+		String newPath = 
+				Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator
+				+ testName + Settings.jsonExtension;
+
 		try {
 			FileUtils.write(new File(newPath), gson.toJson(tc));
 		} catch (IOException e) {
@@ -235,9 +239,10 @@ public class UtilsParser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		if (Settings.VERBOSE)
+			System.out.println("[LOG]\tException saved: " + path);
 	}
-	
+
 	/**
 	 * Save the exception in JSON format
 	 * 
@@ -261,8 +266,8 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator + "exception"
-				+ Settings.jsonExtension;
+		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.separator
+				+ "exception" + Settings.jsonExtension;
 		return newPath;
 	}
 
@@ -379,9 +384,8 @@ public class UtilsParser {
 		}
 		return foundElement;
 	}
-	
-	private static int getSiblingIndex(String xPathElement)
-	{
+
+	private static int getSiblingIndex(String xPathElement) {
 		String value = getValueFromRegex(Settings.REGEX_FOR_GETTING_INDEX, xPathElement);
 		if (value == null)
 			return -1;
@@ -400,14 +404,14 @@ public class UtilsParser {
 		}
 		return null;
 	}
-	
-	public static boolean isPointInRectangle(int x, int y, int left, int top, int width, int height, boolean isBorderIncluded) {
-		
+
+	public static boolean isPointInRectangle(int x, int y, int left, int top, int width, int height,
+			boolean isBorderIncluded) {
+
 		if (isBorderIncluded) {
 			if (x >= left && y >= top && x <= (left + width) && y <= (top + height))
 				return true;
-		}
-		else {
+		} else {
 			if (x > left && y > top && x < (left + width) && y < (top + height))
 				return true;
 		}
@@ -422,24 +426,25 @@ public class UtilsParser {
 
 	// OK
 	public static String getExceptionFromFailure(Failure f) {
-		String s = f.getException().toString().substring(0, f.getException().toString().indexOf("For documentation", 0));
+		String s = f.getException().toString().substring(0,
+				f.getException().toString().indexOf("For documentation", 0));
 		return s;
 	}
 
 	// OK
 	public static String getMessageFromFailure(Failure f) {
-		
+
 		String s;
-		
-		if(f.getMessage().contains("Cannot locate element with text:")){
+
+		if (f.getMessage().contains("Cannot locate element with text:")) {
 			s = f.getMessage().toString().substring(0, f.getException().toString().indexOf("For documentation", 0));
 			s = s.substring(0, s.indexOf("For documentation"));
-		} 
-		else {
-			//s = f.getMessage().toString().substring(0, f.getException().toString().indexOf(":", 0));
+		} else {
+			// s = f.getMessage().toString().substring(0,
+			// f.getException().toString().indexOf(":", 0));
 			s = f.getMessage().toString().substring(0, f.getMessage().toString().indexOf("Command"));
 		}
-		
+
 		return s;
 	}
 
@@ -451,8 +456,25 @@ public class UtilsParser {
 		return s.replaceAll("\\D+", "");
 	}
 
-	
+	public static Map<String, File> convertToHashMap(File[] tests) {
 
+		Map<String, File> m = new HashMap<String, File>();
+		for (File test : tests) 
+				m.put(test.getName(), test);
+		return m;
+	}
 	
+	public static void printResults(List<Node<HtmlElement>> result, HtmlDomTreeWithRTree rt) {
+
+		String s = "***** repairs list *****";
+		System.out.println(s);
+		for (Node<HtmlElement> node : result) {
+			System.out.println(node.getData().getXPath());
+			System.out.println(rt.getRects().get(node.getData().getRectId()));
+		}
+		for (int i = 0; i < s.length(); i++)
+			System.out.print("*");
+		System.out.print("\n");
+	}
 
 }

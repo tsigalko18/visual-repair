@@ -367,10 +367,20 @@ public class ImageProcessing
 	
 	public static void main(String[] args)
 	{
+		String image1 = 	"/Users/astocco/Desktop/output-etunebook.ch/screenshots/state41.jpg";
+		
+		String[] images = { "/Users/astocco/Desktop/output-etunebook.ch/screenshots/state59.jpg" , 
+							"/Users/astocco/Desktop/output-etunebook.ch/screenshots/state23.jpg" , 
+							"/Users/astocco/Desktop/output-etunebook.ch/screenshots/state5.jpg" , 
+							"/Users/astocco/Desktop/output-etunebook.ch/screenshots/state77.jpg" };
+		
 		ImageProcessing ip = new ImageProcessing();
-		//ip.compareImagesForSimilarity("/Users/sonal/USC/rwd/mobify_selenium_browser_size_set_to_360_640.png", "/Users/sonal/USC/rwd/mobify_selenium_browser_size_set_to_391_640.png");
+		
+		for (int i = 0; i < images.length; i++) {
+//			System.out.println(ip.compareImagesByHistogram(image1, images[i]));
+		}
 		
 		System.out.println(ip.compareImagesByHistogram("/Users/astocco/Desktop/oracle.png", "/Users/astocco/Desktop/test.png"));
-//		ip.compareImagesForSimilarity("/Users/astocco/Desktop/oracle.png", "/Users/astocco/Desktop/test.png");
+		
 	}
 }
