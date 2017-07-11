@@ -1,0 +1,396 @@
+{
+  "name": "testAddCategory",
+  "statements": {
+    "35": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 35
+    },
+    "36": {
+      "domBefore": {
+        "path": "testSuite2/TestAddCategory/36-1before-TestAddCategory-36/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddCategory/36-2after-TestAddCategory-36/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/36-1before-TestAddCategory-36.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/36-2after-TestAddCategory-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/36-Annotated-TestAddCategory-36.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/36-visualLocator-TestAddCategory-36.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestAddCategory/37-1before-TestAddCategory-37/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddCategory/37-2after-TestAddCategory-37/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/37-1before-TestAddCategory-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/37-2after-TestAddCategory-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/37-Annotated-TestAddCategory-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/37-visualLocator-TestAddCategory-37.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 37
+    },
+    "38": {
+      "domBefore": {
+        "path": "testSuite2/TestAddCategory/38-1before-TestAddCategory-38/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddCategory/38-2after-TestAddCategory-38/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/38-1before-TestAddCategory-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/38-2after-TestAddCategory-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/38-Annotated-TestAddCategory-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/38-visualLocator-TestAddCategory-38.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 38
+    },
+    "39": {
+      "domBefore": {
+        "path": "testSuite2/TestAddCategory/39-1before-TestAddCategory-39/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddCategory/39-2after-TestAddCategory-39/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/39-1before-TestAddCategory-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/39-2after-TestAddCategory-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/39-Annotated-TestAddCategory-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/39-visualLocator-TestAddCategory-39.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 39
+    },
+    "40": {
+      "domAfter": {
+        "path": "testSuite2/TestAddCategory/40-2after-TestAddCategory-40/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/40-1before-TestAddCategory-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/40-2after-TestAddCategory-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/40-Annotated-TestAddCategory-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/40-visualLocator-TestAddCategory-40.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 40
+    },
+    "41": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/41-1before-TestAddCategory-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/41-2after-TestAddCategory-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/41-Annotated-TestAddCategory-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/41-visualLocator-TestAddCategory-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Manage course categories"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/42-1before-TestAddCategory-42.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/42-2after-TestAddCategory-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/42-Annotated-TestAddCategory-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/42-visualLocator-TestAddCategory-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "43": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Create a category"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/43-1before-TestAddCategory-43.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/43-2after-TestAddCategory-43.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/43-Annotated-TestAddCategory-43.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/43-visualLocator-TestAddCategory-43.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 43
+    },
+    "44": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "nameCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/44-1before-TestAddCategory-44.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/44-2after-TestAddCategory-44.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/44-Annotated-TestAddCategory-44.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/44-visualLocator-TestAddCategory-44.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 44
+    },
+    "45": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "nameCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/45-1before-TestAddCategory-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/45-2after-TestAddCategory-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/45-Annotated-TestAddCategory-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/45-visualLocator-TestAddCategory-45.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"Software Eng\"",
+      "line": 45
+    },
+    "46": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/46-1before-TestAddCategory-46.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/46-2after-TestAddCategory-46.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/46-Annotated-TestAddCategory-46.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/46-visualLocator-TestAddCategory-46.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 46
+    },
+    "47": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/47-1before-TestAddCategory-47.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/47-2after-TestAddCategory-47.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/47-Annotated-TestAddCategory-47.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/47-visualLocator-TestAddCategory-47.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"SE1718\"",
+      "line": 47
+    },
+    "48": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/form/table/tbody/tr[6]/td[2]/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/48-1before-TestAddCategory-48.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/48-2after-TestAddCategory-48.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/48-Annotated-TestAddCategory-48.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/48-visualLocator-TestAddCategory-48.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 48
+    },
+    "49": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category created[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/49-1before-TestAddCategory-49.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/49-2after-TestAddCategory-49.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/49-Annotated-TestAddCategory-49.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/49-visualLocator-TestAddCategory-49.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 49
+    },
+    "50": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr[4]/td[5]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/50-1before-TestAddCategory-50.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/50-Annotated-TestAddCategory-50.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/50-visualLocator-TestAddCategory-50.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 50
+    },
+    "52": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category deleted[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/52-1before-TestAddCategory-52.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/52-2after-TestAddCategory-52.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/52-Annotated-TestAddCategory-52.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/52-visualLocator-TestAddCategory-52.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 52
+    },
+    "53": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddCategory/53-1before-TestAddCategory-53.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddCategory/53-2after-TestAddCategory-53.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddCategory/53-Annotated-TestAddCategory-53.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddCategory/53-visualLocator-TestAddCategory-53.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 53
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestAddCategory.java"
+}

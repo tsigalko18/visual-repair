@@ -1,0 +1,357 @@
+{
+  "name": "testCourseCategoryEdit",
+  "statements": {
+    "36": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestCourseCategoryEdit/37-1before-TestCourseCategoryEdit-37/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestCourseCategoryEdit/37-2after-TestCourseCategoryEdit-37/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/37-1before-TestCourseCategoryEdit-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/37-2after-TestCourseCategoryEdit-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/37-Annotated-TestCourseCategoryEdit-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/37-visualLocator-TestCourseCategoryEdit-37.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 37
+    },
+    "38": {
+      "domBefore": {
+        "path": "testSuite2/TestCourseCategoryEdit/38-1before-TestCourseCategoryEdit-38/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestCourseCategoryEdit/38-2after-TestCourseCategoryEdit-38/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/38-1before-TestCourseCategoryEdit-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/38-2after-TestCourseCategoryEdit-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/38-Annotated-TestCourseCategoryEdit-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/38-visualLocator-TestCourseCategoryEdit-38.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 38
+    },
+    "39": {
+      "domBefore": {
+        "path": "testSuite2/TestCourseCategoryEdit/39-1before-TestCourseCategoryEdit-39/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestCourseCategoryEdit/39-2after-TestCourseCategoryEdit-39/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/39-1before-TestCourseCategoryEdit-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/39-2after-TestCourseCategoryEdit-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/39-Annotated-TestCourseCategoryEdit-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/39-visualLocator-TestCourseCategoryEdit-39.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 39
+    },
+    "40": {
+      "domBefore": {
+        "path": "testSuite2/TestCourseCategoryEdit/40-1before-TestCourseCategoryEdit-40/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestCourseCategoryEdit/40-2after-TestCourseCategoryEdit-40/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/40-1before-TestCourseCategoryEdit-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/40-2after-TestCourseCategoryEdit-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/40-Annotated-TestCourseCategoryEdit-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/40-visualLocator-TestCourseCategoryEdit-40.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 40
+    },
+    "41": {
+      "domAfter": {
+        "path": "testSuite2/TestCourseCategoryEdit/41-2after-TestCourseCategoryEdit-41/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/41-1before-TestCourseCategoryEdit-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/41-2after-TestCourseCategoryEdit-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/41-Annotated-TestCourseCategoryEdit-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/41-visualLocator-TestCourseCategoryEdit-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/42-1before-TestCourseCategoryEdit-42.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/42-2after-TestCourseCategoryEdit-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/42-Annotated-TestCourseCategoryEdit-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/42-visualLocator-TestCourseCategoryEdit-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "43": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Manage course categories"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/43-1before-TestCourseCategoryEdit-43.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/43-2after-TestCourseCategoryEdit-43.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/43-Annotated-TestCourseCategoryEdit-43.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/43-visualLocator-TestCourseCategoryEdit-43.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 43
+    },
+    "44": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table/tbody/tr[1]/td[3]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/44-1before-TestCourseCategoryEdit-44.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/44-2after-TestCourseCategoryEdit-44.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/44-Annotated-TestCourseCategoryEdit-44.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/44-visualLocator-TestCourseCategoryEdit-44.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 44
+    },
+    "45": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/45-1before-TestCourseCategoryEdit-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/45-2after-TestCourseCategoryEdit-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/45-Annotated-TestCourseCategoryEdit-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/45-visualLocator-TestCourseCategoryEdit-45.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 45
+    },
+    "46": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/46-1before-TestCourseCategoryEdit-46.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/46-2after-TestCourseCategoryEdit-46.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/46-Annotated-TestCourseCategoryEdit-46.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/46-visualLocator-TestCourseCategoryEdit-46.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"SCI\"",
+      "line": 46
+    },
+    "47": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr[1]/td[7]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/47-1before-TestCourseCategoryEdit-47.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/47-2after-TestCourseCategoryEdit-47.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/47-Annotated-TestCourseCategoryEdit-47.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/47-visualLocator-TestCourseCategoryEdit-47.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 47
+    },
+    "48": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category moved[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/48-1before-TestCourseCategoryEdit-48.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/48-2after-TestCourseCategoryEdit-48.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/48-Annotated-TestCourseCategoryEdit-48.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/48-visualLocator-TestCourseCategoryEdit-48.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 48
+    },
+    "49": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr[2]/td[6]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/49-1before-TestCourseCategoryEdit-49.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/49-2after-TestCourseCategoryEdit-49.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/49-Annotated-TestCourseCategoryEdit-49.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/49-visualLocator-TestCourseCategoryEdit-49.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 49
+    },
+    "50": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category moved[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/50-1before-TestCourseCategoryEdit-50.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/50-2after-TestCourseCategoryEdit-50.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/50-Annotated-TestCourseCategoryEdit-50.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/50-visualLocator-TestCourseCategoryEdit-50.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 50
+    },
+    "51": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestCourseCategoryEdit/51-1before-TestCourseCategoryEdit-51.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestCourseCategoryEdit/51-2after-TestCourseCategoryEdit-51.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestCourseCategoryEdit/51-Annotated-TestCourseCategoryEdit-51.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestCourseCategoryEdit/51-visualLocator-TestCourseCategoryEdit-51.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 51
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestCourseCategoryEdit.java"
+}

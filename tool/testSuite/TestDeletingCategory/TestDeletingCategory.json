@@ -1,0 +1,396 @@
+{
+  "name": "testDeletingCategory",
+  "statements": {
+    "34": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 34
+    },
+    "35": {
+      "domBefore": {
+        "path": "testSuite2/TestDeletingCategory/35-1before-TestDeletingCategory-35/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestDeletingCategory/35-2after-TestDeletingCategory-35/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/35-1before-TestDeletingCategory-35.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/35-2after-TestDeletingCategory-35.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/35-Annotated-TestDeletingCategory-35.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/35-visualLocator-TestDeletingCategory-35.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 35
+    },
+    "36": {
+      "domBefore": {
+        "path": "testSuite2/TestDeletingCategory/36-1before-TestDeletingCategory-36/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestDeletingCategory/36-2after-TestDeletingCategory-36/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/36-1before-TestDeletingCategory-36.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/36-2after-TestDeletingCategory-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/36-Annotated-TestDeletingCategory-36.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/36-visualLocator-TestDeletingCategory-36.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestDeletingCategory/37-1before-TestDeletingCategory-37/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestDeletingCategory/37-2after-TestDeletingCategory-37/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/37-1before-TestDeletingCategory-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/37-2after-TestDeletingCategory-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/37-Annotated-TestDeletingCategory-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/37-visualLocator-TestDeletingCategory-37.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 37
+    },
+    "38": {
+      "domBefore": {
+        "path": "testSuite2/TestDeletingCategory/38-1before-TestDeletingCategory-38/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestDeletingCategory/38-2after-TestDeletingCategory-38/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/38-1before-TestDeletingCategory-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/38-2after-TestDeletingCategory-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/38-Annotated-TestDeletingCategory-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/38-visualLocator-TestDeletingCategory-38.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 38
+    },
+    "39": {
+      "domAfter": {
+        "path": "testSuite2/TestDeletingCategory/39-2after-TestDeletingCategory-39/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/39-1before-TestDeletingCategory-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/39-2after-TestDeletingCategory-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/39-Annotated-TestDeletingCategory-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/39-visualLocator-TestDeletingCategory-39.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 39
+    },
+    "40": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/40-1before-TestDeletingCategory-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/40-2after-TestDeletingCategory-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/40-Annotated-TestDeletingCategory-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/40-visualLocator-TestDeletingCategory-40.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 40
+    },
+    "41": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Manage course categories"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/41-1before-TestDeletingCategory-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/41-2after-TestDeletingCategory-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/41-Annotated-TestDeletingCategory-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/41-visualLocator-TestDeletingCategory-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Create a category"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/42-1before-TestDeletingCategory-42.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/42-2after-TestDeletingCategory-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/42-Annotated-TestDeletingCategory-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/42-visualLocator-TestDeletingCategory-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "43": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "nameCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/43-1before-TestDeletingCategory-43.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/43-2after-TestDeletingCategory-43.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/43-Annotated-TestDeletingCategory-43.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/43-visualLocator-TestDeletingCategory-43.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 43
+    },
+    "44": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "nameCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/44-1before-TestDeletingCategory-44.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/44-2after-TestDeletingCategory-44.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/44-Annotated-TestDeletingCategory-44.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/44-visualLocator-TestDeletingCategory-44.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"Software Testing\"",
+      "line": 44
+    },
+    "45": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/45-1before-TestDeletingCategory-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/45-2after-TestDeletingCategory-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/45-Annotated-TestDeletingCategory-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/45-visualLocator-TestDeletingCategory-45.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 45
+    },
+    "46": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/46-1before-TestDeletingCategory-46.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/46-2after-TestDeletingCategory-46.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/46-Annotated-TestDeletingCategory-46.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/46-visualLocator-TestDeletingCategory-46.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"ST1718\"",
+      "line": 46
+    },
+    "47": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/form/table/tbody/tr[6]/td[2]/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/47-1before-TestDeletingCategory-47.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/47-2after-TestDeletingCategory-47.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/47-Annotated-TestDeletingCategory-47.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/47-visualLocator-TestDeletingCategory-47.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 47
+    },
+    "48": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category created[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/48-1before-TestDeletingCategory-48.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/48-2after-TestDeletingCategory-48.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/48-Annotated-TestDeletingCategory-48.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/48-visualLocator-TestDeletingCategory-48.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 48
+    },
+    "49": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr[4]/td[5]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/49-1before-TestDeletingCategory-49.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/49-Annotated-TestDeletingCategory-49.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/49-visualLocator-TestDeletingCategory-49.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 49
+    },
+    "51": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category deleted[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/51-1before-TestDeletingCategory-51.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/51-2after-TestDeletingCategory-51.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/51-Annotated-TestDeletingCategory-51.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/51-visualLocator-TestDeletingCategory-51.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 51
+    },
+    "52": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestDeletingCategory/52-1before-TestDeletingCategory-52.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestDeletingCategory/52-2after-TestDeletingCategory-52.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestDeletingCategory/52-Annotated-TestDeletingCategory-52.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestDeletingCategory/52-visualLocator-TestDeletingCategory-52.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 52
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestDeletingCategory.java"
+}

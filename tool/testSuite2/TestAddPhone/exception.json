@@ -1,0 +1,6 @@
+{
+  "exception": "org.openqa.selenium.NoSuchElementException: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input\"}\nCommand duration or timeout: 3.05 seconds\n",
+  "message": "Unable to locate element: {\"method\":\"xpath\",\"selector\":\"html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input\"}\n",
+  "failedTest": "testAddPhone",
+  "involvedLine": "39"
+}

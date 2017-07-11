@@ -1,0 +1,354 @@
+{
+  "name": "testAddClass",
+  "statements": {
+    "34": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 34
+    },
+    "35": {
+      "domBefore": {
+        "path": "testSuite2/TestAddClass/35-1before-TestAddClass-35/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddClass/35-2after-TestAddClass-35/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/35-1before-TestAddClass-35.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/35-2after-TestAddClass-35.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/35-Annotated-TestAddClass-35.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/35-visualLocator-TestAddClass-35.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 35
+    },
+    "36": {
+      "domBefore": {
+        "path": "testSuite2/TestAddClass/36-1before-TestAddClass-36/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddClass/36-2after-TestAddClass-36/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/36-1before-TestAddClass-36.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/36-2after-TestAddClass-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/36-Annotated-TestAddClass-36.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/36-visualLocator-TestAddClass-36.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestAddClass/37-1before-TestAddClass-37/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddClass/37-2after-TestAddClass-37/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/37-1before-TestAddClass-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/37-2after-TestAddClass-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/37-Annotated-TestAddClass-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/37-visualLocator-TestAddClass-37.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 37
+    },
+    "38": {
+      "domBefore": {
+        "path": "testSuite2/TestAddClass/38-1before-TestAddClass-38/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddClass/38-2after-TestAddClass-38/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/38-1before-TestAddClass-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/38-2after-TestAddClass-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/38-Annotated-TestAddClass-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/38-visualLocator-TestAddClass-38.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 38
+    },
+    "39": {
+      "domAfter": {
+        "path": "testSuite2/TestAddClass/39-2after-TestAddClass-39/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/39-1before-TestAddClass-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/39-2after-TestAddClass-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/39-Annotated-TestAddClass-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/39-visualLocator-TestAddClass-39.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 39
+    },
+    "40": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/40-1before-TestAddClass-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/40-2after-TestAddClass-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/40-Annotated-TestAddClass-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/40-visualLocator-TestAddClass-40.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 40
+    },
+    "41": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Manage classes"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/41-1before-TestAddClass-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/41-2after-TestAddClass-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/41-Annotated-TestAddClass-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/41-visualLocator-TestAddClass-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Create a new class"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/42-1before-TestAddClass-42.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/42-2after-TestAddClass-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/42-Annotated-TestAddClass-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/42-visualLocator-TestAddClass-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "43": {
+      "domLocator": {
+        "strategy": "name",
+        "value": "class_name"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/43-1before-TestAddClass-43.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/43-2after-TestAddClass-43.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/43-Annotated-TestAddClass-43.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/43-visualLocator-TestAddClass-43.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 43
+    },
+    "44": {
+      "domLocator": {
+        "strategy": "name",
+        "value": "class_name"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/44-1before-TestAddClass-44.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/44-2after-TestAddClass-44.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/44-Annotated-TestAddClass-44.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/44-visualLocator-TestAddClass-44.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"EG\"",
+      "line": 44
+    },
+    "45": {
+      "domLocator": {
+        "strategy": "cssSelector",
+        "value": "input[type\u003d\\submit\\]"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/45-1before-TestAddClass-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/45-2after-TestAddClass-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/45-Annotated-TestAddClass-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/45-visualLocator-TestAddClass-45.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 45
+    },
+    "46": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*The new class has been created[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/46-1before-TestAddClass-46.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/46-2after-TestAddClass-46.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/46-Annotated-TestAddClass-46.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/46-visualLocator-TestAddClass-46.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 46
+    },
+    "47": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr/td[6]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/47-1before-TestAddClass-47.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/47-Annotated-TestAddClass-47.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/47-visualLocator-TestAddClass-47.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 47
+    },
+    "49": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Class deleted[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/49-1before-TestAddClass-49.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/49-2after-TestAddClass-49.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/49-Annotated-TestAddClass-49.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/49-visualLocator-TestAddClass-49.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 49
+    },
+    "50": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddClass/50-1before-TestAddClass-50.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddClass/50-2after-TestAddClass-50.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddClass/50-Annotated-TestAddClass-50.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddClass/50-visualLocator-TestAddClass-50.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 50
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestAddClass.java"
+}

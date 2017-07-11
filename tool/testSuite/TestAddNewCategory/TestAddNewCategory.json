@@ -1,0 +1,396 @@
+{
+  "name": "testAddNewCategory",
+  "statements": {
+    "34": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 34
+    },
+    "35": {
+      "domBefore": {
+        "path": "testSuite2/TestAddNewCategory/35-1before-TestAddNewCategory-35/index.php.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddNewCategory/35-2after-TestAddNewCategory-35/index.php.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/35-1before-TestAddNewCategory-35.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/35-2after-TestAddNewCategory-35.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/35-Annotated-TestAddNewCategory-35.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/35-visualLocator-TestAddNewCategory-35.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 35
+    },
+    "36": {
+      "domBefore": {
+        "path": "testSuite2/TestAddNewCategory/36-1before-TestAddNewCategory-36/index.php.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddNewCategory/36-2after-TestAddNewCategory-36/index.php.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/36-1before-TestAddNewCategory-36.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/36-2after-TestAddNewCategory-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/36-Annotated-TestAddNewCategory-36.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/36-visualLocator-TestAddNewCategory-36.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestAddNewCategory/37-1before-TestAddNewCategory-37/index.php.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddNewCategory/37-2after-TestAddNewCategory-37/index.php.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/37-1before-TestAddNewCategory-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/37-2after-TestAddNewCategory-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/37-Annotated-TestAddNewCategory-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/37-visualLocator-TestAddNewCategory-37.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 37
+    },
+    "38": {
+      "domBefore": {
+        "path": "testSuite2/TestAddNewCategory/38-1before-TestAddNewCategory-38/index.php.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestAddNewCategory/38-2after-TestAddNewCategory-38/index.php.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/38-1before-TestAddNewCategory-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/38-2after-TestAddNewCategory-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/38-Annotated-TestAddNewCategory-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/38-visualLocator-TestAddNewCategory-38.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 38
+    },
+    "39": {
+      "domAfter": {
+        "path": "testSuite2/TestAddNewCategory/39-2after-TestAddNewCategory-39/index.php.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/39-1before-TestAddNewCategory-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/39-2after-TestAddNewCategory-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/39-Annotated-TestAddNewCategory-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/39-visualLocator-TestAddNewCategory-39.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 39
+    },
+    "40": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/40-1before-TestAddNewCategory-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/40-2after-TestAddNewCategory-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/40-Annotated-TestAddNewCategory-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/40-visualLocator-TestAddNewCategory-40.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 40
+    },
+    "41": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Manage course categories"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/41-1before-TestAddNewCategory-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/41-2after-TestAddNewCategory-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/41-Annotated-TestAddNewCategory-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/41-visualLocator-TestAddNewCategory-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Create a category"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/42-1before-TestAddNewCategory-42.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/42-2after-TestAddNewCategory-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/42-Annotated-TestAddNewCategory-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/42-visualLocator-TestAddNewCategory-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "43": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "nameCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/43-1before-TestAddNewCategory-43.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/43-2after-TestAddNewCategory-43.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/43-Annotated-TestAddNewCategory-43.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/43-visualLocator-TestAddNewCategory-43.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 43
+    },
+    "44": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "nameCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/44-1before-TestAddNewCategory-44.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/44-2after-TestAddNewCategory-44.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/44-Annotated-TestAddNewCategory-44.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/44-visualLocator-TestAddNewCategory-44.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"Software Testing\"",
+      "line": 44
+    },
+    "45": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/45-1before-TestAddNewCategory-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/45-2after-TestAddNewCategory-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/45-Annotated-TestAddNewCategory-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/45-visualLocator-TestAddNewCategory-45.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 45
+    },
+    "46": {
+      "domLocator": {
+        "strategy": "id",
+        "value": "codeCat"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/46-1before-TestAddNewCategory-46.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/46-2after-TestAddNewCategory-46.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/46-Annotated-TestAddNewCategory-46.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/46-visualLocator-TestAddNewCategory-46.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"ST1718\"",
+      "line": 46
+    },
+    "47": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/form/table/tbody/tr[6]/td[2]/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/47-1before-TestAddNewCategory-47.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/47-2after-TestAddNewCategory-47.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/47-Annotated-TestAddNewCategory-47.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/47-visualLocator-TestAddNewCategory-47.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 47
+    },
+    "48": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category created[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/48-1before-TestAddNewCategory-48.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/48-2after-TestAddNewCategory-48.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/48-Annotated-TestAddNewCategory-48.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/48-visualLocator-TestAddNewCategory-48.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 48
+    },
+    "49": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr[4]/td[5]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/49-1before-TestAddNewCategory-49.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/49-Annotated-TestAddNewCategory-49.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/49-visualLocator-TestAddNewCategory-49.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 49
+    },
+    "51": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Category deleted[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr/td/div/div"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/51-1before-TestAddNewCategory-51.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/51-2after-TestAddNewCategory-51.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/51-Annotated-TestAddNewCategory-51.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/51-visualLocator-TestAddNewCategory-51.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 51
+    },
+    "52": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestAddNewCategory/52-1before-TestAddNewCategory-52.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestAddNewCategory/52-2after-TestAddNewCategory-52.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestAddNewCategory/52-Annotated-TestAddNewCategory-52.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestAddNewCategory/52-visualLocator-TestAddNewCategory-52.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 52
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestAddNewCategory.java"
+}

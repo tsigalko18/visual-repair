@@ -1,0 +1,486 @@
+{
+  "name": "testModuleSettings",
+  "statements": {
+    "33": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 33
+    },
+    "34": {
+      "domBefore": {
+        "path": "testSuite2/TestModuleSettings/34-1before-TestModuleSettings-34/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestModuleSettings/34-2after-TestModuleSettings-34/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/34-1before-TestModuleSettings-34.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/34-2after-TestModuleSettings-34.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/34-Annotated-TestModuleSettings-34.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/34-visualLocator-TestModuleSettings-34.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 34
+    },
+    "35": {
+      "domBefore": {
+        "path": "testSuite2/TestModuleSettings/35-1before-TestModuleSettings-35/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestModuleSettings/35-2after-TestModuleSettings-35/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/35-1before-TestModuleSettings-35.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/35-2after-TestModuleSettings-35.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/35-Annotated-TestModuleSettings-35.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/35-visualLocator-TestModuleSettings-35.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 35
+    },
+    "36": {
+      "domBefore": {
+        "path": "testSuite2/TestModuleSettings/36-1before-TestModuleSettings-36/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestModuleSettings/36-2after-TestModuleSettings-36/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/36-1before-TestModuleSettings-36.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/36-2after-TestModuleSettings-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/36-Annotated-TestModuleSettings-36.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/36-visualLocator-TestModuleSettings-36.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestModuleSettings/37-1before-TestModuleSettings-37/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestModuleSettings/37-2after-TestModuleSettings-37/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/37-1before-TestModuleSettings-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/37-2after-TestModuleSettings-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/37-Annotated-TestModuleSettings-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/37-visualLocator-TestModuleSettings-37.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 37
+    },
+    "38": {
+      "domAfter": {
+        "path": "testSuite2/TestModuleSettings/38-2after-TestModuleSettings-38/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/38-1before-TestModuleSettings-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/38-2after-TestModuleSettings-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/38-Annotated-TestModuleSettings-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/38-visualLocator-TestModuleSettings-38.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 38
+    },
+    "39": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/39-1before-TestModuleSettings-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/39-2after-TestModuleSettings-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/39-Annotated-TestModuleSettings-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/39-visualLocator-TestModuleSettings-39.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 39
+    },
+    "40": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Modules"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/40-1before-TestModuleSettings-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/40-2after-TestModuleSettings-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/40-Annotated-TestModuleSettings-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/40-visualLocator-TestModuleSettings-40.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 40
+    },
+    "41": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[2]/tbody/tr[1]/td[5]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/41-1before-TestModuleSettings-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/41-2after-TestModuleSettings-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/41-Annotated-TestModuleSettings-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/41-visualLocator-TestModuleSettings-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Make visible"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/42-1before-TestModuleSettings-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/42-Annotated-TestModuleSettings-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/42-visualLocator-TestModuleSettings-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "45": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"Module visibility updated\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table/tbody/tr/td"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/45-1before-TestModuleSettings-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/45-2after-TestModuleSettings-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/45-Annotated-TestModuleSettings-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/45-visualLocator-TestModuleSettings-45.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 45
+    },
+    "46": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Global settings"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/46-1before-TestModuleSettings-46.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/46-2after-TestModuleSettings-46.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/46-Annotated-TestModuleSettings-46.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/46-visualLocator-TestModuleSettings-46.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 46
+    },
+    "47": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "About"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/47-1before-TestModuleSettings-47.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/47-2after-TestModuleSettings-47.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/47-Annotated-TestModuleSettings-47.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/47-visualLocator-TestModuleSettings-47.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 47
+    },
+    "48": {
+      "assertion": "assertTrue",
+      "predicate": "matches(\"^[\\\\s\\\\S]*Course description[\\\\s\\\\S]*$\")",
+      "domLocator": {
+        "strategy": "id",
+        "value": "claroBody"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/48-1before-TestModuleSettings-48.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/48-2after-TestModuleSettings-48.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/48-Annotated-TestModuleSettings-48.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/48-visualLocator-TestModuleSettings-48.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 48
+    },
+    "49": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Global settings"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/49-1before-TestModuleSettings-49.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/49-2after-TestModuleSettings-49.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/49-Annotated-TestModuleSettings-49.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/49-visualLocator-TestModuleSettings-49.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 49
+    },
+    "50": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/form/table/tbody/tr[1]/td[2]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/50-1before-TestModuleSettings-50.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/50-2after-TestModuleSettings-50.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/50-Annotated-TestModuleSettings-50.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/50-visualLocator-TestModuleSettings-50.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 50
+    },
+    "51": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"Module deactivation succeeded\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table/tbody/tr/td"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/51-1before-TestModuleSettings-51.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/51-2after-TestModuleSettings-51.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/51-Annotated-TestModuleSettings-51.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/51-visualLocator-TestModuleSettings-51.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 51
+    },
+    "52": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/form/table/tbody/tr[1]/td[2]/a/img"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/52-1before-TestModuleSettings-52.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/52-2after-TestModuleSettings-52.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/52-Annotated-TestModuleSettings-52.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/52-visualLocator-TestModuleSettings-52.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 52
+    },
+    "53": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"Module activation succeeded\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table/tbody/tr/td"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/53-1before-TestModuleSettings-53.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/53-2after-TestModuleSettings-53.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/53-Annotated-TestModuleSettings-53.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/53-visualLocator-TestModuleSettings-53.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 53
+    },
+    "54": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "About"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/54-1before-TestModuleSettings-54.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/54-2after-TestModuleSettings-54.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/54-Annotated-TestModuleSettings-54.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/54-visualLocator-TestModuleSettings-54.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 54
+    },
+    "55": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"Course description\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[1]/tbody/tr[3]/td[2]"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/55-1before-TestModuleSettings-55.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/55-2after-TestModuleSettings-55.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/55-Annotated-TestModuleSettings-55.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/55-visualLocator-TestModuleSettings-55.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 55
+    },
+    "56": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestModuleSettings/56-1before-TestModuleSettings-56.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestModuleSettings/56-2after-TestModuleSettings-56.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestModuleSettings/56-Annotated-TestModuleSettings-56.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestModuleSettings/56-visualLocator-TestModuleSettings-56.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 56
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestModuleSettings.java"
+}

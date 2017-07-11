@@ -1,0 +1,252 @@
+{
+  "name": "testUserList",
+  "statements": {
+    "35": {
+      "seleniumAction": "get",
+      "value": "baseUrl + Settings.getVersion()",
+      "line": 35
+    },
+    "36": {
+      "domBefore": {
+        "path": "testSuite2/TestUserList/36-1before-TestUserList-36/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestUserList/36-2after-TestUserList-36/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/36-1before-TestUserList-36.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/36-2after-TestUserList-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/36-Annotated-TestUserList-36.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/36-visualLocator-TestUserList-36.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 36
+    },
+    "37": {
+      "domBefore": {
+        "path": "testSuite2/TestUserList/37-1before-TestUserList-37/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestUserList/37-2after-TestUserList-37/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/37-1before-TestUserList-37.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/37-2after-TestUserList-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/37-Annotated-TestUserList-37.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/37-visualLocator-TestUserList-37.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 37
+    },
+    "38": {
+      "domBefore": {
+        "path": "testSuite2/TestUserList/38-1before-TestUserList-38/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestUserList/38-2after-TestUserList-38/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/38-1before-TestUserList-38.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/38-2after-TestUserList-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/38-Annotated-TestUserList-38.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/38-visualLocator-TestUserList-38.png"
+      },
+      "seleniumAction": "clear",
+      "value": "",
+      "line": 38
+    },
+    "39": {
+      "domBefore": {
+        "path": "testSuite2/TestUserList/39-1before-TestUserList-39/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "testSuite2/TestUserList/39-2after-TestUserList-39/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/39-1before-TestUserList-39.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/39-2after-TestUserList-39.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/39-Annotated-TestUserList-39.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/39-visualLocator-TestUserList-39.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 39
+    },
+    "40": {
+      "domAfter": {
+        "path": "testSuite2/TestUserList/40-2after-TestUserList-40/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/40-1before-TestUserList-40.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/40-2after-TestUserList-40.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/40-Annotated-TestUserList-40.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/40-visualLocator-TestUserList-40.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 40
+    },
+    "41": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Platform Administration"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/41-1before-TestUserList-41.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/41-2after-TestUserList-41.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/41-Annotated-TestUserList-41.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/41-visualLocator-TestUserList-41.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 41
+    },
+    "42": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "User list"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/42-1before-TestUserList-42.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/42-2after-TestUserList-42.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/42-Annotated-TestUserList-42.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/42-visualLocator-TestUserList-42.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 42
+    },
+    "43": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"Doe\")",
+      "domLocator": {
+        "strategy": "id",
+        "value": "L0"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/43-1before-TestUserList-43.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/43-2after-TestUserList-43.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/43-Annotated-TestUserList-43.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/43-visualLocator-TestUserList-43.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 43
+    },
+    "44": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"Administrator\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[3]/table[3]/tbody/tr/td[6]/span"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/44-1before-TestUserList-44.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/44-2after-TestUserList-44.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/44-Annotated-TestUserList-44.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/44-visualLocator-TestUserList-44.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 44
+    },
+    "45": {
+      "domLocator": {
+        "strategy": "linkText",
+        "value": "Logout"
+      },
+      "screenshotBefore": {
+        "path": "testSuite/TestUserList/45-1before-TestUserList-45.png"
+      },
+      "screenshotAfter": {
+        "path": "testSuite/TestUserList/45-2after-TestUserList-45.png"
+      },
+      "annotatedScreenshot": {
+        "path": "testSuite/TestUserList/45-Annotated-TestUserList-45.png"
+      },
+      "visualLocator": {
+        "path": "testSuite/TestUserList/45-visualLocator-TestUserList-45.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 45
+    }
+  },
+  "path": "/Users/astocco/eclipseMarsWorkspace/visual-repair//Users/astocco/eclipseMarsWorkspace/visual-repair/src/claroline1811/TestUserList.java"
+}
