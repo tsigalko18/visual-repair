@@ -15,9 +15,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestViewProfile {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -25,7 +24,7 @@ public class TestViewProfile {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -40,7 +39,8 @@ public class TestViewProfile {
 		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
 		driver.findElement(By.linkText("Platform Administration")).click();
 		driver.findElement(By.linkText("Right profile list")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[2]/tbody/tr[3]/td[2]")).getText().contains("Course member (the user is actually enrolled in the course"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[2]/tbody/tr[3]/td[2]")).getText()
+				.contains("Course member (the user is actually enrolled in the course"));
 		driver.findElement(By.xpath("(//img[@alt='Edit'])[6]")).click();
 		assertEquals("Claroline", driver.getTitle());
 		driver.findElement(By.linkText("View all right profile")).click();

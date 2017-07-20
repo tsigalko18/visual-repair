@@ -15,9 +15,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestUserList {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -25,7 +24,7 @@ public class TestUserList {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -41,7 +40,8 @@ public class TestUserList {
 		driver.findElement(By.linkText("Platform Administration")).click();
 		driver.findElement(By.linkText("User list")).click();
 		assertTrue(driver.findElement(By.id("L0")).getText().contains("Doe"));
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[3]/tbody/tr/td[6]/span")).getText().contains("Administrator"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[3]/tbody/tr/td[6]/span")).getText()
+				.contains("Administrator"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 

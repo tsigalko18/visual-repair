@@ -25,8 +25,8 @@ public class ParseTest {
 	static EnhancedTestCase tc;
 
 	/**
-	 * parse a test, get its static information and
-	 * serialize a JSON file
+	 * parse a test, get its static information and serialize a JSON file
+	 * 
 	 * @param clazz
 	 * @return EnhancedTestCase
 	 */
@@ -41,23 +41,23 @@ public class ParseTest {
 		}
 
 		new MethodVisitor().visit(cu, clazz);
-		
+
 		UtilsParser.serializeTestCase(tc, clazz);
-			
+
 		return tc;
 	}
-	
+
 	/**
-	 * parse a test, get its static information and
-	 * serialize a JSON file
+	 * parse a test, get its static information and serialize a JSON file
+	 * 
 	 * @param clazz
 	 * @return EnhancedTestCase
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static EnhancedTestCase saveToJava(EnhancedTestCase newTest, String clazz) throws IOException {
 
 		tc = newTest;
-		
+
 		CompilationUnit cu = null;
 
 		try {
@@ -73,21 +73,21 @@ public class ParseTest {
 		String source = cu.toString();
 		File fileMod = new File(clazz);
 		FileUtils.writeStringToFile(fileMod, source);
-		
+
 		return tc;
 	}
-	
+
 	/**
-	 * parse a test, get its static information and
-	 * serialize a JSON file
+	 * parse a test, get its static information and serialize a JSON file
+	 * 
 	 * @param clazz
 	 * @return EnhancedTestCase
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static Result runTest(EnhancedTestCase newTest, String clazz) throws IOException {
 
 		tc = newTest;
-		
+
 		CompilationUnit cu = null;
 
 		try {
@@ -100,15 +100,14 @@ public class ParseTest {
 		new ChangeMethodMethodVisitor().visit(cu, clazz);
 
 		// save back to java
-//		String source = cu.toString();
+		// String source = cu.toString();
 		File fileMod = new File(clazz);
-//		FileUtils.writeStringToFile(fileMod, source);
-		
+		// FileUtils.writeStringToFile(fileMod, source);
+
 		Result r = UtilsRepair.runTestSuite(fileMod.getClass());
-	
+
 		return r;
 	}
-
 
 	/**
 	 * Simple visitor implementation for visiting MethodDeclaration nodes.
@@ -121,9 +120,9 @@ public class ParseTest {
 
 				String className = UtilsParser.getClassNameFromPath((String) arg);
 				String fullPath = System.getProperty("user.dir") + Settings.separator + arg;
-				
+
 				tc = new EnhancedTestCase(m.getName(), fullPath);
-				
+
 				for (Statement st : m.getBody().getStmts()) {
 
 					// driver get is managed separately
@@ -133,16 +132,17 @@ public class ParseTest {
 						dg.setAction("get");
 						dg.setLine(st.getBeginLine());
 						dg.setValue(UtilsParser.getUrlFromDriverGet(st));
-						
+
 						tc.addStatement(dg.getLine(), dg);
 
-					// web element not assertion not select
-					} else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert") && !st.toString().contains("new Select")) {
+						// web element not assertion not select
+					} else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert")
+							&& !st.toString().contains("new Select")) {
 
 						EnhancedWebElement ewe = new EnhancedWebElement();
 						ewe.setLine(st.getBeginLine());
 						ewe.setDomLocator(UtilsParser.getDomLocator(st));
-						
+
 						if (st.toString().contains("click()")) {
 							ewe.setAction("click");
 							ewe.setValue("");
@@ -156,31 +156,34 @@ public class ParseTest {
 							ewe.setAction("clear");
 							ewe.setValue("");
 						}
-						
+
 						try {
 							// get the screenshots
 							ewe.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
 							ewe.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
-							ewe.setVisualLocator(UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
-							ewe.setAnnotatedScreenshot(UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
-							
+							ewe.setVisualLocator(
+									UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+							ewe.setAnnotatedScreenshot(
+									UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+
 							// get the DOMs
 							ewe.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
 							ewe.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
 						} catch (Exception e) {
 							e.printStackTrace();
-						} 
-						
+						}
+
 						tc.addStatement(ewe.getLine(), ewe);
-						
-					} 
+
+					}
 					// select
-					else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert") && st.toString().contains("new Select")) {
-						
+					else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert")
+							&& st.toString().contains("new Select")) {
+
 						EnhancedSelect esl = new EnhancedSelect();
 						esl.setLine(st.getBeginLine());
 						esl.setDomLocator(UtilsParser.getDomLocator(st));
-						
+
 						if (st.toString().contains("selectByVisibleText")) {
 							esl.setAction("selectByVisibleText");
 							esl.setValue(UtilsParser.getValueFromSelect(st));
@@ -191,64 +194,67 @@ public class ParseTest {
 							esl.setAction("selectByValue");
 							esl.setValue(UtilsParser.getValueFromSelect(st));
 						}
-						
+
 						try {
 							// get the screenshots
 							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
 							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
-							esl.setVisualLocator(UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
-							esl.setAnnotatedScreenshot(UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
-							
+							esl.setVisualLocator(
+									UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+							esl.setAnnotatedScreenshot(
+									UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+
 							// get the DOMs
 							esl.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
 							esl.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
 						} catch (Exception e) {
 							e.printStackTrace();
-						} 
-						
+						}
+
 						tc.addStatement(esl.getLine(), esl);
 					}
-					// assertion 
+					// assertion
 					else if (st.toString().contains("driver.findElement(") && st.toString().contains("assert")) {
-						
+
 						EnhancedAssertion ea = new EnhancedAssertion();
-					
+
 						ea.setAssertion(UtilsParser.getAssertion(st));
 						ea.setPredicate(UtilsParser.getPredicate(st));
-						
-						if(st.toString().contains("getText")){
+
+						if (st.toString().contains("getText")) {
 							ea.setAction("getText");
 							ea.setValue("");
 						} else {
 							System.err.println("[LOG]\tAnalysing an assertion with no getText()");
 						}
-						
+
 						ea.setLine(st.getBeginLine());
 						ea.setDomLocator(UtilsParser.getDomLocator(st));
-						
+
 						try {
 							// get the screenshots
 							ea.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
 							ea.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
-							ea.setVisualLocator(UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
-							ea.setAnnotatedScreenshot(UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
-							
+							ea.setVisualLocator(
+									UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+							ea.setAnnotatedScreenshot(
+									UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+
 							// get the DOMs
 							ea.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
 							ea.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
 						} catch (Exception e) {
 							e.printStackTrace();
-						} 
-						
+						}
+
 						tc.addStatement(ea.getLine(), ea);
-						
-					
+
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Simple visitor implementation for visiting MethodDeclaration nodes.
 	 */
@@ -256,19 +262,19 @@ public class ParseTest {
 		@Override
 		public void visit(MethodDeclaration m, Object arg) {
 
-			if (m.getAnnotations() != null && m.getAnnotations().get(0).getName().getName().equals("Test") 
+			if (m.getAnnotations() != null && m.getAnnotations().get(0).getName().getName().equals("Test")
 					&& m.getName().equals(tc.getName())) {
 
 				BlockStmt newBlockStmt = new BlockStmt();
-				
+
 				for (Integer i : tc.getStatements().keySet()) {
 					ASTHelper.addStmt(newBlockStmt, new NameExpr(tc.getStatements().get(i).toString()));
 				}
-				
+
 				m.setBody(newBlockStmt);
-				
+
 			}
 		}
 	}
-	
+
 }

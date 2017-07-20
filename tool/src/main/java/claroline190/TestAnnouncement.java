@@ -15,9 +15,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestAnnouncement {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -25,7 +24,7 @@ public class TestAnnouncement {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}

@@ -16,9 +16,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestCourseCategoryEdit {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -26,7 +25,7 @@ public class TestCourseCategoryEdit {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -45,9 +44,11 @@ public class TestCourseCategoryEdit {
 		driver.findElement(By.id("codeCat")).clear();
 		driver.findElement(By.id("codeCat")).sendKeys("SCI");
 		driver.findElement(By.xpath("html/body/div[3]/table[2]/tbody/tr[1]/td[7]/a/img")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText().matches("^[\\s\\S]*Category moved[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText()
+				.matches("^[\\s\\S]*Category moved[\\s\\S]*$"));
 		driver.findElement(By.xpath("html/body/div[3]/table[2]/tbody/tr[2]/td[6]/a/img")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText().matches("^[\\s\\S]*Category moved[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText()
+				.matches("^[\\s\\S]*Category moved[\\s\\S]*$"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 

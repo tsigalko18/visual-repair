@@ -14,7 +14,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestEditTextZone {
 	private WebDriver driver;
 	private String baseUrl;
@@ -23,7 +22,7 @@ public class TestEditTextZone {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -40,7 +39,8 @@ public class TestEditTextZone {
 		driver.findElement(By.linkText("Edit text zones")).click();
 		driver.findElement(By.xpath("html/body/div[3]/table/tbody/tr[2]/td[2]/a/img")).click();
 		driver.findElement(By.xpath("html/body/div[3]/form/p/input")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText().contains("The changes have been carried out correctly"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText()
+				.contains("The changes have been carried out correctly"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 

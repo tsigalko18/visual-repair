@@ -15,7 +15,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestAddNewCategory {
 	private WebDriver driver;
 	private String baseUrl;
@@ -24,7 +23,7 @@ public class TestAddNewCategory {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -44,11 +43,14 @@ public class TestAddNewCategory {
 		driver.findElement(By.id("nameCat")).sendKeys("Software Testing");
 		driver.findElement(By.id("codeCat")).clear();
 		driver.findElement(By.id("codeCat")).sendKeys("ST1718");
-		driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/form/table/tbody/tr[6]/td[2]/input")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText().matches("^[\\s\\S]*Category created[\\s\\S]*$"));
+		driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/form/table/tbody/tr[6]/td[2]/input"))
+				.click();
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText()
+				.matches("^[\\s\\S]*Category created[\\s\\S]*$"));
 		driver.findElement(By.xpath("html/body/div[3]/table[2]/tbody/tr[4]/td[5]/a/img")).click();
 		driver.switchTo().alert().accept();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText().matches("^[\\s\\S]*Category deleted[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td/div/div")).getText()
+				.matches("^[\\s\\S]*Category deleted[\\s\\S]*$"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 

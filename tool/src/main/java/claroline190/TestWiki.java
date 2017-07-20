@@ -11,7 +11,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class TestWiki {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -19,7 +19,7 @@ public class TestWiki {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -27,25 +27,28 @@ public class TestWiki {
 	@Test
 	public void testWiki() throws Exception {
 		System.out.println("[TestWiki]\t\tnot applicable in this version");
-//		driver.get(baseUrl + Version.getVersion());
-//		driver.findElement(By.id("login")).clear();
-//		driver.findElement(By.id("login")).sendKeys("admin");
-//		driver.findElement(By.id("password")).clear();
-//		driver.findElement(By.id("password")).sendKeys("admin");
-//		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
-//		driver.findElement(By.linkText("Platform Administration")).click();
-//		driver.findElement(By.linkText("Modules")).click();
-//		driver.findElement(By.cssSelector(".claroTable > tbody:nth-child(2) > tr:nth-child(11) > td:nth-child(6) > a:nth-child(1) > img:nth-child(1)")).click();
-//		driver.findElement(By.linkText("Local settings")).click();
-//		driver.findElement(By.id("label_showWikiEditorToolbar_FALSE")).click();
-//		driver.findElement(By.id("label_forcePreviewBeforeSaving_TRUE")).click();
-//		driver.findElement(By.id("label_forcePreviewBeforeSaving_FALSE")).click();
-//		driver.findElement(By.id("label_showWikiEditorToolbar_TRUE")).click();
-//		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-//		assertTrue(driver.findElement(By.cssSelector("div.claroDialogBox.boxSuccess")).getText().matches("^[\\s\\S]*Properties for Wiki, \\(CLWIKI\\) are now effective on server\\.[\\s\\S]*$"));
-//		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-//		driver.findElement(By.linkText("About")).click();
-//		driver.findElement(By.linkText("Logout")).click();
+		// driver.get(baseUrl + Version.getVersion());
+		// driver.findElement(By.id("login")).clear();
+		// driver.findElement(By.id("login")).sendKeys("admin");
+		// driver.findElement(By.id("password")).clear();
+		// driver.findElement(By.id("password")).sendKeys("admin");
+		// driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
+		// driver.findElement(By.linkText("Platform Administration")).click();
+		// driver.findElement(By.linkText("Modules")).click();
+		// driver.findElement(By.cssSelector(".claroTable > tbody:nth-child(2) >
+		// tr:nth-child(11) > td:nth-child(6) > a:nth-child(1) >
+		// img:nth-child(1)")).click();
+		// driver.findElement(By.linkText("Local settings")).click();
+		// driver.findElement(By.id("label_showWikiEditorToolbar_FALSE")).click();
+		// driver.findElement(By.id("label_forcePreviewBeforeSaving_TRUE")).click();
+		// driver.findElement(By.id("label_forcePreviewBeforeSaving_FALSE")).click();
+		// driver.findElement(By.id("label_showWikiEditorToolbar_TRUE")).click();
+		// driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+		// assertTrue(driver.findElement(By.cssSelector("div.claroDialogBox.boxSuccess")).getText().matches("^[\\s\\S]*Properties
+		// for Wiki, \\(CLWIKI\\) are now effective on server\\.[\\s\\S]*$"));
+		// driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+		// driver.findElement(By.linkText("About")).click();
+		// driver.findElement(By.linkText("Logout")).click();
 	}
 
 	@After

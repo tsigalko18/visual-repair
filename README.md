@@ -86,3 +86,13 @@
 * YourContacts
 	* 100 commits
 	* [GH repository] (https://github.com/jubi4dition/yourcontacts/)
+
+### Open Source Test Suites [SO discussion] (https://sqa.stackexchange.com/questions/12551/free-sample-selenium-test-suites-code-for-open-source-projects)
+
+* Wikia
+	* [GH repository] (https://github.com/Wikia/selenium-tests)
+* Mozilla Addon
+	* [GH repository] (https://github.com/mozilla/Addon-Tests)
+* Jenkins Acceptance Tests
+	* [GH repository] (https://github.com/jenkinsci/acceptance-test-harness)
+  

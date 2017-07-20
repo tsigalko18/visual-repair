@@ -27,30 +27,31 @@ public class ElementRelocatedSameState {
 	static EnhancedTestCase broken;
 	static EnhancedTestCase correct;
 	static EnhancedException ex;
-	
-	static List<HtmlElement> searchLocatorWithinTheSameState(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c) throws SAXException, IOException {
-		
+
+	static List<HtmlElement> searchLocatorWithinTheSameState(EnhancedException e, EnhancedTestCase b,
+			EnhancedTestCase c) throws SAXException, IOException {
+
 		System.out.println("[LOG]\tApplying repair strategy <searchLocatorWithinTheSameState>");
-		
+
 		// get the broken statement
 		Statement oldst = c.getStatements().get(Integer.parseInt(e.getInvolvedLine()));
 
 		// get the correct statement in the correct version
 		Statement newst = b.getStatements().get(Integer.parseInt(e.getInvolvedLine()));
-		
+
 		// get the visual locator on the old page
 		String template = oldst.getVisualLocator().toString();
-		
+
 		String htmlFile;
-		if(oldst.getDomBefore() == null){
+		if (oldst.getDomBefore() == null) {
 			htmlFile = oldst.getDomAfter().getAbsolutePath();
-		} else 
+		} else
 			htmlFile = oldst.getDomBefore().getAbsolutePath();
-		
+
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
-		
+
 		System.out.println("If the page is correctly displayed, type anything to proceed further");
 		Scanner scanner = new Scanner(System.in);
 		scanner.next();
@@ -63,28 +64,28 @@ public class ElementRelocatedSameState {
 		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
 
 		long startTime = System.currentTimeMillis();
-		
+
 		// build RTree for the HTML page
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
 		rt.buildHtmlDomTree();
-//		rt.preOrderTraversalRTree();
-		
+		// rt.preOrderTraversalRTree();
+
 		long stopTime = System.currentTimeMillis();
 		long elapsedTime = stopTime - startTime;
 		System.out.println("RTree built in: " + elapsedTime / 1000);
 
 		// search element in the RTree
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
-		
-		if(Settings.VERBOSE)
+
+		if (Settings.VERBOSE)
 			UtilsParser.printResults(result, rt);
-		
+
 		List<HtmlElement> rep = new LinkedList<HtmlElement>();
 		for (Node<HtmlElement> htmlElement : result) {
 			rep.add(htmlElement.getData());
 		}
-		
+
 		return rep;
-	} 
-	
+	}
+
 }

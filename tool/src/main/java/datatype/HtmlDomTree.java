@@ -23,14 +23,14 @@ import main.java.utils.HtmlAttributesParser;
 import main.java.utils.UtilsParser;
 
 public class HtmlDomTree {
-	
+
 	Logger rootLogger = Logger.getRootLogger();
-	  
+
 	private Node<HtmlElement> root;
 	private HtmlAttributesParser htmlAttributesParser;
 
 	public HtmlDomTree(WebDriver driver, String htmlFileFullPath) throws SAXException, IOException {
-		
+
 		rootLogger.setLevel(Level.OFF);
 		rootLogger.addAppender(new ConsoleAppender(new PatternLayout("%-5p [%t]: %m%n")));
 
@@ -42,7 +42,7 @@ public class HtmlDomTree {
 		int y = rootElementFromSelenium.getLocation().y;
 		int w = rootElementFromSelenium.getSize().width;
 		int h = rootElementFromSelenium.getSize().height;
-		
+
 		// parse HTML attributes
 		htmlAttributesParser = new HtmlAttributesParser(htmlFileFullPath);
 
@@ -105,7 +105,6 @@ public class HtmlDomTree {
 					// set html attributes
 					newChild.setHtmlAttributes(htmlAttributesParser.getHTMLAttributesForElement(newChild.getXPath()));
 
-					
 					buildHtmlDomTreeFromNode(newNode);
 				}
 			}
@@ -115,18 +114,19 @@ public class HtmlDomTree {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void preOrderTraversalRTree() {
 		preOrderTraversalRTree(this.root);
 	}
-	
+
 	private void preOrderTraversalRTree(Node<HtmlElement> node) {
 		if (node == null) {
 			return;
 		}
-		
-//		System.out.println(node.getData().getTagName() + "\t" + node.getData().getXPath());
-		
+
+		// System.out.println(node.getData().getTagName() + "\t" +
+		// node.getData().getXPath());
+
 		if (node.getChildren() != null) {
 			for (Node<HtmlElement> child : node.getChildren()) {
 				preOrderTraversalRTree(child);
@@ -168,7 +168,7 @@ public class HtmlDomTree {
 			result = result + paths.get(0);
 		}
 
-//		System.out.println(result);
+		// System.out.println(result);
 		return result;
 	}
 
@@ -195,13 +195,13 @@ public class HtmlDomTree {
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(this.root);
 
-//		System.out.println("searching for " + xpath);
-		
+		// System.out.println("searching for " + xpath);
+
 		while (!q.isEmpty()) {
 			Node<HtmlElement> node = q.remove();
-			
-//			System.out.println(node.getData().getXPath());
-			
+
+			// System.out.println(node.getData().getXPath());
+
 			if (node.getData().getXPath().equalsIgnoreCase(xpath)) {
 				return node.getData();
 			}
@@ -242,7 +242,7 @@ public class HtmlDomTree {
 			return node;
 		}
 	}
-	
+
 	public HtmlElement searchHtmlDomTreeByAttribute(String attribute, String value) {
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(this.root);
@@ -260,7 +260,7 @@ public class HtmlDomTree {
 		}
 		return null;
 	}
-	
+
 	public HtmlElement searchHtmlDomTreeByTagName(String tagName) {
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(this.root);
@@ -278,9 +278,10 @@ public class HtmlDomTree {
 		}
 		return null;
 	}
-	
-	private static boolean containsAttributeValue(Map<String, String> m, String a, String v){
-		if (m.containsKey(a)) return m.get(a).equals(v);
+
+	private static boolean containsAttributeValue(Map<String, String> m, String a, String v) {
+		if (m.containsKey(a))
+			return m.get(a).equals(v);
 		return false;
 	}
 
@@ -295,7 +296,7 @@ public class HtmlDomTree {
 	public void setHtmlAttributesParser(HtmlAttributesParser htmlAttributesParser) {
 		this.htmlAttributesParser = htmlAttributesParser;
 	}
-	
+
 	public Node<HtmlElement> getRoot() {
 		return root;
 	}

@@ -15,9 +15,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestExercise {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -25,7 +24,7 @@ public class TestExercise {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -42,7 +41,8 @@ public class TestExercise {
 		driver.findElement(By.linkText("Configuration")).click();
 		driver.findElement(By.linkText("Exercises")).click();
 		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table/tbody/tr/td")).getText().matches("^[\\s\\S]*Properties for Exercises, \\(CLQWZ\\) are now effective on server\\.[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table/tbody/tr/td")).getText()
+				.matches("^[\\s\\S]*Properties for Exercises, \\(CLQWZ\\) are now effective on server\\.[\\s\\S]*$"));
 		driver.findElement(By.id("label_exercisesPerPage")).clear();
 		driver.findElement(By.id("label_exercisesPerPage")).sendKeys("20");
 		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();

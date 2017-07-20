@@ -11,7 +11,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class TestManageUserDesktop {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -19,7 +19,7 @@ public class TestManageUserDesktop {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -27,16 +27,17 @@ public class TestManageUserDesktop {
 	@Test
 	public void testManageUserDesktop() throws Exception {
 		System.out.println("[TestManageUserDesktop]\t\tnot applicable in this version");
-//		driver.get(baseUrl + Version.getVersion());
-//		driver.findElement(By.id("login")).clear();
-//		driver.findElement(By.id("login")).sendKeys("admin");
-//		driver.findElement(By.id("password")).clear();
-//		driver.findElement(By.id("password")).sendKeys("admin");
-//		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
-//		driver.findElement(By.linkText("Platform Administration")).click();
-//		driver.findElement(By.linkText("Manage user desktop")).click();
-//		assertTrue(driver.findElement(By.cssSelector("table.claroTable.emphaseLine")).getText().matches("^[\\s\\S]*My course list[\\s\\S]*$"));
-//		driver.findElement(By.linkText("Logout")).click();
+		// driver.get(baseUrl + Version.getVersion());
+		// driver.findElement(By.id("login")).clear();
+		// driver.findElement(By.id("login")).sendKeys("admin");
+		// driver.findElement(By.id("password")).clear();
+		// driver.findElement(By.id("password")).sendKeys("admin");
+		// driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
+		// driver.findElement(By.linkText("Platform Administration")).click();
+		// driver.findElement(By.linkText("Manage user desktop")).click();
+		// assertTrue(driver.findElement(By.cssSelector("table.claroTable.emphaseLine")).getText().matches("^[\\s\\S]*My
+		// course list[\\s\\S]*$"));
+		// driver.findElement(By.linkText("Logout")).click();
 	}
 
 	@After

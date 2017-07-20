@@ -627,8 +627,7 @@ public class UtilsScreenshots {
 		try {
 			driver.switchTo().alert();
 			return true;
-		}
-		catch (NoAlertPresentException Ex) {
+		} catch (NoAlertPresentException Ex) {
 			return false;
 		}
 	}

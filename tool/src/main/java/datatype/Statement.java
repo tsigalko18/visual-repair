@@ -14,12 +14,12 @@ public abstract class Statement {
 	WebDriver driverGet;
 	WebElement webElement;
 	Select select;
-	
+
 	// DOM-based information
 	private File domBefore;
 	private File domAfter;
 	private SeleniumLocator domLocator; // on domBefore
-	
+
 	// visual-based information
 	private File screenshotBefore;
 	private File screenshotAfter;
@@ -29,13 +29,13 @@ public abstract class Statement {
 
 	private Point coordinates;
 	private Dimension dimension;
-	
+
 	// statement information
 	private String seleniumAction;
 	private String value;
 	private String name;
 	private int line;
-	
+
 	public WebDriver getDriverGet() {
 		return driverGet;
 	}
@@ -59,7 +59,7 @@ public abstract class Statement {
 	public void setSelect(Select select) {
 		this.select = select;
 	}
-	
+
 	public File getDomBefore() {
 		return domBefore;
 	}
@@ -67,7 +67,7 @@ public abstract class Statement {
 	public void setDomBefore(File dom) {
 		this.domBefore = dom;
 	}
-	
+
 	public File getDomAfter() {
 		return domAfter;
 	}

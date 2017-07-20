@@ -15,7 +15,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestAddClass {
 	private WebDriver driver;
 	private String baseUrl;
@@ -24,7 +23,7 @@ public class TestAddClass {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -43,10 +42,12 @@ public class TestAddClass {
 		driver.findElement(By.name("class_name")).clear();
 		driver.findElement(By.name("class_name")).sendKeys("EG");
 		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td")).getText().matches("^[\\s\\S]*The new class has been created[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td")).getText()
+				.matches("^[\\s\\S]*The new class has been created[\\s\\S]*$"));
 		driver.findElement(By.xpath("html/body/div[3]/table[2]/tbody/tr/td[6]/a/img")).click();
 		driver.switchTo().alert().accept();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td")).getText().matches("^[\\s\\S]*Class deleted[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table[1]/tbody/tr/td")).getText()
+				.matches("^[\\s\\S]*Class deleted[\\s\\S]*$"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 

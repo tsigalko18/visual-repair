@@ -12,16 +12,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestLoginAdmin {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private StringBuffer verificationErrors = new StringBuffer();
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -29,10 +28,10 @@ public class TestLoginAdmin {
 	@Test
 	public void testHomePage() {
 		driver.get(baseUrl + Settings.getVersion());
-        driver.findElement(By.id("login")).sendKeys("admin"); // username
-        driver.findElement(By.id("password")).sendKeys("admin"); // password
-        driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click(); // confirmLogin
-        assertTrue(driver.findElement(By.id("userName")).getText().contains("John Doe"));
+		driver.findElement(By.id("login")).sendKeys("admin"); // username
+		driver.findElement(By.id("password")).sendKeys("admin"); // password
+		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click(); // confirmLogin
+		assertTrue(driver.findElement(By.id("userName")).getText().contains("John Doe"));
 	}
 
 	@After
@@ -43,5 +42,5 @@ public class TestLoginAdmin {
 			fail(verificationErrorString);
 		}
 	}
-	
+
 }

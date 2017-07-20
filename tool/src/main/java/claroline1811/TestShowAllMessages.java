@@ -11,7 +11,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class TestShowAllMessages {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -19,7 +19,7 @@ public class TestShowAllMessages {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -27,17 +27,18 @@ public class TestShowAllMessages {
 	@Test
 	public void testShowAllMessages() throws Exception {
 		System.out.println("[TestShowAllMessages]\t\tnot applicable in this version");
-//		driver.get(baseUrl + Version.getVersion());
-//		driver.findElement(By.id("login")).clear();
-//		driver.findElement(By.id("login")).sendKeys("admin");
-//		driver.findElement(By.id("password")).clear();
-//		driver.findElement(By.id("password")).sendKeys("admin");
-//		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
-//		driver.findElement(By.linkText("Show/Hide")).click();
-//		assertTrue(driver.findElement(By.cssSelector("div.content.collapsible-wrapper")).getText().matches("^[\\s\\S]*textzone_top\\.authenticated\\.inc\\.html[\\s\\S]*$"));
-//		driver.findElement(By.linkText("View all my messages")).click();
-//		assertTrue(driver.findElement(By.cssSelector("div.toolTitleBlock")).getText().equals("MY MESSAGES"));
-//		driver.findElement(By.linkText("Logout")).click();
+		// driver.get(baseUrl + Version.getVersion());
+		// driver.findElement(By.id("login")).clear();
+		// driver.findElement(By.id("login")).sendKeys("admin");
+		// driver.findElement(By.id("password")).clear();
+		// driver.findElement(By.id("password")).sendKeys("admin");
+		// driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
+		// driver.findElement(By.linkText("Show/Hide")).click();
+		// assertTrue(driver.findElement(By.cssSelector("div.content.collapsible-wrapper")).getText().matches("^[\\s\\S]*textzone_top\\.authenticated\\.inc\\.html[\\s\\S]*$"));
+		// driver.findElement(By.linkText("View all my messages")).click();
+		// assertTrue(driver.findElement(By.cssSelector("div.toolTitleBlock")).getText().equals("MY
+		// MESSAGES"));
+		// driver.findElement(By.linkText("Logout")).click();
 	}
 
 	@After

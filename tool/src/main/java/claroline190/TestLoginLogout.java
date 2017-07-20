@@ -11,7 +11,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class TestLoginLogout {
-	
+
 	private WebDriver driver;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
@@ -19,7 +19,7 @@ public class TestLoginLogout {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -33,7 +33,8 @@ public class TestLoginLogout {
 		driver.findElement(By.id("password")).sendKeys("admin");
 		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
 		driver.findElement(By.linkText("Logout")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/legend")).getText().matches("^[\\s\\S]*Authentication[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/legend")).getText()
+				.matches("^[\\s\\S]*Authentication[\\s\\S]*$"));
 	}
 
 	@After

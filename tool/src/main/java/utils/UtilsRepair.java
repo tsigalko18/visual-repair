@@ -14,14 +14,14 @@ import main.java.datatype.EnhancedException;
 import main.java.datatype.EnhancedTestCase;
 
 public class UtilsRepair {
-	
-	public static Result runTestSuite(Class<?> testSuite){
+
+	public static Result runTestSuite(Class<?> testSuite) {
 		Result result = JUnitCore.runClasses(testSuite);
 		return result;
 	}
-	
+
 	public static EnhancedException saveExceptionFromFailure(Failure f) {
-	
+
 		EnhancedException ea = new EnhancedException();
 		ea.setException(UtilsParser.getExceptionFromFailure(f));
 		ea.setFailedTest(UtilsParser.getFailedTestFromFailure(f));
@@ -88,12 +88,12 @@ public class UtilsRepair {
 		bw.close();
 
 	}
-	
+
 	public static String capitalizeFirstLetter(String original) {
-	    if (original == null || original.length() == 0) {
-	        return original;
-	    }
-	    return original.substring(0, 1).toUpperCase() + original.substring(1);
+		if (original == null || original.length() == 0) {
+			return original;
+		}
+		return original.substring(0, 1).toUpperCase() + original.substring(1);
 	}
 
 }

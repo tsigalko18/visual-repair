@@ -6,5 +6,5 @@ public class EnhancedSelect extends Statement {
 	public String toString() {
 		return "new Select(driver.findElement(" + getDomLocator() + "))." + getAction() + "(" + getValue() + ");";
 	}
-	
+
 }

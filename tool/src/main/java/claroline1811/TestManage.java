@@ -15,7 +15,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestManage {
 	private WebDriver driver;
 	private String baseUrl;
@@ -24,7 +23,7 @@ public class TestManage {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -32,21 +31,23 @@ public class TestManage {
 	@Test
 	public void testManage() throws Exception {
 		System.out.println("[TestManage]\t\tnot applicable in this version");
-//		driver.get(baseUrl + Version.getVersion());
-//		driver.findElement(By.id("login")).clear();
-//		driver.findElement(By.id("login")).sendKeys("admin");
-//		driver.findElement(By.id("password")).clear();
-//		driver.findElement(By.id("password")).sendKeys("admin");
-//		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
-//		driver.findElement(By.linkText("Platform Administration")).click();
-//		driver.findElement(By.linkText("Manage administrator email notifications")).click();
-//		driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[6]/input")).click();
-//		driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[7]/input")).click();
-//		driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[6]/input")).click();
-//		driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[7]/input")).click();
-//		assertTrue(driver.getTitle().contains("System mail : recipients list - Claroline"));
-//		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-//		driver.findElement(By.linkText("Logout")).click();
+		// driver.get(baseUrl + Version.getVersion());
+		// driver.findElement(By.id("login")).clear();
+		// driver.findElement(By.id("login")).sendKeys("admin");
+		// driver.findElement(By.id("password")).clear();
+		// driver.findElement(By.id("password")).sendKeys("admin");
+		// driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
+		// driver.findElement(By.linkText("Platform Administration")).click();
+		// driver.findElement(By.linkText("Manage administrator email
+		// notifications")).click();
+		// driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[6]/input")).click();
+		// driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[7]/input")).click();
+		// driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[6]/input")).click();
+		// driver.findElement(By.xpath("html/body/div[1]/div[2]/form/table/tbody/tr/td[7]/input")).click();
+		// assertTrue(driver.getTitle().contains("System mail : recipients list
+		// - Claroline"));
+		// driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+		// driver.findElement(By.linkText("Logout")).click();
 	}
 
 	@After

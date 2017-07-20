@@ -15,7 +15,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class TestAddPhone {
 	private WebDriver driver;
 	private String baseUrl;
@@ -24,7 +23,7 @@ public class TestAddPhone {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -39,12 +38,14 @@ public class TestAddPhone {
 		driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td[2]/form/fieldset/input")).click();
 		driver.findElement(By.linkText("Platform Administration")).click();
 		driver.findElement(By.linkText("Claroline.net news")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/h3")).getText().matches("^[\\s\\S]*Claroline.net news[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/h3")).getText()
+				.matches("^[\\s\\S]*Claroline.net news[\\s\\S]*$"));
 		driver.findElement(By.linkText("My User Account")).click();
 		driver.findElement(By.id("phone")).sendKeys("7788814476");
 		driver.findElement(By.id("phone")).clear();
 		driver.findElement(By.id("applyChange")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table/tbody/tr/td/div[2]/div")).getText().matches("^[\\s\\S]*The information have been modified[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[3]/table/tbody/tr/td/div[2]/div")).getText()
+				.matches("^[\\s\\S]*The information have been modified[\\s\\S]*$"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 

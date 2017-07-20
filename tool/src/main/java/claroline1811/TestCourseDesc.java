@@ -25,7 +25,7 @@ public class TestCourseDesc {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();//Settings.getDriver();
+		driver = new FirefoxDriver();// Settings.getDriver();
 		baseUrl = "http://localhost:8888/claroline";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -45,7 +45,8 @@ public class TestCourseDesc {
 		driver.findElement(By.id("course_officialCode")).sendKeys("AAOC112");
 		new Select(driver.findElement(By.id("course_category"))).selectByVisibleText("(SC) Sciences");
 		driver.findElement(By.name("changeProperties")).click();
-		assertTrue(driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td/span")).getText().matches("^[\\s\\S]*Error[\\s\\S]*$"));
+		assertTrue(driver.findElement(By.xpath("html/body/div[2]/table/tbody/tr/td/span")).getText()
+				.matches("^[\\s\\S]*Error[\\s\\S]*$"));
 		driver.findElement(By.linkText("Logout")).click();
 	}
 
