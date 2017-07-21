@@ -5,21 +5,27 @@ import java.io.IOException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import config.Settings;
-import utils.UtilsAspect;
-import utils.UtilsScreenshots;
+import main.java.config.Settings;
+import main.java.utils.UtilsAspect;
+import main.java.utils.UtilsScreenshots;
 
-public aspect ScreenshotSaver {
+@Aspect
+public class ScreenshotSaver {
 
 	static WebDriver d;
 	static String testFolderName;
 	static String mainPage;
+	
+	static {
+		nu.pattern.OpenCV.loadShared();
+	}
 	
 	// pointcuts definition
 	
@@ -47,14 +53,15 @@ public aspect ScreenshotSaver {
 			
 		d = (WebDriver) jp.getTarget();
 		
-		// for each test, create a folder
-		if(Settings.INRECORDING) {
-			testFolderName = Settings.referenceTestSuiteVisualTraceExecutionFolder + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
-		} else {
-			testFolderName = Settings.testingTestSuiteVisualTraceExecutionFolder   + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
-		}
+		String withinType = jp.getStaticPart().getSourceLocation().getWithinType().toString();
+		String testSuiteName = UtilsScreenshots.getTestSuiteNameFromWithinType(withinType);
+		
+		UtilsAspect.createTestFolder(testSuiteName);
+		
+		testFolderName = testSuiteName + Settings.separator + jp.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
+		
 		UtilsAspect.createTestFolder(testFolderName);
-			
+
 	}
 	
 	@Before("logSeleniumCommands(JoinPoint)")
@@ -99,7 +106,6 @@ public aspect ScreenshotSaver {
 			// save the HTML page
 			UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -17,21 +17,4 @@ public class TestParserAspect {
 		System.out.println("[LOG]   Entering Test " + joinPoint.getStaticPart().getSignature().getName());
 	}
 
-	// @After("testMethodEntryPoint(JoinPoint)")
-	// public void executeAfterEnteringTestMethod(JoinPoint joinPoint) {
-	// // clarolineDirectBreakage.DirectBreakage@77eca502
-	// String path = joinPoint.getTarget().toString().split("@")[0]; //
-	// clarolineDirectBreakage.DirectBreakage
-	// path = path.split("\\.")[0]; // clarolineDirectBreakage
-	// path = "src" + Settings.separator + path; // src/clarolineDirectBreakage
-	//
-	// System.out.println("\n[LOG]\tExiting Test " +
-	// joinPoint.getStaticPart().getSignature().getName());
-	// try {
-	// ParseTest.getMethodLineNumbers(path,
-	// joinPoint.getStaticPart().getSourceLocation().getFileName());
-	// } catch (ParseException | IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
 }
