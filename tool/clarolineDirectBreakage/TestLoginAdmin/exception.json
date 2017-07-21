@@ -1,0 +1,6 @@
+{
+  "exception": "org.openqa.selenium.NoSuchElementException: Unable to locate element: {\"method\":\"xpath\",\"selector\":\".//*[@id\u003d\u0027loginBox\u0027]/form/fieldset/input[4]\"}\nCommand duration or timeout: 1.03 seconds\n",
+  "message": "Unable to locate element: {\"method\":\"xpath\",\"selector\":\".//*[@id\u003d\u0027loginBox\u0027]/form/fieldset/input[4]\"}\n",
+  "failedTest": "testLoginAdmin",
+  "involvedLine": "31"
+}

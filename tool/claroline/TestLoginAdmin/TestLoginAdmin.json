@@ -1,0 +1,112 @@
+{
+  "name": "testLoginAdmin",
+  "statements": {
+    "28": {
+      "seleniumAction": "get",
+      "value": "\"http://localhost:8888/claroline/claroline-1.10.7/\"",
+      "line": 28
+    },
+    "29": {
+      "domBefore": {
+        "path": "clarolineDirectBreakage/TestLoginAdmin/29-1before-TestLoginAdmin-29/index.html"
+      },
+      "domAfter": {
+        "path": "clarolineDirectBreakage/TestLoginAdmin/29-2after-TestLoginAdmin-29/index.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "login"
+      },
+      "screenshotBefore": {
+        "path": "claroline/TestLoginAdmin/29-1before-TestLoginAdmin-29.png"
+      },
+      "screenshotAfter": {
+        "path": "claroline/TestLoginAdmin/29-2after-TestLoginAdmin-29.png"
+      },
+      "annotatedScreenshot": {
+        "path": "claroline/TestLoginAdmin/29-Annotated-TestLoginAdmin-29.png"
+      },
+      "visualLocator": {
+        "path": "claroline/TestLoginAdmin/29-visualLocator-TestLoginAdmin-29.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 29
+    },
+    "30": {
+      "domBefore": {
+        "path": "clarolineDirectBreakage/TestLoginAdmin/30-1before-TestLoginAdmin-30/index.html"
+      },
+      "domAfter": {
+        "path": "clarolineDirectBreakage/TestLoginAdmin/30-2after-TestLoginAdmin-30/index.html"
+      },
+      "domLocator": {
+        "strategy": "id",
+        "value": "password"
+      },
+      "screenshotBefore": {
+        "path": "claroline/TestLoginAdmin/30-1before-TestLoginAdmin-30.png"
+      },
+      "screenshotAfter": {
+        "path": "claroline/TestLoginAdmin/30-2after-TestLoginAdmin-30.png"
+      },
+      "annotatedScreenshot": {
+        "path": "claroline/TestLoginAdmin/30-Annotated-TestLoginAdmin-30.png"
+      },
+      "visualLocator": {
+        "path": "claroline/TestLoginAdmin/30-visualLocator-TestLoginAdmin-30.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 30
+    },
+    "31": {
+      "domAfter": {
+        "path": "clarolineDirectBreakage/TestLoginAdmin/31-2after-TestLoginAdmin-31/index.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": ".//*[@id\u003d\u0027loginBox\u0027]/form/fieldset/input[3]"
+      },
+      "screenshotBefore": {
+        "path": "claroline/TestLoginAdmin/31-1before-TestLoginAdmin-31.png"
+      },
+      "screenshotAfter": {
+        "path": "claroline/TestLoginAdmin/31-2after-TestLoginAdmin-31.png"
+      },
+      "annotatedScreenshot": {
+        "path": "claroline/TestLoginAdmin/31-Annotated-TestLoginAdmin-31.png"
+      },
+      "visualLocator": {
+        "path": "claroline/TestLoginAdmin/31-visualLocator-TestLoginAdmin-31.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 31
+    },
+    "32": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"John Doe\")",
+      "domLocator": {
+        "strategy": "id",
+        "value": "userName"
+      },
+      "screenshotBefore": {
+        "path": "claroline/TestLoginAdmin/32-1before-TestLoginAdmin-32.png"
+      },
+      "screenshotAfter": {
+        "path": "claroline/TestLoginAdmin/32-2after-TestLoginAdmin-32.png"
+      },
+      "annotatedScreenshot": {
+        "path": "claroline/TestLoginAdmin/32-Annotated-TestLoginAdmin-32.png"
+      },
+      "visualLocator": {
+        "path": "claroline/TestLoginAdmin/32-visualLocator-TestLoginAdmin-32.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 32
+    }
+  },
+  "path": "/Users/astocco/git/visualrepair/tool//Users/astocco/git/visualrepair/tool/src/main/java/claroline/TestLoginAdmin.java"
+}
