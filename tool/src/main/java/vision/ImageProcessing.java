@@ -9,36 +9,18 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.opencv.core.Core;
-import org.opencv.core.Core.MinMaxLocResult;
-import org.opencv.core.CvException;
-import org.opencv.core.DMatch;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfKeyPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.features2d.DescriptorExtractor;
-import org.opencv.features2d.DescriptorMatcher;
-import org.opencv.features2d.FeatureDetector;
-import org.opencv.features2d.Features2d;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
-import nu.pattern.OpenCV;
 
 public class ImageProcessing {
 
 	private String fileEnclosingCharacter;
 
 	static {
-		// load opencv java library
-		OpenCV.loadShared();
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		nu.pattern.OpenCV.loadShared();
 	}
 
 	public void compareImages(String referenceImagePath, String referenceImageName, String comparisonImagePath,
@@ -150,77 +132,97 @@ public class ImageProcessing {
 		return differencePixels;
 	}
 
-	public String cropImage(int x, int y, int width, int height, String imageFullPath) throws IOException {
-		String[] image = Util.getPathAndFileNameFromFullPath(imageFullPath);
-		String croppedImagesDirectoryString = image[0] + File.separatorChar + Constants.DIRECTORY_TO_STORE_CROP_IMAGES;
-		File croppedImagesDirectory = new File(croppedImagesDirectoryString);
-		if (!croppedImagesDirectory.exists()) {
-			croppedImagesDirectory.mkdir();
-		}
-
-		String croppedImage = croppedImagesDirectoryString + File.separatorChar
-				+ Util.getNextAvailableFileName(croppedImagesDirectoryString, Constants.CROPPED_IMAGE_NAME);
-
-		Mat uncropped = Imgcodecs.imread(imageFullPath);
-
-		// check if the dimensions are out of the uncropped image size
-		if (x < 0)
-			x = 0;
-		if (y < 0)
-			y = 0;
-		if ((x + width) > uncropped.width())
-			width = uncropped.width() - x;
-		if ((y + height) > uncropped.height())
-			height = uncropped.height() - y;
-
-		if (width > 0 && height > 0) {
-			Rect roi = new Rect(x, y, width, height);
-			Mat cropped = new Mat(uncropped, roi);
-			Imgcodecs.imwrite(croppedImage, cropped);
-		}
-		return croppedImage;
-	}
-
-	public Rectangle findSubImage(String originalImageFullPath, String templateImageFileNameFullPath)
-			throws IOException {
-		// source image
-		Mat img = Imgcodecs.imread(originalImageFullPath, Imgcodecs.CV_LOAD_IMAGE_ANYDEPTH);
-		// template image
-		Mat templ = Imgcodecs.imread(templateImageFileNameFullPath, Imgcodecs.CV_LOAD_IMAGE_ANYDEPTH);
-
-		Mat img_display = new Mat();
-		img.copyTo(img_display);
-
-		Mat result = new Mat();
-		int match_method = Imgproc.TM_SQDIFF;
-
-		try {
-			Imgproc.matchTemplate(img, templ, result, match_method);
-		} catch (CvException e) {
-			return null;
-		}
-
-		MinMaxLocResult minMaxResult = Core.minMaxLoc(result);
-		Point minLoc = minMaxResult.minLoc;
-		Point maxLoc = minMaxResult.maxLoc;
-
-		Point matchLoc;
-		if (match_method == Imgproc.TM_SQDIFF || match_method == Imgproc.TM_SQDIFF_NORMED) {
-			matchLoc = minLoc;
-		} else {
-			matchLoc = maxLoc;
-		}
-
-		// check if the sub-image is same as the template
-		String originalCroppedImage = cropImage((int) matchLoc.x, (int) matchLoc.y, templ.cols(), templ.rows(),
-				originalImageFullPath);
-		double histResult = compareImagesByHistogram(templateImageFileNameFullPath, originalCroppedImage);
-		if (histResult == 1) {
-			Rectangle rect = new Rectangle((int) matchLoc.x, (int) matchLoc.y, templ.cols(), templ.rows());
-			return rect;
-		}
-		return null;
-	}
+	// public String cropImage(int x, int y, int width, int height, String
+	// imageFullPath) throws IOException
+	// {
+	// String[] image = Util.getPathAndFileNameFromFullPath(imageFullPath);
+	// String croppedImagesDirectoryString = image[0] + File.separatorChar +
+	// Constants.DIRECTORY_TO_STORE_CROP_IMAGES;
+	// File croppedImagesDirectory = new File(croppedImagesDirectoryString);
+	// if(!croppedImagesDirectory.exists())
+	// {
+	// croppedImagesDirectory.mkdir();
+	// }
+	//
+	// String croppedImage = croppedImagesDirectoryString + File.separatorChar +
+	// Util.getNextAvailableFileName(croppedImagesDirectoryString,
+	// Constants.CROPPED_IMAGE_NAME);
+	//
+	// Mat uncropped = Imgcodecs.imread(imageFullPath);
+	//
+	// // check if the dimensions are out of the uncropped image size
+	// if(x < 0)
+	// x = 0;
+	// if(y < 0)
+	// y = 0;
+	// if((x + width) > uncropped.width())
+	// width = uncropped.width() - x;
+	// if((y + height) > uncropped.height())
+	// height = uncropped.height() - y;
+	//
+	// if(width > 0 && height > 0)
+	// {
+	// Rect roi = new Rect(x, y, width, height);
+	// Mat cropped = new Mat(uncropped, roi);
+	// Imgcodecs.imwrite(croppedImage, cropped);
+	// }
+	// return croppedImage;
+	// }
+	//
+	// public Rectangle findSubImage(String originalImageFullPath, String
+	// templateImageFileNameFullPath) throws IOException
+	// {
+	// // source image
+	// Mat img = Imgcodecs.imread(originalImageFullPath,
+	// Imgcodecs.CV_LOAD_IMAGE_ANYDEPTH);
+	// // template image
+	// Mat templ = Imgcodecs.imread(templateImageFileNameFullPath,
+	// Imgcodecs.CV_LOAD_IMAGE_ANYDEPTH);
+	//
+	// Mat img_display = new Mat();
+	// img.copyTo(img_display);
+	//
+	// Mat result = new Mat();
+	// int match_method = Imgproc.TM_SQDIFF;
+	//
+	// try
+	// {
+	// Imgproc.matchTemplate(img, templ, result, match_method);
+	// }
+	// catch(CvException e)
+	// {
+	// return null;
+	// }
+	//
+	// MinMaxLocResult minMaxResult = Core.minMaxLoc(result);
+	// Point minLoc = minMaxResult.minLoc;
+	// Point maxLoc = minMaxResult.maxLoc;
+	//
+	// Point matchLoc;
+	// if (match_method == Imgproc.TM_SQDIFF || match_method ==
+	// Imgproc.TM_SQDIFF_NORMED)
+	// {
+	// matchLoc = minLoc;
+	// }
+	// else
+	// {
+	// matchLoc = maxLoc;
+	// }
+	//
+	// // check if the sub-image is same as the template
+	// String originalCroppedImage = cropImage((int)matchLoc.x, (int)matchLoc.y,
+	// templ.cols(), templ.rows(), originalImageFullPath);
+	// double histResult =
+	// compareImagesByHistogram(templateImageFileNameFullPath,
+	// originalCroppedImage);
+	// if(histResult == 1)
+	// {
+	// Rectangle rect = new Rectangle((int)matchLoc.x, (int)matchLoc.y,
+	// templ.cols(), templ.rows());
+	// return rect;
+	// }
+	// return null;
+	// }
 
 	public static double compareImagesByHistogram(String img1FullPath, String img2FullPath) {
 		List<Mat> images = new ArrayList<Mat>();
@@ -245,99 +247,115 @@ public class ImageProcessing {
 		return new Rectangle(0, 0, bimg.getWidth(), bimg.getHeight());
 	}
 
-	public boolean isImageBlank(String imageFullPath) {
-		Mat img = Imgcodecs.imread(imageFullPath);
-		boolean isAllSameColor = true;
-		double[] imgRGBFirstPixel = img.get(0, 0);
-		String colorFirstPixel = Util.getHexFromRGB((int) imgRGBFirstPixel[0], (int) imgRGBFirstPixel[1],
-				(int) imgRGBFirstPixel[2]);
-		for (int col = 1; col < img.cols(); col += 10) {
-			for (int row = 1; row < img.rows(); row += 10) {
-				double[] imgRGB = img.get(row, col);
-				String color = Util.getHexFromRGB((int) imgRGB[0], (int) imgRGB[1], (int) imgRGB[2]);
-				if (!color.equalsIgnoreCase(colorFirstPixel)) {
-					isAllSameColor = false;
-					break;
-				}
-			}
-		}
-		return isAllSameColor;
-	}
+	// public boolean isImageBlank(String imageFullPath)
+	// {
+	// Mat img = Imgcodecs.imread(imageFullPath);
+	// boolean isAllSameColor = true;
+	// double[] imgRGBFirstPixel = img.get(0, 0);
+	// String colorFirstPixel = Util.getHexFromRGB((int)imgRGBFirstPixel[0],
+	// (int)imgRGBFirstPixel[1], (int)imgRGBFirstPixel[2]);
+	// for(int col = 1; col < img.cols(); col += 10)
+	// {
+	// for(int row = 1; row < img.rows(); row += 10)
+	// {
+	// double[] imgRGB = img.get(row, col);
+	// String color = Util.getHexFromRGB((int)imgRGB[0], (int)imgRGB[1],
+	// (int)imgRGB[2]);
+	// if(!color.equalsIgnoreCase(colorFirstPixel))
+	// {
+	// isAllSameColor = false;
+	// break;
+	// }
+	// }
+	// }
+	// return isAllSameColor;
+	// }
 
-	public void compareImagesForSimilarity(String img1FullPath, String img2FullPath) {
-		Mat img1 = Imgcodecs.imread(img1FullPath);
-		Mat img2 = Imgcodecs.imread(img2FullPath);
-
-		MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
-		MatOfKeyPoint keypoints2 = new MatOfKeyPoint();
-		Mat outImage = new Mat();
-		Scalar keypointColor = new Scalar(255.0, 0.0, 0.0);
-		Scalar singlePointColor = new Scalar(0.0, 255.0, 0.0);
-		MatOfDMatch matches1to2 = new MatOfDMatch();
-		MatOfByte matchesMask = new MatOfByte();
-
-		FeatureDetector detector = FeatureDetector.create(FeatureDetector.SIFT);
-		detector.detect(img1, keypoints1);
-		detector.detect(img2, keypoints2);
-
-		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
-		DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
-
-		Mat descriptors1 = new Mat();
-		Mat descriptors2 = new Mat();
-		descriptorExtractor.compute(img1, keypoints1, descriptors1);
-		descriptorExtractor.compute(img2, keypoints2, descriptors2);
-
-		descriptorMatcher.match(descriptors1, descriptors2, matches1to2);
-
-		System.out.println("matches1to2: " + matches1to2.total());
-
-		System.out.println("keypoints1 = " + keypoints1.total());
-		System.out.println("keypoints2 = " + keypoints2.total());
-		System.out.println("descriptors1 = " + descriptors1.total());
-		System.out.println("descriptors2 = " + descriptors2.total());
-
-		outImage = new Mat();
-		Features2d.drawMatches(img1, keypoints1, img2, keypoints2, matches1to2, outImage);
-		Imgcodecs.imwrite("/Users/astocco/Desktop/test_mob_desktop_keypoints_match.png", outImage);
-
-		double maxDistance = 0;
-		double minDistance = 100;
-		List<DMatch> matchesList = matches1to2.toList();
-		// -- Quick calculation of max and min distances between keypoints
-		int rowCount = matchesList.size();
-		for (int r = 0; r < rowCount; r++) {
-			double dist = matchesList.get(r).distance;
-			if (dist < minDistance)
-				minDistance = dist;
-			if (dist > maxDistance)
-				maxDistance = dist;
-		}
-
-		System.out.println("Matches list: " + matchesList.size());
-
-		List<DMatch> goodMatchesList = new ArrayList<DMatch>();
-		double upperBound = 6 * minDistance;
-		for (int i = 0; i < rowCount; i++) {
-			// if (matchesList.get(i).distance < upperBound)
-			if (matchesList.get(i).distance <= Math.max(6 * minDistance, 0.02)) {
-				goodMatchesList.add(matchesList.get(i));
-			}
-		}
-		MatOfDMatch goodMatches = new MatOfDMatch();
-		goodMatches.fromList(goodMatchesList);
-
-		outImage = new Mat();
-		Features2d.drawMatches(img1, keypoints1, img2, keypoints2, goodMatches, outImage);
-		Imgcodecs.imwrite("/Users/astocco/Desktop/test_mob_desktop_keypoints_good_matches.png", outImage);
-
-		System.out.println("Good matches list: " + goodMatchesList.size());
-	}
+	// public void compareImagesForSimilarity(String img1FullPath, String
+	// img2FullPath)
+	// {
+	// Mat img1 = Highgui.imread(img1FullPath);
+	// Mat img2 = Highgui.imread(img2FullPath);
+	//
+	// MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
+	// MatOfKeyPoint keypoints2 = new MatOfKeyPoint();
+	// Mat outImage = new Mat();
+	// Scalar keypointColor = new Scalar(255.0, 0.0, 0.0);
+	// Scalar singlePointColor = new Scalar(0.0, 255.0, 0.0);
+	// MatOfDMatch matches1to2 = new MatOfDMatch();
+	// MatOfByte matchesMask = new MatOfByte();
+	//
+	// FeatureDetector detector = FeatureDetector.create(FeatureDetector.SIFT);
+	// detector.detect(img1, keypoints1);
+	// detector.detect(img2, keypoints2);
+	//
+	// DescriptorExtractor descriptorExtractor =
+	// DescriptorExtractor.create(DescriptorExtractor.SIFT);
+	// DescriptorMatcher descriptorMatcher =
+	// DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
+	//
+	// Mat descriptors1 = new Mat();
+	// Mat descriptors2 = new Mat();
+	// descriptorExtractor.compute(img1, keypoints1, descriptors1);
+	// descriptorExtractor.compute(img2, keypoints2, descriptors2);
+	//
+	// descriptorMatcher.match(descriptors1, descriptors2, matches1to2);
+	//
+	// System.out.println("matches1to2: " + matches1to2.total());
+	//
+	// System.out.println("keypoints1 = " + keypoints1.total());
+	// System.out.println("keypoints2 = " + keypoints2.total());
+	// System.out.println("descriptors1 = " + descriptors1.total());
+	// System.out.println("descriptors2 = " + descriptors2.total());
+	//
+	// outImage = new Mat();
+	// Features2d.drawMatches(img1, keypoints1, img2, keypoints2, matches1to2,
+	// outImage);
+	// Highgui.imwrite("/Users/astocco/Desktop/test_mob_desktop_keypoints_match.png",
+	// outImage);
+	//
+	// double maxDistance = 0; double minDistance = 100;
+	// List<org.opencv.features2d.DMatch> matchesList = matches1to2.toList();
+	// //-- Quick calculation of max and min distances between keypoints
+	// int rowCount = matchesList.size();
+	// for (int r = 0; r < rowCount; r++)
+	// {
+	// double dist = matchesList.get(r).distance;
+	// if (dist < minDistance)
+	// minDistance = dist;
+	// if (dist > maxDistance)
+	// maxDistance = dist;
+	// }
+	//
+	// System.out.println("Matches list: " + matchesList.size());
+	//
+	// List<org.opencv.features2d.DMatch> goodMatchesList = new
+	// ArrayList<org.opencv.features2d.DMatch>();
+	// double upperBound = 6 * minDistance;
+	// for (int i = 0; i < rowCount; i++)
+	// {
+	// //if (matchesList.get(i).distance < upperBound)
+	// if (matchesList.get(i).distance <= Math.max(6*minDistance, 0.02))
+	// {
+	// goodMatchesList.add(matchesList.get(i));
+	// }
+	// }
+	// MatOfDMatch goodMatches = new MatOfDMatch();
+	// goodMatches.fromList(goodMatchesList);
+	//
+	// outImage = new Mat();
+	// Features2d.drawMatches(img1, keypoints1, img2, keypoints2, goodMatches,
+	// outImage);
+	// Highgui.imwrite("/Users/astocco/Desktop/test_mob_desktop_keypoints_good_matches.png",
+	// outImage);
+	//
+	// System.out.println("Good matches list: " + goodMatchesList.size());
+	// }
 
 	public static void main(String[] args) {
-
-		System.out.println("Hist sim: " + ImageProcessing.compareImagesByHistogram("src/test/resources/oracle.png",
-				"src/test/resources/test.png"));
+	
+		System.out.println(
+				ImageProcessing.compareImagesByHistogram("src/test/resources/oracle.jpg", "src/test/resources/test.jpg"));
 
 	}
 }

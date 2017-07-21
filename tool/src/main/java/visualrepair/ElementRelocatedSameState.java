@@ -1,4 +1,4 @@
-package main.java.repair;
+package main.java.visualrepair;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -10,34 +10,29 @@ import org.openqa.selenium.WebDriver;
 import org.xml.sax.SAXException;
 
 import main.java.config.Settings;
-import main.java.datatype.EnhancedException;
-import main.java.datatype.EnhancedTestCase;
-import main.java.datatype.HtmlDomTreeWithRTree;
-import main.java.datatype.HtmlElement;
-import main.java.datatype.Node;
-import main.java.datatype.Statement;
-import main.java.datatype.WebDriverSingleton;
-import main.java.utils.UtilsParser;
+import main.java.datatype.*;
+import main.java.utils.UtilsRepair;
 import main.java.utils.UtilsScreenshots;
-import main.java.config.*;
 
 public class ElementRelocatedSameState {
-
-	static List<HtmlElement> repairs;
-	static EnhancedTestCase broken;
-	static EnhancedTestCase correct;
-	static EnhancedException ex;
+	
+	static {
+		nu.pattern.OpenCV.loadShared();
+	}
 
 	static List<HtmlElement> searchLocatorWithinTheSameState(EnhancedException e, EnhancedTestCase b,
 			EnhancedTestCase c) throws SAXException, IOException {
 
-		System.out.println("[LOG]\tApplying repair strategy <searchLocatorWithinTheSameState>");
+		System.out.println("[LOG]\tApplying visual repair strategy <searchLocatorWithinTheSameState>");
+
+		// read the broken statement line from the exception
+		int brokenStatementLine = Integer.parseInt(e.getInvolvedLine());
 
 		// get the broken statement
-		Statement oldst = c.getStatements().get(Integer.parseInt(e.getInvolvedLine()));
+		Statement oldst = c.getStatements().get(brokenStatementLine);
 
 		// get the correct statement in the correct version
-		Statement newst = b.getStatements().get(Integer.parseInt(e.getInvolvedLine()));
+		Statement newst = b.getStatements().get(brokenStatementLine);
 
 		// get the visual locator on the old page
 		String template = oldst.getVisualLocator().toString();
@@ -77,14 +72,33 @@ public class ElementRelocatedSameState {
 		// search element in the RTree
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
 
-		if (Settings.VERBOSE)
-			UtilsParser.printResults(result, rt);
-
-		List<HtmlElement> rep = new LinkedList<HtmlElement>();
-		for (Node<HtmlElement> htmlElement : result) {
-			rep.add(htmlElement.getData());
+		if (Settings.VERBOSE) {
+			System.out.println(result.size() + " candidate(s) element found");
 		}
 
+		List<HtmlElement> rep = new LinkedList<HtmlElement>();
+		
+		for (Node<HtmlElement> htmlElement : result) {
+			rep.add(htmlElement.getData());
+				
+			// print repaired test cases
+			SeleniumLocator newlocator = null; 
+			
+			if(result.get(0).getData().getTagName().equals("option")){
+				Node<HtmlElement> option = result.get(0).getParent();
+				newlocator = new SeleniumLocator("xpath", option.getData().getXPath());
+				newst.setDomLocator(newlocator);
+			} else {
+				newlocator = new SeleniumLocator("xpath", result.get(0).getData().getXPath());
+				newst.setDomLocator(newlocator);
+			}
+			
+			newst.setDomLocator(newlocator);
+			b.addStatement(Integer.parseInt(e.getInvolvedLine()), newst);
+
+			UtilsRepair.printTestCase(b);
+		}
+		
 		return rep;
 	}
 

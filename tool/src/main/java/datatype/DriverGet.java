@@ -5,25 +5,15 @@ import org.openqa.selenium.support.ui.Select;
 
 public class DriverGet extends Statement {
 
-	public WebElement getWebElement() {
-		return null;
-	}
-
-	public Select getSelect() {
-		return null;
-	}
-
-	public void setWebElement(WebElement we) {
-		webElement = null;
-	}
-
-	public void setSelect(Select we) {
-		select = null;
-	}
-
+	public WebElement getWebElement() { return null; }
+	public Select getSelect() { return null; }
+	
+	public void setWebElement(WebElement we) { webElement = null; }
+	public void setSelect(Select we) { select = null; }
+	
 	@Override
 	public String toString() {
 		return "driver." + getAction() + "(" + getValue() + ");";
 	}
-
+	
 }

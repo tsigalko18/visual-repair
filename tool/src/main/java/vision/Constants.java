@@ -3,7 +3,8 @@ package main.java.vision;
 import java.io.File;
 import java.util.ArrayList;
 
-public final class Constants {
+public final class Constants
+{
 	public static final String SAVED_HTML_FILENAME = "savedHTML.html";
 	public static final String REPORT_FILENAME = "_report";
 	public static final String REPORT_FILE_EXTENSION = "txt";
@@ -13,8 +14,7 @@ public final class Constants {
 	public static final String COMPARE_IMAGES_DIFFERENCE_TEXT_FILENAME = "diff.txt";
 	public static final String COMPARE_IMAGES_DIFFERENCE_IMAGENAME = "diff" + SCREENSHOT_FILE_EXTENSION;
 	public static final String CLUSTERING_DIFFERENCE_PIXELS_IMAGENAME = "diff_clustered" + SCREENSHOT_FILE_EXTENSION;
-	public static final String DIFFERENCE_IMAGE_FILTERED_WITH_SPECIAL_REGIONS_IMAGENAME = "diff_filtered"
-			+ SCREENSHOT_FILE_EXTENSION;
+	public static final String DIFFERENCE_IMAGE_FILTERED_WITH_SPECIAL_REGIONS_IMAGENAME = "diff_filtered" + SCREENSHOT_FILE_EXTENSION;
 	public static final String FILE_EXTENSION_REGEX = "\\.";
 	public final static String NEW_FILE_NAME = "test.html";
 	public final static String NEW_FILES_DIRECTORY = "tests";
@@ -34,13 +34,11 @@ public final class Constants {
 	public static final int ERRORS_PER_FILE_COUNT = 1;
 	public static final int ATTRIBUTES_PER_ELEMENT = 1;
 	public static final String BASE_PATH = "evaluation";
-	public static final String[] NON_TEXT_TAGS = new String[] { "img", "area", "audio", "video", "iframe", "meter",
-			"progress", "canvas" };
-	public static final String[] NON_VISUAL_TAGS = new String[] { "head", "script", "link", "meta", "style", "title" };
+	public static final String[] NON_TEXT_TAGS = new String[] {"img", "area", "audio", "video", "iframe", "meter", "progress", "canvas"};
+	public static final String[] NON_VISUAL_TAGS = new String[] {"head", "script", "link", "meta", "style", "title"};
 	public static final String SEED_ERRORS_XML_FILENAME = "seed_errors.xml";
 	public static final String SEED_ERRORS_DTD_FILENAME = "seed_errors.dtd";
-	public static final String SEED_ERRORS_DTD_FILENAME_WITH_PATH = "evaluationframework" + File.separatorChar
-			+ "seed_errors.dtd";
+	public static final String SEED_ERRORS_DTD_FILENAME_WITH_PATH = "evaluationframework" + File.separatorChar + "seed_errors.dtd";
 	public static final String TEST_RUN_DIRECTORY_NAME = "test_run_";
 	public static final boolean HEURISTIC_1_ON = true;
 	public static final boolean HEURISTIC_2_ON = true;
@@ -96,27 +94,27 @@ public final class Constants {
 	public static final int RCA_WEBSEE_RANKING_BASED_ELEMENTS_CUTOFF = 10;
 	public static final int RCA_NUMERIC_ANALYSIS_RATE_OF_CHANGE_WINDOW_SIZE = 50;
 	public static final boolean HEADLESS_FIREFOX = false;
-
-	// this value should specify at a minimum how much reduction in the
-	// difference pixels do you expect
+	
+	// this value should specify at a minimum how much reduction in the difference pixels do you expect
 	// reduction = 100% => exact match, no tolerance
 	// reduction = 0% => any match, full tolerance
 	public static final int RCA_NUMERIC_ANALYSIS_REDUCTION_IN_DIFFERENCE_PIXELS_THRESHOLD_PERCENTAGE = 100;
-
+	
 	public static final int RCA_SBST_SEARCH_SPACE_SIZE = 200;
-
+	
 	// PHANTOM JS
 	public static final String PHANTOM_JS_EXECUTABLE_PATH = "/usr/local/bin/phantomjs";
-
-	public static ArrayList<String> getHtmlRelativeUrlsTagsAttributes() {
+	
+	public static ArrayList<String> getHtmlRelativeUrlsTagsAttributes()
+	{
 		ArrayList<String> htmlRelativeUrlsTagsAttributes = new ArrayList<String>();
-
-		// html
+		
+		//html
 		htmlRelativeUrlsTagsAttributes.add("src");
 		htmlRelativeUrlsTagsAttributes.add("href");
-
-		// css
-
+		
+		//css
+		
 		return htmlRelativeUrlsTagsAttributes;
 	}
 }

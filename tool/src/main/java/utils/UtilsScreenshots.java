@@ -1,6 +1,7 @@
 package main.java.utils;
 
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -42,6 +43,10 @@ public class UtilsScreenshots {
 	protected static Properties configFile;
 	protected static String screenshotFolder;
 
+	static {
+		nu.pattern.OpenCV.loadShared();
+	}
+	
 	/**
 	 * Save the GUI of the current driver instance in a file name identified by
 	 * name
@@ -627,8 +632,55 @@ public class UtilsScreenshots {
 		try {
 			driver.switchTo().alert();
 			return true;
-		} catch (NoAlertPresentException Ex) {
+		}
+		catch (NoAlertPresentException Ex) {
 			return false;
 		}
+	}
+	
+	/**
+	 * converts a png image to jpg
+	 * @param imagePath to png image
+	 * @return imagePath to jpg image
+	 */
+	public static String convertPngToJpg(String imagePath) {
+
+		BufferedImage bufferedImage;
+		String newPath = imagePath.replace("png", "jpg");
+
+		try {
+
+			// read image file
+			bufferedImage = ImageIO.read(new File(imagePath));
+
+			// create a blank, RGB, same width and height, and a white
+			// background
+			BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+					BufferedImage.TYPE_INT_RGB);
+			newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+
+			// write to jpeg file
+			ImageIO.write(newBufferedImage, "jpg", new File(newPath));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return newPath;
+
+	}
+
+	public static String getTestSuiteNameFromWithinType(String withinType) {
+		// class clarolineDirectBreakage.TestLoginAdmin 			 -> clarolineDirectBreakage
+		// class main.java.clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
+		
+		if(withinType.contains("main.java")) {
+			withinType = withinType.replaceAll("class main.java.", "");
+		} else {
+			withinType = withinType.replaceAll("class ", "");
+		}
+		
+		withinType = withinType.substring(0, withinType.indexOf("."));
+		return withinType;
 	}
 }

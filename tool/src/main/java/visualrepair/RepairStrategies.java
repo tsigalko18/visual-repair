@@ -1,4 +1,4 @@
-package main.java.repair;
+package main.java.visualrepair;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -11,7 +11,7 @@ import main.java.datatype.EnhancedTestCase;
 import main.java.datatype.HtmlDomTree;
 import main.java.datatype.HtmlElement;
 
-public class RepairMain {
+public class RepairStrategies {
 
 	static List<HtmlElement> repairs;
 	static EnhancedTestCase broken;
@@ -21,8 +21,7 @@ public class RepairMain {
 	static String locator;
 	static HtmlDomTree newDom;
 
-	public static List<HtmlElement> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
-			throws SAXException, IOException {
+	public static List<HtmlElement> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c) throws SAXException, IOException {
 
 		repairs = new LinkedList<HtmlElement>();
 
@@ -30,12 +29,16 @@ public class RepairMain {
 		if (e.getMessage().contains("Unable to locate element")) {
 
 			// apply strategy 1
-			repairs = ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c);
+			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
 
 			// apply strategy 2
-			if (repairs.isEmpty())
-				repairs = searchLocatorWithinNeighbouringhStates();
-
+//			if (repairs.isEmpty())
+//				repairs = searchLocatorWithinNeighbouringhStates();
+			
+			// apply strategy 3
+//			if (repairs.isEmpty())
+//			repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
+		
 		} else if (e.getMessage().contains("Assertion error")) {
 
 			// assertion error
@@ -47,24 +50,19 @@ public class RepairMain {
 			} else {
 				// negate assertion?
 			}
-
+			
 			if (!repairs.isEmpty())
 				return repairs;
 
 			// TODO: to manage
 			// repairs.add(checkRepair());
 		} else if (e.getMessage().contains("Cannot locate element with text")) {
-
+			
 			// repair dropdownlist
 			repairs = getNewDropdownlistAttributes();
 		}
-
+		
 		return repairs;
-	}
-
-	private static List<HtmlElement> searchLocatorWithinNeighbouringhStates() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private static List<HtmlElement> getNewActualValue() {

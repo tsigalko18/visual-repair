@@ -2,8 +2,6 @@ package main.java.utils;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -62,7 +60,7 @@ public class UtilsRepair {
 
 	public static void saveFailures(Failure fail) throws IOException {
 
-		FileWriter bw = new FileWriter(Settings.pathToTestSuiteUnderTest + "exception.txt");
+		FileWriter bw = new FileWriter(Settings.referenceTestSuiteVisualTraceExecutionFolder + "exception.txt");
 
 		bw.write("MESSAGE" + "\n");
 		bw.write("--------------------" + "\n");
@@ -94,6 +92,12 @@ public class UtilsRepair {
 			return original;
 		}
 		return original.substring(0, 1).toUpperCase() + original.substring(1);
+	}
+
+	public static void printTestCase(EnhancedTestCase tc) {
+		for (Integer i : tc.getStatements().keySet()) {
+			System.out.println(tc.getStatements().get(i));
+		}
 	}
 
 }

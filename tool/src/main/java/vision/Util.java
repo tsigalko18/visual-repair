@@ -2,43 +2,20 @@ package main.java.vision;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.w3c.dom.Node;
 
 public class Util {
 
@@ -217,14 +194,6 @@ public class Util {
 
 	public static double convertNanosecondsToSeconds(long time) {
 		return (double) time / 1000000000.0;
-	}
-
-	public static Logger getNewLogger(String filePathWithName, String loggerName) throws IOException {
-		Logger log = org.apache.log4j.Logger.getLogger(loggerName);
-		PatternLayout layout = new PatternLayout(Layout.LINE_SEP + "%m");
-		FileAppender appender = new FileAppender(layout, filePathWithName, true);
-		log.addAppender(appender);
-		return log;
 	}
 
 	public static int getDecimalFromHex(String hex) {

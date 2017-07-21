@@ -12,16 +12,16 @@ import main.java.utils.UtilsParser;
  *
  */
 public class HtmlElement {
-
+	
 	private String xpath;
 	private String tagName;
 	private String id;
 	private WebElement seleniumWebElement;
-
-	// location of top left hand corner
+	
+	// location of top left hand corner	
 	private int x;
 	private int y;
-
+	
 	// rectangular dimensions
 	private int width;
 	private int height;
@@ -32,10 +32,11 @@ public class HtmlElement {
 	// R-tree rectangle id
 	private int rectId;
 
-	public HtmlElement() {
-	}
-
-	public HtmlElement(JavascriptExecutor js, WebElement e) {
+	
+	public HtmlElement() {}
+	
+	public HtmlElement(JavascriptExecutor js, WebElement e)
+	{
 		this.xpath = UtilsParser.getElementXPath(js, e);
 		this.tagName = e.getTagName();
 		this.id = e.getAttribute("id");
@@ -45,84 +46,86 @@ public class HtmlElement {
 		this.width = e.getSize().width;
 		this.height = e.getSize().height;
 	}
-
-	public String getXPath() {
+	
+	public String getXPath()
+	{
 		return xpath;
 	}
-
-	public void setXPath(String xpath) {
+	public void setXPath(String xpath)
+	{
 		this.xpath = xpath;
 	}
-
-	public String getTagName() {
+	public String getTagName()
+	{
 		return tagName;
 	}
-
-	public void setTagName(String tagName) {
+	public void setTagName(String tagName)
+	{
 		this.tagName = tagName;
 	}
-
-	public String getId() {
+	public String getId()
+	{
 		return id;
 	}
-
-	public void setId(String id) {
+	public void setId(String id)
+	{
 		this.id = id;
 	}
-
-	public WebElement getSeleniumWebElement() {
+	public WebElement getSeleniumWebElement()
+	{
 		return seleniumWebElement;
 	}
-
-	public void setSeleniumWebElement(WebElement seleniumWebElement) {
+	public void setSeleniumWebElement(WebElement seleniumWebElement)
+	{
 		this.seleniumWebElement = seleniumWebElement;
 	}
-
-	public int getX() {
+	public int getX()
+	{
 		return x;
 	}
-
-	public void setX(int x) {
+	public void setX(int x)
+	{
 		this.x = x;
 	}
-
-	public int getY() {
+	public int getY()
+	{
 		return y;
 	}
-
-	public void setY(int y) {
+	public void setY(int y)
+	{
 		this.y = y;
 	}
-
-	public int getWidth() {
+	public int getWidth()
+	{
 		return width;
 	}
-
-	public void setWidth(int width) {
+	public void setWidth(int width)
+	{
 		this.width = width;
 	}
-
-	public int getHeight() {
+	public int getHeight()
+	{
 		return height;
 	}
-
-	public void setHeight(int height) {
+	public void setHeight(int height)
+	{
 		this.height = height;
 	}
-
-	public Map<String, String> getHtmlAttributes() {
+	
+	public Map<String, String> getHtmlAttributes()
+	{
 		return htmlAttributes;
 	}
-
-	public void setHtmlAttributes(Map<String, String> htmlAttributes) {
+	public void setHtmlAttributes(Map<String, String> htmlAttributes)
+	{
 		this.htmlAttributes = htmlAttributes;
 	}
-
-	public int getRectId() {
+	public int getRectId()
+	{
 		return rectId;
 	}
-
-	public void setRectId(int rectId) {
+	public void setRectId(int rectId)
+	{
 		this.rectId = rectId;
 	}
 
@@ -134,7 +137,8 @@ public class HtmlElement {
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((xpath == null) ? 0 : xpath.hashCode());
@@ -142,7 +146,8 @@ public class HtmlElement {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -150,10 +155,12 @@ public class HtmlElement {
 		if (getClass() != obj.getClass())
 			return false;
 		HtmlElement other = (HtmlElement) obj;
-		if (xpath == null) {
+		if (xpath == null)
+		{
 			if (other.xpath != null)
 				return false;
-		} else if (!xpath.equals(other.xpath))
+		}
+		else if (!xpath.equals(other.xpath))
 			return false;
 		return true;
 	}

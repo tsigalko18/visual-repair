@@ -23,8 +23,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-import main.java.config.*;
-import main.java.datatype.*;
+import main.java.config.Settings;
+import main.java.datatype.EnhancedException;
+import main.java.datatype.EnhancedTestCase;
+import main.java.datatype.HtmlDomTreeWithRTree;
+import main.java.datatype.HtmlElement;
+import main.java.datatype.Node;
+import main.java.datatype.SeleniumLocator;
 import japa.parser.ast.stmt.Statement;
 
 public class UtilsParser {
@@ -103,14 +108,15 @@ public class UtilsParser {
 
 		String p;
 
-		if (Settings.INRECORDING) {
-			p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-"
-					+ type + "-" + name + "-" + beginLine;
-		} else {
-			p = Settings.testingTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type
-					+ "-" + name + "-" + beginLine;
-		}
-
+		p = Settings.testingTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
+		
+		
+//		if(Settings.INRECORDING){
+//			p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
+//		} else {
+//			p = Settings.testingTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
+//		}
+		
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
@@ -122,7 +128,8 @@ public class UtilsParser {
 
 		if (listOfFiles == null || listOfFiles.length == 0) {
 			return null;
-		} else {
+		}
+		else {
 			return listOfFiles[0];
 		}
 
@@ -215,7 +222,8 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator
+		String newPath = 
+				Settings.referenceTestSuiteVisualTraceExecutionFolder + testName + Settings.separator
 				+ testName + Settings.jsonExtension;
 
 		try {
@@ -459,14 +467,14 @@ public class UtilsParser {
 	public static Map<String, File> convertToHashMap(File[] tests) {
 
 		Map<String, File> m = new HashMap<String, File>();
-		for (File test : tests)
-			m.put(test.getName(), test);
+		for (File test : tests) 
+				m.put(test.getName(), test);
 		return m;
 	}
-
+	
 	public static void printResults(List<Node<HtmlElement>> result, HtmlDomTreeWithRTree rt) {
 
-		String s = "***** repairs list *****";
+		String s = "***** candidate list *****";
 		System.out.println(s);
 		for (Node<HtmlElement> node : result) {
 			System.out.println(node.getData().getXPath());

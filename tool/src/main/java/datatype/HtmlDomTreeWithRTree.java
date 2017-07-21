@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -29,9 +25,8 @@ import main.java.utils.HtmlAttributesParser;
 import main.java.utils.UtilsParser;
 
 public class HtmlDomTreeWithRTree {
-
-	Logger rootLogger = Logger.getRootLogger();
-
+	
+	  
 	private Node<HtmlElement> root;
 	private SpatialIndex spatialIndex;
 	private Map<Integer, Rectangle> rects;
@@ -40,9 +35,7 @@ public class HtmlDomTreeWithRTree {
 	private HtmlAttributesParser htmlAttributesParser;
 
 	public HtmlDomTreeWithRTree(WebDriver driver, String htmlFileFullPath) throws SAXException, IOException {
-
-		rootLogger.setLevel(Level.OFF);
-		rootLogger.addAppender(new ConsoleAppender(new PatternLayout("%-5p [%t]: %m%n")));
+		
 
 		// get the root element
 		List<WebElement> elements = driver.findElements(By.xpath("//*"));
@@ -52,7 +45,7 @@ public class HtmlDomTreeWithRTree {
 		int y = rootElementFromSelenium.getLocation().y;
 		int w = rootElementFromSelenium.getSize().width;
 		int h = rootElementFromSelenium.getSize().height;
-
+		
 		// parse HTML attributes
 		htmlAttributesParser = new HtmlAttributesParser(htmlFileFullPath);
 
@@ -135,13 +128,12 @@ public class HtmlDomTreeWithRTree {
 					rects.put(rectId, r);
 					spatialIndex.add(r, rectId++);
 
-					// if(newChild.getHtmlAttributes().get("value") != null &&
-					// newChild.getHtmlAttributes().get("value").equals("Enter")){
-					// System.out.println("===============");
-					// System.out.println(rects.get(newChild.getRectId()));
-					// System.out.println("===============");
-					// }
-
+//					if(newChild.getHtmlAttributes().get("value") != null && newChild.getHtmlAttributes().get("value").equals("Enter")){
+//						System.out.println("===============");
+//						System.out.println(rects.get(newChild.getRectId()));
+//						System.out.println("===============");
+//					}
+					
 					buildHtmlDomTreeFromNode(newNode);
 				}
 			}
@@ -203,7 +195,7 @@ public class HtmlDomTreeWithRTree {
 
 		// filter result set based on containment relationship
 		for (Integer id : resultRectIds) {
-			// System.out.println(resultRectIds);
+//			System.out.println(resultRectIds);
 			List<Integer> containedElementsRectIds = getContainedElements(id);
 
 			for (Integer cid : containedElementsRectIds) {
@@ -368,26 +360,17 @@ public class HtmlDomTreeWithRTree {
 	public void preOrderTraversalRTree() {
 		preOrderTraversalRTree(this.root);
 	}
-
+	
 	private void preOrderTraversalRTree(Node<HtmlElement> node) {
 		if (node == null) {
 			return;
 		}
-		// System.out.println(node.getData().getTagName() + ": " +
-		// node.getData());
+//		System.out.println(node.getData().getTagName() + ": " + node.getData());
 		if (node.getChildren() != null) {
 			for (Node<HtmlElement> child : node.getChildren()) {
 				preOrderTraversalRTree(child);
 			}
 		}
-	}
-
-	public Logger getRootLogger() {
-		return rootLogger;
-	}
-
-	public void setRootLogger(Logger rootLogger) {
-		this.rootLogger = rootLogger;
 	}
 
 	public SpatialIndex getSpatialIndex() {
@@ -429,7 +412,7 @@ public class HtmlDomTreeWithRTree {
 	public void setHtmlAttributesParser(HtmlAttributesParser htmlAttributesParser) {
 		this.htmlAttributesParser = htmlAttributesParser;
 	}
-
+	
 	public Node<HtmlElement> getRoot() {
 		return root;
 	}
@@ -437,5 +420,9 @@ public class HtmlDomTreeWithRTree {
 	public void setRoot(Node<HtmlElement> root) {
 		this.root = root;
 	}
+
+	
+	
+
 
 }
