@@ -18,6 +18,19 @@
             <target>1.8</target>
           </configuration>
         </plugin>
+        <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <ajdtVersion>1.5</ajdtVersion>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>1.4</version>
+      </plugin>
       </plugins>
     </pluginManagement>
     </build>
@@ -28,7 +41,7 @@
   	<dependency>
   		<groupId>org.aspectj</groupId>
   		<artifactId>aspectjrt</artifactId>
-  		<version>1.8.10</version>
+  		<version>1.8.9</version>
   	</dependency>
   	<dependency>
   		<groupId>com.google.code.javaparser</groupId>
@@ -66,13 +79,8 @@
       <version>1.2.0</version>
     </dependency>
     <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-remote-driver</artifactId>
-        <version>2.41.0</version>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
+      <artifactId>slf4j-simple</artifactId>
       <version>1.7.25</version>
     </dependency>
     <dependency>
@@ -86,6 +94,13 @@
       <version>1.0.0</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/jsi-1.1.0-SNAPSHOT.jar</systemPath>
+    </dependency>
+     <dependency>
+      <groupId>jpHash</groupId>
+      <artifactId>jpHash</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/jpHash-1.0-SNAPSHOT.jar</systemPath>
     </dependency>
     <dependency>
     	<groupId>net.coobird</groupId>
@@ -112,10 +127,11 @@
       <artifactId>ini4j</artifactId>
       <version>0.5.4</version>
     </dependency>
+
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>RELEASE</version>
+    	<groupId>org.seleniumhq.selenium</groupId>
+    	<artifactId>selenium-remote-driver</artifactId>
+    	<version>2.41.0</version>
     </dependency>
-  </dependencies>
+    </dependencies>
 </project>
