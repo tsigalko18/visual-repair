@@ -5,10 +5,10 @@ import java.io.File;
 public class Settings {
 
 	// specify where to find the correct test suite
-	public static String testSuiteCorrect = "claroline";
+	public static String testSuiteCorrect = "addressbook6211";
 
 	// specify where to find the broken/regressed test suite
-	public static String testSuiteBroken  = "clarolineDirectBreakage";
+	public static String testSuiteBroken  = "addressbook825";
 
 	/* ******************************
 	 * YOU ARE NOT SUPPOSED TO EDIT 

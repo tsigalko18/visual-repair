@@ -17,11 +17,14 @@ public class TestSuiteRunner {
 		
 		// path to the test suite class name
 //		String classRunner = "claroline.TestLoginAdmin";
-		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
+//		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
+//		String classRunner = "addressbook6211.TestUserAdded";
+		String classRunner = "addressbook825.TestUserAdded";
+		
 		
 		// this step runs the test suite and the aspect records the visual execution trace 
 		Result result = null;
-		try {
+		try {			
 			result = JUnitCore.runClasses(Class.forName(classRunner));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -33,7 +36,6 @@ public class TestSuiteRunner {
 			// for each breakage, I save the exception on the filesystem
 			for (Failure fail : result.getFailures()) {
 				
-//				UtilsRepair.saveFailures(fail);
 				EnhancedException ea = UtilsRepair.saveExceptionFromFailure(fail);
 				
 				String path = Settings.testingTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXTENSION;
@@ -42,6 +44,8 @@ public class TestSuiteRunner {
 				UtilsParser.serializeException(ea, jsonPath);
 			}
 		}
+		
+		System.exit(0);
 	}
 
 }

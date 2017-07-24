@@ -48,44 +48,4 @@ public class FileFilters {
 		}
 	};
 
-	public static String getTestFile(String name, String pathToTestSuiteUnderTest) {
-
-		File[] files = new File(pathToTestSuiteUnderTest).listFiles(javaFilesFilter);
-		for (File file : files) {
-			if (file.getName().contains(name)) {
-				return file.getAbsolutePath();
-			}
-		}
-
-		return null;
-	}
-
-	public static File[] getAnnotatedScreenshots(String directory) {
-
-		File[] files = new File(directory).listFiles(annotatedScreenshotsFilter);
-		return files;
-
-	}
-
-	public static File[] getVisualLocators(String directory) {
-
-		File[] files = new File(directory).listFiles(visualLocatorFilter);
-		return files;
-
-	}
-
-	public static boolean isTestBroken(File file) {
-		File[] exception = file.listFiles(exceptionFilter);
-		if (exception.length == 1 && exception[0].getName().equals("exception.json"))
-			return true;
-		return false;
-	}
-
-	public static File getExceptionFile(File file) {
-		File[] exception = file.listFiles(exceptionFilter);
-		if (exception.length == 1 && exception[0].getName().equals("exception.json"))
-			return exception[0];
-		return null;
-	}
-
 }

@@ -23,8 +23,8 @@ import datatype.HtmlElement;
 import datatype.Node;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
-import utils.FileFilters;
 import utils.PHash;
+import utils.UtilsGetters;
 import utils.UtilsRepair;
 import utils.UtilsScreenshots;
 import vision.ImageProcessing;
@@ -105,13 +105,13 @@ public class MisSelection {
 
 		// get the visual information for the correct test
 		String test = Settings.referenceTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(correct.getName());
-		File[] correctVisualTrace = FileFilters.getAnnotatedScreenshots(test);
-		File[] correctVisualLocators = FileFilters.getVisualLocators(test);
+		File[] correctVisualTrace = UtilsGetters.getAnnotatedScreenshots(test);
+		File[] correctVisualLocators = UtilsGetters.getVisualLocators(test);
 
 		// get the visual information for the broken test
 		test = Settings.testingTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(broken.getName());
-		File[] brokenVisualTrace = FileFilters.getAnnotatedScreenshots(test);
-		File[] brokenVisualLocators = FileFilters.getVisualLocators(test);
+		File[] brokenVisualTrace = UtilsGetters.getAnnotatedScreenshots(test);
+		File[] brokenVisualLocators = UtilsGetters.getVisualLocators(test);
 
 		int brokenStateFromExeception = Integer.parseInt(e.getInvolvedLine());
 		String path = System.getProperty("user.dir") + Settings.separator;

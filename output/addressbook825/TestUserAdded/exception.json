@@ -1,0 +1,6 @@
+{
+  "exception": "org.openqa.selenium.NoSuchElementException: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"html/body/div[1]/div[4]/form/input[3]\"}\nCommand duration or timeout: 10.04 seconds\n",
+  "message": "Unable to locate element: {\"method\":\"xpath\",\"selector\":\"html/body/div[1]/div[4]/form/input[3]\"}\n",
+  "failedTest": "testUserAdded",
+  "involvedLine": "29"
+}

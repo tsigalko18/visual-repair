@@ -15,6 +15,7 @@ import datatype.EnhancedTestCase;
 import datatype.HtmlElement;
 import parser.ParseTest;
 import utils.FileFilters;
+import utils.UtilsGetters;
 import utils.UtilsParser;
 
 public class Main {
@@ -34,12 +35,12 @@ public class Main {
 
 		for (File file : m.values()) {
 
-			if (FileFilters.isTestBroken(file)) {
+			if (UtilsGetters.isTestBroken(file)) {
 
 				System.out.println("[LOG]\tTest " + file.getName());
 
 				// load the exception
-				File ex = FileFilters.getExceptionFile(file);
+				File ex = UtilsGetters.getExceptionFile(file);
 				exception = UtilsParser.readException(ex.getAbsolutePath());
 
 				if (Settings.VERBOSE) {
@@ -49,13 +50,11 @@ public class Main {
 
 				// load the broken test
 				ParseTest pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-				testBroken = pt.parse(FileFilters.getTestFile(file.getName(), Settings.pathToTestSuiteUnderTest));
+				testBroken = pt.parse(UtilsGetters.getTestFile(file.getName(), Settings.pathToTestSuiteUnderTest));
 
 				// load the correct test
 				pt.setFolder(Settings.testingTestSuiteVisualTraceExecutionFolder);
-				testCorrect = pt.parse(FileFilters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
-				
-				System.exit(1);
+				testCorrect = pt.parse(UtilsGetters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
 
 				// apply repair algorithms
 				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
