@@ -54,6 +54,8 @@ public class Main {
 				// load the correct test
 				pt.setFolder(Settings.testingTestSuiteVisualTraceExecutionFolder);
 				testCorrect = pt.parse(FileFilters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
+				
+				System.exit(1);
 
 				// apply repair algorithms
 				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);

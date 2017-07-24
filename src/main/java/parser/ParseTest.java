@@ -133,7 +133,7 @@ public class ParseTest {
 			if (m.getAnnotations() != null && m.getAnnotations().get(0).getName().getName().equals("Test")) {
 
 				String className = UtilsParser.getClassNameFromPath((String) arg);
-				String fullPath = System.getProperty("user.dir") + Settings.separator + arg;
+				String fullPath = arg.toString();
 
 				tc = new EnhancedTestCase(m.getName(), fullPath);
 

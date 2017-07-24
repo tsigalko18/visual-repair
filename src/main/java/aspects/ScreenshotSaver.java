@@ -150,7 +150,7 @@ public class ScreenshotSaver {
 		String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint); 
 		
 		// for each statement, get the line number
-		int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint); 
+		int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
 
 		// get screenshot of the page before the action is executed, but after the exception has been raised
 		String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-" + statementName + Settings.PNG_EXTENSION;

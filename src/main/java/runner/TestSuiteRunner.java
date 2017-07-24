@@ -16,8 +16,8 @@ public class TestSuiteRunner {
 	public static void main(String[] args) throws IOException {
 		
 		// path to the test suite class name
-		String classRunner = "claroline.TestLoginAdmin";
-//		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
+//		String classRunner = "claroline.TestLoginAdmin";
+		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
 		
 		// this step runs the test suite and the aspect records the visual execution trace 
 		Result result = null;
