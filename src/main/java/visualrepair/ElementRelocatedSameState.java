@@ -15,10 +15,12 @@ import utils.UtilsRepair;
 import utils.UtilsScreenshots;
 
 public class ElementRelocatedSameState {
-	
+
 	static {
 		nu.pattern.OpenCV.loadShared();
 	}
+
+	private static Scanner scanner = new Scanner(System.in);
 
 	static List<HtmlElement> searchLocatorWithinTheSameState(EnhancedException e, EnhancedTestCase b,
 			EnhancedTestCase c) throws SAXException, IOException {
@@ -47,9 +49,9 @@ public class ElementRelocatedSameState {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
-		System.out.println("If the page is correctly displayed, type anything to proceed further");
-		Scanner scanner = new Scanner(System.in);
-		scanner.next();
+		System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
+		while (!scanner.next().equals("Y")) {
+		}
 
 		// screenshot here
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
@@ -77,14 +79,14 @@ public class ElementRelocatedSameState {
 		}
 
 		List<HtmlElement> rep = new LinkedList<HtmlElement>();
-		
+
 		for (Node<HtmlElement> htmlElement : result) {
 			rep.add(htmlElement.getData());
-				
+
 			// print repaired test cases
-			SeleniumLocator newlocator = null; 
-			
-			if(result.get(0).getData().getTagName().equals("option")){
+			SeleniumLocator newlocator = null;
+
+			if (result.get(0).getData().getTagName().equals("option")) {
 				Node<HtmlElement> option = result.get(0).getParent();
 				newlocator = new SeleniumLocator("xpath", option.getData().getXPath());
 				newst.setDomLocator(newlocator);
@@ -92,13 +94,13 @@ public class ElementRelocatedSameState {
 				newlocator = new SeleniumLocator("xpath", result.get(0).getData().getXPath());
 				newst.setDomLocator(newlocator);
 			}
-			
+
 			newst.setDomLocator(newlocator);
 			b.addStatement(Integer.parseInt(e.getInvolvedLine()), newst);
 
 			UtilsRepair.printTestCase(b);
 		}
-		
+
 		return rep;
 	}
 
