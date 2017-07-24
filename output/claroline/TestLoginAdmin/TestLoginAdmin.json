@@ -3,7 +3,7 @@
   "statements": {
     "28": {
       "seleniumAction": "get",
-      "value": "\"http://localhost:8888/claroline/claroline-1.10.7/\"",
+      "value": "\"http://localhost:8888/claroline/claroline-1.10.0/\"",
       "line": 28
     },
     "29": {
@@ -66,7 +66,7 @@
       },
       "domLocator": {
         "strategy": "xpath",
-        "value": ".//*[@id\u003d\u0027loginBox\u0027]/form/fieldset/input[3]"
+        "value": ".//*[@id\u003d\u0027loginBox\u0027]/form/fieldset/input[4]"
       },
       "screenshotBefore": {
         "path": "output/claroline/TestLoginAdmin/31-1before-TestLoginAdmin-31.png"
@@ -88,8 +88,8 @@
       "assertion": "assertTrue",
       "predicate": "contains(\"John Doe\")",
       "domLocator": {
-        "strategy": "id",
-        "value": "userName"
+        "strategy": "xpath",
+        "value": "//*[@class\u003d\u0027userName\u0027]"
       },
       "screenshotBefore": {
         "path": "output/claroline/TestLoginAdmin/32-1before-TestLoginAdmin-32.png"
@@ -108,5 +108,5 @@
       "line": 32
     }
   },
-  "path": "/Users/astocco/eclipse-oxygen-workspace/visualrepair//Users/astocco/eclipse-oxygen-workspace/visualrepair/src/main/resources/claroline/TestLoginAdmin.java"
+  "path": "/Users/astocco/git/visual-repair//Users/astocco/git/visual-repair/src/main/resources/clarolineDirectBreakage/TestLoginAdmin.java"
 }

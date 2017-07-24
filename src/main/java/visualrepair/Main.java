@@ -48,11 +48,11 @@ public class Main {
 				}
 
 				// load the broken test
-				ParseTest pt = new ParseTest(Settings.pathToTestSuiteUnderTest);
+				ParseTest pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
 				testBroken = pt.parse(FileFilters.getTestFile(file.getName(), Settings.pathToTestSuiteUnderTest));
 
 				// load the correct test
-				pt.setFolder(Settings.pathToReferenceTestSuite);
+				pt.setFolder(Settings.testingTestSuiteVisualTraceExecutionFolder);
 				testCorrect = pt.parse(FileFilters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
 
 				// apply repair algorithms
