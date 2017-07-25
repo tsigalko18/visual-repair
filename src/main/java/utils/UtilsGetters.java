@@ -18,29 +18,43 @@ public class UtilsGetters {
 		return false;
 	}
 
+	public static File[] getBeforeScreenshots(String directory) {
+
+		File[] files = new File(directory).listFiles(FileFilters.beforeScreenshotsFilter);
+		return files;
+
+	}
+
+	public static File[] getAfterScreenshots(String directory) {
+
+		File[] files = new File(directory).listFiles(FileFilters.afterScreenshotsFilter);
+		return files;
+
+	}
+
 	public static File[] getVisualLocators(String directory) {
-	
+
 		File[] files = new File(directory).listFiles(FileFilters.visualLocatorFilter);
 		return files;
-	
+
 	}
 
 	public static File[] getAnnotatedScreenshots(String directory) {
-	
+
 		File[] files = new File(directory).listFiles(FileFilters.annotatedScreenshotsFilter);
 		return files;
-	
+
 	}
 
 	public static String getTestFile(String name, String pathToTestSuiteUnderTest) {
-	
+
 		File[] files = new File(pathToTestSuiteUnderTest).listFiles(FileFilters.javaFilesFilter);
 		for (File file : files) {
 			if (file.getName().contains(name)) {
 				return file.getAbsolutePath();
 			}
 		}
-	
+
 		return null;
 	}
 

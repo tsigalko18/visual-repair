@@ -21,7 +21,8 @@ public class RepairStrategies {
 	static String locator;
 	static HtmlDomTree newDom;
 
-	public static List<HtmlElement> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c) throws SAXException, IOException {
+	public static List<HtmlElement> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+			throws SAXException, IOException {
 
 		repairs = new LinkedList<HtmlElement>();
 
@@ -29,16 +30,20 @@ public class RepairStrategies {
 		if (e.getMessage().contains("Unable to locate element")) {
 
 			// apply strategy 1
-			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
+//			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
 
 			// apply strategy 2
-//			if (repairs.isEmpty())
-//				repairs = searchLocatorWithinNeighbouringhStates();
-			
+			// if (repairs.isEmpty())
+			// repairs = searchLocatorWithinNeighbouringhStates();
+
 			// apply strategy 3
 //			if (repairs.isEmpty())
-//			repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
-		
+//				repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
+
+			// apply strategy 4
+			if (repairs.isEmpty())
+				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c));
+
 		} else if (e.getMessage().contains("Assertion error")) {
 
 			// assertion error
@@ -50,18 +55,18 @@ public class RepairStrategies {
 			} else {
 				// negate assertion?
 			}
-			
+
 			if (!repairs.isEmpty())
 				return repairs;
 
 			// TODO: to manage
 			// repairs.add(checkRepair());
 		} else if (e.getMessage().contains("Cannot locate element with text")) {
-			
+
 			// repair dropdownlist
 			repairs = getNewDropdownlistAttributes();
 		}
-		
+
 		return repairs;
 	}
 

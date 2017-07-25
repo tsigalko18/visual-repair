@@ -1,17 +1,17 @@
  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir='rtl'>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="Description" content="PHP-Addressbook" />
-	<meta name="Keywords" content="" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="Description" content="PHP-Addressbook" />
+  <meta name="Keywords" content="" />
 
-	<style type="text/css">
-		
-    body {background-image:url('header-red.jpg.1');background-repeat:repeat-x;background-position:top left;}
+  <style type="text/css">
+    
+    body {background-image:url('./skins/header-red.jpg');background-repeat:repeat-x;background-position:top left;}
     table#maintable th {text-align:center;border:1px solid #ccc;font-size:12px;background:#b63a3a;color:#fff;}
     table#birthdays th {color:#fff;background:#b63a3a;margin:25px;border:1px solid #ccc;}
-		table#maintable th a {color:#fff;}
+    table#maintable th a {color:#fff;}
 body,#footer,ul {margin:0;padding:0;}
 body,p,td,h1,h2,a,a:hover {font-family:Verdana,Helvetica,sans-serif;font-size:12px}
 h1 {font-size:18px}
@@ -75,57 +75,108 @@ input.byear{width:4em !important;}
 #download a,#top a {color:#fff;}
 
 /* Login */
-#content input[name=user],input[name=pass] {width:150px; margin-bottom:3px;}	</style>
-	<!--[if !IE]>-->
-	<link media="only screen and (max-device-width: 480px)" rel="stylesheet" type="text/css" href="iphone.css.1.css"/>
-	<!--<![endif]-->
-	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+#content input[name=user],input[name=pass] {width:150px; margin-bottom:3px;}  </style>
+  <!--[if !IE]>-->
+  <link media="only screen and (max-device-width: 480px)" rel="stylesheet" type="text/css" href="iphone.css"/>
+  <!--<![endif]-->
+  <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 
 
-	<link rel="icon" type="image/png" href="http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/icons/font.png" />
-		<style type="text/css">
-		<!--
-		/* CSS for right to left */
-		label {margin-left:0.5em;float:right;text-align:right;}
-		#content,#right,.right {float:left;}
-		#nav,#left,.left {float:right;}
-		-->
-	</style>
-	<title>Address book</title>  	</head>
-  	<body>
-  		<div id="container">
-  			<div id="top"></div>
-        <div id="header"><a href="http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/"><img width="340" height="75" src="title_x2.png.1" title="Address book" alt="Address book" /></a></div>
-  			<div id="nav"></div>
-  			<div id="content">
-  	      <form accept-charset="utf-8" id="LoginForm" name="LoginForm" method="post">
-  	         <label>User:</echo></label><input name="user" tabindex="0"/><br/>
-  	         <label>Password:</label><input name="pass" type="password"/><br/>
-  	         <input type=submit value="Login"/><br><br>
-          </form>
-  <script type="text/javascript">
-    document.LoginForm.user.focus();
-  </script>
-  	         <a href="http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/register">Create account</a>
-  	       | <a href="http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/register/email_password.php">Create account</a>
+  <link rel="icon" type="image/png" href="icons/font.png" />
+  <title>Address book </title>  </head>
+  <body>
+    <div id="container">
+      <div id="top">
 
-
-  	         <br><br>
-  	         <br>
-  	         <hr>
-
-  	         <b>New features</b>
-  	         	<ul>- Connect your iPhone using <a href="http://simultaneouspancakes.com/Lessons/2010/06/24/connecting-an-iphone-4-to-exchange/">Exchange suppport</a></ul>
-  	         	<ul>- Connect your Android using <a href="http://portal.smartertools.com/KB/a1148/setup-an-android-phone-or-tablet-for-exchange-activesync.aspx">Exchange suppport</a></ul>
-
-<!--
-  	         <br>
-  	         <b>Support</b>
-  	         	<ul>
-  	         	<li>- Send us a mail to <a href="mailto:support@swiss-addressbook.com">support(at)swiss-addressbook.com</a></li>
-  	         	</ul>
+<form name="logout" method="post" class="header">
+<input type="hidden" name="logout" value="yes" />
+<b>(admin)</b> <a href="#" onClick="document.logout.submit();">Logout</a>
+</form>
+      </div>
+      <div id="header">
+        <h1><a href=".">Address Book</a></h1>
+        <a href="."><img src="title_x2.png" width=340 height=75 title="Addressbook" alt="Addressbook" id="logo" /></a>
+      </div>
+      <div id="nav">
+            <!--
+* http://www.dynamicdrive.com/dynamicindex1/ddlevelsmenu/index.htm
+* http://www.dynamicdrive.com/dynamicindex1/popupmenu.htm
+* http://www.alistapart.com/articles/horizdropdowns/
 -->
-  <script>				
-    document.LoginForm.user.focus();
+<ul>
+<li>
+  <a href="./">home</a>
+</li>
+<li class="all">
+  <a href="edit.php">add new</a>
+</li>
+  <li class="admin">
+    <a href="group.php">groups</a>
+  </li>
+  <li class="all">
+    <a href="birthdays.php">next birthdays</a>
+  </li>
+  <li class="export">
+      <a href="view.php?all&amp;print">print all</a>
+  </li>
+  <li class="export">
+      <a href="view.php?all&amp;print&amp;phones">print phones</a>
+  </li>
+  <li class="export">
+      <a href="map.php?">map</a>
+  </li>
+  <li class="export">
+      <a href="export.php">export</a>
+  </li> 
+  <li class="export">
+      <a href="import.php">import</a>
+  </li> 
+</ul>
+      </div>
+      <div id="content">
+
+ <h1>Edit / add address book entry</h1> 
+  <form accept-charset="utf-8" method="post" name="quickadd" >
+    <input type="submit" name="quickadd"  value="Next" /><br/><br/>
+
+    <label>Address:</label>
+    <textarea name="address" rows="20" tabindex="0"></textarea><br/><br/>
+    <input type="submit" name="quickadd"  value="Next" /><br/>
+  </form>
+  <script type="text/javascript">
+    document.quickadd.address.focus();
   </script>
-        </div>
+
+
+
+<br>
+<br>
+  </div>
+  <div id="footer">
+
+      <ul>
+        <li><a href="http://sourceforge.net/projects/php-addressbook/">php-addressbook</a> <a href="notes.htm">v8.2.5</a></li>
+      </ul>
+  </div>
+</div>
+  </body>
+
+<!-- 
+Copyright Notice:
+This script was written by Rob Minto, and is free to use and distribute under GPL. 
+Any improvements, please email rob(at)widgetmonkey.com. 
+Keep software free. 
+And please leave this copyright notice. Thanks.
+
+Major update 2007-2009 by Olivier Chatelain, feel free to use and distribute under GPL. 
+Any improvements, please email chatelao(at)users.sourceforge.net. 
+
+Updated 2009 - Complete theme redesign by Leighton West. Any theme problems,
+please email retrorobot(at)users.sourceforge.net.
+
+Major contribution Mark James ("famfamfam"-icons, cc-by-2.5)
+For more details see: http://www.famfamfam.com/lab/icons/silk/
+
+Major contribution "frequency decoder" ("Unobtrusive Table Sort Script", cc-by-sa-2.5)
+For more details see: http://www.frequency-decoder.com/2006/09/16/unobtrusive-table-sort-script-revisited/
+-->

@@ -1,0 +1,329 @@
+{
+  "name": "testUserAdded",
+  "statements": {
+    "25": {
+      "domBefore": {
+        "path": "output/addressbook825/TestUserAdded/25-1before-TestUserAdded-25/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "output/addressbook825/TestUserAdded/25-2after-TestUserAdded-25/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "name",
+        "value": "user"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/25-1before-TestUserAdded-25.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/25-2after-TestUserAdded-25.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/25-Annotated-TestUserAdded-25.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/25-visualLocator-TestUserAdded-25.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 25
+    },
+    "26": {
+      "domBefore": {
+        "path": "output/addressbook825/TestUserAdded/26-1before-TestUserAdded-26/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "output/addressbook825/TestUserAdded/26-2after-TestUserAdded-26/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "name",
+        "value": "pass"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/26-1before-TestUserAdded-26.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/26-2after-TestUserAdded-26.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/26-Annotated-TestUserAdded-26.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/26-visualLocator-TestUserAdded-26.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"admin\"",
+      "line": 26
+    },
+    "27": {
+      "domBefore": {
+        "path": "output/addressbook825/TestUserAdded/27-1before-TestUserAdded-27/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "output/addressbook825/TestUserAdded/27-2after-TestUserAdded-27/index.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "cssSelector",
+        "value": "input[type\u003d\u0027submit\u0027]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/27-1before-TestUserAdded-27.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/27-2after-TestUserAdded-27.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/27-Annotated-TestUserAdded-27.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/27-visualLocator-TestUserAdded-27.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 27
+    },
+    "28": {
+      "domBefore": {
+        "path": "output/addressbook825/TestUserAdded/28-1before-TestUserAdded-28/index.php.1.html"
+      },
+      "domAfter": {
+        "path": "output/addressbook825/TestUserAdded/28-2after-TestUserAdded-28/edit.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[3]/ul/li[2]/a"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/28-1before-TestUserAdded-28.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/28-2after-TestUserAdded-28.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/28-Annotated-TestUserAdded-28.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/28-visualLocator-TestUserAdded-28.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 28
+    },
+    "29": {
+      "domAfter": {
+        "path": "output/addressbook825/TestUserAdded/29-2after-TestUserAdded-29/edit.php.1.html"
+      },
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/form/input[3]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/29-1before-TestUserAdded-29.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/29-2after-TestUserAdded-29.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/29-Annotated-TestUserAdded-29.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/29-visualLocator-TestUserAdded-29.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"John\"",
+      "line": 29
+    },
+    "30": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/form/input[5]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/30-1before-TestUserAdded-30.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/30-2after-TestUserAdded-30.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/30-Annotated-TestUserAdded-30.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/30-visualLocator-TestUserAdded-30.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"Doe\"",
+      "line": 30
+    },
+    "31": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/form/textarea[1]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/31-1before-TestUserAdded-31.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/31-2after-TestUserAdded-31.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/31-Annotated-TestUserAdded-31.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/31-visualLocator-TestUserAdded-31.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"Times Square\"",
+      "line": 31
+    },
+    "32": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/form/input[10]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/32-1before-TestUserAdded-32.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/32-2after-TestUserAdded-32.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/32-Annotated-TestUserAdded-32.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/32-visualLocator-TestUserAdded-32.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\".com\"",
+      "line": 32
+    },
+    "33": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/form/input[11]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/33-1before-TestUserAdded-33.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/33-2after-TestUserAdded-33.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/33-Annotated-TestUserAdded-33.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/33-visualLocator-TestUserAdded-33.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"123456789\"",
+      "line": 33
+    },
+    "34": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "//*[@id\u003d\u0027content\u0027]/form/select[1]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/34-1before-TestUserAdded-34.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/34-2after-TestUserAdded-34.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/34-Annotated-TestUserAdded-34.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/34-visualLocator-TestUserAdded-34.png"
+      },
+      "seleniumAction": "selectByVisibleText",
+      "value": "\"31\"",
+      "line": 34
+    },
+    "35": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "//*[@id\u003d\u0027content\u0027]/form/select[2]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/35-1before-TestUserAdded-35.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/35-2after-TestUserAdded-35.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/35-Annotated-TestUserAdded-35.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/35-visualLocator-TestUserAdded-35.png"
+      },
+      "seleniumAction": "selectByVisibleText",
+      "value": "\"January\"",
+      "line": 35
+    },
+    "36": {
+      "domLocator": {
+        "strategy": "name",
+        "value": "byear"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/36-1before-TestUserAdded-36.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/36-2after-TestUserAdded-36.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/36-Annotated-TestUserAdded-36.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/36-visualLocator-TestUserAdded-36.png"
+      },
+      "seleniumAction": "sendKeys",
+      "value": "\"1969\"",
+      "line": 36
+    },
+    "37": {
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/form/input[15]"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/37-1before-TestUserAdded-37.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/37-2after-TestUserAdded-37.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/37-Annotated-TestUserAdded-37.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/37-visualLocator-TestUserAdded-37.png"
+      },
+      "seleniumAction": "click",
+      "value": "",
+      "line": 37
+    },
+    "38": {
+      "assertion": "assertTrue",
+      "predicate": "contains(\"1\")",
+      "domLocator": {
+        "strategy": "xpath",
+        "value": "html/body/div[1]/div[4]/label/strong/span"
+      },
+      "screenshotBefore": {
+        "path": "output/addressbook6211/TestUserAdded/38-1before-TestUserAdded-38.png"
+      },
+      "screenshotAfter": {
+        "path": "output/addressbook6211/TestUserAdded/38-2after-TestUserAdded-38.png"
+      },
+      "annotatedScreenshot": {
+        "path": "output/addressbook6211/TestUserAdded/38-Annotated-TestUserAdded-38.png"
+      },
+      "visualLocator": {
+        "path": "output/addressbook6211/TestUserAdded/38-visualLocator-TestUserAdded-38.png"
+      },
+      "seleniumAction": "getText",
+      "value": "",
+      "line": 38
+    }
+  },
+  "path": "/Users/astocco/git/visual-repair/src/main/resources/addressbook825/TestUserAdded.java"
+}

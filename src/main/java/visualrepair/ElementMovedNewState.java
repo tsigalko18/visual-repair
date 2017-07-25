@@ -25,12 +25,13 @@ import datatype.Statement;
 import datatype.WebDriverSingleton;
 import utils.PHash;
 import utils.UtilsGetters;
+import utils.UtilsParser;
 import utils.UtilsRepair;
 import utils.UtilsScreenshots;
 import vision.ImageProcessing;
 
 public class ElementMovedNewState {
-	
+
 	static {
 		nu.pattern.OpenCV.loadShared();
 	}
@@ -40,8 +41,22 @@ public class ElementMovedNewState {
 
 		System.out.println("[LOG]\tApplying repair strategy <searchElementNewState>");
 
-		// detect the broken statement visually
+		/* detect the broken statement visually
+		 * TODO: now basically returns brokenStatement - 1
+		 */
 		int brokenStatementLine = detectMismatchVisually(c, b, e);
+		
+		/* load HTML page at brokenStatementLine */
+		
+		/* get list of clickable elements */
+		
+		/* for each clickable 
+		 * 	1. generate action (i.e., click)
+		 *  2. insert in test
+		 *  3. run? finish
+		 * */
+		
+		/* get list of clickable elements */
 
 		// get the broken statement
 		Statement oldst = c.getStatements().get(brokenStatementLine);
@@ -100,61 +115,78 @@ public class ElementMovedNewState {
 
 		return rep;
 	}
-	
+
 	private static int detectMismatchVisually(EnhancedTestCase correct, EnhancedTestCase broken, EnhancedException e)
 			throws IOException {
 
 		// get the visual information for the correct test
-		String test = Settings.referenceTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(correct.getName());
-		File[] correctVisualTrace = UtilsGetters.getAnnotatedScreenshots(test);
-		File[] correctVisualLocators = UtilsGetters.getVisualLocators(test);
+		String test = Settings.referenceTestSuiteVisualTraceExecutionFolder
+				+ UtilsRepair.capitalizeFirstLetter(correct.getName());
+		File[] afterCorrectTrace = UtilsGetters.getAfterScreenshots(test);
+		File[] beforeCorrectTrace = UtilsGetters.getBeforeScreenshots(test);
+
+		Map<String, File> m = UtilsParser.convertToHashMap(afterCorrectTrace);
 
 		// get the visual information for the broken test
-		test = Settings.testingTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(broken.getName());
-		File[] brokenVisualTrace = UtilsGetters.getAnnotatedScreenshots(test);
-		File[] brokenVisualLocators = UtilsGetters.getVisualLocators(test);
+		test = Settings.testingTestSuiteVisualTraceExecutionFolder
+				+ UtilsRepair.capitalizeFirstLetter(broken.getName());
+		File[] afterBrokenTrace = UtilsGetters.getAfterScreenshots(test);
+		File[] beforeBrokenTrace = UtilsGetters.getBeforeScreenshots(test);
+
+		int min = UtilsRepair.getMinimumValue(afterCorrectTrace, beforeCorrectTrace, afterBrokenTrace,
+				beforeBrokenTrace);
 
 		int brokenStateFromExeception = Integer.parseInt(e.getInvolvedLine());
 		String path = System.getProperty("user.dir") + Settings.separator;
 		ImageProcessing ip = new ImageProcessing();
 
-		int min = Math.min(brokenVisualLocators.length, brokenVisualTrace.length);
+		Map<String, Double> beforeStatesSimilarityMap = new HashMap<String, Double>();
+		Map<String, Double> afterStatesSimilarityMap = new HashMap<String, Double>();
 
-		Map<String, Double> statesSimilarityMap = new HashMap<String, Double>();
-		Map<String, Double> visualLocatorsSimilarityMap = new HashMap<String, Double>();
-
+		String state = null;
+		
 		for (int i = 0; i < min; i++) {
 
-			String state = correctVisualTrace[i].getName().substring(0, 2);
-			
-			statesSimilarityMap.put(state, ip.compareImagesByHistogram(path + correctVisualTrace[i].getPath(),
-							path + brokenVisualTrace[i].getPath()));
-			
-			visualLocatorsSimilarityMap.put(state, PHash.getPHashSimiliarity(path + correctVisualLocators[i].getPath(),
-							path + brokenVisualLocators[i].getPath()));
-			
-			
-//			System.out.println("Sim\t" + correctVisualTrace[i].getName() + "\t" + brokenVisualTrace[i].getName() + ":\t"
-//					+ ip.compareImagesByHistogram(path + correctVisualTrace[i].getPath(),
-//							path + brokenVisualTrace[i].getPath()));
+			state = beforeCorrectTrace[i].getName().substring(0, 2);
 
-//			System.out.println("PHash\t" + correctVisualTrace[i].getName() + "\t" + brokenVisualTrace[i].getName()
-//					+ ":\t" + TestPHash.getPHashSimiliarity(path + correctVisualTrace[i].getPath(),
-//							path + brokenVisualTrace[i].getPath()));
+//			System.out.println(state);
+//			System.out.println("\t" + beforeCorrectTrace[i].getPath());
+//			System.out.println("\t" + beforeBrokenTrace[i].getPath());
+//			System.out.println("\tbefore:\t" + ip.compareImagesByHistogram(path + beforeCorrectTrace[i].getPath(),
+//					path + beforeBrokenTrace[i].getPath()));
+//			System.out.println("\tafter:\t" + ip.compareImagesByHistogram(path + afterCorrectTrace[i].getPath(),
+//					path + afterBrokenTrace[i].getPath()));
+			
+			
+			beforeStatesSimilarityMap.put(state, ip.compareImagesByHistogram(path + beforeCorrectTrace[i].getPath(),
+					path + beforeBrokenTrace[i].getPath()));
+
+			afterStatesSimilarityMap.put(state, ip.compareImagesByHistogram(path + afterCorrectTrace[i].getPath(),
+					path + afterBrokenTrace[i].getPath()));
+			
+//			beforeStatesSimilarityMap.put(state, PHash.getPHashSimiliarity(path + beforeCorrectTrace[i].getPath(),
+//					path + beforeBrokenTrace[i].getPath()));
 //
-//			System.out.println();
+//			afterStatesSimilarityMap.put(state, PHash.getPHashSimiliarity(path + afterCorrectTrace[i].getPath(),
+//					path + afterBrokenTrace[i].getPath()));
+
+			// System.out.println(afterCorrectTrace[i]);
+			// System.out.println(afterBrokenTrace[i] + "\n");
+			//
+			// System.out.println(beforeCorrectTrace[i]);
+			// System.out.println(beforeBrokenTrace[i]);
 		}
-		
-		System.out.println(statesSimilarityMap);
-	
-		System.out.println(visualLocatorsSimilarityMap);
-		
-		return Integer.parseInt(getStateWithMinimumSimilarityScore(visualLocatorsSimilarityMap));
-		
+
+//		System.out.println(beforeStatesSimilarityMap);
+//		System.out.println(afterStatesSimilarityMap);
+
+		return Integer.parseInt(state);
+
 	}
 
 	private static String getStateWithMinimumSimilarityScore(Map<String, Double> visualLocatorsSimilarityMap) {
-		return Collections.min(visualLocatorsSimilarityMap.entrySet(), Comparator.comparingDouble(Entry::getValue)).getKey();
+		return Collections.min(visualLocatorsSimilarityMap.entrySet(), Comparator.comparingDouble(Entry::getValue))
+				.getKey();
 	}
 
 }

@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -98,6 +99,16 @@ public class UtilsRepair {
 		for (Integer i : tc.getStatements().keySet()) {
 			System.out.println(tc.getStatements().get(i));
 		}
+	}
+
+	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace,
+			File[] beforeBrokenTrace) {
+		
+		int min = Math.min(afterCorrectTrace.length, beforeCorrectTrace.length);
+		min = Math.min(min, afterBrokenTrace.length);
+		min = Math.min(min, beforeBrokenTrace.length);
+		
+		return min;
 	}
 
 }
