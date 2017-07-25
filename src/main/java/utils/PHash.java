@@ -1,6 +1,9 @@
 package utils;
 
+import java.io.File;
 import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 
 import com.pragone.jphash.jpHash;
 import com.pragone.jphash.image.radial.RadialHash;
@@ -19,7 +22,12 @@ public class PHash {
 
 		RadialHash hash2 = jpHash.getImageRadialHash(imagepath2);
 
-		return jpHash.getSimilarity(hash1, hash2);
+		Double sim = jpHash.getSimilarity(hash1, hash2);
+
+		FileUtils.deleteQuietly(new File(imagepath1));
+		FileUtils.deleteQuietly(new File(imagepath2));
+
+		return sim;
 
 	}
 }
