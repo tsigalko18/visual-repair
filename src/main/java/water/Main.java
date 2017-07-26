@@ -1,4 +1,4 @@
-package visualrepair;
+package water;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,8 +56,10 @@ public class Main {
 				pt.setFolder(Settings.testingTestSuiteVisualTraceExecutionFolder);
 				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
 
-				// apply repair algorithms
-				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
+				// apply WATER repair algorithm
+				Water water = new Water(testBroken, testCorrect, exception);
+				water.getRepairs();
+//				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
 
 			}
 

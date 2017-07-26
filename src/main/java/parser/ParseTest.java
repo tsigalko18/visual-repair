@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.Result;
 
-import config.Settings;
 import datatype.DriverGet;
 import datatype.EnhancedAssertion;
 import datatype.EnhancedSelect;
@@ -40,7 +39,7 @@ public class ParseTest {
 	 * @param clazz
 	 * @return EnhancedTestCase
 	 */
-	public EnhancedTestCase parse(String clazz) {
+	public EnhancedTestCase parseAndSerialize(String clazz) {
 
 		CompilationUnit cu = null;
 
@@ -68,7 +67,7 @@ public class ParseTest {
 	 * @return EnhancedTestCase
 	 * @throws IOException
 	 */
-	public static EnhancedTestCase saveToJava(EnhancedTestCase newTest, String clazz) throws IOException {
+	public static EnhancedTestCase parseAndSaveToJava(EnhancedTestCase newTest, String clazz) throws IOException {
 
 		tc = newTest;
 
