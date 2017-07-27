@@ -34,7 +34,7 @@ import japa.parser.ast.stmt.Statement;
 
 public class UtilsParser {
 
-	public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	/**
 	 * Auxiliary method to get the value for the get statement
@@ -72,9 +72,9 @@ public class UtilsParser {
 	 * @return
 	 * @throws Exception
 	 */
-	public static File getScreenshot(String name, int beginLine, String type) throws Exception {
+	public static File getScreenshot(String name, int beginLine, String type, String folder) throws Exception {
 
-		String p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name + Settings.separator;
+		String p = folder + name + Settings.separator;
 
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
@@ -104,27 +104,17 @@ public class UtilsParser {
 	 * @return
 	 * @throws Exception
 	 */
-	public static File getHTMLDOMfile(String name, int beginLine, String type, String useExtension) throws Exception {
+	public static File getHTMLDOMfile(String name, int beginLine, String type, String useExtension, String folder)
+			throws Exception {
 
-		String p;
-
-		p = Settings.testingTestSuiteVisualTraceExecutionFolder + name + Settings.separator + beginLine + "-" + type
-				+ "-" + name + "-" + beginLine;
-
-		// if(Settings.INRECORDING){
-		// p = Settings.referenceTestSuiteVisualTraceExecutionFolder + name +
-		// Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
-		// } else {
-		// p = Settings.testingTestSuiteVisualTraceExecutionFolder + name +
-		// Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
-		// }
+		String p = folder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
 
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.endsWith(".html"));
+				return (n.endsWith(Settings.HTML_EXTENSION));
 			}
 		});
 
@@ -144,7 +134,7 @@ public class UtilsParser {
 	 * @return
 	 */
 	public static String getClassNameFromPath(String arg) {
-		return arg.substring(arg.lastIndexOf("/") + 1).replace(".java", "");
+		return arg.substring(arg.lastIndexOf("/") + 1).replace(Settings.JAVA_EXTENSION, "");
 	}
 
 	/**
@@ -251,7 +241,7 @@ public class UtilsParser {
 	}
 
 	/**
-	 * Save the exception in JSON format
+	 * 
 	 * 
 	 * @param tc
 	 * @param path
@@ -447,8 +437,6 @@ public class UtilsParser {
 			s = f.getMessage().toString().substring(0, f.getException().toString().indexOf("For documentation", 0));
 			s = s.substring(0, s.indexOf("For documentation"));
 		} else {
-			// s = f.getMessage().toString().substring(0,
-			// f.getException().toString().indexOf(":", 0));
 			s = f.getMessage().toString().substring(0, f.getMessage().toString().indexOf("Command"));
 		}
 

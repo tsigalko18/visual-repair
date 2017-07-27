@@ -26,11 +26,11 @@ import utils.UtilsRepair;
 public class ParseTest {
 
 	static EnhancedTestCase tc;
-	String folder;
+	static String folder;
 
-	public ParseTest(String folder) {
+	public ParseTest(String f) {
 		super();
-		this.folder = folder;
+		folder = f;
 	}
 
 	/**
@@ -56,8 +56,12 @@ public class ParseTest {
 		return tc;
 	}
 
-	public void setFolder(String folder) {
-		this.folder = folder;
+	public void setFolder(String f) {
+		folder = f;
+	}
+
+	private static String getFolder() {
+		return folder;
 	}
 
 	/**
@@ -153,7 +157,8 @@ public class ParseTest {
 							&& !st.toString().contains("new Select")) {
 
 						EnhancedWebElement ewe = new EnhancedWebElement();
-						ewe.setLine(st.getBeginLine());
+						int line = st.getBeginLine();
+						ewe.setLine(line);
 						ewe.setDomLocator(UtilsParser.getDomLocator(st));
 
 						if (st.toString().contains("click()")) {
@@ -171,22 +176,22 @@ public class ParseTest {
 						}
 
 						try {
-							// get the screenshots
-							ewe.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
-							ewe.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
+							/* get the screenshots. */
+							ewe.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
+							ewe.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
 							ewe.setVisualLocator(
-									UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
 							ewe.setAnnotatedScreenshot(
-									UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
 
-							// get the DOMs
-							ewe.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
-							ewe.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
+							/* get the DOMs. */
+							ewe.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
+							ewe.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 
-						tc.addStatement(ewe.getLine(), ewe);
+						tc.addStatement(line, ewe);
 
 					}
 					// select
@@ -194,7 +199,8 @@ public class ParseTest {
 							&& st.toString().contains("new Select")) {
 
 						EnhancedSelect esl = new EnhancedSelect();
-						esl.setLine(st.getBeginLine());
+						int line = st.getBeginLine();
+						esl.setLine(line);
 						esl.setDomLocator(UtilsParser.getDomLocator(st));
 
 						if (st.toString().contains("selectByVisibleText")) {
@@ -210,27 +216,27 @@ public class ParseTest {
 
 						try {
 							// get the screenshots
-							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
-							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
+							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
+							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
 							esl.setVisualLocator(
-									UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
 							esl.setAnnotatedScreenshot(
-									UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
 
 							// get the DOMs
-							esl.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
-							esl.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
+							esl.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
+							esl.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 
-						tc.addStatement(esl.getLine(), esl);
+						tc.addStatement(line, esl);
 					}
 					// assertion
 					else if (st.toString().contains("driver.findElement(") && st.toString().contains("assert")) {
 
 						EnhancedAssertion ea = new EnhancedAssertion();
-
+						int line = st.getBeginLine();
 						ea.setAssertion(UtilsParser.getAssertion(st));
 						ea.setPredicate(UtilsParser.getPredicate(st));
 
@@ -241,26 +247,26 @@ public class ParseTest {
 							System.err.println("[LOG]\tAnalysing an assertion with no getText()");
 						}
 
-						ea.setLine(st.getBeginLine());
+						ea.setLine(line);
 						ea.setDomLocator(UtilsParser.getDomLocator(st));
 
 						try {
 							// get the screenshots
-							ea.setScreenshotBefore(UtilsParser.getScreenshot(className, st.getBeginLine(), "1before"));
-							ea.setScreenshotAfter(UtilsParser.getScreenshot(className, st.getBeginLine(), "2after"));
+							ea.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
+							ea.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
 							ea.setVisualLocator(
-									UtilsParser.getScreenshot(className, st.getBeginLine(), "visualLocator"));
+									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
 							ea.setAnnotatedScreenshot(
-									UtilsParser.getScreenshot(className, st.getBeginLine(), "Annotated"));
+									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
 
 							// get the DOMs
-							ea.setDomBefore(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "1before", ""));
-							ea.setDomAfter(UtilsParser.getHTMLDOMfile(className, st.getBeginLine(), "2after", ""));
+							ea.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
+							ea.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 
-						tc.addStatement(ea.getLine(), ea);
+						tc.addStatement(line, ea);
 
 					}
 				}

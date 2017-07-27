@@ -14,51 +14,54 @@ import datatype.HtmlDomTreeWithRTree;
 public class UtilsAspect {
 
 	/**
-	 * return an identifier for the statement in the 
-	 * form <testname>-<line> from a joinPoint of type WebElement
+	 * return an identifier for the statement in the form <testname>-<line> from a
+	 * joinPoint of type WebElement
+	 * 
 	 * @param joinPoint
 	 * @return String
 	 */
 	public static String getStatementNameFromJoinPoint(JoinPoint joinPoint) {
-		
+
 		String name = "";
-		
+
 		name = joinPoint.getStaticPart().getSourceLocation().getFileName().replace(".java", "");
 		name = name.concat("-");
 		name = name.concat(Integer.toString(joinPoint.getStaticPart().getSourceLocation().getLine()));
-		
+
 		return name;
 	}
-	
+
 	/**
 	 * return the statement line from a joinPoint of type WebElement
+	 * 
 	 * @param joinPoint
 	 * @return int
 	 */
 	public static int getStatementLineFromJoinPoint(JoinPoint joinPoint) {
 		return joinPoint.getStaticPart().getSourceLocation().getLine();
 	}
-	
-	
+
 	/**
 	 * creates a directory in the project workspace
+	 * 
 	 * @param joinPoint
 	 * @return int
 	 */
-	public static void createTestFolder(String path){
-		
+	public static void createTestFolder(String path) {
+
 		File theDir = new File(path);
-		if (!theDir.exists())
-		{
-			
-			if(Settings.VERBOSE) System.out.print("[LOG]\tcreating directory " + path + "...");
-			
+		if (!theDir.exists()) {
+
+			if (Settings.VERBOSE)
+				System.out.print("[LOG]\tcreating directory " + path + "...");
+
 			boolean result = theDir.mkdir();
-			if (result)
-			{
-				if(Settings.VERBOSE) System.out.println("done");
+			if (result) {
+				if (Settings.VERBOSE)
+					System.out.println("done");
 			} else {
-				if(Settings.VERBOSE) System.out.print("failed!");
+				if (Settings.VERBOSE)
+					System.out.print("failed!");
 				System.exit(1);
 			}
 		}
@@ -66,59 +69,59 @@ public class UtilsAspect {
 
 	/**
 	 * save an HTML file of the a WebDriver instance
+	 * 
 	 * @param d
 	 * @param filePath
 	 */
 	public static void saveDOM(WebDriver d, String filePath) {
-		
+
 		try {
 			FileUtils.writeStringToFile(new File(filePath), d.getPageSource());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
-	 * Save rendered webpage
-	 * path = where to save the html file
+	 * Save rendered webpage path = where to save the html file
 	 */
-	public static File saveHTMLPage(String urlString, String path) throws IOException
-	{
-		// wget to save html page
-		Runtime runtime = Runtime.getRuntime();
-		Process p = runtime.exec("/usr/local/bin/wget -p -k -E -nd -P " + path + " " + urlString);
-		try
-		{
-			p.waitFor();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+	public static File saveHTMLPage(String urlString, String path) throws IOException {
 
 		File savedHTML = new File(path);
+		
+		if (!savedHTML.exists()) {
+			
+			// wget to save html page
+			Runtime runtime = Runtime.getRuntime();
+			Process p = runtime.exec("/usr/local/bin/wget -p -k -E -nd -P " + path + " " + urlString);
+			
+			try {
+				p.waitFor();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+
 		return savedHTML;
 	}
 
-	public static void createHTMLDomTree(WebDriver d, String domFile, String domTreeFile) throws SAXException, IOException {
-		
-//		System.out.println("STARTED BUILDING RTREE");
-		
+	public static void createHTMLDomTree(WebDriver d, String domFile, String domTreeFile)
+			throws SAXException, IOException {
+
+		// System.out.println("STARTED BUILDING RTREE");
+
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(d, domFile);
 		rt.buildHtmlDomTree();
 		rt.preOrderTraversalRTree();
-		
-		if(domTreeFile != ""){
+
+		if (domTreeFile != "" || domTreeFile != null) {
 			UtilsParser.serializeHtmlDomTree(rt, domTreeFile);
 		}
-		
-//		System.out.println("ENDED BUILDING RTREE");
-		
-//		System.out.println(rt.getRoot().getData().getTagName());
-		
+
+		// System.out.println("ENDED BUILDING RTREE");
+
 	}
 
-	
-	
 }

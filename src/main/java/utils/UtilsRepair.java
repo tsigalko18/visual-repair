@@ -103,11 +103,11 @@ public class UtilsRepair {
 
 	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace,
 			File[] beforeBrokenTrace) {
-		
+
 		int min = Math.min(afterCorrectTrace.length, beforeCorrectTrace.length);
 		min = Math.min(min, afterBrokenTrace.length);
 		min = Math.min(min, beforeBrokenTrace.length);
-		
+
 		return min;
 	}
 

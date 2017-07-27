@@ -39,7 +39,7 @@ public class Main {
 
 				System.out.println("[LOG]\tTest " + file.getName());
 
-				// load the exception
+				/* load the exception. */
 				File ex = UtilsGetters.getExceptionFile(file);
 				exception = UtilsParser.readException(ex.getAbsolutePath());
 
@@ -48,16 +48,16 @@ public class Main {
 					System.out.print("[LOG]\t" + exception.getMessage());
 				}
 
-				// load the broken test
-				ParseTest pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
+				/* load the broken test. */
+				ParseTest pt = new ParseTest(Settings.testingTestSuiteVisualTraceExecutionFolder);
 				testBroken = pt.parseAndSerialize(UtilsGetters.getTestFile(file.getName(), Settings.pathToTestSuiteUnderTest));
 
-				// load the correct test
-				pt.setFolder(Settings.testingTestSuiteVisualTraceExecutionFolder);
+				/* load the correct test. */
+				pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
 				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
 
-				// apply repair algorithms
-				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
+				/* apply repair algorithms. */
+//				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
 
 			}
 

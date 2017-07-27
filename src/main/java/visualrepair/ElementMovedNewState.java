@@ -23,7 +23,6 @@ import datatype.HtmlElement;
 import datatype.Node;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
-import utils.PHash;
 import utils.UtilsGetters;
 import utils.UtilsParser;
 import utils.UtilsRepair;
@@ -41,21 +40,21 @@ public class ElementMovedNewState {
 
 		System.out.println("[LOG]\tApplying repair strategy <searchElementNewState>");
 
-		/* detect the broken statement visually
-		 * TODO: now basically returns brokenStatement - 1
+		/*
+		 * detect the broken statement visually TODO: now basically returns
+		 * brokenStatement - 1
 		 */
 		int brokenStatementLine = detectMismatchVisually(c, b, e);
-		
-		/* load HTML page at brokenStatementLine */
-		
+
+		/* load HTML page at brokenStatementLine. */
+
 		/* get list of clickable elements */
-		
-		/* for each clickable 
-		 * 	1. generate action (i.e., click)
-		 *  2. insert in test
-		 *  3. run? finish
-		 * */
-		
+
+		/*
+		 * for each clickable 1. generate action (i.e., click) 2. insert in test 3. run?
+		 * finish
+		 */
+
 		/* get list of clickable elements */
 
 		// get the broken statement
@@ -144,31 +143,34 @@ public class ElementMovedNewState {
 		Map<String, Double> afterStatesSimilarityMap = new HashMap<String, Double>();
 
 		String state = null;
-		
+
 		for (int i = 0; i < min; i++) {
 
 			state = beforeCorrectTrace[i].getName().substring(0, 2);
 
-//			System.out.println(state);
-//			System.out.println("\t" + beforeCorrectTrace[i].getPath());
-//			System.out.println("\t" + beforeBrokenTrace[i].getPath());
-//			System.out.println("\tbefore:\t" + ip.compareImagesByHistogram(path + beforeCorrectTrace[i].getPath(),
-//					path + beforeBrokenTrace[i].getPath()));
-//			System.out.println("\tafter:\t" + ip.compareImagesByHistogram(path + afterCorrectTrace[i].getPath(),
-//					path + afterBrokenTrace[i].getPath()));
-			
-			
+			// System.out.println(state);
+			// System.out.println("\t" + beforeCorrectTrace[i].getPath());
+			// System.out.println("\t" + beforeBrokenTrace[i].getPath());
+			// System.out.println("\tbefore:\t" + ip.compareImagesByHistogram(path +
+			// beforeCorrectTrace[i].getPath(),
+			// path + beforeBrokenTrace[i].getPath()));
+			// System.out.println("\tafter:\t" + ip.compareImagesByHistogram(path +
+			// afterCorrectTrace[i].getPath(),
+			// path + afterBrokenTrace[i].getPath()));
+
 			beforeStatesSimilarityMap.put(state, ip.compareImagesByHistogram(path + beforeCorrectTrace[i].getPath(),
 					path + beforeBrokenTrace[i].getPath()));
 
 			afterStatesSimilarityMap.put(state, ip.compareImagesByHistogram(path + afterCorrectTrace[i].getPath(),
 					path + afterBrokenTrace[i].getPath()));
-			
-//			beforeStatesSimilarityMap.put(state, PHash.getPHashSimiliarity(path + beforeCorrectTrace[i].getPath(),
-//					path + beforeBrokenTrace[i].getPath()));
-//
-//			afterStatesSimilarityMap.put(state, PHash.getPHashSimiliarity(path + afterCorrectTrace[i].getPath(),
-//					path + afterBrokenTrace[i].getPath()));
+
+			// beforeStatesSimilarityMap.put(state, PHash.getPHashSimiliarity(path +
+			// beforeCorrectTrace[i].getPath(),
+			// path + beforeBrokenTrace[i].getPath()));
+			//
+			// afterStatesSimilarityMap.put(state, PHash.getPHashSimiliarity(path +
+			// afterCorrectTrace[i].getPath(),
+			// path + afterBrokenTrace[i].getPath()));
 
 			// System.out.println(afterCorrectTrace[i]);
 			// System.out.println(afterBrokenTrace[i] + "\n");
@@ -177,8 +179,8 @@ public class ElementMovedNewState {
 			// System.out.println(beforeBrokenTrace[i]);
 		}
 
-//		System.out.println(beforeStatesSimilarityMap);
-//		System.out.println(afterStatesSimilarityMap);
+		// System.out.println(beforeStatesSimilarityMap);
+		// System.out.println(afterStatesSimilarityMap);
 
 		return Integer.parseInt(state);
 

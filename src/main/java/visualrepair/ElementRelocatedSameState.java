@@ -27,18 +27,19 @@ public class ElementRelocatedSameState {
 
 		System.out.println("[LOG]\tApplying visual repair strategy <searchLocatorWithinTheSameState>");
 
-		// read the broken statement line from the exception
+		/* get the line responsible for the breakage. */
 		int brokenStatementLine = Integer.parseInt(e.getInvolvedLine());
 
-		// get the broken statement
+		/*  get the statement in the correct test case. */
 		Statement oldst = c.getStatements().get(brokenStatementLine);
 
-		// get the correct statement in the correct version
+		/*  get the statement in the broken test case. */
 		Statement newst = b.getStatements().get(brokenStatementLine);
 
-		// get the visual locator on the old page
+		/*  get the visual locator of the statement in the correct test case. */
 		String template = oldst.getVisualLocator().toString();
 
+		/*  open the web page of the new version. */
 		String htmlFile;
 		if (oldst.getDomBefore() == null) {
 			htmlFile = oldst.getDomAfter().getAbsolutePath();
@@ -49,20 +50,21 @@ public class ElementRelocatedSameState {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
+		/*  extra check for the cases when the authentication is needed. */
 		System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
 		while (!scanner.next().equals("Y")) {
 		}
 
-		// screenshot here
+		/*  get the screenshot of the web page in the new version. */
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
 
-		// find best visual match
+		/*  find the best visual match. */
 		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
 
 		long startTime = System.currentTimeMillis();
 
-		// build RTree for the HTML page
+		/*  build the RTree for the web page. */
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
 		rt.buildHtmlDomTree();
 		// rt.preOrderTraversalRTree();
@@ -71,7 +73,7 @@ public class ElementRelocatedSameState {
 		long elapsedTime = stopTime - startTime;
 		System.out.println("RTree built in: " + elapsedTime / 1000);
 
-		// search element in the RTree
+		/*  search the web element in the RTree. */ 
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
 
 		if (Settings.VERBOSE) {
@@ -81,9 +83,9 @@ public class ElementRelocatedSameState {
 		List<HtmlElement> rep = new LinkedList<HtmlElement>();
 
 		for (Node<HtmlElement> htmlElement : result) {
+			
 			rep.add(htmlElement.getData());
 
-			// print repaired test cases
 			SeleniumLocator newlocator = null;
 
 			if (result.get(0).getData().getTagName().equals("option")) {
@@ -95,6 +97,7 @@ public class ElementRelocatedSameState {
 				newst.setDomLocator(newlocator);
 			}
 
+			/*  print the repaired test case. */ 
 			newst.setDomLocator(newlocator);
 			b.addStatement(Integer.parseInt(e.getInvolvedLine()), newst);
 

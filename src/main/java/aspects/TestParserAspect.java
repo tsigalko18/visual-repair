@@ -1,4 +1,4 @@
-package main.java.aspects;
+package aspects;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +14,7 @@ public class TestParserAspect {
 
 	@Before("testMethodEntryPoint(JoinPoint)")
 	public void executeBeforeEnteringTestMethod(JoinPoint joinPoint) {
-		System.out.println("[LOG]   Entering Test " + joinPoint.getStaticPart().getSignature().getName());
+		System.out.println("[LOG]\tEntering Test " + joinPoint.getStaticPart().getSignature().getName());
 	}
 
 }
