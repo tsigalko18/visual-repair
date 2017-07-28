@@ -270,6 +270,23 @@ public class HtmlDomTree {
 		return null;
 	}
 
+	public void getClickables(List<String> tags, List<Node<HtmlElement>> nodes) {
+		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
+		q.add(this.root);
+
+		while (!q.isEmpty()) {
+			Node<HtmlElement> node = q.remove();
+			if (tags.contains(node.getData().getTagName())) {
+				nodes.add(node);
+			}
+			if (node.getChildren() != null) {
+				for (Node<HtmlElement> child : node.getChildren()) {
+					q.add(child);
+				}
+			}
+		}
+	}
+
 	private static boolean containsAttributeValue(Map<String, String> m, String a, String v) {
 		if (m.containsKey(a))
 			return m.get(a).equals(v);

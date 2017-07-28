@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -26,6 +27,7 @@ import com.google.gson.JsonSyntaxException;
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
+import datatype.HtmlDomTree;
 import datatype.HtmlDomTreeWithRTree;
 import datatype.HtmlElement;
 import datatype.Node;
@@ -470,6 +472,21 @@ public class UtilsParser {
 		for (int i = 0; i < s.length(); i++)
 			System.out.print("*");
 		System.out.print("\n");
+	}
+
+	/**
+	 * retrieve the HTML elements
+	 * 
+	 * @param dt
+	 * @param list
+	 */
+	public static void extractClickablesFromHtmlPage(HtmlDomTree dt, List<Node<HtmlElement>> list) {
+
+		List<String> tags = new LinkedList<String>();
+		tags.add("a");
+		tags.add("input");
+		dt.getClickables(tags, list);
+
 	}
 
 }

@@ -57,7 +57,7 @@ public class Main {
 				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
 
 				/* apply repair algorithms. */
-//				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
+				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
 
 			}
 

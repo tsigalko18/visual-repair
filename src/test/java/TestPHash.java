@@ -1,4 +1,4 @@
-package testPHash;
+
 
 import static org.junit.Assert.*;
 
