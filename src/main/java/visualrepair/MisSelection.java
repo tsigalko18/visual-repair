@@ -21,6 +21,7 @@ import datatype.EnhancedTestCase;
 import datatype.HtmlDomTreeWithRTree;
 import datatype.HtmlElement;
 import datatype.Node;
+import datatype.SeleniumLocator;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
 import utils.PHash;
@@ -37,7 +38,7 @@ public class MisSelection {
 
 	private static Scanner scanner = new Scanner(System.in);
 
-	static List<HtmlElement> searchForMisSelection(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+	static List<EnhancedTestCase> searchForMisSelection(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
 			throws SAXException, IOException {
 
 		System.out.println("[LOG]\tApplying visual repair strategy <searchForMisSelection>");
@@ -94,12 +95,36 @@ public class MisSelection {
 			// UtilsParser.printResults(result, rt);
 		}
 
-		List<HtmlElement> rep = new LinkedList<HtmlElement>();
+//		List<HtmlElement> rep = new LinkedList<HtmlElement>();
+//		for (Node<HtmlElement> htmlElement : result) {
+//			rep.add(htmlElement.getData());
+//		}
+
+		////////////
+		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
+
 		for (Node<HtmlElement> htmlElement : result) {
-			rep.add(htmlElement.getData());
+
+			SeleniumLocator newlocator = null;
+
+			if (htmlElement.getData().getTagName().equals("option")) {
+				Node<HtmlElement> option = htmlElement.getParent();
+				newlocator = new SeleniumLocator("xpath", option.getData().getXPath());
+				newst.setDomLocator(newlocator);
+			} else {
+				newlocator = new SeleniumLocator("xpath", htmlElement.getData().getXPath());
+				newst.setDomLocator(newlocator);
+			}
+			
+			newst.setDomLocator(newlocator);
+
+			EnhancedTestCase temp = UtilsRepair.copyTest(b);
+			temp.addAndReplaceStatement(brokenStatementLine, newst);
+			candidateRepairs.add(temp);
+
 		}
 
-		return rep;
+		return candidateRepairs;
 	}
 
 	private static int detectMismatchVisually(EnhancedTestCase correct, EnhancedTestCase broken, EnhancedException e)

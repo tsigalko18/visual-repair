@@ -9,7 +9,6 @@ import org.xml.sax.SAXException;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTree;
-import datatype.HtmlElement;
 
 public class RepairStrategies {
 
@@ -33,8 +32,8 @@ public class RepairStrategies {
 			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
 
 			// apply strategy 2
-			// if (repairs.isEmpty())
-			// repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
+			if (repairs.isEmpty())
+				repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
 
 			// apply strategy 3
 			if (repairs.isEmpty())
