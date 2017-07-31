@@ -79,10 +79,6 @@ public class ElementMovedNewState {
 			System.out.println(node.getData().getXPath());
 		}
 
-		/*
-		 * for each clickable found 1. generate action (i.e., click) 2. insert in test
-		 * 3. run? finish
-		 */
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
 
 		// System.out.println("ORIGINAL TEST");

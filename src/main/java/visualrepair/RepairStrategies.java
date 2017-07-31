@@ -30,16 +30,15 @@ public class RepairStrategies {
 		if (e.getMessage().contains("Unable to locate element")) {
 
 			// apply strategy 1
-//			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
+			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
 
 			// apply strategy 2
-//			if (repairs.isEmpty())
-//				repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
-			
+			// if (repairs.isEmpty())
+			// repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
+
 			// apply strategy 3
 			if (repairs.isEmpty())
-				 repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c));
-			
+				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c));
 
 		} else if (e.getMessage().contains("Assertion error")) {
 
