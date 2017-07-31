@@ -99,7 +99,7 @@ public class ElementRelocatedSameState {
 
 			/*  print the repaired test case. */ 
 			newst.setDomLocator(newlocator);
-			b.addStatement(Integer.parseInt(e.getInvolvedLine()), newst);
+			b.addAndReplaceStatement(Integer.parseInt(e.getInvolvedLine()), newst);
 
 			UtilsRepair.printTestCase(b);
 		}

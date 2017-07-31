@@ -12,7 +12,6 @@ import com.google.gson.JsonSyntaxException;
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
-import datatype.HtmlElement;
 import parser.ParseTest;
 import utils.FileFilters;
 import utils.UtilsGetters;
@@ -23,7 +22,7 @@ public class Main {
 	static EnhancedException exception;
 	static EnhancedTestCase testCorrect;
 	static EnhancedTestCase testBroken;
-	static List<HtmlElement> repairs;
+	static List<EnhancedTestCase> repairs;
 
 	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
 
@@ -49,12 +48,13 @@ public class Main {
 				}
 
 				/* load the broken test. */
+				String name = file.getName();
 				ParseTest pt = new ParseTest(Settings.testingTestSuiteVisualTraceExecutionFolder);
-				testBroken = pt.parseAndSerialize(UtilsGetters.getTestFile(file.getName(), Settings.pathToTestSuiteUnderTest));
+				testBroken = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToTestSuiteUnderTest));
 
 				/* load the correct test. */
 				pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(file.getName(), Settings.pathToReferenceTestSuite));
+				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToReferenceTestSuite));
 
 				/* apply repair algorithms. */
 				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);

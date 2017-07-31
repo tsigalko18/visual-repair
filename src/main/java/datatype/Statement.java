@@ -28,8 +28,6 @@ public abstract class Statement {
 	
 	private VisualState visualState;
 	
-
-
 	// DOM-based information
 	private File htmlPage;
 

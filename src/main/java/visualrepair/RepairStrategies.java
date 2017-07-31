@@ -13,7 +13,7 @@ import datatype.HtmlElement;
 
 public class RepairStrategies {
 
-	static List<HtmlElement> repairs;
+	static List<EnhancedTestCase> repairs;
 	static EnhancedTestCase broken;
 	static EnhancedTestCase correct;
 	static EnhancedException ex;
@@ -21,10 +21,10 @@ public class RepairStrategies {
 	static String locator;
 	static HtmlDomTree newDom;
 
-	public static List<HtmlElement> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+	public static List<EnhancedTestCase> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
 			throws SAXException, IOException {
 
-		repairs = new LinkedList<HtmlElement>();
+		repairs = new LinkedList<EnhancedTestCase>();
 
 		// locator error
 		if (e.getMessage().contains("Unable to locate element")) {
@@ -33,16 +33,13 @@ public class RepairStrategies {
 //			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
 
 			// apply strategy 2
-			// if (repairs.isEmpty())
-			// repairs = searchLocatorWithinNeighbouringhStates();
-
-			// apply strategy 3
 //			if (repairs.isEmpty())
 //				repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
-
-			// apply strategy 4
+			
+			// apply strategy 3
 			if (repairs.isEmpty())
-				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c));
+				 repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c));
+			
 
 		} else if (e.getMessage().contains("Assertion error")) {
 
@@ -70,12 +67,12 @@ public class RepairStrategies {
 		return repairs;
 	}
 
-	private static List<HtmlElement> getNewActualValue() {
+	private static List<EnhancedTestCase> getNewActualValue() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private static List<HtmlElement> getNewDropdownlistAttributes() {
+	private static List<EnhancedTestCase> getNewDropdownlistAttributes() {
 		// TODO Auto-generated method stub
 		return null;
 	}

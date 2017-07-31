@@ -150,7 +150,7 @@ public class ParseTest {
 						dg.setLine(st.getBeginLine());
 						dg.setValue(UtilsParser.getUrlFromDriverGet(st));
 
-						tc.addStatement(dg.getLine(), dg);
+						tc.addStatementAtPosition(dg.getLine(), dg);
 
 						// web element not assertion not select
 					} else if (st.toString().contains("driver.findElement(") && !st.toString().contains("assert")
@@ -191,7 +191,7 @@ public class ParseTest {
 							e.printStackTrace();
 						}
 
-						tc.addStatement(line, ewe);
+						tc.addStatementAtPosition(line, ewe);
 
 					}
 					// select
@@ -230,7 +230,7 @@ public class ParseTest {
 							e.printStackTrace();
 						}
 
-						tc.addStatement(line, esl);
+						tc.addStatementAtPosition(line, esl);
 					}
 					// assertion
 					else if (st.toString().contains("driver.findElement(") && st.toString().contains("assert")) {
@@ -266,7 +266,7 @@ public class ParseTest {
 							e.printStackTrace();
 						}
 
-						tc.addStatement(line, ea);
+						tc.addStatementAtPosition(line, ea);
 
 					}
 				}

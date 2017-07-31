@@ -18,9 +18,11 @@ import org.xml.sax.SAXException;
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
+import datatype.EnhancedWebElement;
 import datatype.HtmlDomTree;
 import datatype.HtmlElement;
 import datatype.Node;
+import datatype.SeleniumLocator;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
 import utils.UtilsGetters;
@@ -34,7 +36,7 @@ public class ElementMovedNewState {
 		nu.pattern.OpenCV.loadShared();
 	}
 
-	static List<HtmlElement> searchElementNewState(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+	static List<EnhancedTestCase> searchElementNewState(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
 			throws SAXException, IOException {
 
 		System.out.println("[LOG]\tApplying repair strategy <searchElementNewState>");
@@ -63,7 +65,7 @@ public class ElementMovedNewState {
 
 		File newpage = new File(htmlFile);
 		FileUtils.write(newpage, driver.getPageSource());
-		
+
 		// build RTree for the HTML page
 		HtmlDomTree dt = new HtmlDomTree(driver, htmlFile);
 		dt.buildHtmlDomTree();
@@ -76,79 +78,35 @@ public class ElementMovedNewState {
 		for (Node<HtmlElement> node : clickables) {
 			System.out.println(node.getData().getXPath());
 		}
-		
-		System.exit(1);
 
 		/*
-		 * for each clickable 1. generate action (i.e., click) 2. insert in test 3. run?
-		 * finish
+		 * for each clickable found 1. generate action (i.e., click) 2. insert in test
+		 * 3. run? finish
 		 */
+		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
 
-		// get the broken statement
-		// Statement oldst = c.getStatements().get(brokenStatementLine);
-		//
-		// // get the correct statement in the correct version
-		// Statement newst = b.getStatements().get(brokenStatementLine);
-		//
-		// // get the visual locator on the old page
-		// String template = oldst.getVisualLocator().toString();
-		//
-		// String htmlFile;
-		// if (oldst.getDomBefore() == null) {
-		// htmlFile = oldst.getDomAfter().getAbsolutePath();
-		// } else
-		// htmlFile = oldst.getDomBefore().getAbsolutePath();
-		//
-		// WebDriverSingleton instance = WebDriverSingleton.getInstance();
-		// instance.loadPage("file:///" + htmlFile);
-		// WebDriver driver = instance.getDriver();
-		//
-		// System.out.println("If the page is correctly displayed, type anything to
-		// proceed further");
-		// Scanner scanner = new Scanner(System.in);
-		// scanner.next();
-		// scanner.close();
-		//
-		// // build RTree for the HTML page
-		// HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
-		// rt.buildHtmlDomTree();
-		// // rt.preOrderTraversalRTree();
+		// System.out.println("ORIGINAL TEST");
+		// UtilsRepair.printTestCaseWithLineNumbers(b);
 
-		// screenshot here
-		// String currentScreenshot = System.getProperty("user.dir") +
-		// Settings.separator + "currentScreenshot.png";
-		// UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
-		//
-		// // find best visual match
-		// Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot,
-		// template);
-		//
-		// long startTime = System.currentTimeMillis();
-		//
-		// // build RTree for the HTML page
-		// HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
-		// rt.buildHtmlDomTree();
-		// // rt.preOrderTraversalRTree();
-		//
-		// long stopTime = System.currentTimeMillis();
-		// long elapsedTime = stopTime - startTime;
-		// System.out.println("RTree built in: " + elapsedTime / 1000);
-		//
-		// // search element in the RTree
-		// List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int)
-		// match.y);
-		//
-		// if (Settings.VERBOSE) {
-		// System.out.println(result.size() + " candidate(s) element found");
-		// // UtilsParser.printResults(result, rt);
-		// }
-		//
-		List<HtmlElement> rep = new LinkedList<HtmlElement>();
-		// for (Node<HtmlElement> htmlElement : result) {
-		// rep.add(htmlElement.getData());
-		// }
+		for (Node<HtmlElement> node : clickables) {
+			int newStatementLine = brokenStatementLine + 1;
 
-		return rep;
+			Statement newStatement = new EnhancedWebElement();
+			newStatement.setAction("click");
+			newStatement.setValue("");
+			newStatement.setLine(newStatementLine);
+			newStatement.setDomLocator(new SeleniumLocator("xpath", node.getData().getXPath()));
+
+			EnhancedTestCase temp = UtilsRepair.copyTest(b);
+			temp.addStatementAtPosition(newStatementLine, newStatement);
+			candidateRepairs.add(temp);
+
+			// System.out.println("\nREPAIRED TEST");
+			// UtilsRepair.printTestCaseWithLineNumbers(b);
+
+		}
+
+		return candidateRepairs;
 	}
 
 	private static int detectMismatchVisually(EnhancedTestCase correct, EnhancedTestCase broken, EnhancedException e)

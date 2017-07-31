@@ -101,6 +101,12 @@ public class UtilsRepair {
 		}
 	}
 
+	public static void printTestCaseWithLineNumbers(EnhancedTestCase tc) {
+		for (Integer i : tc.getStatements().keySet()) {
+			System.out.println(tc.getStatements().get(i).getLine() + ":\t" + tc.getStatements().get(i));
+		}
+	}
+
 	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace,
 			File[] beforeBrokenTrace) {
 
@@ -109,6 +115,14 @@ public class UtilsRepair {
 		min = Math.min(min, beforeBrokenTrace.length);
 
 		return min;
+	}
+
+	public static EnhancedTestCase copyTest(EnhancedTestCase b) {
+		EnhancedTestCase res = new EnhancedTestCase();
+		res.setName(b.getName());
+		res.setPath(b.getPath());
+		res.setStatements(b.getStatements());
+		return res;
 	}
 
 }
