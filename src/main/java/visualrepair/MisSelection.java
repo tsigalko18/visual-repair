@@ -38,7 +38,7 @@ public class MisSelection {
 
 	private static Scanner scanner = new Scanner(System.in);
 
-	static List<EnhancedTestCase> searchForMisSelection(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+	static List<EnhancedTestCase> searchForMisSelection(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c, boolean check)
 			throws SAXException, IOException {
 
 		System.out.println("[LOG]\tApplying visual repair strategy <searchForMisSelection>");
@@ -65,8 +65,11 @@ public class MisSelection {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
-		System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
-		while (!scanner.next().equals("Y")) {
+		if (check) {
+			/* extra check for the cases when the authentication is needed. */
+			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
+			while (!scanner.next().equals("Y")) {
+			}
 		}
 
 		// screenshot here
@@ -76,16 +79,16 @@ public class MisSelection {
 		// find best visual match
 		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
 
-		long startTime = System.currentTimeMillis();
+//		long startTime = System.currentTimeMillis();
 
 		// build RTree for the HTML page
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
 		rt.buildHtmlDomTree();
 		// rt.preOrderTraversalRTree();
 
-		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
-		System.out.println("RTree built in: " + elapsedTime / 1000);
+//		long stopTime = System.currentTimeMillis();
+//		long elapsedTime = stopTime - startTime;
+//		System.out.println("RTree built in: " + elapsedTime / 1000);
 
 		// search element in the RTree
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);

@@ -36,7 +36,9 @@ public class ElementMovedNewState {
 		nu.pattern.OpenCV.loadShared();
 	}
 
-	static List<EnhancedTestCase> searchElementNewState(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+	private static Scanner scanner = new Scanner(System.in);
+	
+	static List<EnhancedTestCase> searchElementNewState(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c, boolean check)
 			throws SAXException, IOException {
 
 		System.out.println("[LOG]\tApplying repair strategy <searchElementNewState>");
@@ -58,10 +60,12 @@ public class ElementMovedNewState {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
-		System.out.println("If the page is correctly displayed, type anything to proceed further");
-		Scanner scanner = new Scanner(System.in);
-		scanner.next();
-		scanner.close();
+		if (check) {
+			/* extra check for the cases when the authentication is needed. */
+			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
+			while (!scanner.next().equals("Y")) {
+			}
+		}
 
 		File newpage = new File(htmlFile);
 		FileUtils.write(newpage, driver.getPageSource());
@@ -85,8 +89,8 @@ public class ElementMovedNewState {
 		// UtilsRepair.printTestCaseWithLineNumbers(b);
 
 		for (Node<HtmlElement> node : clickables) {
+			
 			int newStatementLine = brokenStatementLine + 1;
-
 			Statement newStatement = new EnhancedWebElement();
 			newStatement.setAction("click");
 			newStatement.setValue("");
@@ -96,10 +100,7 @@ public class ElementMovedNewState {
 			EnhancedTestCase temp = UtilsRepair.copyTest(b);
 			temp.addStatementAtPosition(newStatementLine, newStatement);
 			candidateRepairs.add(temp);
-
-			// System.out.println("\nREPAIRED TEST");
-			// UtilsRepair.printTestCaseWithLineNumbers(b);
-
+			
 		}
 
 		return candidateRepairs;

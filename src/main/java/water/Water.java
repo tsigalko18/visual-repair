@@ -32,10 +32,10 @@ public class Water {
 		ex = e;
 
 		System.out.println("[LOG]\tLoading the old DOM");
-		oldDom = UtilsWater.getDom(correct, Integer.parseInt(e.getInvolvedLine()));
+		oldDom = UtilsWater.getDom(correct, Integer.parseInt(e.getInvolvedLine()), false);
 
 		System.out.println("[LOG]\tLoading the new DOM");
-		newDom = UtilsWater.getDom(broken, Integer.parseInt(e.getInvolvedLine()));
+		newDom = UtilsWater.getDom(broken, Integer.parseInt(e.getInvolvedLine()), false);
 	}
 
 	public List<EnhancedTestCase> suggestRepair() {
@@ -82,7 +82,6 @@ public class Water {
 		SeleniumLocator l = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine())).getDomLocator();
 
 		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l);
-		// HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l.getValue());
 
 		HtmlElement el = newTree.searchHtmlDomTreeByAttribute("id", oldNode.getId());
 		if (el != null)

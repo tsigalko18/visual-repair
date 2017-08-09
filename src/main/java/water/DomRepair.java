@@ -60,10 +60,15 @@ public class DomRepair {
 				pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
 				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToReferenceTestSuite));
 
+				long startTime = System.currentTimeMillis();
+				
 				/* apply repair algorithms. */
 				Water wt = new Water(testBroken, testCorrect, exception);
-				
 				repairs = wt.suggestRepair();
+				
+				long stopTime = System.currentTimeMillis();
+				long elapsedTime = stopTime - startTime;
+				System.out.println("Repairs found in: " + elapsedTime / 1000 + " s");
 
 				for (int i = 0; i < repairs.size(); i++) {
 					System.out.println("Repaired Test #" + i);

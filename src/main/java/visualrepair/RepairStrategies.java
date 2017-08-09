@@ -19,6 +19,7 @@ public class RepairStrategies {
 	static HtmlDomTree oldDom;
 	static String locator;
 	static HtmlDomTree newDom;
+	static boolean checkOnBrowser = false; 
 
 	public static List<EnhancedTestCase> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
 			throws SAXException, IOException {
@@ -29,15 +30,15 @@ public class RepairStrategies {
 		if (e.getMessage().contains("Unable to locate element")) {
 
 			// apply strategy 1
-			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c));
+			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c, checkOnBrowser));
 
 			// apply strategy 2
 			if (repairs.isEmpty())
-				repairs.addAll(MisSelection.searchForMisSelection(e, b, c));
+				repairs.addAll(MisSelection.searchForMisSelection(e, b, c, checkOnBrowser));
 
 			// apply strategy 3
 			if (repairs.isEmpty())
-				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c));
+				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c, checkOnBrowser));
 
 		} else if (e.getMessage().contains("Assertion error")) {
 

@@ -21,6 +21,7 @@ import parser.ParseTest;
 public class UtilsWater {
 
 	private static Scanner scanner;
+	static WebDriverSingleton instance;
 
 	/**
 	 * Return the list of nodes in @param newTree that are found similar to @param
@@ -69,7 +70,7 @@ public class UtilsWater {
 
 			return tree.searchHtmlDomTreeByXPath(loc);
 		}
-		
+
 		return null;
 	}
 
@@ -120,7 +121,7 @@ public class UtilsWater {
 		return similarNodes;
 	}
 
-	public static HtmlDomTree getDom(EnhancedTestCase tc, int line) throws SAXException, IOException {
+	public static HtmlDomTree getDom(EnhancedTestCase tc, int line, boolean check) throws SAXException, IOException {
 
 		scanner = new Scanner(System.in);
 
@@ -130,13 +131,15 @@ public class UtilsWater {
 		else
 			domPath = tc.getStatements().get(line).getDomBefore().getAbsolutePath();
 
-		WebDriverSingleton instance = WebDriverSingleton.getInstance();
+		instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + domPath);
 		WebDriver driver = instance.getDriver();
 
-		/* extra check for the cases when the authentication is needed. */
-		System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
-		while (!scanner.next().equals("Y")) {
+		if (check) {
+			/* extra check for the cases when the authentication is needed. */
+			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
+			while (!scanner.next().equals("Y")) {
+			}
 		}
 
 		HtmlDomTree domTree = new HtmlDomTree(driver, domPath);
@@ -186,4 +189,5 @@ public class UtilsWater {
 		}
 		return 0;
 	}
+
 }

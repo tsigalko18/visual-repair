@@ -23,7 +23,7 @@ public class ElementRelocatedSameState {
 	private static Scanner scanner = new Scanner(System.in);
 
 	static List<EnhancedTestCase> searchLocatorWithinTheSameState(EnhancedException e, EnhancedTestCase b,
-			EnhancedTestCase c) throws SAXException, IOException {
+			EnhancedTestCase c, boolean check) throws SAXException, IOException {
 
 		System.out.println("[LOG]\tApplying visual repair strategy <searchLocatorWithinTheSameState>");
 
@@ -50,13 +50,15 @@ public class ElementRelocatedSameState {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
-		/* extra check for the cases when the authentication is needed. */
-		System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
-		while (!scanner.next().equals("Y")) {
+		if (check) {
+			/* extra check for the cases when the authentication is needed. */
+			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
+			while (!scanner.next().equals("Y")) {
+			}
 		}
 
-		long startTime = System.currentTimeMillis();
-		
+//		long startTime = System.currentTimeMillis();
+
 		/* get the screenshot of the web page in the new version. */
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
@@ -75,10 +77,10 @@ public class ElementRelocatedSameState {
 		if (Settings.VERBOSE) {
 			System.out.println(result.size() + " candidate(s) element found");
 		}
-		
-		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
-		System.out.println("Repairs found in: " + elapsedTime / 1000);
+
+//		long stopTime = System.currentTimeMillis();
+//		long elapsedTime = stopTime - startTime;
+//		System.out.println("Repairs found in: " + elapsedTime + " ms");
 
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
 
@@ -94,7 +96,7 @@ public class ElementRelocatedSameState {
 				newlocator = new SeleniumLocator("xpath", htmlElement.getData().getXPath());
 				newst.setDomLocator(newlocator);
 			}
-			
+
 			newst.setDomLocator(newlocator);
 
 			EnhancedTestCase temp = UtilsRepair.copyTest(b);
