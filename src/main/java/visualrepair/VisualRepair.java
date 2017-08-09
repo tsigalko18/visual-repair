@@ -70,6 +70,8 @@ public class VisualRepair {
 			}
 
 		}
+		
+		System.exit(0);
 
 	}
 

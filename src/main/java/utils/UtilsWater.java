@@ -63,7 +63,16 @@ public class UtilsWater {
 		} else if (l.getStrategy().equals("xpath")) {
 			// differentiate further!!!
 			// supports only absolute xpaths
-			return tree.searchHtmlDomTreeByXPath(l.getValue());
+
+			/* workaround for XPath locators that need to be in a specific formate */
+			System.out.println(l.getValue());
+			System.out.println("Enter XPath");
+			String loc = "";
+			while (!loc.startsWith("/")) {
+				loc = scanner.nextLine();
+			}
+
+			return tree.searchHtmlDomTreeByXPath(loc);
 		}
 		return null;
 	}
@@ -100,7 +109,11 @@ public class UtilsWater {
 
 		scanner = new Scanner(System.in);
 
-		String domPath = tc.getStatements().get(line).getDomBefore().getAbsolutePath();
+		String domPath;
+		if (tc.getStatements().get(line).getDomBefore() == null)
+			domPath = tc.getStatements().get(line).getDomAfter().getAbsolutePath();
+		else
+			domPath = tc.getStatements().get(line).getDomBefore().getAbsolutePath();
 
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + domPath);

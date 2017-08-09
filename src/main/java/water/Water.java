@@ -30,7 +30,11 @@ public class Water {
 		broken = b;
 		correct = c;
 		ex = e;
+
+		System.out.println("[LOG]\tLoading the old DOM");
 		oldDom = UtilsWater.getDom(correct, Integer.parseInt(e.getInvolvedLine()));
+
+		System.out.println("[LOG]\tLoading the new DOM");
 		newDom = UtilsWater.getDom(broken, Integer.parseInt(e.getInvolvedLine()));
 	}
 
@@ -41,13 +45,7 @@ public class Water {
 		// locator error
 		if (ex.getMessage().contains("Unable to locate element")) {
 
-			long startTime = System.currentTimeMillis();
-
 			repairs = repairLocators(broken, correct, ex, oldDom, newDom);
-
-			long stopTime = System.currentTimeMillis();
-			long elapsedTime = stopTime - startTime;
-			System.out.println("Repairs found in: " + elapsedTime / 1000);
 
 			// assertion error
 		} else if (ex.getMessage().contains("Assertion error")) {
@@ -111,11 +109,15 @@ public class Water {
 
 				Statement st = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
 				st.setDomLocator(new SeleniumLocator("xpath", candidateElement.getXPath()));
-				
+
 				EnhancedTestCase temp = UtilsRepair.copyTest(broken);
 				temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), st);
 				repairs.add(temp);
 
+			}
+
+			if (Settings.VERBOSE) {
+				System.out.println(repairs.size() + " candidates(s) element found");
 			}
 		}
 
@@ -125,15 +127,19 @@ public class Water {
 
 				Statement st = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
 				st.setDomLocator(new SeleniumLocator("xpath", similarElement.getXPath()));
-				
+
 				EnhancedTestCase temp = UtilsRepair.copyTest(broken);
 				temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), st);
 				repairs.add(temp);
 			}
+
+			if (Settings.VERBOSE) {
+				System.out.println(repairs.size() + " similar(s) element found");
+			}
 		}
 
 		if (Settings.VERBOSE) {
-			System.out.println(repairs.size() + " candidate(s) element found");
+			System.out.println(repairs.size() + " repair(s) element found");
 		}
 
 		return repairs;
