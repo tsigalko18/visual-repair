@@ -95,12 +95,6 @@ public class MisSelection {
 			// UtilsParser.printResults(result, rt);
 		}
 
-//		List<HtmlElement> rep = new LinkedList<HtmlElement>();
-//		for (Node<HtmlElement> htmlElement : result) {
-//			rep.add(htmlElement.getData());
-//		}
-
-		////////////
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
 
 		for (Node<HtmlElement> htmlElement : result) {
@@ -115,7 +109,7 @@ public class MisSelection {
 				newlocator = new SeleniumLocator("xpath", htmlElement.getData().getXPath());
 				newst.setDomLocator(newlocator);
 			}
-			
+
 			newst.setDomLocator(newlocator);
 
 			EnhancedTestCase temp = UtilsRepair.copyTest(b);

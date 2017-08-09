@@ -19,7 +19,8 @@ public class TestSuiteRunner {
 //		String classRunner = "claroline.TestLoginAdmin";
 //		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
 //		String classRunner = "addressbook6211.TestUserAdded";
-		String classRunner = "addressbook825.TestUserAdded";
+		
+		String classRunner = "claroline190.TestAddCategory";
 		
 		
 		// this step runs the test suite and the aspect records the visual execution trace 

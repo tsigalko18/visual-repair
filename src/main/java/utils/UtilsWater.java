@@ -4,56 +4,63 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Scanner;
 
 import org.junit.runner.Result;
+import org.openqa.selenium.WebDriver;
+import org.xml.sax.SAXException;
 
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTree;
 import datatype.HtmlElement;
 import datatype.Node;
 import datatype.SeleniumLocator;
+import datatype.WebDriverSingleton;
 import parser.ParseTest;
 
 public class UtilsWater {
 
+	private static Scanner scanner;
+
 	/**
-	 * Return the list of nodes in @param newTree
-	 * that are found similar to @param oldNode 
-	 * according to the @param similarityThreshold
+	 * Return the list of nodes in @param newTree that are found similar to @param
+	 * oldNode according to the @param similarityThreshold
+	 * 
 	 * @param oldNode
 	 * @param newTree
 	 * @param similarityThreshold
 	 * @return
 	 */
-	public static List<HtmlElement> getSimilarNodes(HtmlElement oldNode, HtmlDomTree newTree, double similarityThreshold) {
-		
-		List <HtmlElement> results = new LinkedList<HtmlElement>();
+	public static List<HtmlElement> getSimilarNodes(HtmlElement oldNode, HtmlDomTree newTree,
+			double similarityThreshold) {
+
+		List<HtmlElement> results = new LinkedList<HtmlElement>();
 		return searchHtmlDomTreeByNode(oldNode, newTree.getRoot(), similarityThreshold, results);
-		
+
 	}
 
 	public static HtmlElement getNodeByLocator(HtmlDomTree tree, String xpath) {
 		return tree.searchHtmlDomTreeByXPath(xpath);
 	}
-	
+
 	public static HtmlElement getNodeByLocator(HtmlDomTree tree, SeleniumLocator l) {
-		
-		if(l.getStrategy().equals("id")) { 
+
+		if (l.getStrategy().equals("id")) {
 			return tree.searchHtmlDomTreeByAttribute("id", l.getValue());
-		
-		} else if(l.getStrategy().equals("className")) { 
+
+		} else if (l.getStrategy().equals("className")) {
 			return tree.searchHtmlDomTreeByAttribute("class", l.getValue());
-		
-		} else if(l.getStrategy().equals("linkText")) { 
+
+		} else if (l.getStrategy().equals("linkText")) {
 			return tree.searchHtmlDomTreeByAttribute("text", l.getValue());
-		
-		} else if(l.getStrategy().equals("name")) { 
+
+		} else if (l.getStrategy().equals("name")) {
 			return tree.searchHtmlDomTreeByAttribute("name", l.getValue());
-		
-		} else if(l.getStrategy().equals("tagName")) { 
+
+		} else if (l.getStrategy().equals("tagName")) {
 			return tree.searchHtmlDomTreeByTagName(l.getValue());
-		
-		} else if(l.getStrategy().equals("xpath")) { 
+
+		} else if (l.getStrategy().equals("xpath")) {
 			// differentiate further!!!
 			// supports only absolute xpaths
 			return tree.searchHtmlDomTreeByXPath(l.getValue());
@@ -69,8 +76,9 @@ public class UtilsWater {
 		Result r = ParseTest.runTest(t, t.getPath());
 		return r.wasSuccessful();
 	}
-	
-	public static List<HtmlElement> searchHtmlDomTreeByNode(HtmlElement searchNode, Node<HtmlElement> newTree, double similarityThreshold, List<HtmlElement> similarNodes) {
+
+	public static List<HtmlElement> searchHtmlDomTreeByNode(HtmlElement searchNode, Node<HtmlElement> newTree,
+			double similarityThreshold, List<HtmlElement> similarNodes) {
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(newTree);
 
@@ -86,6 +94,27 @@ public class UtilsWater {
 			}
 		}
 		return similarNodes;
+	}
+
+	public static HtmlDomTree getDom(EnhancedTestCase tc, int line) throws SAXException, IOException {
+
+		scanner = new Scanner(System.in);
+
+		String domPath = tc.getStatements().get(line).getDomBefore().getAbsolutePath();
+
+		WebDriverSingleton instance = WebDriverSingleton.getInstance();
+		instance.loadPage("file:///" + domPath);
+		WebDriver driver = instance.getDriver();
+
+		/* extra check for the cases when the authentication is needed. */
+		System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
+		while (!scanner.next().equals("Y")) {
+		}
+
+		HtmlDomTree domTree = new HtmlDomTree(driver, domPath);
+		domTree.buildHtmlDomTree();
+
+		return domTree;
 	}
 
 	private static int minimum(int a, int b, int c) {
@@ -111,13 +140,15 @@ public class UtilsWater {
 	private static double getSimilarityScore(HtmlElement a, HtmlElement b) {
 		double alpha = 0.9;
 		double rho, rho1, rho2 = 0;
-		
+
 		if (a.getTagName().equals(b.getTagName())) {
 			double levDist = computeLevenshteinDistance(a.getXPath(), b.getXPath());
 			rho1 = 1 - levDist / Math.max(a.getXPath().length(), b.getXPath().length());
 
-			if (Math.abs(a.getX() - b.getX()) <= 5 && Math.abs((a.getX() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5
-			 && Math.abs(a.getY() - b.getY()) <= 5 && Math.abs((a.getY() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5) {
+			if (Math.abs(a.getX() - b.getX()) <= 5
+					&& Math.abs((a.getX() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5
+					&& Math.abs(a.getY() - b.getY()) <= 5
+					&& Math.abs((a.getY() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5) {
 				rho2 = rho2 + 1;
 			}
 			rho2 = rho2 / 2;

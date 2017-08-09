@@ -41,10 +41,10 @@ public class ElementRelocatedSameState {
 
 		/* open the web page of the new version. */
 		String htmlFile;
-		if (oldst.getDomBefore() == null) {
-			htmlFile = oldst.getDomAfter().getAbsolutePath();
+		if (newst.getDomBefore() == null) {
+			htmlFile = newst.getDomAfter().getAbsolutePath();
 		} else
-			htmlFile = oldst.getDomBefore().getAbsolutePath();
+			htmlFile = newst.getDomBefore().getAbsolutePath();
 
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + htmlFile);
@@ -55,6 +55,8 @@ public class ElementRelocatedSameState {
 		while (!scanner.next().equals("Y")) {
 		}
 
+		long startTime = System.currentTimeMillis();
+		
 		/* get the screenshot of the web page in the new version. */
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
@@ -62,16 +64,10 @@ public class ElementRelocatedSameState {
 		/* find the best visual match. */
 		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
 
-		long startTime = System.currentTimeMillis();
-
 		/* build the RTree for the web page. */
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
 		rt.buildHtmlDomTree();
 		// rt.preOrderTraversalRTree();
-
-		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
-		System.out.println("RTree built in: " + elapsedTime / 1000);
 
 		/* search the web element in the RTree. */
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
@@ -79,6 +75,10 @@ public class ElementRelocatedSameState {
 		if (Settings.VERBOSE) {
 			System.out.println(result.size() + " candidate(s) element found");
 		}
+		
+		long stopTime = System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
+		System.out.println("Repairs found in: " + elapsedTime / 1000);
 
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
 
