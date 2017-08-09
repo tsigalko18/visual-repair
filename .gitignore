@@ -3,3 +3,6 @@
 /target/
 /output/*
 /src/main/resources/*
+.setting
+.project
+.settings/*

@@ -62,19 +62,34 @@ public class UtilsWater {
 
 		} else if (l.getStrategy().equals("xpath")) {
 			// differentiate further!!!
-			// supports only absolute xpaths
+			// supports only absolute XPaths and a specific format
 
-			/* workaround for XPath locators that need to be in a specific formate */
-			System.out.println(l.getValue());
-			System.out.println("Enter XPath");
-			String loc = "";
-			while (!loc.startsWith("/")) {
-				loc = scanner.nextLine();
-			}
+			/* workaround for XPath locators that need to be in a specific format. */
+			String loc = UtilsWater.formatXPath(l.getValue());
 
 			return tree.searchHtmlDomTreeByXPath(loc);
 		}
+		
 		return null;
+	}
+
+	public static String formatXPath(String value) {
+
+		String[] slices = value.split("/");
+		String res = "/";
+
+		for (String s : slices) {
+			if (!s.endsWith("]")) {
+				res = res.concat(s).concat("[1]");
+			} else {
+				res = res.concat(s);
+			}
+			res = res.concat("/");
+		}
+
+		res = res.substring(0, res.length() - 1);
+
+		return res;
 	}
 
 	public static HtmlElement getNodesByProperty(HtmlDomTree tree, String attribute, String value) {
