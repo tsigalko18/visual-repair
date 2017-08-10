@@ -25,8 +25,7 @@ import utils.HtmlAttributesParser;
 import utils.UtilsParser;
 
 public class HtmlDomTreeWithRTree {
-	
-	  
+
 	private Node<HtmlElement> root;
 	private SpatialIndex spatialIndex;
 	private Map<Integer, Rectangle> rects;
@@ -35,7 +34,6 @@ public class HtmlDomTreeWithRTree {
 	private HtmlAttributesParser htmlAttributesParser;
 
 	public HtmlDomTreeWithRTree(WebDriver driver, String htmlFileFullPath) throws SAXException, IOException {
-		
 
 		// get the root element
 		List<WebElement> elements = driver.findElements(By.xpath("//*"));
@@ -45,7 +43,7 @@ public class HtmlDomTreeWithRTree {
 		int y = rootElementFromSelenium.getLocation().y;
 		int w = rootElementFromSelenium.getSize().width;
 		int h = rootElementFromSelenium.getSize().height;
-		
+
 		// parse HTML attributes
 		htmlAttributesParser = new HtmlAttributesParser(htmlFileFullPath);
 
@@ -128,14 +126,14 @@ public class HtmlDomTreeWithRTree {
 					rects.put(rectId, r);
 					spatialIndex.add(r, rectId++);
 
-//					System.out.println(newChild.getXPath());
-					
-//					if(newChild.getXPath().equals("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/span[2]/a[5]")){
-//						System.out.println("===============");
-//						System.out.println(rects.get(newChild.getRectId()).centre());
-//						System.out.println("===============");
-//					}
-					
+					// System.out.println(newChild.getXPath());
+
+					// if(newChild.getXPath().equals("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/span[2]/a[5]")){
+					// System.out.println("===============");
+					// System.out.println(rects.get(newChild.getRectId()).centre());
+					// System.out.println("===============");
+					// }
+
 					buildHtmlDomTreeFromNode(newNode);
 				}
 			}
@@ -197,7 +195,7 @@ public class HtmlDomTreeWithRTree {
 
 		// filter result set based on containment relationship
 		for (Integer id : resultRectIds) {
-//			System.out.println(resultRectIds);
+			// System.out.println(resultRectIds);
 			List<Integer> containedElementsRectIds = getContainedElements(id);
 
 			for (Integer cid : containedElementsRectIds) {
@@ -241,7 +239,7 @@ public class HtmlDomTreeWithRTree {
 				// check that it not the same element itself
 				if (key != key2 && xpaths.get(key2) != null && xpaths.get(key) != null
 						&& xpaths.get(key2).contains(xpaths.get(key))) {
-					
+
 					HtmlElement ele1 = rectIdHtmlDomTreeNodeMap.get(key).getData();
 					HtmlElement ele2 = rectIdHtmlDomTreeNodeMap.get(key2).getData();
 
@@ -254,14 +252,62 @@ public class HtmlDomTreeWithRTree {
 			}
 		}
 
+		// tsigalko18: remove xpaths that contain each other
+		List<String> xpathsNotContained = new LinkedList<String>();
+		for (String s1 : xpaths.values()) {
+			for (String s2 : xpaths.values()) {
+				if (!s1.equals(s2)) {
+					if (s2.contains(s1)) {
+						if (!xpathsNotContained.contains(s2) && !isContained(s2, xpathsNotContained)) {
+							xpathsNotContained.add(s2);
+						}
+					}
+				}
+			}
+		}
+		
+		Map<Integer, String> xpathsCleaned = new HashMap<Integer, String>();
+		for (Integer i : xpaths.keySet()) {
+			if(existsInTheList(xpaths.get(i), xpathsNotContained)) {
+				xpathsCleaned.put(i, xpaths.get(i));
+			}
+		}
+		
 		List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
-		for (Integer key : xpaths.keySet()) {
+		for (Integer key : xpathsCleaned.keySet()) {
 			if (xpaths.get(key) != null) {
 				finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));
 			}
 		}
 
+		// old implementation
+//		List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
+//		for (Integer key : xpaths.keySet()) {
+//			if (xpaths.get(key) != null) {
+//				finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));
+//			}
+//		}
+		
+
 		return finalResultSet;
+	}
+
+	private boolean isContained(String s2, List<String> xpathsNotContained) {
+		for (String s : xpathsNotContained) {
+			if(s.contains(s2)) {
+				return true; 
+			}
+		}
+		return false;
+	}
+	
+	private boolean existsInTheList(String s2, List<String> xpathsNotContained) {
+		for (String s : xpathsNotContained) {
+			if(s.equals(s2)) {
+				return true; 
+			}
+		}
+		return false;
 	}
 
 	private List<Integer> getContainedElements(final int rectId) {
@@ -363,12 +409,12 @@ public class HtmlDomTreeWithRTree {
 	public void preOrderTraversalRTree() {
 		preOrderTraversalRTree(this.root);
 	}
-	
+
 	private void preOrderTraversalRTree(Node<HtmlElement> node) {
 		if (node == null) {
 			return;
 		}
-//		System.out.println(node.getData().getTagName() + ": " + node.getData());
+		// System.out.println(node.getData().getTagName() + ": " + node.getData());
 		if (node.getChildren() != null) {
 			for (Node<HtmlElement> child : node.getChildren()) {
 				preOrderTraversalRTree(child);
@@ -415,7 +461,7 @@ public class HtmlDomTreeWithRTree {
 	public void setHtmlAttributesParser(HtmlAttributesParser htmlAttributesParser) {
 		this.htmlAttributesParser = htmlAttributesParser;
 	}
-	
+
 	public Node<HtmlElement> getRoot() {
 		return root;
 	}
@@ -423,9 +469,5 @@ public class HtmlDomTreeWithRTree {
 	public void setRoot(Node<HtmlElement> root) {
 		this.root = root;
 	}
-
-	
-	
-
 
 }

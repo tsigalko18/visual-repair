@@ -12,7 +12,14 @@ import org.openqa.selenium.WebDriver;
 import org.xml.sax.SAXException;
 
 import config.Settings;
-import datatype.*;
+import datatype.EnhancedException;
+import datatype.EnhancedTestCase;
+import datatype.HtmlDomTreeWithRTree;
+import datatype.HtmlElement;
+import datatype.Node;
+import datatype.SeleniumLocator;
+import datatype.Statement;
+import datatype.WebDriverSingleton;
 import utils.UtilsRepair;
 import utils.UtilsScreenshots;
 
@@ -25,7 +32,7 @@ public class ElementRelocatedSameState {
 	private static Scanner scanner = new Scanner(System.in);
 
 	static List<EnhancedTestCase> searchLocatorWithinTheSameState(EnhancedException e, EnhancedTestCase b,
-			EnhancedTestCase c, boolean check) throws SAXException, IOException {
+			EnhancedTestCase c, boolean check) throws SAXException, IOException, CloneNotSupportedException {
 
 		System.out.println("[LOG]\tApplying visual repair strategy <searchLocatorWithinTheSameState>");
 
@@ -92,6 +99,7 @@ public class ElementRelocatedSameState {
 		}
 
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
+		List<String> strings = new LinkedList<String>();
 
 		for (Node<HtmlElement> htmlElement : result) {
 
@@ -100,17 +108,21 @@ public class ElementRelocatedSameState {
 			if (htmlElement.getData().getTagName().equals("option")) {
 				Node<HtmlElement> option = htmlElement.getParent();
 				newlocator = new SeleniumLocator("xpath", option.getData().getXPath());
-				newst.setDomLocator(newlocator);
 			} else {
 				newlocator = new SeleniumLocator("xpath", htmlElement.getData().getXPath());
-				newst.setDomLocator(newlocator);
 			}
 
-			EnhancedTestCase temp = UtilsRepair.copyTest(b);
-			temp.addAndReplaceStatement(brokenStatementLine, newst);
+			EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(b);
+			Statement newStatementWithNewLocator = temp.getStatements().get(brokenStatementLine);
+			newStatementWithNewLocator.setDomLocator(newlocator);
+			temp.addAndReplaceStatement(brokenStatementLine, newStatementWithNewLocator);
+						
 			candidateRepairs.add(temp);
+			strings.add(newlocator.getValue());
 
 		}
+		
+		System.out.println(strings);
 
 		return candidateRepairs;
 

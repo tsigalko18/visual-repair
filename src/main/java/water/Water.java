@@ -24,7 +24,7 @@ public class Water {
 	static EnhancedException ex;
 	static HtmlDomTree oldDom;
 	static HtmlDomTree newDom;
-	static boolean checkOnBrowser = true; 
+	static boolean checkOnBrowser = true;
 
 	public Water(EnhancedTestCase b, EnhancedTestCase c, EnhancedException e)
 			throws NumberFormatException, SAXException, IOException {
@@ -83,8 +83,8 @@ public class Water {
 		SeleniumLocator l = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine())).getDomLocator();
 
 		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l);
-		
-		if(oldNode == null){
+
+		if (oldNode == null) {
 			System.err.println("[ERROR]\tElement not found in old DOM by its own locator");
 			System.exit(1);
 		}
@@ -115,7 +115,7 @@ public class Water {
 				Statement st = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
 				st.setDomLocator(new SeleniumLocator("xpath", candidateElement.getXPath()));
 
-				EnhancedTestCase temp = UtilsRepair.copyTest(broken);
+				EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
 				temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), st);
 				repairs.add(temp);
 
@@ -133,7 +133,7 @@ public class Water {
 				Statement st = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
 				st.setDomLocator(new SeleniumLocator("xpath", similarElement.getXPath()));
 
-				EnhancedTestCase temp = UtilsRepair.copyTest(broken);
+				EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
 				temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), st);
 				repairs.add(temp);
 			}
@@ -141,7 +141,7 @@ public class Water {
 			if (Settings.VERBOSE) {
 				System.out.println(repairs.size() + " similar(s) element found");
 			}
-			
+
 			for (HtmlElement htmlElement : similarNodes) {
 				System.out.println(htmlElement.getXPath());
 			}

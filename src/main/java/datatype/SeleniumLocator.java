@@ -1,25 +1,9 @@
 package datatype;
 
-public class SeleniumLocator {
+import java.io.Serializable;
 
-//	Pair<String, String> pair;
-//	
-//	public SeleniumLocator(String strategy, String value){
-//		pair = new MutablePair<String, String>(strategy, value);
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return "By." + pair.getLeft() + "(\"" + pair.getRight() + "\")";
-//	}
-//
-//	public Pair<String, String> getPair() {
-//		return pair;
-//	}
-//
-//	public void setPair(Pair<String, String> pair) {
-//		this.pair = pair;
-//	}
+@SuppressWarnings("serial")
+public class SeleniumLocator implements Serializable {
 	
 	String strategy, value;
 

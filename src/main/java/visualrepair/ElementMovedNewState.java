@@ -97,7 +97,7 @@ public class ElementMovedNewState {
 			newStatement.setLine(newStatementLine);
 			newStatement.setDomLocator(new SeleniumLocator("xpath", node.getData().getXPath()));
 
-			EnhancedTestCase temp = UtilsRepair.copyTest(b);
+			EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(b);
 			temp.addStatementAtPosition(newStatementLine, newStatement);
 			candidateRepairs.add(temp);
 			

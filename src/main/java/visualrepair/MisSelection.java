@@ -115,7 +115,7 @@ public class MisSelection {
 
 			newst.setDomLocator(newlocator);
 
-			EnhancedTestCase temp = UtilsRepair.copyTest(b);
+			EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(b);
 			temp.addAndReplaceStatement(brokenStatementLine, newst);
 			candidateRepairs.add(temp);
 

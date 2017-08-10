@@ -22,7 +22,7 @@ public class RepairStrategies {
 	static boolean checkOnBrowser = true; 
 
 	public static List<EnhancedTestCase> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
-			throws SAXException, IOException {
+			throws SAXException, IOException, CloneNotSupportedException {
 
 		repairs = new LinkedList<EnhancedTestCase>();
 

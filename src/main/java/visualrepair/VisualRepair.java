@@ -24,7 +24,7 @@ public class VisualRepair {
 	static EnhancedTestCase testCorrect;
 	static EnhancedTestCase testBroken;
 
-	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
+	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException, CloneNotSupportedException {
 
 		File testSuiteFolder = new File(Settings.testingTestSuiteVisualTraceExecutionFolder);
 

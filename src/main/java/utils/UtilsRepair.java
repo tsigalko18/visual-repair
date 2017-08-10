@@ -1,8 +1,12 @@
 package utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -11,7 +15,6 @@ import org.junit.runner.notification.Failure;
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
-import datatype.Statement;
 
 public class UtilsRepair {
 
@@ -117,13 +120,22 @@ public class UtilsRepair {
 
 		return min;
 	}
-
-	public static EnhancedTestCase copyTest(EnhancedTestCase b) {
-		EnhancedTestCase res = new EnhancedTestCase();
-		res.setName(b.getName());
-		res.setPath(b.getPath());
-		res.setStatements(b.getStatements());
-		return res;
+	
+	/**
+	 * This method makes a "deep clone" of any object it is given.
+	 */
+	public static Object deepClone(Object object) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(object);
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return ois.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

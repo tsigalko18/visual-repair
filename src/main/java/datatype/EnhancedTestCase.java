@@ -1,9 +1,11 @@
 package datatype;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class EnhancedTestCase {
+@SuppressWarnings("serial")
+public class EnhancedTestCase implements Serializable {
 
 	String name;
 	Map<Integer, Statement> statements;
@@ -26,9 +28,9 @@ public class EnhancedTestCase {
 		this.statements = new LinkedHashMap<Integer, Statement>();
 		setPath(null);
 	}
-	
+
 	public EnhancedTestCase() {
-		
+
 	}
 
 	public String getName() {
@@ -48,31 +50,27 @@ public class EnhancedTestCase {
 	}
 
 	public void addStatementAtPosition(Integer i, Statement st) {
-		if(!statements.containsKey(i)) {
+		if (!statements.containsKey(i)) {
 			statements.put(i, st);
-		}
-		else {
-			
-//			ArrayList<Statement> asList = new ArrayList<Statement>(statements.values());
+		} else {
+
 			Map<Integer, Statement> newMap = new LinkedHashMap<Integer, Statement>();
-			
+
 			for (Statement statement : statements.values()) {
-				if(statement.getLine() < i) {
+				if (statement.getLine() < i) {
 					newMap.put(statement.getLine(), statement);
-				}
-				else if(statement.getLine() == i) {
+				} else if (statement.getLine() == i) {
 					newMap.put(i, st);
-				} 
-				else if(statement.getLine() > i) {
+				} else if (statement.getLine() > i) {
 					statement.setLine(1 + statement.getLine());
 					newMap.put(statement.getLine(), statement);
 				}
 			}
-			
+
 			statements = newMap;
-			
+
 		}
-		
+
 	}
 
 	public void addAndReplaceStatement(Integer i, Statement st) {
