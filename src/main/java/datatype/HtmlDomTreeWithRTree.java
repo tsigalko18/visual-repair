@@ -128,9 +128,11 @@ public class HtmlDomTreeWithRTree {
 					rects.put(rectId, r);
 					spatialIndex.add(r, rectId++);
 
-//					if(newChild.getHtmlAttributes().get("value") != null && newChild.getHtmlAttributes().get("value").equals("Enter")){
+//					System.out.println(newChild.getXPath());
+					
+//					if(newChild.getXPath().equals("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/span[2]/a[5]")){
 //						System.out.println("===============");
-//						System.out.println(rects.get(newChild.getRectId()));
+//						System.out.println(rects.get(newChild.getRectId()).centre());
 //						System.out.println("===============");
 //					}
 					
@@ -239,6 +241,7 @@ public class HtmlDomTreeWithRTree {
 				// check that it not the same element itself
 				if (key != key2 && xpaths.get(key2) != null && xpaths.get(key) != null
 						&& xpaths.get(key2).contains(xpaths.get(key))) {
+					
 					HtmlElement ele1 = rectIdHtmlDomTreeNodeMap.get(key).getData();
 					HtmlElement ele2 = rectIdHtmlDomTreeNodeMap.get(key2).getData();
 

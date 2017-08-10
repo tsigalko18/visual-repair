@@ -1,11 +1,13 @@
 package utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.runner.Result;
 import org.openqa.selenium.WebDriver;
 import org.xml.sax.SAXException;
@@ -54,7 +56,10 @@ public class UtilsWater {
 
 		} else if (l.getStrategy().equals("linkText")) {
 			return tree.searchHtmlDomTreeByAttribute("text", l.getValue());
-
+			
+//			System.out.println(tree.containsAttributeValue);	
+//			return tree.searchHtmlDomTreeByText(l.getValue());
+			
 		} else if (l.getStrategy().equals("name")) {
 			return tree.searchHtmlDomTreeByAttribute("name", l.getValue());
 
@@ -135,15 +140,27 @@ public class UtilsWater {
 		instance.loadPage("file:///" + domPath);
 		WebDriver driver = instance.getDriver();
 
+		HtmlDomTree domTree;
+		
 		if (check) {
 			/* extra check for the cases when the authentication is needed. */
 			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
 			while (!scanner.next().equals("Y")) {
 			}
+			
+			String newFileName = domPath.replace(".html", "-temp.html");
+			
+			File newPageSource = new File(newFileName);
+			FileUtils.write(newPageSource, driver.getPageSource());
+		
+			domTree = new HtmlDomTree(driver, newFileName);
+			domTree.buildHtmlDomTree();
+			
+			FileUtils.deleteQuietly(newPageSource);
+		} else {
+			domTree = new HtmlDomTree(driver, domPath);
+			domTree.buildHtmlDomTree();
 		}
-
-		HtmlDomTree domTree = new HtmlDomTree(driver, domPath);
-		domTree.buildHtmlDomTree();
 
 		return domTree;
 	}

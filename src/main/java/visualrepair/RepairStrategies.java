@@ -19,7 +19,7 @@ public class RepairStrategies {
 	static HtmlDomTree oldDom;
 	static String locator;
 	static HtmlDomTree newDom;
-	static boolean checkOnBrowser = false; 
+	static boolean checkOnBrowser = true; 
 
 	public static List<EnhancedTestCase> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
 			throws SAXException, IOException {

@@ -70,6 +70,7 @@ public class DomRepair {
 				long elapsedTime = stopTime - startTime;
 				System.out.println("Repairs found in: " + elapsedTime / 1000 + " s");
 
+				System.out.println("Found " + repairs.size() + " repairs");
 				for (int i = 0; i < repairs.size(); i++) {
 					System.out.println("Repaired Test #" + i);
 					UtilsRepair.printTestCaseWithLineNumbers(repairs.get(i));

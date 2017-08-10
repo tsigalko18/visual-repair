@@ -11,6 +11,7 @@ import org.junit.runner.notification.Failure;
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
+import datatype.Statement;
 
 public class UtilsRepair {
 

@@ -23,7 +23,6 @@ public class VisualRepair {
 	static EnhancedException exception;
 	static EnhancedTestCase testCorrect;
 	static EnhancedTestCase testBroken;
-	static List<EnhancedTestCase> repairs;
 
 	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
 
@@ -62,7 +61,7 @@ public class VisualRepair {
 				long startTime = System.currentTimeMillis();
 				
 				/* apply repair algorithms. */
-				repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
+				List<EnhancedTestCase> repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
 				
 				long stopTime = System.currentTimeMillis();
 				long elapsedTime = stopTime - startTime;

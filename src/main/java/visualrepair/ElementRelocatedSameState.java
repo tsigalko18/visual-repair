@@ -1,10 +1,12 @@
 package visualrepair;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
 import org.openqa.selenium.WebDriver;
 import org.xml.sax.SAXException;
@@ -50,14 +52,28 @@ public class ElementRelocatedSameState {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
+		HtmlDomTreeWithRTree rt;
+
+		/* build the RTree for the web page. */
 		if (check) {
 			/* extra check for the cases when the authentication is needed. */
 			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
 			while (!scanner.next().equals("Y")) {
 			}
-		}
 
-//		long startTime = System.currentTimeMillis();
+			String newFileName = htmlFile.replace(".html", "-temp.html");
+
+			File newPageSource = new File(newFileName);
+			FileUtils.write(newPageSource, driver.getPageSource());
+
+			rt = new HtmlDomTreeWithRTree(driver, newFileName);
+			rt.buildHtmlDomTree();
+
+			FileUtils.deleteQuietly(newPageSource);
+		} else {
+			rt = new HtmlDomTreeWithRTree(driver, htmlFile);
+			rt.buildHtmlDomTree();
+		}
 
 		/* get the screenshot of the web page in the new version. */
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
@@ -65,11 +81,8 @@ public class ElementRelocatedSameState {
 
 		/* find the best visual match. */
 		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
-
-		/* build the RTree for the web page. */
-		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(driver, htmlFile);
-		rt.buildHtmlDomTree();
-		// rt.preOrderTraversalRTree();
+		// System.out.println("best visual match center at (" + match.x + ", " + match.y
+		// + ")");
 
 		/* search the web element in the RTree. */
 		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
@@ -77,10 +90,6 @@ public class ElementRelocatedSameState {
 		if (Settings.VERBOSE) {
 			System.out.println(result.size() + " candidate(s) element found");
 		}
-
-//		long stopTime = System.currentTimeMillis();
-//		long elapsedTime = stopTime - startTime;
-//		System.out.println("Repairs found in: " + elapsedTime + " ms");
 
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
 
@@ -96,8 +105,6 @@ public class ElementRelocatedSameState {
 				newlocator = new SeleniumLocator("xpath", htmlElement.getData().getXPath());
 				newst.setDomLocator(newlocator);
 			}
-
-			newst.setDomLocator(newlocator);
 
 			EnhancedTestCase temp = UtilsRepair.copyTest(b);
 			temp.addAndReplaceStatement(brokenStatementLine, newst);

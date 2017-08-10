@@ -315,6 +315,7 @@ public class UtilsParser {
 	}
 
 	public static Element getElementFromXPathJava(String xPath, Document doc) throws IOException {
+		
 		String xPathArray[] = xPath.split("/");
 		ArrayList<String> xPathList = new ArrayList<String>();
 

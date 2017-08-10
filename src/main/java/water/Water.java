@@ -24,6 +24,7 @@ public class Water {
 	static EnhancedException ex;
 	static HtmlDomTree oldDom;
 	static HtmlDomTree newDom;
+	static boolean checkOnBrowser = true; 
 
 	public Water(EnhancedTestCase b, EnhancedTestCase c, EnhancedException e)
 			throws NumberFormatException, SAXException, IOException {
@@ -32,10 +33,10 @@ public class Water {
 		ex = e;
 
 		System.out.println("[LOG]\tLoading the old DOM");
-		oldDom = UtilsWater.getDom(correct, Integer.parseInt(e.getInvolvedLine()), false);
+		oldDom = UtilsWater.getDom(correct, Integer.parseInt(e.getInvolvedLine()), checkOnBrowser);
 
 		System.out.println("[LOG]\tLoading the new DOM");
-		newDom = UtilsWater.getDom(broken, Integer.parseInt(e.getInvolvedLine()), false);
+		newDom = UtilsWater.getDom(broken, Integer.parseInt(e.getInvolvedLine()), checkOnBrowser);
 	}
 
 	public List<EnhancedTestCase> suggestRepair() {
@@ -82,6 +83,11 @@ public class Water {
 		SeleniumLocator l = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine())).getDomLocator();
 
 		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l);
+		
+		if(oldNode == null){
+			System.err.println("[ERROR]\tElement not found in old DOM by its own locator");
+			System.exit(1);
+		}
 
 		HtmlElement el = newTree.searchHtmlDomTreeByAttribute("id", oldNode.getId());
 		if (el != null)
@@ -134,6 +140,10 @@ public class Water {
 
 			if (Settings.VERBOSE) {
 				System.out.println(repairs.size() + " similar(s) element found");
+			}
+			
+			for (HtmlElement htmlElement : similarNodes) {
+				System.out.println(htmlElement.getXPath());
 			}
 		}
 

@@ -95,6 +95,11 @@ public class HtmlDomTree {
 
 					// set html attributes
 					newChild.setHtmlAttributes(htmlAttributesParser.getHTMLAttributesForElement(newChild.getXPath()));
+					
+//					if(newChild.getTagName().equalsIgnoreCase("a")) {
+//						System.out.println(newChild);
+//						System.out.println("\t"+newChild.getHtmlAttributes());
+//					}
 
 					buildHtmlDomTreeFromNode(newNode);
 				}
@@ -252,13 +257,33 @@ public class HtmlDomTree {
 		return null;
 	}
 
+	public HtmlElement searchHtmlDomTreeByText(String text) {
+		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
+		q.add(this.root);
+
+		while (!q.isEmpty()) {
+			Node<HtmlElement> node = q.remove();
+
+			if (node.getData().getHtmlAttributes().get("text").equals(text)) {
+				return node.getData();
+			}
+
+			if (node.getChildren() != null) {
+				for (Node<HtmlElement> child : node.getChildren()) {
+					q.add(child);
+				}
+			}
+		}
+		return null;
+	}
+
 	public HtmlElement searchHtmlDomTreeByTagName(String tagName) {
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(this.root);
 
 		while (!q.isEmpty()) {
 			Node<HtmlElement> node = q.remove();
-			if (node.getData().getTagName().equals(tagName)) {
+			if (node.getData().getTagName().equalsIgnoreCase(tagName)) {
 				return node.getData();
 			}
 			if (node.getChildren() != null) {
