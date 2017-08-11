@@ -19,9 +19,8 @@ public class RepairStrategies {
 	static HtmlDomTree oldDom;
 	static String locator;
 	static HtmlDomTree newDom;
-	static boolean checkOnBrowser = true; 
 
-	public static List<EnhancedTestCase> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c)
+	public static List<EnhancedTestCase> suggestRepair(EnhancedException e, EnhancedTestCase b, EnhancedTestCase c, boolean checkOnBrowser)
 			throws SAXException, IOException, CloneNotSupportedException {
 
 		repairs = new LinkedList<EnhancedTestCase>();

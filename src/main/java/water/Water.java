@@ -24,9 +24,8 @@ public class Water {
 	static EnhancedException ex;
 	static HtmlDomTree oldDom;
 	static HtmlDomTree newDom;
-	static boolean checkOnBrowser = true;
 
-	public Water(EnhancedTestCase b, EnhancedTestCase c, EnhancedException e)
+	public Water(EnhancedTestCase b, EnhancedTestCase c, EnhancedException e, boolean checkOnBrowser)
 			throws NumberFormatException, SAXException, IOException {
 		broken = b;
 		correct = c;
@@ -110,45 +109,62 @@ public class Water {
 			matches.add(el);
 
 		if (!matches.isEmpty()) {
-			for (HtmlElement candidateElement : matches) {
-
-				Statement st = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
-				st.setDomLocator(new SeleniumLocator("xpath", candidateElement.getXPath()));
-
-				EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
-				temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), st);
-				repairs.add(temp);
-
-			}
 
 			if (Settings.VERBOSE) {
-				System.out.println(repairs.size() + " candidates(s) element found");
+				System.out.println(matches.size() + " candidates(s) element found");
 			}
+
+			for (HtmlElement candidateElement : matches) {
+
+				List<SeleniumLocator> locators = new LinkedList<SeleniumLocator>();
+				locators = UtilsRepair.generateAllLocators(candidateElement);
+
+				for (SeleniumLocator seleniumLocator : locators) {
+
+					EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
+					Statement newStatementWithNewLocator = temp.getStatements()
+							.get(Integer.parseInt(ex.getInvolvedLine()));
+					newStatementWithNewLocator.setDomLocator(seleniumLocator);
+					temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), newStatementWithNewLocator);
+
+					repairs.add(temp);
+
+				}
+
+			}
+
 		}
 
 		if (repairs.isEmpty()) {
+
 			List<HtmlElement> similarNodes = UtilsWater.getSimilarNodes(oldNode, newTree, Settings.similarityThreshold);
-			for (HtmlElement similarElement : similarNodes) {
-
-				Statement st = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine()));
-				st.setDomLocator(new SeleniumLocator("xpath", similarElement.getXPath()));
-
-				EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
-				temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), st);
-				repairs.add(temp);
-			}
 
 			if (Settings.VERBOSE) {
-				System.out.println(repairs.size() + " similar(s) element found");
+				System.out.println(similarNodes.size() + " similar(s) element found");
+			}
+
+			for (HtmlElement similarElement : similarNodes) {
+
+				List<SeleniumLocator> locators = new LinkedList<SeleniumLocator>();
+				locators = UtilsRepair.generateAllLocators(similarElement);
+
+				for (SeleniumLocator seleniumLocator : locators) {
+
+					EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
+					Statement newStatementWithNewLocator = temp.getStatements()
+							.get(Integer.parseInt(ex.getInvolvedLine()));
+					newStatementWithNewLocator.setDomLocator(seleniumLocator);
+					temp.addAndReplaceStatement(Integer.parseInt(ex.getInvolvedLine()), newStatementWithNewLocator);
+
+					repairs.add(temp);
+
+				}
+
 			}
 
 			for (HtmlElement htmlElement : similarNodes) {
 				System.out.println(htmlElement.getXPath());
 			}
-		}
-
-		if (Settings.VERBOSE) {
-			System.out.println(repairs.size() + " repair(s) element found");
 		}
 
 		return repairs;

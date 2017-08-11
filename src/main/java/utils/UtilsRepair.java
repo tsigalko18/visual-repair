@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -15,6 +17,8 @@ import org.junit.runner.notification.Failure;
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
+import datatype.HtmlElement;
+import datatype.SeleniumLocator;
 
 public class UtilsRepair {
 
@@ -120,7 +124,7 @@ public class UtilsRepair {
 
 		return min;
 	}
-	
+
 	/**
 	 * This method makes a "deep clone" of any object it is given.
 	 */
@@ -136,6 +140,42 @@ public class UtilsRepair {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static SeleniumLocator generateLocator(HtmlElement htmlElement) {
+
+		SeleniumLocator loc = null;
+
+		// text (<a>), id, name, xpath
+		if (htmlElement.getTagName().equalsIgnoreCase("a") && htmlElement.getHtmlAttributes().get("text") != null)
+			loc = new SeleniumLocator("linkText", htmlElement.getHtmlAttributes().get("text"));
+		else if (htmlElement.getHtmlAttributes().get("id") != null)
+			loc = new SeleniumLocator("id", htmlElement.getId());
+		else if (htmlElement.getHtmlAttributes().get("name") != null)
+			loc = new SeleniumLocator("name", htmlElement.getHtmlAttributes().get("name"));
+		else
+			loc = new SeleniumLocator("xpath", htmlElement.getXPath());
+
+		return loc;
+	}
+
+	public static List<SeleniumLocator> generateAllLocators(HtmlElement htmlElement) {
+
+		List<SeleniumLocator> locs = new LinkedList<SeleniumLocator>();
+
+		// text (<a>), id, name, xpath
+		if (htmlElement.getTagName().equalsIgnoreCase("a") && htmlElement.getHtmlAttributes().get("text") != null)
+			locs.add(new SeleniumLocator("linkText", htmlElement.getHtmlAttributes().get("text")));
+
+		if (htmlElement.getHtmlAttributes().get("id") != null)
+			locs.add(new SeleniumLocator("id", htmlElement.getId()));
+
+		if (htmlElement.getHtmlAttributes().get("name") != null)
+			locs.add(new SeleniumLocator("name", htmlElement.getHtmlAttributes().get("name")));
+
+		locs.add(new SeleniumLocator("xpath", htmlElement.getXPath()));
+
+		return locs;
 	}
 
 }

@@ -23,6 +23,7 @@ public class VisualRepair {
 	static EnhancedException exception;
 	static EnhancedTestCase testCorrect;
 	static EnhancedTestCase testBroken;
+	static boolean checkOnBrowser = true; 
 
 	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException, CloneNotSupportedException {
 
@@ -33,6 +34,7 @@ public class VisualRepair {
 		Map<String, File> m = UtilsParser.convertToHashMap(tests);
 
 		System.out.println("[LOG]\tRunning Visual Repair");
+		System.out.println("[LOG]\tcheckOnBrowser is set to " + checkOnBrowser);
 		
 		for (File file : m.values()) {
 
@@ -61,11 +63,11 @@ public class VisualRepair {
 				long startTime = System.currentTimeMillis();
 				
 				/* apply repair algorithms. */
-				List<EnhancedTestCase> repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect);
+				List<EnhancedTestCase> repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect, checkOnBrowser);
 				
 				long stopTime = System.currentTimeMillis();
 				long elapsedTime = stopTime - startTime;
-				System.out.println("Repairs found in: " + elapsedTime / 1000 + " s");
+				System.out.println(repairs.size() + " repairs found in " + elapsedTime / 1000 + " s");
 
 				for (int i = 0; i < repairs.size(); i++) {
 					System.out.println("Repaired Test #" + i);

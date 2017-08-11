@@ -25,6 +25,7 @@ public class DomRepair {
 	static String htmlpage;
 	static EnhancedTestCase testBroken;
 	static EnhancedTestCase testCorrect;
+	static boolean checkOnBrowser = true; 
 
 	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
 
@@ -35,6 +36,7 @@ public class DomRepair {
 		Map<String, File> m = UtilsParser.convertToHashMap(tests);
 
 		System.out.println("[LOG]\tRunning WATER");
+		System.out.println("[LOG]\tcheckOnBrowser is set to " + checkOnBrowser);
 
 		for (File file : m.values()) {
 
@@ -61,16 +63,15 @@ public class DomRepair {
 				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToReferenceTestSuite));
 
 				long startTime = System.currentTimeMillis();
-				
+
 				/* apply repair algorithms. */
-				Water wt = new Water(testBroken, testCorrect, exception);
+				Water wt = new Water(testBroken, testCorrect, exception, checkOnBrowser);
 				repairs = wt.suggestRepair();
-				
+
 				long stopTime = System.currentTimeMillis();
 				long elapsedTime = stopTime - startTime;
-				System.out.println("Repairs found in: " + elapsedTime / 1000 + " s");
+				System.out.println(repairs.size() + " repairs found in " + elapsedTime / 1000 + " s");
 
-				System.out.println("Found " + repairs.size() + " repairs");
 				for (int i = 0; i < repairs.size(); i++) {
 					System.out.println("Repaired Test #" + i);
 					UtilsRepair.printTestCaseWithLineNumbers(repairs.get(i));
@@ -79,7 +80,7 @@ public class DomRepair {
 			}
 
 		}
-		
+
 		System.exit(0);
 
 	}

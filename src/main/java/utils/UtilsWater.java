@@ -115,7 +115,9 @@ public class UtilsWater {
 		while (!q.isEmpty()) {
 			Node<HtmlElement> node = q.remove();
 			if (getSimilarityScore(node.getData(), searchNode) > similarityThreshold) {
-				similarNodes.add(node.getData());
+				if(!similarNodes.contains(node.getData())) {
+					similarNodes.add(node.getData());
+				}
 			}
 			if (node.getChildren() != null) {
 				for (Node<HtmlElement> child : node.getChildren()) {
