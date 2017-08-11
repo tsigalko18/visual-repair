@@ -252,59 +252,64 @@ public class HtmlDomTreeWithRTree {
 			}
 		}
 
-		// tsigalko18: remove xpaths that contain each other
-		List<String> xpathsNotContained = new LinkedList<String>();
-		for (String s1 : xpaths.values()) {
-			for (String s2 : xpaths.values()) {
-				if (!s1.equals(s2)) {
-					if (s2.contains(s1)) {
-						if (!xpathsNotContained.contains(s2) && !isContained(s2, xpathsNotContained)) {
-							xpathsNotContained.add(s2);
+		if (xpaths.size() > 1) {
+
+			// tsigalko18: remove xpaths that contain each other
+			List<String> xpathsNotContained = new LinkedList<String>();
+			for (String s1 : xpaths.values()) {
+				for (String s2 : xpaths.values()) {
+					if (!s1.equals(s2)) {
+						if (s2.contains(s1)) {
+							if (!xpathsNotContained.contains(s2) && !isContained(s2, xpathsNotContained)) {
+								xpathsNotContained.add(s2);
+							}
 						}
 					}
 				}
 			}
-		}
-		
-		Map<Integer, String> xpathsCleaned = new HashMap<Integer, String>();
-		for (Integer i : xpaths.keySet()) {
-			if(existsInTheList(xpaths.get(i), xpathsNotContained)) {
-				xpathsCleaned.put(i, xpaths.get(i));
+
+			Map<Integer, String> xpathsCleaned = new HashMap<Integer, String>();
+			for (Integer i : xpaths.keySet()) {
+				if (existsInTheList(xpaths.get(i), xpathsNotContained)) {
+					xpathsCleaned.put(i, xpaths.get(i));
+				}
 			}
+
+			List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
+			for (Integer key : xpathsCleaned.keySet()) {
+				if (xpaths.get(key) != null) {
+					finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));
+				}
+			}
+			
+			return finalResultSet;
+
 		}
-		
+
+		// old implementation
 		List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
-		for (Integer key : xpathsCleaned.keySet()) {
+		for (Integer key : xpaths.keySet()) {
 			if (xpaths.get(key) != null) {
 				finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));
 			}
 		}
-
-		// old implementation
-//		List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
-//		for (Integer key : xpaths.keySet()) {
-//			if (xpaths.get(key) != null) {
-//				finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));
-//			}
-//		}
-		
 
 		return finalResultSet;
 	}
 
 	private boolean isContained(String s2, List<String> xpathsNotContained) {
 		for (String s : xpathsNotContained) {
-			if(s.contains(s2)) {
-				return true; 
+			if (s.contains(s2)) {
+				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	private boolean existsInTheList(String s2, List<String> xpathsNotContained) {
 		for (String s : xpathsNotContained) {
-			if(s.equals(s2)) {
-				return true; 
+			if (s.equals(s2)) {
+				return true;
 			}
 		}
 		return false;
