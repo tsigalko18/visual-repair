@@ -79,12 +79,12 @@ public class Water {
 			EnhancedException ex, HtmlDomTree oldTree, HtmlDomTree newTree) {
 
 		List<HtmlElement> matches = new LinkedList<HtmlElement>();
-		SeleniumLocator l = broken.getStatements().get(Integer.parseInt(ex.getInvolvedLine())).getDomLocator();
+		SeleniumLocator l = correct.getStatements().get(Integer.parseInt(ex.getInvolvedLine())).getDomLocator();
 
 		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l);
 
 		if (oldNode == null) {
-			System.err.println("[ERROR]\tElement not found in old DOM by its own locator");
+			System.err.println("[ERROR]\tElement not found in old DOM by its own locator " + l.toString());
 			System.exit(1);
 		}
 

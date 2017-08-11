@@ -25,7 +25,7 @@ public class DomRepair {
 	static String htmlpage;
 	static EnhancedTestCase testBroken;
 	static EnhancedTestCase testCorrect;
-	static boolean checkOnBrowser = true; 
+	static boolean checkOnBrowser = true;
 
 	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
 
