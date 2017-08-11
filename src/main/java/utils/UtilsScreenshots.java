@@ -46,10 +46,9 @@ public class UtilsScreenshots {
 	static {
 		nu.pattern.OpenCV.loadShared();
 	}
-	
+
 	/**
-	 * Save the GUI of the current driver instance in a file name identified by
-	 * name
+	 * Save the GUI of the current driver instance in a file name identified by name
 	 * 
 	 * @param d
 	 * @param filename
@@ -427,7 +426,7 @@ public class UtilsScreenshots {
 	public static Point findBestMatchCenter(String inFile, String templateFile) {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
+
 		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED");
@@ -460,9 +459,9 @@ public class UtilsScreenshots {
 		}
 
 		if (matches.size() == 0) {
-			System.err.println("[LOG]\tWARNING: No matches found!");
+			System.err.println("[LOG]\tWARNING: No visual matches found!");
 		} else if (matches.size() > 1) {
-			System.err.println("[LOG]\tWARNING: Multiple matches!");
+			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
 		}
 
 		// Localizing the best match with minMaxLoc
@@ -480,7 +479,7 @@ public class UtilsScreenshots {
 		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
 	}
 
-	public static List<Point> returnAllMatchesForAllAlgorithms(String inFile, String templateFile) {
+	public static List<Point> returnAllMatches(String inFile, String templateFile) {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
@@ -496,45 +495,58 @@ public class UtilsScreenshots {
 		int result_rows = img.rows() - templ.rows() + 1;
 		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
 
-		int methods[] = { Imgproc.TM_SQDIFF_NORMED, Imgproc.TM_SQDIFF, Imgproc.TM_CCOEFF_NORMED, Imgproc.TM_CCOEFF,
-				Imgproc.TM_CCORR, Imgproc.TM_CCORR_NORMED };
-
 		List<Point> matches = new LinkedList<Point>();
 		List<Point> bestMatches = new LinkedList<Point>();
 
-		for (int meth : methods) {
+		if (Settings.VERBOSE) {
+			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
+			System.out.println("[LOG]\tusing image recognition algorithm TM_CCOEFF_NORMED");
+		}
 
-			if (Settings.VERBOSE) {
-				System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
-				System.out.println("[LOG]\tusing image recognition algorithm " + methods[meth]);
-			}
+		// Do the Matching and Normalize
+		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
+		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
-			// Do the Matching and Normalize
-			Imgproc.matchTemplate(img, templ, result, meth);
-			Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-
-			for (int i = 0; i < result_rows; i++) {
-				for (int j = 0; j < result_cols; j++) {
-
-					if (result.get(i, j)[0] >= 0.99) {
-						matches.add(new Point(i, j));
-					}
-
+		for (int i = 0; i < result_rows; i++) {
+			for (int j = 0; j < result_cols; j++) {
+				if (result.get(i, j)[0] >= 0.99) {
+					matches.add(new Point(i, j));
 				}
-
 			}
+		}
 
+		if (matches.size() == 0) {
+			System.err.println("[LOG]\tWARNING: No visual matches found!");
+		} else if (matches.size() > 1) {
+			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
+		}
+
+		// MinMaxLocResult mmr = Core.minMaxLoc(result);
+		// Point matchLoc = mmr.maxLoc;
+		// bestMatches.add(new Point(matchLoc.x + templ.cols(), matchLoc.y +
+		// templ.rows()));
+
+		while (true) {
 			MinMaxLocResult mmr = Core.minMaxLoc(result);
 			Point matchLoc = mmr.maxLoc;
-			bestMatches.add(new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()));
-
+			if (mmr.maxVal >= 0.9) {
+				Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+						new Scalar(0, 255, 0));
+				Imgproc.rectangle(result, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+						new Scalar(0, 255, 0), -1);
+				bestMatches.add(new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()));
+				// break;
+			} else {
+				break; // No more results within tolerance, break search
+			}
 		}
 
-		for (Point match : bestMatches) {
-			// Show me what you got
-			Imgproc.rectangle(img, match, new Point(match.x + templ.cols(), match.y + templ.rows()),
-					new Scalar(0, 255, 0), 1);
-		}
+		// for (Point match : bestMatches) {
+		// // Show me what you got
+		// Imgproc.rectangle(img, match, new Point(match.x + templ.cols(), match.y +
+		// templ.rows()),
+		// new Scalar(0, 255, 0), 1);
+		// }
 
 		// Save the visualized detection
 		File annotated = new File("annotated.png");
@@ -633,15 +645,16 @@ public class UtilsScreenshots {
 		try {
 			driver.switchTo().alert();
 			return true;
-		}
-		catch (NoAlertPresentException Ex) {
+		} catch (NoAlertPresentException Ex) {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * converts a png image to jpg
-	 * @param imagePath to png image
+	 * 
+	 * @param imagePath
+	 *            to png image
 	 * @return imagePath to jpg image
 	 */
 	public static String convertPngToJpg(String imagePath) {
@@ -672,15 +685,15 @@ public class UtilsScreenshots {
 	}
 
 	public static String getTestSuiteNameFromWithinType(String withinType) {
-		// class clarolineDirectBreakage.TestLoginAdmin 			 -> clarolineDirectBreakage
 		// class clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
-		
-		if(withinType.contains("main.java")) {
+		// class clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
+
+		if (withinType.contains("main.java")) {
 			withinType = withinType.replaceAll("class ", "");
 		} else {
 			withinType = withinType.replaceAll("class ", "");
 		}
-		
+
 		withinType = withinType.substring(0, withinType.indexOf("."));
 		return withinType;
 	}

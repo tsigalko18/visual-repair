@@ -85,47 +85,52 @@ public class ElementRelocatedSameState {
 		/* get the screenshot of the web page in the new version. */
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
+		
+		/* find the best visual matches. */
+		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
 
-		/* find the best visual match. */
-		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
-		// System.out.println("best visual match center at (" + match.x + ", " + match.y
-		// + ")");
-
-		/* search the web element in the RTree. */
-		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
+		/* find the corresponding rectangles. */
+		List<Node<HtmlElement>> results = new LinkedList<Node<HtmlElement>>();
+		for (Point point : matches) {
+			results.addAll(rt.searchRTreeByPoint((int) point.x, (int) point.y));
+		}
 
 		if (Settings.VERBOSE) {
-			System.out.println(result.size() + " candidate(s) element found");
+			System.out.println(results.size() + " candidate(s) element found");
 		}
 
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();
-		List<String> strings = new LinkedList<String>();
 
-		for (Node<HtmlElement> htmlElement : result) {
+		/* for each element, generate all possible locators. */
+		for (Node<HtmlElement> htmlElement : results) {
 
-			SeleniumLocator newlocator = null;
+			List<SeleniumLocator> locators = new LinkedList<SeleniumLocator>();
 
+			// generate a set of locators for the element, if possible
 			if (htmlElement.getData().getTagName().equals("option")) {
 				Node<HtmlElement> option = htmlElement.getParent();
-				newlocator = new SeleniumLocator("xpath", option.getData().getXPath());
+				locators = UtilsRepair.generateAllLocators(option.getData());
 			} else {
-				newlocator = new SeleniumLocator("xpath", htmlElement.getData().getXPath());
+				locators = UtilsRepair.generateAllLocators(htmlElement.getData());
 			}
 
-			EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(b);
-			Statement newStatementWithNewLocator = temp.getStatements().get(brokenStatementLine);
-			newStatementWithNewLocator.setDomLocator(newlocator);
-			temp.addAndReplaceStatement(brokenStatementLine, newStatementWithNewLocator);
-						
-			candidateRepairs.add(temp);
-			strings.add(newlocator.getValue());
+			for (SeleniumLocator seleniumLocator : locators) {
+
+				EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(b);
+				Statement newStatementWithNewLocator = temp.getStatements().get(brokenStatementLine);
+				newStatementWithNewLocator.setDomLocator(seleniumLocator);
+				temp.addAndReplaceStatement(brokenStatementLine, newStatementWithNewLocator);
+
+				candidateRepairs.add(temp);
+
+			}
 
 		}
-		
-		System.out.println(strings);
 
 		return candidateRepairs;
 
 	}
+
+
 
 }
