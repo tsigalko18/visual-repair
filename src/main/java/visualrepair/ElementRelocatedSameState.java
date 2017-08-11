@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.xml.sax.SAXException;
 
 import config.Settings;
@@ -59,7 +61,7 @@ public class ElementRelocatedSameState {
 		instance.loadPage("file:///" + htmlFile);
 		WebDriver driver = instance.getDriver();
 
-		HtmlDomTreeWithRTree rt;
+		HtmlDomTreeWithRTree rt = null;
 
 		/* build the RTree for the web page. */
 		if (check) {
@@ -71,12 +73,19 @@ public class ElementRelocatedSameState {
 			String newFileName = htmlFile.replace(".html", "-temp.html");
 
 			File newPageSource = new File(newFileName);
-			FileUtils.write(newPageSource, driver.getPageSource());
+			try {
+				FileUtils.write(newPageSource, driver.getPageSource());
+			} catch (UnhandledAlertException ex) {
+
+				// TODO: try to understand how to manage the errors after the popup box
+//				driver.switchTo().alert().accept();
+			}
 
 			rt = new HtmlDomTreeWithRTree(driver, newFileName);
 			rt.buildHtmlDomTree();
 
 			FileUtils.deleteQuietly(newPageSource);
+
 		} else {
 			rt = new HtmlDomTreeWithRTree(driver, htmlFile);
 			rt.buildHtmlDomTree();
@@ -86,8 +95,13 @@ public class ElementRelocatedSameState {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
 		
+//		WebDriverSingleton.closeDriver();
+
 		/* find the best visual matches. */
 		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
+
+//		List<Point> matches = new LinkedList<Point>();
+//		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
 
 		/* find the corresponding rectangles. */
 		List<Node<HtmlElement>> results = new LinkedList<Node<HtmlElement>>();
@@ -130,7 +144,5 @@ public class ElementRelocatedSameState {
 		return candidateRepairs;
 
 	}
-
-
 
 }

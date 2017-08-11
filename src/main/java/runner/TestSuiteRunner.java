@@ -20,12 +20,19 @@ public class TestSuiteRunner {
 //		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
 //		String classRunner = "addressbook6211.TestUserAdded";
 		
-		String classRunner = "claroline190.TestAddCategory";
+//		String classRunner = "claroline190.TestAddCategory";
+//		String classRunner = "claroline190.TestAddClass";
+//		String classRunner = "claroline190.TestAddCourse";
+//		String classRunner = "claroline190.TestAddNewCategory";
+//		String classRunner = "claroline190.TestAddPhone";
+//		String classRunner = "claroline190.TestAddUser";
+//		String classRunner = "claroline190.TestAssignments";
+		String classRunner = "claroline190.TestCourseCategoryEdit";
 		
-		
-		// this step runs the test suite and the aspect records the visual execution trace 
+		// this step runs the test suite and the aspect records the visual execution trace
 		Result result = null;
-		try {			
+		try {
+			System.out.println("[LOG]\tRunning Test " + classRunner);
 			result = JUnitCore.runClasses(Class.forName(classRunner));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -34,6 +41,8 @@ public class TestSuiteRunner {
 		// if tests have failed, save the exception
 		if(!result.wasSuccessful()) {
 		
+			System.out.println("[LOG]\tTest " + classRunner + " failed, saving the exception");
+			
 			// for each breakage, I save the exception on the filesystem
 			for (Failure fail : result.getFailures()) {
 				
@@ -44,6 +53,8 @@ public class TestSuiteRunner {
 				
 				UtilsParser.serializeException(ea, jsonPath);
 			}
+		} else {
+			System.out.println("[LOG]\tTest " + classRunner + " passed");
 		}
 		
 		System.exit(0);

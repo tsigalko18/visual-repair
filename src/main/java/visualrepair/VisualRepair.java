@@ -23,9 +23,10 @@ public class VisualRepair {
 	static EnhancedException exception;
 	static EnhancedTestCase testCorrect;
 	static EnhancedTestCase testBroken;
-	static boolean checkOnBrowser = true; 
+	static boolean checkOnBrowser = true;
 
-	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException, CloneNotSupportedException {
+	public static void main(String[] args)
+			throws JsonSyntaxException, IOException, SAXException, CloneNotSupportedException {
 
 		File testSuiteFolder = new File(Settings.testingTestSuiteVisualTraceExecutionFolder);
 
@@ -35,11 +36,11 @@ public class VisualRepair {
 
 		System.out.println("[LOG]\tRunning Visual Repair");
 		System.out.println("[LOG]\tcheckOnBrowser is set to " + checkOnBrowser);
-		
+
 		for (File file : m.values()) {
 
 			if (UtilsGetters.isTestBroken(file)) {
-				
+
 				System.out.println("[LOG]\tTest " + file.getName());
 
 				/* load the exception. */
@@ -61,10 +62,11 @@ public class VisualRepair {
 				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToReferenceTestSuite));
 
 				long startTime = System.currentTimeMillis();
-				
+
 				/* apply repair algorithms. */
-				List<EnhancedTestCase> repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect, checkOnBrowser);
-				
+				List<EnhancedTestCase> repairs = RepairStrategies.suggestRepair(exception, testBroken, testCorrect,
+						checkOnBrowser);
+
 				long stopTime = System.currentTimeMillis();
 				long elapsedTime = stopTime - startTime;
 				System.out.println(repairs.size() + " repairs found in " + elapsedTime / 1000 + " s");
@@ -77,7 +79,7 @@ public class VisualRepair {
 			}
 
 		}
-		
+
 		System.exit(0);
 
 	}
