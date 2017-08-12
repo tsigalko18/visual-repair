@@ -38,6 +38,9 @@ public class RepairStrategies {
 			// apply strategy 3
 			if (repairs.isEmpty())
 				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c, checkOnBrowser));
+			
+			/* remove statement. */
+			repairs.addAll(ElementDeleted.deleteElementFromState(e, b, c, checkOnBrowser));
 
 		} else if (e.getMessage().contains("Assertion error")) {
 

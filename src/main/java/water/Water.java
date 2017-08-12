@@ -68,8 +68,15 @@ public class Water {
 		}
 
 		if (repairs.isEmpty()) {
-			// remove statement
-			// repairs.add(checkRepair());
+			
+			/* get the line responsible for the breakage. */
+			int brokenStatementLine = Integer.parseInt(ex.getInvolvedLine());
+
+			EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(broken);
+			temp.removeStatementAtPosition(brokenStatementLine);
+
+			repairs.add(temp);
+			
 		}
 
 		return repairs;

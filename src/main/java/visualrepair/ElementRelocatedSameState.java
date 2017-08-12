@@ -98,10 +98,10 @@ public class ElementRelocatedSameState {
 //		WebDriverSingleton.closeDriver();
 
 		/* find the best visual matches. */
-		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
+//		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
 
-//		List<Point> matches = new LinkedList<Point>();
-//		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
+		List<Point> matches = new LinkedList<Point>();
+		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
 
 		/* find the corresponding rectangles. */
 		List<Node<HtmlElement>> results = new LinkedList<Node<HtmlElement>>();
