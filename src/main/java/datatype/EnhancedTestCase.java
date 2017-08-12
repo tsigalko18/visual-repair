@@ -72,6 +72,31 @@ public class EnhancedTestCase implements Serializable {
 		}
 
 	}
+	
+	public void removeStatementAtPosition(Integer i) {
+		
+		if (!statements.containsKey(i)) {
+			return;
+		} else {
+
+			Map<Integer, Statement> newMap = new LinkedHashMap<Integer, Statement>();
+
+			for (Statement statement : statements.values()) {
+				if (statement.getLine() < i) {
+					newMap.put(statement.getLine(), statement);
+				} else if (statement.getLine() == i) {
+//					newMap.put(i, st);
+				} else if (statement.getLine() > i) {
+					statement.setLine(statement.getLine()-1);
+					newMap.put(statement.getLine(), statement);
+				}
+			}
+
+			statements = newMap;
+
+		}
+
+	}
 
 	public void addAndReplaceStatement(Integer i, Statement st) {
 		statements.put(i, st);
