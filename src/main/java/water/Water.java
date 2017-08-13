@@ -67,7 +67,7 @@ public class Water {
 
 		}
 
-		if (repairs.isEmpty()) {
+		if (!repairs.isEmpty()) {
 			
 			/* get the line responsible for the breakage. */
 			int brokenStatementLine = Integer.parseInt(ex.getInvolvedLine());
@@ -91,7 +91,7 @@ public class Water {
 		HtmlElement oldNode = UtilsWater.getNodeByLocator(oldTree, l);
 
 		if (oldNode == null) {
-			System.err.println("[ERROR]\tElement not found in old DOM by its own locator " + l.toString());
+			System.err.println("[LOG]\tElement not found in old DOM by its own locator " + l.toString());
 			System.exit(1);
 		}
 

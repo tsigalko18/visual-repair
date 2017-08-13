@@ -138,8 +138,18 @@ public class UtilsWater {
 		else
 			domPath = tc.getStatements().get(line).getDomBefore().getAbsolutePath();
 
-		instance = WebDriverSingleton.getInstance();
-		instance.loadPage("file:///" + domPath);
+		/* html page to be cleaned. */
+		String theHtmlPage = tc.getStatements().get(line).getDomAfter().getName();
+		
+		String htmlFileCleaned = domPath.toString();
+		/* encode URL. */
+		theHtmlPage = java.net.URLEncoder.encode(theHtmlPage, "UTF-8");
+		
+		htmlFileCleaned = htmlFileCleaned.substring(0, domPath.lastIndexOf("/") + 1);
+		htmlFileCleaned = htmlFileCleaned.concat(theHtmlPage);
+		
+		WebDriverSingleton instance = WebDriverSingleton.getInstance();
+		instance.loadPage("file:///" + htmlFileCleaned);
 		WebDriver driver = instance.getDriver();
 
 		HtmlDomTree domTree;

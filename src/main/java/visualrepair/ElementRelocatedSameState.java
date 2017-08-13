@@ -56,9 +56,19 @@ public class ElementRelocatedSameState {
 			htmlFile = newst.getDomAfter().getAbsolutePath();
 		} else
 			htmlFile = newst.getDomBefore().getAbsolutePath();
-
+		
+		/* html page to be cleaned. */
+		String theHtmlPage = newst.getDomAfter().getName();
+		
+		String htmlFileCleaned = htmlFile.toString();
+		/* encode URL. */
+		theHtmlPage = java.net.URLEncoder.encode(theHtmlPage, "UTF-8");
+		
+		htmlFileCleaned = htmlFileCleaned.substring(0, htmlFile.lastIndexOf("/") + 1);
+		htmlFileCleaned = htmlFileCleaned.concat(theHtmlPage);
+		
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
-		instance.loadPage("file:///" + htmlFile);
+		instance.loadPage("file:///" + htmlFileCleaned);
 		WebDriver driver = instance.getDriver();
 
 		HtmlDomTreeWithRTree rt = null;
@@ -98,10 +108,10 @@ public class ElementRelocatedSameState {
 //		WebDriverSingleton.closeDriver();
 
 		/* find the best visual matches. */
-//		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
+		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
 
-		List<Point> matches = new LinkedList<Point>();
-		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
+//		List<Point> matches = new LinkedList<Point>();
+//		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
 
 		/* find the corresponding rectangles. */
 		List<Node<HtmlElement>> results = new LinkedList<Node<HtmlElement>>();
