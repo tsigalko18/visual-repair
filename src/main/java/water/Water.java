@@ -67,7 +67,7 @@ public class Water {
 
 		}
 
-		if (!repairs.isEmpty()) {
+		if (repairs.isEmpty()) {
 			
 			/* get the line responsible for the breakage. */
 			int brokenStatementLine = Integer.parseInt(ex.getInvolvedLine());
@@ -144,7 +144,7 @@ public class Water {
 
 		if (repairs.isEmpty()) {
 
-			List<HtmlElement> similarNodes = UtilsWater.getSimilarNodes(oldNode, newTree, Settings.similarityThreshold);
+			List<HtmlElement> similarNodes = UtilsWater.getSimilarNodes(oldNode, newTree, Settings.SIMILARITY_THRESHOLD);
 
 			if (Settings.VERBOSE) {
 				System.out.println(similarNodes.size() + " similar(s) element found");
@@ -169,9 +169,10 @@ public class Water {
 
 			}
 
-			for (HtmlElement htmlElement : similarNodes) {
-				System.out.println(htmlElement.getXPath());
+			for (int i = 0; i < similarNodes.size(); i++) {
+				System.out.println(i + ":\t" + similarNodes.get(i).getXPath());
 			}
+
 		}
 
 		return repairs;

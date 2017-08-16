@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -181,7 +183,9 @@ public class HtmlDomTreeWithRTree {
 		return result;
 	}
 
-	public List<Node<HtmlElement>> searchRTreeByPoint(int x, int y) {
+	public Set<Node<HtmlElement>> searchRTreeByPoint(int x, int y) {
+//	public List<Node<HtmlElement>> searchRTreeByPoint(int x, int y) {
+		
 		final List<Node<HtmlElement>> resultSet = new ArrayList<Node<HtmlElement>>();
 		final List<Integer> resultRectIds = new ArrayList<Integer>();
 
@@ -260,7 +264,7 @@ public class HtmlDomTreeWithRTree {
 				for (String s2 : xpaths.values()) {
 					if (!s1.equals(s2)) {
 						if (s2.contains(s1)) {
-							if (!xpathsNotContained.contains(s2) && !isContained(s2, xpathsNotContained)) {
+							if (!xpathsNotContained.contains(s2) && !isContained(s2, xpathsNotContained) && !s2.equals(s1)) {
 								xpathsNotContained.add(s2);
 							}
 						}
@@ -275,7 +279,8 @@ public class HtmlDomTreeWithRTree {
 				}
 			}
 
-			List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
+			Set<Node<HtmlElement>> finalResultSet = new HashSet<Node<HtmlElement>>();
+//			List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
 			for (Integer key : xpathsCleaned.keySet()) {
 				if (xpaths.get(key) != null) {
 					finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));
@@ -287,7 +292,8 @@ public class HtmlDomTreeWithRTree {
 		}
 
 		// old implementation
-		List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
+		Set<Node<HtmlElement>> finalResultSet = new HashSet<Node<HtmlElement>>();
+//		List<Node<HtmlElement>> finalResultSet = new ArrayList<Node<HtmlElement>>();
 		for (Integer key : xpaths.keySet()) {
 			if (xpaths.get(key) != null) {
 				finalResultSet.add(rectIdHtmlDomTreeNodeMap.get(key));

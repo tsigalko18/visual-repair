@@ -108,7 +108,7 @@ public class ElementMovedNewState {
 
 	private static int detectMismatchVisually(EnhancedTestCase correct, EnhancedTestCase broken, EnhancedException e)
 			throws IOException {
-
+		
 		// get the visual information for the correct test
 		String test = Settings.referenceTestSuiteVisualTraceExecutionFolder
 				+ UtilsRepair.capitalizeFirstLetter(correct.getName());
@@ -173,7 +173,9 @@ public class ElementMovedNewState {
 		// System.out.println(beforeStatesSimilarityMap);
 		// System.out.println(afterStatesSimilarityMap);
 
-		return Integer.parseInt(state);
+		return Integer.parseInt(e.getInvolvedLine()) - 1;
+
+//		return Integer.parseInt(state);
 
 	}
 

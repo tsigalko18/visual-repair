@@ -48,9 +48,9 @@ public class Settings {
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 
-	public static boolean annotate = false;
+	public static boolean ANNOTATE = false;
+	public static boolean PERFECT_CROP = true;
 	public static boolean VERBOSE = true;
-	public static int scale = 10;
-	public static double similarityThreshold = 0.5;
+	public static double SIMILARITY_THRESHOLD = 0.5;
 
 }

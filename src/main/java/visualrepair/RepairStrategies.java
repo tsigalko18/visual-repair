@@ -32,15 +32,15 @@ public class RepairStrategies {
 			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c, checkOnBrowser));
 
 			// apply strategy 2
-			if (repairs.isEmpty())
-				repairs.addAll(MisSelection.searchForMisSelection(e, b, c, checkOnBrowser));
+//			if (repairs.isEmpty())
+//				repairs.addAll(MisSelection.searchForMisSelection(e, b, c, checkOnBrowser));
 
 			// apply strategy 3
-			if (repairs.isEmpty())
-				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c, checkOnBrowser));
+//			if (repairs.isEmpty())
+//				repairs.addAll(ElementMovedNewState.searchElementNewState(e, b, c, checkOnBrowser));
 			
 			/* remove statement. */
-			repairs.addAll(ElementDeleted.deleteElementFromState(e, b, c, checkOnBrowser));
+//			repairs.addAll(ElementDeleted.deleteElementFromState(e, b, c, checkOnBrowser));
 
 		} else if (e.getMessage().contains("Assertion error")) {
 

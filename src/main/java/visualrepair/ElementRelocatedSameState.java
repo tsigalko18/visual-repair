@@ -2,9 +2,12 @@ package visualrepair;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
@@ -105,7 +108,7 @@ public class ElementRelocatedSameState {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
 		
-//		WebDriverSingleton.closeDriver();
+		WebDriverSingleton.closeDriver();
 
 		/* find the best visual matches. */
 		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
@@ -114,13 +117,17 @@ public class ElementRelocatedSameState {
 //		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
 
 		/* find the corresponding rectangles. */
-		List<Node<HtmlElement>> results = new LinkedList<Node<HtmlElement>>();
+		Set<Node<HtmlElement>> results = new HashSet<Node<HtmlElement>>();
+//		List<Node<HtmlElement>> results = new ArrayList<Node<HtmlElement>>();
 		for (Point point : matches) {
 			results.addAll(rt.searchRTreeByPoint((int) point.x, (int) point.y));
 		}
 
 		if (Settings.VERBOSE) {
 			System.out.println(results.size() + " candidate(s) element found");
+			for (Node<HtmlElement> node : results) {
+				System.out.println(node.getData().getXPath());
+			}
 		}
 
 		List<EnhancedTestCase> candidateRepairs = new LinkedList<EnhancedTestCase>();

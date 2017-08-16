@@ -34,7 +34,8 @@ public class TestSuiteRunner {
 //		String classRunner = prefix + "TestEditTextZone";
 //		String classRunner = prefix + "TestExercise";
 //		String classRunner = prefix + "TestLoginAdmin";
-		String classRunner = prefix + "TestLoginLogout";
+//		String classRunner = prefix + "TestLoginLogout";
+		String classRunner = prefix + "TestModuleSettings";
 		
 		// this step runs the test suite and the aspect records the visual execution trace
 		Result result = null;

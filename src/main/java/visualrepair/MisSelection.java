@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.opencv.core.Point;
 import org.openqa.selenium.WebDriver;
@@ -91,7 +92,7 @@ public class MisSelection {
 //		System.out.println("RTree built in: " + elapsedTime / 1000);
 
 		// search element in the RTree
-		List<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
+		Set<Node<HtmlElement>> result = rt.searchRTreeByPoint((int) match.x, (int) match.y);
 
 		if (Settings.VERBOSE) {
 			System.out.println(result.size() + " candidate(s) element found");
