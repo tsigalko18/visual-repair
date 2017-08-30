@@ -12,9 +12,6 @@ public class WebDriverSingleton {
 
 	private WebDriverSingleton() {
 		driver = new FirefoxDriver();
-		// driver = new FirefoxDriver();
-		// driver.manage().window().setSize(new Dimension(1024,768));
-		// driver.manage().window().maximize();
 	}
 
 	public static WebDriverSingleton getInstance() {
@@ -40,19 +37,14 @@ public class WebDriverSingleton {
 	}
 
 	public void loadPage(String htmlFileFullPath) {
-		// System.out.println("Loading page " + htmlFileFullPath);
+		
 		String urlString = htmlFileFullPath;
-
-		// if(driver.getCurrentUrl().equalsIgnoreCase(urlString)) {
-		// driver.navigate().refresh();
-		// return;
-		// }
 
 		try {
 			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 			driver.get(urlString);
 		} catch (Exception e) {
-			// restart the browser
+			/* restart the browser. */
 			restartDriver();
 			driver.get(urlString);
 		}

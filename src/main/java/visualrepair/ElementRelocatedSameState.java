@@ -2,7 +2,6 @@ package visualrepair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.xml.sax.SAXException;
 
 import config.Settings;

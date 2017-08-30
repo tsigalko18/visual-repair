@@ -426,8 +426,17 @@ public class UtilsParser {
 
 	// OK
 	public static String getExceptionFromFailure(Failure f) {
-		String s = f.getException().toString().substring(0,
-				f.getException().toString().indexOf("For documentation", 0));
+		String s = null;
+		
+		try {
+			s = f.getException().toString().substring(0,
+					f.getException().toString().indexOf("For documentation", 0));
+		} catch(StringIndexOutOfBoundsException e) {
+			System.out.println("[ERROR]\tException not supported by the current implementation");
+			System.out.println(f.getMessage());
+			System.exit(1);
+		}
+		
 		return s;
 	}
 

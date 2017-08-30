@@ -61,7 +61,7 @@ public class RepairStrategies {
 			// repairs.add(checkRepair());
 		} else if (e.getMessage().contains("Cannot locate element with text")) {
 
-			// repair dropdownlist
+			// repair drop-down list
 			repairs = getNewDropdownlistAttributes();
 		}
 

@@ -30,7 +30,6 @@ public class EnhancedTestCase implements Serializable {
 	}
 
 	public EnhancedTestCase() {
-
 	}
 
 	public String getName() {
@@ -72,9 +71,9 @@ public class EnhancedTestCase implements Serializable {
 		}
 
 	}
-	
+
 	public void removeStatementAtPosition(Integer i) {
-		
+
 		if (!statements.containsKey(i)) {
 			return;
 		} else {
@@ -85,9 +84,9 @@ public class EnhancedTestCase implements Serializable {
 				if (statement.getLine() < i) {
 					newMap.put(statement.getLine(), statement);
 				} else if (statement.getLine() == i) {
-//					newMap.put(i, st);
+					continue;
 				} else if (statement.getLine() > i) {
-					statement.setLine(statement.getLine()-1);
+					statement.setLine(statement.getLine() - 1);
 					newMap.put(statement.getLine(), statement);
 				}
 			}
