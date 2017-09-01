@@ -72,8 +72,7 @@ public class HtmlDomTreeWithRTreeNewImplementation {
 		Rectangle r = Geometries.rectangle(x, y, x + w, y + h);
 		rects.put(rectId, r);
 		rectIdHtmlDomTreeNodeMap.put(rectId, root);
-		tree.add(rectId++, r);
-
+		tree = tree.add(rectId++, r);
 	}
 
 	public void buildHtmlDomTree() {
@@ -129,8 +128,8 @@ public class HtmlDomTreeWithRTreeNewImplementation {
 
 					Rectangle r = Geometries.rectangle(x, y, x + w, y + h);
 					rects.put(rectId, r);
-					tree.add(rectId++, r);
-
+					tree = tree.add(rectId++, r);
+					
 					buildHtmlDomTreeFromNode(newNode);
 				}
 			}
@@ -190,12 +189,17 @@ public class HtmlDomTreeWithRTreeNewImplementation {
 
 	}
 
-	public Set<Node<HtmlElement>> searchRTreeByPoint(int x, int y, int distance, int numEntries) {
+	public Set<Node<HtmlElement>> searchRTreeByPointWithinADistance(int x, int y, int distance) {
 
 		Set<Node<HtmlElement>> finalResults = new HashSet<Node<HtmlElement>>();
 		Point point = Geometries.point(x, y);
 
-		Observable<Entry<Integer, Rectangle>> results = tree.nearest(point, distance, numEntries);
+		Observable<Entry<Integer, Rectangle>> results = tree.nearest(point, distance, 100);
+
+		System.out.println("point: " + point.toString());
+		tree.visualize(600, 600).save("mytree.png");
+		System.out.println(tree.asString());
+
 		List<Entry<Integer, Rectangle>> asList = results.toList().toBlocking().single();
 
 		for (Entry<Integer, Rectangle> entry : asList) {
