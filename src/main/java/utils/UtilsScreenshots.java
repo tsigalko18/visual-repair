@@ -523,32 +523,22 @@ public class UtilsScreenshots {
 			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
 		}
 
-		// MinMaxLocResult mmr = Core.minMaxLoc(result);
-		// Point matchLoc = mmr.maxLoc;
-		// bestMatches.add(new Point(matchLoc.x + templ.cols(), matchLoc.y +
-		// templ.rows()));
-
 		while (true) {
 			MinMaxLocResult mmr = Core.minMaxLoc(result);
 			Point matchLoc = mmr.maxLoc;
 			if (mmr.maxVal >= 0.9) {
+
 				Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 						new Scalar(0, 255, 0));
 				Imgproc.rectangle(result, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 						new Scalar(0, 255, 0), -1);
-				bestMatches.add(new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()));
-				// break;
+
+				/* add the centers of the rectangles as best matches. */
+				bestMatches.add(new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2));
 			} else {
 				break; // No more results within tolerance, break search
 			}
 		}
-
-		// for (Point match : bestMatches) {
-		// // Show me what you got
-		// Imgproc.rectangle(img, match, new Point(match.x + templ.cols(), match.y +
-		// templ.rows()),
-		// new Scalar(0, 255, 0), 1);
-		// }
 
 		// Save the visualized detection
 		File annotated = new File("annotated.png");
