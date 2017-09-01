@@ -18,6 +18,7 @@ import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTreeWithRTree;
+import datatype.HtmlDomTreeWithRTreeNewImplementation;
 import datatype.HtmlElement;
 import datatype.Node;
 import datatype.SeleniumLocator;
@@ -72,7 +73,7 @@ public class ElementRelocatedSameState {
 		instance.loadPage("file:///" + htmlFileCleaned);
 		WebDriver driver = instance.getDriver();
 
-		HtmlDomTreeWithRTree rt = null;
+		HtmlDomTreeWithRTreeNewImplementation rt = null;
 
 		/* build the RTree for the web page. */
 		if (check) {
@@ -92,13 +93,13 @@ public class ElementRelocatedSameState {
 //				driver.switchTo().alert().accept();
 			}
 
-			rt = new HtmlDomTreeWithRTree(driver, newFileName);
+			rt = new HtmlDomTreeWithRTreeNewImplementation(driver, newFileName);
 			rt.buildHtmlDomTree();
 
 			FileUtils.deleteQuietly(newPageSource);
 
 		} else {
-			rt = new HtmlDomTreeWithRTree(driver, htmlFile);
+			rt = new HtmlDomTreeWithRTreeNewImplementation(driver, htmlFile);
 			rt.buildHtmlDomTree();
 		}
 
@@ -110,21 +111,24 @@ public class ElementRelocatedSameState {
 
 		/* find the best visual matches. */
 		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
-
+		
 //		List<Point> matches = new LinkedList<Point>();
 //		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));
+		
+		System.out.println("[LOG]\t" + matches.size() + " visual matches found");
 
 		/* find the corresponding rectangles. */
 		Set<Node<HtmlElement>> results = new HashSet<Node<HtmlElement>>();
-//		List<Node<HtmlElement>> results = new ArrayList<Node<HtmlElement>>();
+
 		for (Point point : matches) {
-			results.addAll(rt.searchRTreeByPoint((int) point.x, (int) point.y));
+			results.addAll(rt.searchRTreeByPointWithinADistance((int) point.x, (int) point.y, 100));
+//			results.add(rt.searchRTreeByPoint((int) point.x, (int) point.y));
 		}
 
 		if (Settings.VERBOSE) {
 			System.out.println(results.size() + " candidate(s) element found");
 			for (Node<HtmlElement> node : results) {
-				System.out.println(node.getData().getXPath());
+				System.out.println(node.getData().getRectId() + ": " + node.getData().getXPath());
 			}
 		}
 

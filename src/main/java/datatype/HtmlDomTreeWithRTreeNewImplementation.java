@@ -129,7 +129,7 @@ public class HtmlDomTreeWithRTreeNewImplementation {
 					Rectangle r = Geometries.rectangle(x, y, x + w, y + h);
 					rects.put(rectId, r);
 					tree = tree.add(rectId++, r);
-					
+
 					buildHtmlDomTreeFromNode(newNode);
 				}
 			}
@@ -177,37 +177,60 @@ public class HtmlDomTreeWithRTreeNewImplementation {
 		return result;
 	}
 
-	public Node<HtmlElement> searchRTreeByPoint(int x, int y) {
-
-		Point point = Geometries.point(x, y);
-
-		Observable<Entry<Integer, Rectangle>> results = tree.nearest(point, 100, 1);
-		List<Entry<Integer, Rectangle>> asList = results.toList().toBlocking().single();
-		Entry<Integer, Rectangle> entry = asList.get(0);
-
-		return rectIdHtmlDomTreeNodeMap.get(entry.value());
-
-	}
+//	public Node<HtmlElement> searchRTreeByPoint(int x, int y) {
+//
+//		Point point = Geometries.point(x, y);
+//
+//		Observable<Entry<Integer, Rectangle>> results = tree.nearest(point, 100, 1);
+//		List<Entry<Integer, Rectangle>> asList = results.toList().toBlocking().single();
+//		Entry<Integer, Rectangle> entry = asList.get(0);
+//
+//		return rectIdHtmlDomTreeNodeMap.get(entry.value());
+//
+//	}
 
 	public Set<Node<HtmlElement>> searchRTreeByPointWithinADistance(int x, int y, int distance) {
 
 		Set<Node<HtmlElement>> finalResults = new HashSet<Node<HtmlElement>>();
 		Point point = Geometries.point(x, y);
 
-		Observable<Entry<Integer, Rectangle>> results = tree.nearest(point, distance, 100);
-
-		System.out.println("point: " + point.toString());
-		tree.visualize(600, 600).save("mytree.png");
-		System.out.println(tree.asString());
+		Observable<Entry<Integer, Rectangle>> results = tree.nearest(point, distance, 10);
 
 		List<Entry<Integer, Rectangle>> asList = results.toList().toBlocking().single();
 
 		for (Entry<Integer, Rectangle> entry : asList) {
+			System.out.println(entry.value() + ": " + entry);
 			finalResults.add(rectIdHtmlDomTreeNodeMap.get(entry.value()));
 		}
 
-		return finalResults;
+		Set<Node<HtmlElement>> res = retainOnlyLongestXPath(finalResults);
 
+		return res;
+
+	}
+
+	public static Set<Node<HtmlElement>> retainOnlyLongestXPath(Set<Node<HtmlElement>> finalResults) {
+
+		Set<Node<HtmlElement>> resultsCleaned = new HashSet<Node<HtmlElement>>();
+		resultsCleaned.addAll(finalResults);
+
+		int maxLength = 0;
+		String longestString = null;
+		Node<HtmlElement> max = null;
+		for (Node<HtmlElement> s : finalResults) {
+			if (maxLength == 0) {
+				maxLength = s.getData().getXPath().length();
+				longestString = s.getData().getXPath();
+				max = s;
+			} else if (s.getData().getXPath().length() > maxLength && s.getData().getXPath().contains(longestString)) {
+				maxLength = s.getData().getXPath().length();
+				longestString = s.getData().getXPath();
+				resultsCleaned.remove(max);
+				max = s;
+			} else
+				resultsCleaned.remove(s);
+		}
+		return resultsCleaned;
 	}
 
 	public Node<HtmlElement> searchHtmlDomTreeByRectId(int rectId) {
