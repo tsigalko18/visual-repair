@@ -84,26 +84,26 @@ public class UtilsAspect {
 	}
 
 	/**
-	 * Save rendered webpage 
-	 * path = where to save the html file
+	 * Save rendered webpage path = where to save the html file
 	 */
 	public static File saveHTMLPage(String urlString, String path) throws IOException {
 
 		File savedHTML = new File(path);
-		
-//		if (!savedHTML.exists()) {
-			
-			// wget to save html page
-			Runtime runtime = Runtime.getRuntime();
-			Process p = runtime.exec("/usr/local/bin/wget -p -k -E -nd -P " + path + " " + urlString);
-			
-			try {
-				p.waitFor();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-//		}
+
+		/* necessary to avoid garbage. */
+		if (savedHTML.exists()) {
+			FileUtils.deleteDirectory(savedHTML);
+		}
+
+		/* wget to save html page. */
+		Runtime runtime = Runtime.getRuntime();
+		Process p = runtime.exec("/usr/local/bin/wget -p -k -E -nd -P " + path + " " + urlString);
+
+		try {
+			p.waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		return savedHTML;
 	}
