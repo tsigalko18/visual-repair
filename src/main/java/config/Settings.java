@@ -41,9 +41,6 @@ public class Settings {
 	public static String JAVA_EXTENSION = ".java";
 	public static String JSON_EXTENSION = ".json";
 
-	/* those might be deleted in the future. */
-	public static final String[] NON_VISUAL_TAGS = new String[] { "head", "script", "link", "meta", "style", "title",
-			"canvas" };
 	public static final String[] TAGS_BLACKLIST = new String[] { "head", "script", "link", "meta", "style", "canvas" };
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
