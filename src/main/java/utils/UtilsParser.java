@@ -83,7 +83,6 @@ public class UtilsParser {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				// return true;
 				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.PNG_EXTENSION)
 						&& n.contains(name) && n.contains(type));
 			}

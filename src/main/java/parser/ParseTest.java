@@ -179,8 +179,10 @@ public class ParseTest {
 							/* get the screenshots. */
 							ewe.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
 							ewe.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
-							ewe.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
+							ewe.setVisualLocatorLarge(
+									UtilsParser.getScreenshot(className, line, "visualLocatorLarge", getFolder()));
+							ewe.setVisualLocatorPerfect(
+									UtilsParser.getScreenshot(className, line, "visualLocatorPerfect", getFolder()));
 							ewe.setAnnotatedScreenshot(
 									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
 
@@ -218,8 +220,10 @@ public class ParseTest {
 							// get the screenshots
 							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
 							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
-							esl.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
+							esl.setVisualLocatorLarge(
+									UtilsParser.getScreenshot(className, line, "visualLocatorLarge", getFolder()));
+							esl.setVisualLocatorPerfect(
+									UtilsParser.getScreenshot(className, line, "visualLocatorPerfect", getFolder()));
 							esl.setAnnotatedScreenshot(
 									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
 
@@ -254,8 +258,10 @@ public class ParseTest {
 							// get the screenshots
 							ea.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
 							ea.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
-							ea.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
+							ea.setVisualLocatorLarge(
+									UtilsParser.getScreenshot(className, line, "visualLocatorLarge", getFolder()));
+							ea.setVisualLocatorPerfect(
+									UtilsParser.getScreenshot(className, line, "visualLocatorPerfect", getFolder()));
 							ea.setAnnotatedScreenshot(
 									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
 

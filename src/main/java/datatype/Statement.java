@@ -26,7 +26,8 @@ public abstract class Statement implements Serializable {
 	private File screenshotBefore;
 	private File screenshotAfter;
 	private File annotatedScreenshot;
-	private File visualLocator; // on screenshotBefore
+	private File visualLocatorPerfect; // on screenshotBefore
+	private File visualLocatorLarge; // on screenshotBefore
 
 	private VisualState visualState;
 
@@ -170,12 +171,12 @@ public abstract class Statement implements Serializable {
 		this.name = statementName;
 	}
 
-	public File getVisualLocator() {
-		return visualLocator;
+	public File getVisualLocatorPerfect() {
+		return visualLocatorPerfect;
 	}
 
-	public void setVisualLocator(File visualLocator) {
-		this.visualLocator = visualLocator;
+	public void setVisualLocatorPerfect(File visualLocator) {
+		this.visualLocatorPerfect = visualLocator;
 	}
 
 	public File getHtmlPage() {
@@ -192,6 +193,14 @@ public abstract class Statement implements Serializable {
 
 	public void setSeleniumAction(String seleniumAction) {
 		this.seleniumAction = seleniumAction;
+	}
+
+	public File getVisualLocatorLarge() {
+		return visualLocatorLarge;
+	}
+
+	public void setVisualLocatorLarge(File visualLocatorLarge) {
+		this.visualLocatorLarge = visualLocatorLarge;
 	}
 
 }

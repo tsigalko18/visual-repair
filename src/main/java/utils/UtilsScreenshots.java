@@ -8,11 +8,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -125,8 +123,8 @@ public class UtilsScreenshots {
 
 		File visualLocator = new File(webElementImageName);
 
-		// int scale = 10;
-		int scale = 4;
+		int scale = 10;
+		// int scale = 4;
 		getScaledSubImage(d, img, element, visualLocator, scale);
 
 		while (!isUnique(destFile.getAbsolutePath(), visualLocator.getAbsolutePath())) {
@@ -429,12 +427,13 @@ public class UtilsScreenshots {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		if (Settings.VERBOSE) {
-			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
-					+ " using image recognition algorithm TM_CCOEFF_NORMED");
-
-			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
-		}
+		// if (Settings.VERBOSE) {
+		// System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
+		// + " using image recognition algorithm TM_CCOEFF_NORMED");
+		//
+		// System.out.println("[LOG]\tSearching matches of " + templateFile + " in " +
+		// inFile);
+		// }
 
 		Mat img = Imgcodecs.imread(inFile);
 		Mat templ = Imgcodecs.imread(templateFile);
@@ -677,7 +676,6 @@ public class UtilsScreenshots {
 	}
 
 	public static String getTestSuiteNameFromWithinType(String withinType) {
-		// class clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
 		// class clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
 
 		if (withinType.contains("main.java")) {

@@ -15,7 +15,10 @@ public class TestSuiteRunner {
 
 	public static void main(String[] args) throws IOException {
 		
-		String prefix = "claroline190.";
+//		String prefix = "claroline190.";
+//		String prefix = "addressbook6211.";
+		String prefix = "addressbook825.";
+		
 		// path to the test suite class name
 //		String classRunner = "claroline.TestLoginAdmin";
 //		String classRunner = "clarolineDirectBreakage.TestLoginAdmin";
@@ -37,7 +40,8 @@ public class TestSuiteRunner {
 //		String classRunner = prefix + "TestLoginLogout";
 //		String classRunner = prefix + "TestModuleSettings";
 //		String classRunner = prefix + "TestUserList";
-		String classRunner = prefix + "TestViewProfile";
+//		String classRunner = prefix + "TestViewProfile";
+		String classRunner = prefix + "TestUserAdded";
 		
 		// this step runs the test suite and the aspect records the visual execution trace
 		Result result = null;
