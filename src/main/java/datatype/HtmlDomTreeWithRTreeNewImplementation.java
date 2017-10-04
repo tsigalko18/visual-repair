@@ -98,7 +98,7 @@ public class HtmlDomTreeWithRTreeNewImplementation {
 
 				// don't process elements with no visual impact
 				// if(x >= 0 && y >= 0 && w > 0 && h > 0)
-				if (!Arrays.asList(Settings.NON_VISUAL_TAGS).contains(child.getTagName())) {
+				if (!Arrays.asList(Settings.TAGS_BLACKLIST).contains(child.getTagName())) {
 					HtmlElement newChild = new HtmlElement();
 
 					// set tag name
