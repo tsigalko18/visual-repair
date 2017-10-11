@@ -49,4 +49,11 @@ public class UtilsXPath {
 		return result.toLowerCase();
 	}
 
+	public static String getXPathFromVisualLocatorWebElement(WebElement webElementFromVisualLocatorPerfect) {
+		String res = webElementFromVisualLocatorPerfect.toString();
+		res = res.substring(res.indexOf("html"), res.length());
+		res = res.substring(0, res.length() - 1);
+		return res;
+	}
+
 }

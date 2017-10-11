@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.opencv.core.Point;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,7 +28,7 @@ public class VisualAssertionTestRunner {
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		// String prefix = "clarolineDirectBreakage.";
-		String prefix = "claroline190.";
+		String prefix = "clarolineDirectBreakage.";
 
 		String className = "TestLoginAdmin";
 
@@ -37,8 +38,11 @@ public class VisualAssertionTestRunner {
 		// trace
 
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
+		// String testBroken = UtilsGetters.getTestFile(className, "src/main/resources/"
+		// + prefix.replace(".", ""));
 		Class<?> clazz = null;
 		Object inst = null;
+
 		try {
 			clazz = Class.forName(classRunner);
 			inst = clazz.newInstance();
@@ -49,6 +53,7 @@ public class VisualAssertionTestRunner {
 		} catch (IllegalAccessException e3) {
 			e3.printStackTrace();
 		}
+
 		Object ret = runMethod(clazz, inst, "setUp");
 
 		WebDriver driver = (WebDriver) runMethod(clazz, inst, "getDriver");
@@ -60,21 +65,18 @@ public class VisualAssertionTestRunner {
 		EnhancedTestCase testCorrect = pt
 				.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
-		// System.out.println(etc.getStatements());
-
 		Map<Integer, Statement> statementMap = etc.getStatements();
-
-		// System.out.println(testBroken);
 
 		for (Integer I : statementMap.keySet()) {
 
 			Statement statement = statementMap.get(I);
 
-			System.out.println("Statement " + I + ": " + statement.toString());
+			System.out.println("[LOG]\tStatement " + I + ": " + statement.toString());
+			System.out.println("[LOG]\tAsserting visual correcteness");
 
-			WebElement webElementFromDomLocator = null;
 			String visualLocatorPerfect = null;
 			String visualLocatorLarge = null;
+			WebElement webElementFromDomLocator = null;
 			WebElement webElementFromVisualLocatorPerfect = null;
 			WebElement webElementFromVisualLocatorLarge = null;
 
@@ -82,57 +84,65 @@ public class VisualAssertionTestRunner {
 				webElementFromDomLocator = retrieveWebElementFromDomLocator(driver, statement.getDomLocator());
 			} catch (NoSuchElementException Ex) {
 
-				System.out.println("Direct breakage detected at line " + statement.getLine());
-				System.out.println("Locator " + statement.getDomLocator()
-						+ " not found in the current state. Applying visual detection");
+				System.out.println("[LOG]\tDirect breakage detected at line " + statement.getLine());
+				System.out.println("[LOG]\tLocator " + statement.getDomLocator()
+						+ " not found in the current state. Applying visual detection of the web element");
 
 				visualLocatorPerfect = testCorrect.getStatements().get(I).getVisualLocatorPerfect().toString();
 				visualLocatorLarge = testCorrect.getStatements().get(I).getVisualLocatorLarge().toString();
 
-				/* What if the wrong element is targeted? */
-				/* Can it raise a NoSuchElementException? */
 				webElementFromVisualLocatorPerfect = retrieveWebElementFromVisualLocator(driver, visualLocatorPerfect);
 				webElementFromVisualLocatorLarge = retrieveWebElementFromVisualLocator(driver, visualLocatorLarge);
-				
-				if(!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
-					System.out.println(webElementFromVisualLocatorPerfect);
-					System.out.println(webElementFromVisualLocatorLarge);
-				}
 
-				/* HERE SHOULD APPLY REPAIR */
-				System.out.println("Applied visual repair.");
-				webElementFromDomLocator = webElementFromVisualLocatorPerfect;
+				/* there is disagreement between the visual locators. */
+				if (!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
+					System.out.println("[LOG]\tThe two visual locators target two different elements");
+					System.out.println("[LOG]\tApplying proximity procedure");
+
+					/* might be the wrong element. */
+					System.out.println("[LOG]\tApplied (suboptimal) visual repair");
+					webElementFromDomLocator = webElementFromVisualLocatorLarge;
+				} else {
+					/* any of the visual locator is ok. */
+					System.out.println("[LOG]\tApplied visual repair");
+					System.out.println("[LOG]\tRepaired element is " + webElementFromVisualLocatorPerfect);
+					webElementFromDomLocator = webElementFromVisualLocatorPerfect;
+				}
 			}
 
 			if (webElementFromDomLocator != null) {
+
 				/* check the visual locators. */
 				visualLocatorPerfect = testCorrect.getStatements().get(I).getVisualLocatorPerfect().toString();
 				webElementFromVisualLocatorPerfect = retrieveWebElementFromVisualLocator(driver, visualLocatorPerfect);
-				
+
 				visualLocatorLarge = testCorrect.getStatements().get(I).getVisualLocatorLarge().toString();
 				webElementFromVisualLocatorLarge = retrieveWebElementFromVisualLocator(driver, visualLocatorLarge);
-				
-				if(!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
-					System.out.println("The two visual locators target two different elements");
-					System.out.println(webElementFromVisualLocatorPerfect);
-					System.out.println(webElementFromVisualLocatorLarge);
-					System.out.println("DOM locator");
-					System.out.println(webElementFromDomLocator);
-					System.out.println("DOM locator to XPath");
-					System.out.println(UtilsXPath.generateXPathForWebElement(webElementFromDomLocator, ""));
+
+				/* there is disagreement between the visual locators. */
+				if (!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
+
+					System.out.println("[LOG]\tThe two visual locators target two different elements");
+					System.out.println("[LOG]\tApplying proximity procedure");
+					webElementFromDomLocator = applyProximityVoting((JavascriptExecutor) driver,
+							webElementFromDomLocator, webElementFromVisualLocatorPerfect,
+							webElementFromVisualLocatorLarge);
 				}
 
-				if (!areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorLarge)) {
-					System.out.println("Chance of propagated breakage at line " + statement.getLine());
-					System.out.println("DOM locator and visual locator target two different elements");
+				if (!areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorLarge)
+						|| !areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorPerfect)) {
+
+					System.out.println("[LOG]\tChance of propagated breakage at line " + statement.getLine());
+					System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
 
 					System.out.println(webElementFromVisualLocatorLarge);
+					System.out.println(webElementFromVisualLocatorPerfect);
 					System.out.println(webElementFromDomLocator);
-					
+
 					/* DECIDE WHAT TO DO HERE: which one should I trust? */
 					webElementFromDomLocator = webElementFromVisualLocatorPerfect;
 				} else {
-					System.out.println("Visual Assertion correct");
+					System.out.println("[LOG]\tVisual Assertion correct");
 				}
 				try {
 					// after ascertaining the right element, perform the action
@@ -198,6 +208,27 @@ public class VisualAssertionTestRunner {
 		// }
 
 		System.exit(0);
+	}
+
+	private static WebElement applyProximityVoting(JavascriptExecutor js, WebElement webElementFromDomLocator,
+			WebElement webElementFromVisualLocatorPerfect, WebElement webElementFromVisualLocatorLarge) {
+
+		String xpathVisualLocatorPerfect = UtilsXPath.generateXPathForWebElement(webElementFromVisualLocatorPerfect,
+				"");
+		String xpathVisualLocatorLarge = UtilsXPath.generateXPathForWebElement(webElementFromVisualLocatorLarge, "");
+
+		String xpathDomLocator = UtilsXPath.generateXPathForWebElement(webElementFromDomLocator, "");
+
+		if (xpathDomLocator.equals(xpathVisualLocatorPerfect)) {
+			System.out.println("[LOG]\tVisually verified with perfectly cropped visual locator");
+			return webElementFromVisualLocatorPerfect;
+		} else if (xpathDomLocator.equals(xpathVisualLocatorLarge)) {
+			System.out.println("[LOG]\tVisually verified with largely cropped visual locator");
+			return webElementFromVisualLocatorLarge;
+		} else {
+			System.out.println("[LOG]\tNot visually verified");
+			return webElementFromVisualLocatorPerfect;
+		}
 	}
 
 	private static boolean areWebElementsEquals(WebElement webElementFromDomLocator,

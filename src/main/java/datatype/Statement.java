@@ -21,6 +21,7 @@ public abstract class Statement implements Serializable {
 	private File domBefore;
 	private File domAfter;
 	private SeleniumLocator domLocator; // on domBefore
+	private String xpath;
 
 	// visual-based information
 	private File screenshotBefore;
@@ -201,6 +202,14 @@ public abstract class Statement implements Serializable {
 
 	public void setVisualLocatorLarge(File visualLocatorLarge) {
 		this.visualLocatorLarge = visualLocatorLarge;
+	}
+
+	public String getXpath() {
+		return xpath;
+	}
+
+	public void setXpath(String xpath) {
+		this.xpath = xpath;
 	}
 
 }
