@@ -25,10 +25,14 @@ public class DomRepair {
 	static String htmlpage;
 	static EnhancedTestCase testBroken;
 	static EnhancedTestCase testCorrect;
-	static boolean checkOnBrowser = true;
+	static boolean checkOnBrowser = false;
 
-	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
-
+	public DomRepair() throws JsonSyntaxException, IOException, NumberFormatException, SAXException {
+		run();
+	}
+	
+	public void run() throws JsonSyntaxException, IOException, NumberFormatException, SAXException {
+		
 		File testSuiteFolder = new File(Settings.testingTestSuiteVisualTraceExecutionFolder);
 
 		File[] tests = testSuiteFolder.listFiles(FileFilters.directoryFilter);
@@ -80,10 +84,66 @@ public class DomRepair {
 			}
 
 		}
-
 		
-		System.exit(0);
-
 	}
+
+//	public static void main(String[] args) throws JsonSyntaxException, IOException, SAXException {
+//
+//		File testSuiteFolder = new File(Settings.testingTestSuiteVisualTraceExecutionFolder);
+//
+//		File[] tests = testSuiteFolder.listFiles(FileFilters.directoryFilter);
+//
+//		Map<String, File> m = UtilsParser.convertToHashMap(tests);
+//
+//		System.out.println("[LOG]\tRunning WATER");
+//		System.out.println("[LOG]\tcheckOnBrowser is set to " + checkOnBrowser);
+//
+//		for (File file : m.values()) {
+//
+//			if (UtilsGetters.isTestBroken(file)) {
+//
+//				System.out.println("[LOG]\tTest " + file.getName());
+//
+//				/* load the exception. */
+//				File ex = UtilsGetters.getExceptionFile(file);
+//				exception = UtilsParser.readException(ex.getAbsolutePath());
+//
+//				if (Settings.VERBOSE) {
+//					System.out.println("[LOG]\tBreakage at line " + exception.getInvolvedLine());
+//					System.out.print("[LOG]\t" + exception.getMessage());
+//				}
+//
+//				/* load the broken test. */
+//				String name = file.getName();
+//				ParseTest pt = new ParseTest(Settings.testingTestSuiteVisualTraceExecutionFolder);
+//				testBroken = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToTestSuiteUnderTest));
+//
+//				/* load the correct test. */
+//				pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
+//				testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(name, Settings.pathToReferenceTestSuite));
+//
+//				long startTime = System.currentTimeMillis();
+//
+//				/* apply repair algorithms. */
+//				Water wt = new Water(testBroken, testCorrect, exception, checkOnBrowser);
+//				repairs = wt.suggestRepair();
+//
+//				long stopTime = System.currentTimeMillis();
+//				long elapsedTime = stopTime - startTime;
+//				System.out.println(repairs.size() + " repairs found in " + elapsedTime / 1000 + " s");
+//
+//				for (int i = 0; i < repairs.size(); i++) {
+//					System.out.println("Repaired Test #" + i);
+//					UtilsRepair.printTestCaseWithLineNumbers(repairs.get(i));
+//				}
+//
+//			}
+//
+//		}
+//
+//		
+//		System.exit(0);
+//
+//	}
 
 }

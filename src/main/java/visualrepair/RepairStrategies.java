@@ -28,7 +28,9 @@ public class RepairStrategies {
 		// locator error
 		if (e.getMessage().contains("Unable to locate element")) {
 
-			// apply strategy 1
+//			repairs.addAll(ElementMovedNewStateWithLocalCrawling.searchElementNewState(e, b, c, checkOnBrowser));
+			
+//			 apply strategy 1
 			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c, checkOnBrowser));
 
 			// apply strategy 2

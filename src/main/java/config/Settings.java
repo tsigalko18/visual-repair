@@ -10,9 +10,9 @@ public class Settings {
 	public static String testSuiteCorrect = "claroline1811";
 
 	/* specify where to find the broken/regressed test suite. */
-//	 public static String testSuiteBroken = "clarolineDirectBreakage";
+	 public static String testSuiteBroken = "clarolineDirectBreakage";
 //	 public static String testSuiteBroken = "addressbook825";
-	public static String testSuiteBroken = "claroline190";
+//	public static String testSuiteBroken = "claroline190";
 
 	/*
 	 * ******* DO NOT EDIT ANYTHING DOWN HERE *******

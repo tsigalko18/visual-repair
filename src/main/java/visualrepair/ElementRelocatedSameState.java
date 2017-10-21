@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.net.URLEncoder;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
@@ -50,7 +51,7 @@ public class ElementRelocatedSameState {
 		Statement newst = b.getStatements().get(brokenStatementLine);
 
 		/* get the visual locator of the statement in the correct test case. */
-		String template = oldst.getVisualLocator().toString();
+		String template = oldst.getVisualLocatorPerfect().toString();
 
 		/* open the web page of the new version. */
 		String htmlFile;
@@ -64,7 +65,7 @@ public class ElementRelocatedSameState {
 		
 		String htmlFileCleaned = htmlFile.toString();
 		/* encode URL. */
-		theHtmlPage = java.net.URLEncoder.encode(theHtmlPage, "UTF-8");
+		theHtmlPage = URLEncoder.encode(theHtmlPage, "UTF-8");
 		
 		htmlFileCleaned = htmlFileCleaned.substring(0, htmlFile.lastIndexOf("/") + 1);
 		htmlFileCleaned = htmlFileCleaned.concat(theHtmlPage);
