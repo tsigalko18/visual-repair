@@ -96,6 +96,11 @@ public class EnhancedTestCase implements Serializable {
 		}
 
 	}
+	
+	public void replaceStatements(Map<Integer, Statement> map) {
+		this.statements = null;
+		this.statements = map;
+	}
 
 	public void addAndReplaceStatement(Integer i, Statement st) {
 		statements.put(i, st);

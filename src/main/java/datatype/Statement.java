@@ -9,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+import utils.UtilsParser;
+
 @SuppressWarnings("serial")
 public abstract class Statement implements Serializable {
 
@@ -90,6 +92,10 @@ public abstract class Statement implements Serializable {
 
 	public void setDomLocator(SeleniumLocator domLocator) {
 		this.domLocator = domLocator;
+	}
+	
+	public void setDomLocator(WebElement domLocator) {
+		this.domLocator = UtilsParser.getSeleniumLocatorFromWebElement(domLocator);
 	}
 
 	public String getAction() {
