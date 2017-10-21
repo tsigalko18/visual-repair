@@ -3,6 +3,7 @@ package runner;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.opencv.core.Point;
@@ -19,6 +20,7 @@ import datatype.SeleniumLocator;
 import datatype.Statement;
 import parser.ParseTest;
 import utils.UtilsGetters;
+import utils.UtilsRepair;
 import utils.UtilsScreenshots;
 import utils.UtilsXPath;
 
@@ -38,8 +40,7 @@ public class VisualAssertionTestRunner {
 		// trace
 
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
-		// String testBroken = UtilsGetters.getTestFile(className, "src/main/resources/"
-		// + prefix.replace(".", ""));
+
 		Class<?> clazz = null;
 		Object inst = null;
 
@@ -66,6 +67,7 @@ public class VisualAssertionTestRunner {
 				.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
 		Map<Integer, Statement> statementMap = etc.getStatements();
+		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 
 		for (Integer I : statementMap.keySet()) {
 
@@ -74,11 +76,7 @@ public class VisualAssertionTestRunner {
 			System.out.println("[LOG]\tStatement " + I + ": " + statement.toString());
 			System.out.println("[LOG]\tAsserting visual correcteness");
 
-			String visualLocatorPerfect = null;
-			String visualLocatorLarge = null;
 			WebElement webElementFromDomLocator = null;
-			WebElement webElementFromVisualLocatorPerfect = null;
-			WebElement webElementFromVisualLocatorLarge = null;
 
 			try {
 				webElementFromDomLocator = retrieveWebElementFromDomLocator(driver, statement.getDomLocator());
@@ -88,73 +86,64 @@ public class VisualAssertionTestRunner {
 				System.out.println("[LOG]\tLocator " + statement.getDomLocator()
 						+ " not found in the current state. Applying visual detection of the web element");
 
-				visualLocatorPerfect = testCorrect.getStatements().get(I).getVisualLocatorPerfect().toString();
-				visualLocatorLarge = testCorrect.getStatements().get(I).getVisualLocatorLarge().toString();
+				/*
+				 * if the element is not found it can either be:
+				 * 
+				 * 1. on the same state (current default strategy) 2. another state (requires
+				 * local crawling) 3. absent (we delete the statement)
+				 * 
+				 */
 
-				webElementFromVisualLocatorPerfect = retrieveWebElementFromVisualLocator(driver, visualLocatorPerfect);
-				webElementFromVisualLocatorLarge = retrieveWebElementFromVisualLocator(driver, visualLocatorLarge);
+				webElementFromDomLocator = searchWithinTheSameState(driver, webElementFromDomLocator, testCorrect, I);
 
-				/* there is disagreement between the visual locators. */
-				if (!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
-					System.out.println("[LOG]\tThe two visual locators target two different elements");
-					System.out.println("[LOG]\tApplying proximity procedure");
-
-					/* might be the wrong element. */
-					System.out.println("[LOG]\tApplied (suboptimal) visual repair");
-					webElementFromDomLocator = webElementFromVisualLocatorLarge;
-				} else {
-					/* any of the visual locator is ok. */
-					System.out.println("[LOG]\tApplied visual repair");
-					System.out.println("[LOG]\tRepaired element is " + webElementFromVisualLocatorPerfect);
-					webElementFromDomLocator = webElementFromVisualLocatorPerfect;
+				if (webElementFromDomLocator == null) {
+					webElementFromDomLocator = localCrawling(); // stub method
 				}
+
+				if (webElementFromDomLocator == null) {
+					webElementFromDomLocator = removeStatement(); // stub method
+				}
+
 			}
 
 			if (webElementFromDomLocator != null) {
 
-				/* check the visual locators. */
-				visualLocatorPerfect = testCorrect.getStatements().get(I).getVisualLocatorPerfect().toString();
-				webElementFromVisualLocatorPerfect = retrieveWebElementFromVisualLocator(driver, visualLocatorPerfect);
+				webElementFromDomLocator = visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, I,
+						statement);
 
-				visualLocatorLarge = testCorrect.getStatements().get(I).getVisualLocatorLarge().toString();
-				webElementFromVisualLocatorLarge = retrieveWebElementFromVisualLocator(driver, visualLocatorLarge);
+				Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
+				newStatement.setDomLocator(webElementFromDomLocator);
 
-				/* there is disagreement between the visual locators. */
-				if (!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
-
-					System.out.println("[LOG]\tThe two visual locators target two different elements");
-					System.out.println("[LOG]\tApplying proximity procedure");
-					webElementFromDomLocator = applyProximityVoting((JavascriptExecutor) driver,
-							webElementFromDomLocator, webElementFromVisualLocatorPerfect,
-							webElementFromVisualLocatorLarge);
-				}
-
-				if (!areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorLarge)
-						|| !areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorPerfect)) {
-
-					System.out.println("[LOG]\tChance of propagated breakage at line " + statement.getLine());
-					System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
-
-					System.out.println(webElementFromVisualLocatorLarge);
-					System.out.println(webElementFromVisualLocatorPerfect);
-					System.out.println(webElementFromDomLocator);
-
-					/* DECIDE WHAT TO DO HERE: which one should I trust? */
-					webElementFromDomLocator = webElementFromVisualLocatorPerfect;
-				} else {
-					System.out.println("[LOG]\tVisual Assertion correct");
-				}
 				try {
 					// after ascertaining the right element, perform the action
 					if (statement.getAction().equalsIgnoreCase("click")) {
+
 						webElementFromDomLocator.click();
-					}
-					if (statement.getAction().equalsIgnoreCase("sendkeys")) {
-						webElementFromDomLocator.sendKeys(statement.getValue().replaceAll("\"", ""));
-					}
-					if (statement.getAction().equalsIgnoreCase("selectByVisibleText")) {
+
+					} else if (statement.getAction().equalsIgnoreCase("sendkeys")) {
+
+						webElementFromDomLocator.sendKeys(statement.getValue());
+
+					} else if (statement.getAction().equalsIgnoreCase("selectByVisibleText")) {
+
 						new Select(webElementFromDomLocator).selectByVisibleText(statement.getValue());
+
+					} else if (statement.getAction().equalsIgnoreCase("getText")) {
+
+						if (webElementFromDomLocator.getText() == statement.getValue()) {
+							System.out.println("[LOG]\tAssertion value correct");
+							System.out.println(statement.toString());
+						} else {
+							System.out.println(
+									"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText()
+											+ "\"" + " <> " + "\"" + statement.getValue() + "\"");
+							newStatement.setValue(webElementFromDomLocator.getText());
+						}
+
 					}
+
+					// add the repaired statement to the test
+					repairedTest.put(I, newStatement);
 
 				} catch (Exception Ex) {
 					Ex.printStackTrace();
@@ -163,13 +152,20 @@ public class VisualAssertionTestRunner {
 				}
 			}
 
+			System.out.println();
+
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
+		System.out.println("original test case");
+		UtilsRepair.printTestCaseWithLineNumbers(etc);
+
+		EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(etc);
+		temp.replaceStatements(repairedTest);
+
+		System.out.println("repaired test case");
+		UtilsRepair.printTestCaseWithLineNumbers(temp);
+
+		driver.close();
 
 		// cleanup(clazz, inst);
 		// runMethod(clazz, inst, "tearDown");
@@ -208,6 +204,92 @@ public class VisualAssertionTestRunner {
 		// }
 
 		System.exit(0);
+	}
+
+	private static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator,
+			EnhancedTestCase testCorrect, Integer i, Statement statement) {
+
+		String visualLocatorPerfect = null;
+		String visualLocatorLarge = null;
+		WebElement webElementFromVisualLocatorPerfect = null;
+		WebElement webElementFromVisualLocatorLarge = null;
+
+		/* check the visual locators. */
+		visualLocatorPerfect = testCorrect.getStatements().get(i).getVisualLocatorPerfect().toString();
+		webElementFromVisualLocatorPerfect = retrieveWebElementFromVisualLocator(driver, visualLocatorPerfect);
+
+		visualLocatorLarge = testCorrect.getStatements().get(i).getVisualLocatorLarge().toString();
+		webElementFromVisualLocatorLarge = retrieveWebElementFromVisualLocator(driver, visualLocatorLarge);
+
+		/* there is disagreement between the visual locators. */
+		if (!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
+
+			System.out.println("[LOG]\tThe two visual locators target two different elements");
+			System.out.println("[LOG]\tApplying proximity procedure");
+			webElementFromDomLocator = applyProximityVoting((JavascriptExecutor) driver, webElementFromDomLocator,
+					webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge);
+		}
+
+		if (!areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorLarge)
+				|| !areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorPerfect)) {
+
+			System.out.println("[LOG]\tChance of propagated breakage at line " + statement.getLine());
+			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
+
+			// System.out.println(webElementFromVisualLocatorLarge);
+			// System.out.println(webElementFromVisualLocatorPerfect);
+			// System.out.println(webElementFromDomLocator);
+
+			/* DECIDE WHAT TO DO HERE: which one should I trust? */
+			webElementFromDomLocator = webElementFromVisualLocatorPerfect;
+		} else {
+			System.out.println("[LOG]\tVisual Assertion correct");
+		}
+
+		return webElementFromDomLocator;
+	}
+
+	private static WebElement removeStatement() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static WebElement localCrawling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static WebElement searchWithinTheSameState(WebDriver driver, WebElement webElementFromDomLocator,
+			EnhancedTestCase testCorrect, Integer i) {
+
+		String visualLocatorPerfect = null;
+		String visualLocatorLarge = null;
+		WebElement webElementFromVisualLocatorPerfect = null;
+		WebElement webElementFromVisualLocatorLarge = null;
+
+		visualLocatorPerfect = testCorrect.getStatements().get(i).getVisualLocatorPerfect().toString();
+		visualLocatorLarge = testCorrect.getStatements().get(i).getVisualLocatorLarge().toString();
+
+		webElementFromVisualLocatorPerfect = retrieveWebElementFromVisualLocator(driver, visualLocatorPerfect);
+		webElementFromVisualLocatorLarge = retrieveWebElementFromVisualLocator(driver, visualLocatorLarge);
+
+		/* there is disagreement between the visual locators. */
+		if (!areWebElementsEquals(webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge)) {
+			/* might be the wrong element. */
+			System.out.println("[LOG]\tThe two visual locators target two different elements");
+			System.out.println("[LOG]\tApplying proximity procedure");
+			System.out.println("[LOG]\tApplied (suboptimal) visual repair");
+			webElementFromDomLocator = webElementFromVisualLocatorLarge;
+		} else {
+			/* any of the visual locator is ok. */
+			System.out.println("[LOG]\tThe two visual locators target the same element");
+			System.out.println("[LOG]\tApplied (optimal) visual repair");
+			System.out.println("[LOG]\tRepaired element is " + webElementFromVisualLocatorPerfect);
+			webElementFromDomLocator = webElementFromVisualLocatorPerfect;
+		}
+
+		return webElementFromDomLocator;
+
 	}
 
 	private static WebElement applyProximityVoting(JavascriptExecutor js, WebElement webElementFromDomLocator,
