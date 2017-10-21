@@ -63,6 +63,24 @@ public class UtilsParser {
 		int begin = s.indexOf("sendKeys(");
 		s = s.substring(begin, s.length()); // leave only sendKeys("admin");
 		s = s.substring(9, s.length() - 2); // leave only "admin"
+		s = s.replaceAll("\"", ""); // leave only admin
+		return s;
+
+	}
+	
+	/**
+	 * Auxiliary method to get the value from the assertions predicates
+	 * 
+	 * @param st
+	 * @return
+	 */
+	public static String getValueFromAssertion(Statement st) {
+
+		String s = st.toString();
+		int begin = s.indexOf("contains(");
+		s = s.substring(begin, s.length()); // leave only contains("admin");
+		s = s.substring(9, s.length() - 3); // leave only "admin"
+		s = s.replaceAll("\"", ""); // leave only admin
 		return s;
 
 	}
@@ -156,6 +174,36 @@ public class UtilsParser {
 
 		return new SeleniumLocator(strategy, value);
 	}
+	
+	/**
+	 * auxiliary method to extract the DOM locator used by a web element
+	 * 
+	 * @param webElement
+	 * @return
+	 */
+	public static SeleniumLocator getDomLocator(WebElement st) {
+
+		String domLocator = st.toString(); 
+		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.length()); // By.id("login")).sendKeys("admin");
+		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.indexOf(")") + 1); // By.id("login")
+		domLocator = domLocator.replace("By.", ""); // id("login")
+		String strategy = domLocator.split("\\(")[0].trim();
+		String value = domLocator.split("\\(")[1];
+		value = value.substring(0, value.length() - 1).replaceAll("\"", "").trim();
+
+		return new SeleniumLocator(strategy, value);
+	}
+	
+	public static SeleniumLocator getSeleniumLocatorFromWebElement(WebElement webElement) {
+		String res = webElement.toString();
+		res = res.substring(res.indexOf("-> ") + 3, res.length());
+		res = res.substring(0, res.length() - 1);
+		String strategy = res.split(":")[0].trim();
+		String value = res.split(":")[1].trim();
+		value = value.replaceAll("\"", "").trim();
+		return new SeleniumLocator(strategy, value);
+	}
+
 
 	public static String getValueFromSelect(Statement st) {
 

@@ -246,7 +246,7 @@ public class ParseTest {
 
 						if (st.toString().contains("getText")) {
 							ea.setAction("getText");
-							ea.setValue("");
+							ea.setValue(UtilsParser.getValueFromAssertion(st));
 						} else {
 							System.err.println("[LOG]\tAnalysing an assertion with no getText()");
 						}
