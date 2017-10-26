@@ -5,7 +5,7 @@ public class EnhancedAssertion extends EnhancedWebElement {
 	// assertTrue(driver.findElement(By.xpath("//*[@class='userName']")).getText().contains("John
 	// Doe"));
 	String assertion; // assertTrue
-	String predicate; // contains("John Doe")
+	String predicate; // contains
 
 	public String getAssertion() {
 		return assertion;
@@ -32,7 +32,8 @@ public class EnhancedAssertion extends EnhancedWebElement {
 
 	@Override
 	public String toString() {
-		return assertion + "(" + getDomLocator() + ")" + "." + getAction() + "()." + predicate + ");";
+		return assertion + "(" + getDomLocator() + ")" + "." + getAction() + "()." + predicate + "(\"" + getValue()
+				+ "\"));";
 	}
 
 }

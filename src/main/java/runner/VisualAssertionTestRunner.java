@@ -65,11 +65,11 @@ public class VisualAssertionTestRunner {
 		Map<Integer, Statement> statementMap = etc.getStatements();
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 
-		for (Integer I : statementMap.keySet()) {
+		for (Integer statementNumber : statementMap.keySet()) {
 
-			Statement statement = statementMap.get(I);
+			Statement statement = statementMap.get(statementNumber);
 
-			System.out.println("[LOG]\tStatement " + I + ": " + statement.toString());
+			System.out.println("[LOG]\tStatement " + statementNumber + ": " + statement.toString());
 			System.out.println("[LOG]\tAsserting visual correcteness");
 
 			WebElement webElementFromDomLocator = null;
@@ -92,7 +92,7 @@ public class VisualAssertionTestRunner {
 				 */
 
 				webElementFromDomLocator = UtilsVisualRepair.searchWithinTheSameState(driver, webElementFromDomLocator,
-						testCorrect, I);
+						testCorrect, statementNumber);
 
 				/*
 				 * actually the local crawling step might also check whether the step is no
@@ -106,12 +106,17 @@ public class VisualAssertionTestRunner {
 					webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub method
 				}
 
+				/*
+				 * at this point, if the visual check is failing, webElementFromDomLocator
+				 * should be set to null.
+				 */
+
 			}
 
 			if (webElementFromDomLocator != null) {
 
-				webElementFromDomLocator = visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, I,
-						statement);
+				webElementFromDomLocator = visualAssertWebElement(driver, webElementFromDomLocator, testCorrect,
+						statementNumber, statement);
 
 				Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
 				newStatement.setDomLocator(webElementFromDomLocator);
@@ -145,26 +150,28 @@ public class VisualAssertionTestRunner {
 					}
 
 					// add the repaired statement to the test
-					repairedTest.put(I, newStatement);
+					repairedTest.put(statementNumber, newStatement);
 
-				} catch (Exception Ex) {
-					Ex.printStackTrace();
+				} catch (Exception ex) {
+					ex.printStackTrace();
 					// Apply repair strategies
 					break;
 				}
+			} else {
+				System.out.println("[LOG]\tVisual correctness and repair failed");
 			}
 
 			System.out.println();
 
 		}
 
-		System.out.println("original test case");
+		System.out.println("[LOG]\toriginal test case");
 		UtilsRepair.printTestCaseWithLineNumbers(etc);
 
 		EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(etc);
 		temp.replaceStatements(repairedTest);
 
-		System.out.println("repaired test case");
+		System.out.println("[LOG]\trepaired test case");
 		UtilsRepair.printTestCaseWithLineNumbers(temp);
 
 		driver.close();

@@ -62,7 +62,7 @@ public class UtilsVisualRepair {
 			return webElementFromVisualLocatorLarge;
 		} else {
 			System.out.println("[LOG]\tNot visually verified");
-			return webElementFromVisualLocatorPerfect;
+			return webElementFromVisualLocatorLarge;
 		}
 	}
 

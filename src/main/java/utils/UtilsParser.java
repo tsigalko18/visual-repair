@@ -67,23 +67,6 @@ public class UtilsParser {
 		return s;
 
 	}
-	
-	/**
-	 * Auxiliary method to get the value from the assertions predicates
-	 * 
-	 * @param st
-	 * @return
-	 */
-	public static String getValueFromAssertion(Statement st) {
-
-		String s = st.toString();
-		int begin = s.indexOf("contains(");
-		s = s.substring(begin, s.length()); // leave only contains("admin");
-		s = s.substring(9, s.length() - 3); // leave only "admin"
-		s = s.replaceAll("\"", ""); // leave only admin
-		return s;
-
-	}
 
 	/**
 	 * Auxiliary method to get the screenshot file
@@ -174,7 +157,7 @@ public class UtilsParser {
 
 		return new SeleniumLocator(strategy, value);
 	}
-	
+
 	/**
 	 * auxiliary method to extract the DOM locator used by a web element
 	 * 
@@ -183,7 +166,7 @@ public class UtilsParser {
 	 */
 	public static SeleniumLocator getDomLocator(WebElement st) {
 
-		String domLocator = st.toString(); 
+		String domLocator = st.toString();
 		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.length()); // By.id("login")).sendKeys("admin");
 		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.indexOf(")") + 1); // By.id("login")
 		domLocator = domLocator.replace("By.", ""); // id("login")
@@ -193,7 +176,7 @@ public class UtilsParser {
 
 		return new SeleniumLocator(strategy, value);
 	}
-	
+
 	public static SeleniumLocator getSeleniumLocatorFromWebElement(WebElement webElement) {
 		String res = webElement.toString();
 		res = res.substring(res.indexOf("-> ") + 3, res.length());
@@ -203,7 +186,6 @@ public class UtilsParser {
 		value = value.replaceAll("\"", "").trim();
 		return new SeleniumLocator(strategy, value);
 	}
-
 
 	public static String getValueFromSelect(Statement st) {
 
@@ -239,13 +221,45 @@ public class UtilsParser {
 		// assertTrue(driver.findElement(By.xpath("//*[@class='userName']")).getText().contains("John
 		// Doe"));
 		if (st.toString().contains("assert") && st.toString().contains("getText()")) {
+
 			String a = st.toString();
 			int begin = a.indexOf("getText().");
-			a = a.substring(begin + "getText().".length(), a.length() - 2); // contains("John
-																			// Doe")
+			a = a.substring(begin + "getText().".length(), a.length() - 2);
+			a = a.substring(0, a.indexOf("("));
 			return a;
+		} else {
+			System.err.println("[WARNING]\tUnable to extract predicate from assertion");
+			return "";
 		}
-		return "";
+
+	}
+
+	/**
+	 * return the value used in the assertion
+	 * 
+	 * @param st
+	 * @return
+	 */
+	public static String getValueFromAssertion(Statement st) {
+
+		// assertTrue(driver.findElement(By.xpath("//*[@class='userName']")).getText().contains("John
+		// Doe"));
+		if (st.toString().contains("assert") && st.toString().contains("getText()")) {
+
+			String a = st.toString();
+			int begin = a.indexOf("getText().");
+			a = a.substring(begin + "getText().".length(), a.length() - 2);
+			a = a.substring(a.indexOf("("), a.length());
+			a = a.replaceAll("\"", "");
+			a = a.replaceAll("\\(", "");
+			a = a.replaceAll("\\)", "");
+			a = a.trim();
+			return a;
+		} else {
+			System.err.println("[WARNING]\tUnable to extract predicate from assertion");
+			return "";
+		}
+
 	}
 
 	/**
@@ -362,7 +376,7 @@ public class UtilsParser {
 	}
 
 	public static Element getElementFromXPathJava(String xPath, Document doc) throws IOException {
-		
+
 		String xPathArray[] = xPath.split("/");
 		ArrayList<String> xPathList = new ArrayList<String>();
 
@@ -474,16 +488,15 @@ public class UtilsParser {
 	// OK
 	public static String getExceptionFromFailure(Failure f) {
 		String s = null;
-		
+
 		try {
-			s = f.getException().toString().substring(0,
-					f.getException().toString().indexOf("For documentation", 0));
-		} catch(StringIndexOutOfBoundsException e) {
+			s = f.getException().toString().substring(0, f.getException().toString().indexOf("For documentation", 0));
+		} catch (StringIndexOutOfBoundsException e) {
 			System.out.println("[ERROR]\tException not supported by the current implementation");
 			System.out.println(f.getMessage());
 			System.exit(1);
 		}
-		
+
 		return s;
 	}
 
