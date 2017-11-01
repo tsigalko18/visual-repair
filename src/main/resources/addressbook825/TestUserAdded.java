@@ -16,7 +16,7 @@ public class TestUserAdded {
 	@Before
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		driver.get("http://localhost:8888" + Settings.getVersion());
 	}
 
