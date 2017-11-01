@@ -25,12 +25,16 @@ public class VisualAssertionTestRunner {
 	public static void main(String[] args)
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
-		// String prefix = "clarolineDirectBreakage.";
+		/* package name. */
 		String prefix = "clarolineDirectBreakage.";
 
+		/* class name. */
 		String className = "TestLoginAdmin";
 
-		String classRunner = prefix + className;
+		runTestWithVisualAssertion(prefix, className);
+	}
+
+	private static void runTestWithVisualAssertion(String prefix, String className) {
 
 		// this step runs the test suite and the aspect records the visual execution
 		// trace
@@ -41,7 +45,7 @@ public class VisualAssertionTestRunner {
 		Object inst = null;
 
 		try {
-			clazz = Class.forName(classRunner);
+			clazz = Class.forName(prefix + className);
 			inst = clazz.newInstance();
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
