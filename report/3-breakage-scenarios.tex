@@ -1,21 +1,27 @@
 %% !TEX root =  paper.tex
 \section{Test Breakages}\label{sec:breakage-scenarios}
 
-\head{Scope}
+\head{Characterization of a breakage}
 In order to clarify the scope of our work, and avoid possible misinterpretations, it is hence important to emphasize the difference between test breakages and test failures. We consider a \textit{test breakage} as the event that occur when a test that was used to work and pass on a certain version $k$, fails to be applicable to a version $k+n$ (with $n \geq 1$) due to changes in the production code that interrupt its execution unpremeditatedly. %This event arises, for instance, when the test no longer reflects the intended behavior of the web application.
 This is different from cases when tests expose a program failure and hence do something for which they have been designed (i.e., exposing regression faults).
-Said that, in the context of this paper we focus our analysis on test breakages. In the following of this section we present a series of scenarios that are particularly challenging or impossible to repair with existing automated repair techniques. In~\autoref{} we present our novel test breakage detection and repair technique for E2E web tests.
+Said that, in the context of this paper we focus our analysis on test breakages.
 
 \head{Study of Breakages}
-In a recent study, researchers have categorized breakages happening as test suites for web applications are evolved, for regression purposes~\cite{Hammoudi-2016-ICST}. While the study considers C\&R test suites only, it has interesting findings, such as web element \textit{locators} have emerged as the main cause of fragility, accounting for more than 75\% of the totality of breakages.  
-%
-Indeed, the mapping between locators and web elements is heavily affected by changes to the web page layout/structure, often performed only to accommodate cosmetic or stylistic changes to align the GUI with the latest trends~\cite{2016-leotta-Advances,2016-Leotta-JSEP}. These changes may render tests inapplicable, because the locators become ineffective, as thoroughly reported in the literature~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-ICST}. 
-Indeed, locators that rely on properties of the DOM (e.g., HTML attributes or XPath expressions) are prone to break for a very diverse number of reasons such as attributes or nodes being removed/modified from the DOM.
+In a recent study, researchers have categorized breakages happening as test suites for web applications are evolved, for regression purposes~\cite{Hammoudi-2016-ICST}. While the study considers C\&R test suites only, the taxonomy of breakages proposed by Hammoudi and colleagues offers interesting findings. 
 
-Moreover, repairing web tests is often considered a burdensome activity because of the high frequency at which those tests break, and ~the little tooling support in the identification of the root causes behind a breakage and repair.
+Concerning the \textbf{causal} characterization, web element \textit{locators} have emerged as the main cause of fragility (74\% of the totality of breakages), followed by problems with test values (e.g., assertion values or input data -- 15\%), page reloading (4\%), user sessions (2\%), and popup issues (5\%). 
 %
-Indeed, despite repairing locators could seem mostly a mechanical and straightforward activity, it instead accounts for a number of different scenarios, some of which are particularly challenging to identify, and that make this activity extremely time-consuming and 
-definitely limit the applicability of existing automated repair techniques. In the following of this section, we describe some of the most complex scenarios.
+This confirms previous anecdotal finding on the problem of fragile locators~\cite{2016-Leotta-JSEP,2014-leotta-WoSAR,Daniel:2011:AGR:2002931.2002937,2013-Ricca-wse}.
+%
+Indeed, the mapping between locators and web elements is heavily affected by changes to the web page layout/structure, often performed only to accommodate cosmetic or stylistic changes to align the GUI with the latest trends~\cite{2016-leotta-Advances,2016-Leotta-JSEP}. These changes may render tests inapplicable, because the locators become ineffective, as thoroughly reported in the literature~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-ICST,2013-Ricca-wse}. 
+Indeed, locators that rely on properties of the DOM (e.g., HTML attributes or XPath expressions) are prone to break for a large variety of reasons such as attributes or nodes being removed/modified from the DOM~\cite{Choudhary:2011:WWA:2002931.2002935}.
+
+Hammoudi and colleagues give also a \textbf{temporal} characterization of test breakages, distinguishing into direct, propagated, and silent breakages. A breakage is called direct when the test stops at a statement $st_i$, and $st_i$ has to be repaired in order to let the test pass or continue its execution. With propagated breakages, on the other hand, the test stops at a statement $st_i$, but another statement $st_j$, usually preceding $st_i$ (i.e., $j > i$), has to be repaired in order to let the test pass or continue its execution. Finally, a silent breakages do not manifest explicitly because the test does not stop nor fail, but it yet diverges from its original intent, and only by manually checking its execution (perhaps by looking at the actions performed on the GUI), the tester can detect the mis-behaviour.
+
+At this point, it should be clear that to do effective root cause analysis, the testers must take into consideration all aspects behind a breakage (e.g., its cause and its position in the test) and link them together to devise possible repairs that do not change the intended test scenario. This is why repairing web tests is often considered a burdensome activity that leads the the test suites to be abandoned~\cite{Christophe2014}. In our belief, this is due to the high frequency at which those tests break, and the little tooling support in the identification of the root causes behind a breakage and repair.
+%
+Let us just focus for a moment on locator problems. Indeed, despite repairing locators could seem mostly a mechanical and straightforward activity, it instead accounts for a number of different scenarios -- some of which are particularly challenging to identify -- and that make this activity extremely time-consuming and 
+definitely limit the applicability of existing automated repair techniques. In the following of this section, we describe some of the most complex scenarios. In~\autoref{sec:approach} we present our novel test breakage detection and repair technique for E2E web tests.
 
 %\begin{figure}[t]
 %\centering
