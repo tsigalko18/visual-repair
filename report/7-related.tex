@@ -1,0 +1,31 @@
+\section{Related Work}\label{sec:relwork}
+
+
+
+There exist a body of knowledge describing the kind of repair activities that a tester must perform during test suites maintenance. 
+
+\head{Web Test Repair} \textit{Choudhary et al.}~\cite{Choudhary:2011:WWA:2002931.2002935} distinguish three main reasons for tests scripts to break: (1)~structural, (2)~content, and (3)~blind. The first category concerns DOM elements that get repositioned in the tree due to node/attribute insertion, modification or deletion. The second category concerns the textual content that get updated during software evolution. At last, the third category is related to server-side changes that are not directly observable in any DOM modification, such as popup boxes. 
+%
+In a recent work, \textit{Hammoudi et al.}~\cite{Hammoudi:2016:WIA:2950290.2950294}, an incremental test repair approach called \textsc{WaterFall}, has been proposed. Test repair techniques are applied iteratively across a sequence of fine-grained versions of a web application. Results of an empirical study comparing \textsc{WaterFall} to a coarse-grained approach (\textsc{Water}) show that the former is more effective than the latter at automatically repairing tests.
+%
+\textit{Leotta et al.}~\cite{2015-leotta-ICST} suggest to go beyond the concept of single locator and propose and experiment with a set of equivalent locators, called multi-locator. 
+%Locators are resilient to different types of changes and tend to be fragile individually, not collectively. 
+The idea is to compensate for one locator's fragility by resorting to the capabilities of another locator. Despite the improvement from the robustness point of view, the locator repair algorithm is also able to perform the correct repairs of the locator set in most of the cases, by relying on the redundancy of set of locators.
+
+\head{Test Case Breakages}  
+\textit{Hammoudi et al.}~\cite{Hammoudi-2016-ICST} present a taxonomy of web breakages in the context of record/replay tests. At a high level, they distinguish between proximal and distal causes. They define a proximal cause of a breakage as the cause which is most closely related to that breakage. Distal causes, on the other hand, are the modification that are made on the web application during its natural evolution and/or maintenance. For instance, the fact that a developer removes a choice from a dropdown list is a distal cause; the fact that a test fails at localizing that missing element is the proximal cause for which a tester must find an appropriate repair. 
+%
+In another paper, \textit{Leotta et al.}~\cite{2016-leotta-Advances} distinguish between \textit{structural} changes and \textit{logical} changes. The former involve the modification of the web page structure (i.e., the DOM) that impact only the low-level test script statement associated with that page and modification. The latter category, on the other hand, involve a change of the test scenario for which one or more test statements need to be added, altered or deleted.
+
+
+
+
+
+\begin{enumerate}
+%\item \textst{Choudhary WATER}
+%\item \textst{WATERFALL}
+\item Ernst workflow
+\item Atif SITAR
+\item ROBULA (locator breakage prevention)
+%\item \textst{Multilocator (locator breakage prevention and repair)}
+\end{enumerate}

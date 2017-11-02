@@ -1,0 +1,26 @@
+\begin{table*}%[h]
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.9}
+\centering
+\caption{Examples of Root Causes}
+\begin{tabular}{l@\qquad l}
+\toprule
+\bf Distal Cause & \bf Example \\
+\textsc{Addition} &  \\
+\quad A web element $e$ has been inserted & AddressBook v.6.2.11 $\rightarrow$ v8.2.5 Next button \\
+\quad A popup window $p$ has been inserted & PHPFusion v.7.0.0 assertion message $\rightarrow$ popup message \\[0.5ex]
+\textsc{Deletion} &  \\
+\quad An attribute $a$ of a web element $e$* has been deleted & attribute locator \\
+\quad A textual content $t$ of a web element $e$ has been deleted (rare) & assertion cannot be repaired! \\
+\quad A value/statement $v$ has become obsolete & test value/action \\
+\quad A web element $e$ has been deleted & locator and value/action \\[0.5ex]
+\textsc{Modification} &  \\
+\quad An attribute $a$ of a web element $e$ has been modified & attribute locator  \\
+\quad A textual content $t$ of a web element $e$** has been modified & assertion value \\
+\quad The web app structure or a tag of a web element $e$ have been changed & hierarchy based locator  \\
+\quad A web element $e$ is repositioned on the page & position based locator \\
+\quad A value $v$ has become obsolete, or assertion invalid & test value/action \\
+\bottomrule
+\end{tabular}
+\label{table:examples}
+\end{table*}

@@ -1,0 +1,74 @@
+% !TEX root =  paper.tex
+\section{Introduction}\label{sec:introduction}
+
+% introduction to E2E test automation
+Test automation techniques are used to enable the end-to-end (E2E) functional testing of web applications~\cite{DBLP:journals/ac/TonellaRM14}. 
+In this setting, the tester assumes the role of the end user and verifies the correct functioning of the application under test (AUT) by means of automated test cases. Such tests aim at automating the set of manual operations that the end user  performs on the web application GUI (e.g., delivering events with clicks, or filling in forms). 
+In modern software development the ability to react fast to ever-changing requirements is essential. For this reason, test automation techniques are often used in agile or continuous integration environments where new test cases are being developed and added to existing test suites in parallel with the development of the software itself, and across a wide range of testing tasks such as regression, system and UI testing~\cite{STVR:STVR121,Fewster,Ramler:2006:EPT:1138929.1138946,Nguyen2014,7381848}.
+
+% the problem
+
+Despite their wide adoption, E2E test automation tools bring the problem of \textit{maintaining test scripts during software evolution}. Changes as simple as repositioning GUI elements on the page or altering the selections in a drop-down list can cause the test to behave improperly. 
+In the literature, instances of these problems are known as \textit{test breakages}: a test breakage is defined as the event that occur when the test raises exceptions or errors that do not pertain to the presence of a bug or a malfunction of the application under test. This is different from cases in which
+test cases \textit{fail}, i.e., raise exceptions which signal the presence of one or more bugs in the production code. In this latter case, the developer is required to correct the application. In the former case, instead, the tester is required to fix the tests, that are no longer synchronized with the AUT.
+
+% existing work
+
+While there are interesting research contributions that try to address the testware evolution problem \cite{2016-leotta-Advances,2014-leotta-WoSAR,2015-leotta-ICST,Thummalapenta:2013:ECT:2486788.2486926,Yandrapally:2014:RTA:2610384.2610390,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE}, we are far from a consolidated solution. 
+The problem of \textit{detecting breakages} in web tests is largely unexplored and no automatic solution have been proposed yet. Even though web test repair techniques have been proposed~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi:2016:WIA:2950290.2950294,2015-leotta-ICST}, they have drawbacks. 
+First, in many cases, such techniques are either unable to correct breakages, or produce a great number of false positives. 
+This is due to the DOM-narrowness of those techniques, all of which do not consider visual aspects of the AUT. In fact, repairing tests is an activity that often requires testers to inspect the GUI of the AUT, or replay a portion of test scenario, in order to find the root cause of the breakage.
+Second, breakages does not always occur at the precise point in which the test execution's stops, but rather at some later point (e.g., statement) in execution. Existing repair algorithms rely on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle such propagated breakages~\cite{Hammoudi-2016-ICST}.
+
+% our proposal
+
+For the scope of this paper, we present a new holistic approach to  web applications testing that considers both DOM-based and visual characteristics of the AUT in order to support \textit{automatic breakage detection and repair of E2E web test cases}. 
+To overcome the aforementioned limitations, we propose \tool, a new generation web test breakage detection repair algorithm. \tool is based on differential testing, but it leverages the knowledge given by the visual execution of the tests and computer vision techniques to support a large variety of breakage scenarios and minimize the undesirable effects of the false positives. The key idea behind the development of \tool is that the manual actions and reasoning that a tester does while searching for possible repairs can be automated to a large extent by using differential testing and computer vision. 
+\tool maintains the visual temporal snapshots of the executing test cases in order to support comprehensibility of the test, and automatic test case repair.
+
+
+%\begin{itemize}
+%\item proximal causes $\rightarrow$ use DOM; distal causes $\rightarrow$ use visual; 
+%\item one of the most challenging problem in test case repair is related to the automatic repair of a broken workflow scenario. 
+%\item our tool maintain the visual temporal snapshots of the executing test cases in order to support comprehensibility of the test, and automatic test case repair.
+%\end{itemize}
+
+%\noindent
+%\textbf{Considerations.}
+%
+%\begin{itemize}
+%\item DOM-based test automation tools are popular but do not consider the visual appearance of the SUT, which is instead important and can be used as a further oracle. Visual test automation tools, on the other hand, completely abstract away the DOM of the page, limiting the applicability of existing techniques for generate/repair test cases. Timid approaches as Applitools~\cite{} try to unify the two approaches, allowing the tester to manually inject visual checks at specific points of the tests. This has two drawbacks: (1)~the insertion must be performed manually, (2)~this extra-code clutters the initial test code, with statements that do not pertain to the test scenario itself.
+%\item repairing a GUI test script is more challenging than repairing a broken workflow~\cite{Zhang:2013:ARB:2483760.2483775}; 
+%\item according to~\cite{Zhang:2013:ARB:2483760.2483775}, only comparing GUIs is insufficient to repair broken workflows. For that, we aim at joining DOM and visual aspects of the tests.
+%\item DOM-based repair techniques are based on limited heuristics: (1)~they only consider direct breakages, but are unable to target and suggest repairs for propagate breakages, (2)~for similar reasons, they cannot effectively repair broken workflows \andrea{to be verified}.
+%\end{itemize}
+
+%\noindent
+%\textbf{Approach.}
+%
+%\begin{itemize}
+%\item dynamic workflow profiling by instrumenting the test code. Differently from~\cite{Zhang:2013:ARB:2483760.2483775}, we do not ask the user to demonstrate a scenario on the web app, we use existing test cases. 
+%\item for each web element, we save its DOM properties, as well as its graphical representation on the GUI.
+%\item \cite{Zhang:2013:ARB:2483760.2483775} uses random testing (i.e., action execution) to find a potential candidate element for repairing the workflow. The candidate actions are ranked according to a weight; we might use a metaheuristic algorithm, and a fitness function.
+%\item we \textbf{must} preserve the semantics of the test, i.e., the assertions.
+%\end{itemize}
+
+We evaluated \tool \andrea{Complete}
+
+This paper makes the following contributions.
+
+\begin{itemize}
+\item 
+\item
+\item
+\end{itemize}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,55 @@
+\colorlet{mygreen}{green!75!black}
+\colorlet{col1in}{gray!10}
+\colorlet{col1out}{gray!20}
+\colorlet{green1in}{mygreen!80}
+\colorlet{green1out}{mygreen!70}
+\colorlet{green2in}{mygreen!60}
+\colorlet{green2out}{mygreen!50}
+\colorlet{green3in}{mygreen!40}
+\colorlet{green3out}{mygreen!30}
+\colorlet{green4in}{mygreen!20}
+\colorlet{green4out}{mygreen!10}
+\colorlet{blue3in}{blue!50}
+\colorlet{blue3out}{blue!40}
+\colorlet{blue4in}{blue!30}
+\colorlet{blue4out}{blue!20}
+\colorlet{linecol}{black}
+
+\pgfkeys{/forest,
+  rect/.append style={rectangle, rounded corners=1pt, font=\sffamily\Huge\bf, minimum width=80mm, minimum height=15mm},
+}
+\begin{forest}
+  for tree={
+    grow'=south,
+    parent anchor=south,
+    line width=2pt,
+    draw=linecol,
+    rect,
+    align=center,
+    s sep+=20pt,
+    l sep+=20pt,
+    drop shadow,
+    edge={->, thick, >={Triangle[]}},
+	edge path={
+    \noexpand\path[line width=1.5pt,\forestoption{edge}]
+      (\forestOve{\forestove{@parent}}{name}.parent anchor) -- +(0,-16pt) -|   
+      (\forestove{name}.child anchor)\forestoption{edge label};
+  },
+  }
+  [Locators Breakage Scenarios, inner color=col1in, outer color=col1out,
+  	[\textbf{2-Locator Accessible}, inner color=blue3in, outer color=blue3out,
+      [2.3-Different Web Element, inner color=blue4in, outer color=blue4out]
+      [2.2-Switched Web Element, inner color=blue4in, outer color=blue4out]
+      [2.1-Duplicate Web Element, inner color=blue4in, outer color=blue4out]
+    ],
+    [1-Locator Inaccessible, inner color=green1in, outer color=green1out,
+      [1.2-Web element not present, inner color=green2in, outer color=green2out,
+      [1.2.1-Deleted, inner color=green3in, outer color=green3out, calign with current]
+      ]
+      [1.1-Web element present, inner color=green2in, outer color=green2out,
+        [1.1.2-Another Page, inner color=green3in, outer color=green3out]
+        [1.1.1-Same Page, inner color=green3in, outer color=green3out]
+      ]
+    ]
+  ]
+\end{forest}

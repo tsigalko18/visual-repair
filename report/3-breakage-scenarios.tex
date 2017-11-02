@@ -1,0 +1,120 @@
+%% !TEX root =  paper.tex
+\section{Test Breakages}\label{sec:breakage-scenarios}
+
+\head{Scope}
+In order to clarify the scope of our work, and avoid possible misinterpretations, it is hence important to emphasize the difference between test breakages and test failures. We consider a \textit{test breakage} as the event that occur when a test that was used to work and pass on a certain version $k$, fails to be applicable to a version $k+n$ (with $n \geq 1$) due to changes in the production code that interrupt its execution unpremeditatedly. %This event arises, for instance, when the test no longer reflects the intended behavior of the web application.
+This is different from cases when tests expose a program failure and hence do something for which they have been designed (i.e., exposing regression faults).
+Said that, in the context of this paper we focus our analysis on test breakages. In the following of this section we present a series of scenarios that are particularly challenging or impossible to repair with existing automated repair techniques. In~\autoref{} we present our novel test breakage detection and repair technique for E2E web tests.
+
+\head{Study of Breakages}
+In a recent study, researchers have categorized breakages happening as test suites for web applications are evolved, for regression purposes~\cite{Hammoudi-2016-ICST}. While the study considers C\&R test suites only, it has interesting findings, such as web element \textit{locators} have emerged as the main cause of fragility, accounting for more than 75\% of the totality of breakages.  
+%
+Indeed, the mapping between locators and web elements is heavily affected by changes to the web page layout/structure, often performed only to accommodate cosmetic or stylistic changes to align the GUI with the latest trends~\cite{2016-leotta-Advances,2016-Leotta-JSEP}. These changes may render tests inapplicable, because the locators become ineffective, as thoroughly reported in the literature~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-ICST}. 
+Indeed, locators that rely on properties of the DOM (e.g., HTML attributes or XPath expressions) are prone to break for a very diverse number of reasons such as attributes or nodes being removed/modified from the DOM.
+
+Moreover, repairing web tests is often considered a burdensome activity because of the high frequency at which those tests break, and ~the little tooling support in the identification of the root causes behind a breakage and repair.
+%
+Indeed, despite repairing locators could seem mostly a mechanical and straightforward activity, it instead accounts for a number of different scenarios, some of which are particularly challenging to identify, and that make this activity extremely time-consuming and 
+definitely limit the applicability of existing automated repair techniques. In the following of this section, we describe some of the most complex scenarios.
+
+%\begin{figure}[t]
+%\centering
+%%\fbox{
+%\includegraphics[trim={0cm 12.4cm 0cm 0cm},clip,scale=0.23]{images/claroline-version2}
+%%}
+%\caption{Login page of the Claroline web application (version 1.11.0), along with a portion of the corresponding HTML code, and an automated Selenium test}
+%\label{claroline-version2}
+%\end{figure}
+
+\begin{figure}[t]
+\centering
+%\fbox{
+\includegraphics[trim={0cm 0cm 5.5cm 0cm},clip,scale=0.275]{images/claroline-together}
+%}
+\caption{Login page of the Claroline web application (version 1.11.0), along with a portion of the corresponding HTML code, and an automated Selenium test}
+\label{claroline-together}
+\end{figure}
+
+\head{Scenario 1 (Non Selection Same State)} 
+The first and more common scenario occurs when a locator $l$ applied to a certain DOM state $D$, returns no elements---formally, $l: D \rightarrow \emptyset$. A possible repair requires to find another locator $l'$, such that $l': D \rightarrow e$.
+This scenario is depicted in~\autoref{claroline-together}:~\textcircled{\raisebox{-0.9pt}{1}} shows the login form of Claroline web application version 1.10.0, together with the corresponding HTML code~\textcircled{\raisebox{-0.9pt}{2}}.~\textcircled{\raisebox{-0.9pt}{3}} shows the login form of Claroline in version 1.11.0, and the corresponding HTML code~\textcircled{\raisebox{-0.9pt}{4}}. 
+
+Let us a test scenario in which a user 
+inserts \texttt{username} and \texttt{password} 
+in the login form, and if these credentials are correct, 
+the \texttt{username} is displayed on the the homepage (not shown for brevity).
+\autoref{claroline-together}~\textcircled{\raisebox{-0.9pt}{5}} shows an automated test case implementing such scenario, developed using the popular Selenium framework~\cite{selenium}.
+In Line~3, an instance of WebDriver is created to control the Firefox browser. 
+In Line~4, the executable test case instruments WebDriver to 
+navigate to the URL of the target web application.  
+Lines~5-6 fill in the username and password input boxes 
+with the administrator credentials, and Line~7 submits the form. 
+Line~8 verifies, by means of an assertion, the presence 
+of an HTML element containing the username in the home page, 
+and asserts that it equals the string ``admin''. 
+Finally, Line~9 shuts down the WebDriver instance 
+and closes the browser.
+
+When executed on version 1.11.0~\textcircled{\raisebox{-0.9pt}{1}}, the test will stop at Line~7 when attempting to locate the ``Enter'' button~\textcircled{\raisebox{-0.9pt}{3}}, because the attribute \mbox{\texttt{name="submitAuth"}} has been removed from the page (see~\textcircled{\raisebox{-0.9pt}{2}}). One may attempt to use another locator, such as the XPath of the element, which is unfortunately inapplicable given that the tag of the element has changed (from \mbox{\texttt{input}} to \mbox{\texttt{button}}).
+However, it is evident that \textit{visually} the desired element is still present, and its position \textit{on the GUI} has not changed. At a visual inspection of the two GUIs, a tester would expect the test to work, because his/her perception is immaterial where changes at DOM-level are concerned.
+\andrea{this kind of breakage is associated to both to attribute-based and XPath locators.}
+
+\noindent
+\textbf{Scenario 2. (Non Selection Neighbouring State)} A second scenario concerns a web element $e$ that in version $V$ appears in a test state $st_i$ and in the new version $V'$ it has been repositioned to a neighbouring state of $st_i$. 
+As a concrete example consider \autoref{misselection}, showing Addressbook web application version 6.2.12~\textcircled{\raisebox{-0.9pt}{1}}, specifically the pages in which the user can insert a new entry. The test~\textcircled{\raisebox{-0.9pt}{2}} clicks on the Add New link on the home page (Line~5), and fills in the First name, Last name and Company text fields (Lines~6--8).
+Suppose now to replay the test on the successive version 7.0.0~\textcircled{\raisebox{-0.9pt}{3}}. The test will stop at Line~6 because a new intermediate confirmation page has been added, and the First name web element can no longer be found. In this scenario, the navigational workflow of the test is broken, and no longer reflects the web application intended behaviour.
+In this scenario, JUnit will raise an exception of kind \texttt{NoSuchElementException}, even though, conceptually, the repair action has nothing to do with the locator at Line~6. 
+This scenario can be challenging to detect for the tester (as well as for any automatic repair technique), unless the visual execution of the test is taken into account.
+%A mis-selection of an element mainly manifests as two different misbehaviours of the application: (1)~the execution of a statement $st_i$ is supposed to trigger a state transition. Due to the 
+%the mis-selection of the locator contained $st_i$, the transition does not take place (i.e., the app remains in the same state), and a later statement $st_k$ (with $k>i$) breaks.
+%(2)~the execution of a statement $st_i$ triggers an unexpected state transition, that makes a successive statement $st_k$ (with $k>i$) to break.
+
+\begin{figure}[t]
+\centering
+%\fbox{
+\includegraphics[trim={0cm 1cm 0cm 0cm},clip,scale=0.23]{images/misselection}
+%}
+\caption{Examples of mis-selection}
+\label{misselection}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+%\fbox{
+\includegraphics[trim={0.0cm 18cm 0.0cm 0cm},clip,scale=0.435]{images/approach-reduced2}
+%}
+\caption{High Level Overview of Visual Test Repair Approach}
+\label{approach}
+\end{figure*}
+
+\noindent
+\textbf{Scenario 3. (Mis-Selection)} Consider \autoref{misselection} again. 
+Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In the literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}, formally, $l: D \rightarrow e'$ where $e \ne e'$. The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a propagated or a silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Conversely, when a silent breakage occurs, the test does not stop, and no exception are raised. Again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakages patterns.
+
+\andrea{this kind of breakage is associated mostly to XPath locators, but it can happen with attributes too if, for instance, two different elements share the same attribute locator.}
+
+\subsection{How Testers Repair}
+
+When a test $t$ that was used to function on a version $V$  breaks on a successive version $V'$, a tester needs to understand the root cause behind the breakage and a possible repair for it. 
+
+In doing so, at least four steps are involved: 
+(1)~the tester inspects the error stack trace or the console, which may contain information about the origin of breakage (e.g., ``\texttt{NoSuchElementException} occurred. Unable to locate element with \mbox{\texttt{name=password}}''). 
+(2)~the tester inspects $t$ to find the statement $st$ responsible for the failure; %which is also likely to be the one that needs to be corrected (note that this is not always true).
+(3)~the tester navigates the GUI of $V'$, trying to identify the portion of the GUI which is related to $st$. 
+(4)~depending on the kind of breakage, the tester inspects either the (i)~DOM of $V'$, or (ii)~the GUI of $V'$, or (iii)~both the DOM and the GUI, to find candidate repair solutions. In doing so, the tester may possibly need to exercise manually the same broken scenario of $t$ (i.e., all the actions in the statements preceding $st$), in order to replicate the breakage occurred at $st$ and gather insights on possible repair actions.
+
+Thus, a \textbf{first challenge} in repairing web tests derives from the fact that  
+%Thus, in E2E web tests such as Selenium's 
+the tester often needs to inspect and link the behaviour of the test code execution, along with the modification perpetrated to the GUI and the DOM of the application. 
+In other words, breakages are often repaired by finding candidate solutions through the inspection of the DOM and the GUI \textit{at the same time}.
+For this reason, it is arguably more difficult (or more time consuming) to repair Selenium's tests than standard JUnit tests for desktop applications (for which the error messages are typically more informative).
+
+A \textbf{second challenge} is related to the time needed to find and correct the breakages. Usually, it is perceived as a task consuming task~\cite{Leotta-TAIC-2013,JAMAICA2013}, and existing test automation tools offer no support in understanding the root causes behind test breakages and how they do relate with the changes made in the web applications. 
+
+In this paper we wish to make step ahead to provide such understanding. 
+Our aim is to combine the knowledge present in the DOM of the application with its visual appearance, so as to effectively aid the tester in the test repair problem. Our approach aims at automating the mental model the testers create when a test case is executed against a web application GUI. In our belief, such a model is a viable means for automating test case repair.
+
+Existing locator repair techniques are indeed limited when the web application undergoes drastic structural changes because they only consider the DOM as source where to find possible repairs.
+However, we argue that visual image recognition can help to fix all the breakages that pertain to ineffective locators that target web elements that are still present and visually displayed within the same web page.
+
+
