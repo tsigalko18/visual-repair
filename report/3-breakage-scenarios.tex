@@ -1,24 +1,24 @@
 %% !TEX root =  paper.tex
-\section{Test Breakages}\label{sec:breakage-scenarios}
+\section{A Test Breakage Travelogue}\label{sec:breakage-travelogue}
 
 \head{Characterization of a breakage}
 In order to clarify the scope of our work, and avoid possible misinterpretations, it is hence important to emphasize the difference between test breakages and test failures. We consider a \textit{test breakage} as the event that occur when a test that was used to work and pass on a certain version $k$, fails to be applicable to a version $k+n$ (with $n \geq 1$) due to changes in the production code that interrupt its execution unpremeditatedly. %This event arises, for instance, when the test no longer reflects the intended behavior of the web application.
 This is different from cases when tests expose a program failure and hence do something for which they have been designed (i.e., exposing regression faults).
-Said that, in the context of this paper we focus our analysis on test breakages.
+Said that, in the context of this paper, we focus our analysis on test breakages.
 
 \head{Study of Breakages}
 In a recent study, researchers have categorized breakages happening as test suites for web applications are evolved, for regression purposes~\cite{Hammoudi-2016-ICST}. While the study considers C\&R test suites only, the taxonomy of breakages proposed by Hammoudi and colleagues offers interesting findings. 
 
 Concerning the \textbf{causal} characterization, web element \textit{locators} have emerged as the main cause of fragility (74\% of the totality of breakages), followed by problems with test values (e.g., assertion values or input data -- 15\%), page reloading (4\%), user sessions (2\%), and popup issues (5\%). 
 %
-This confirms previous anecdotal finding on the problem of fragile locators~\cite{2016-Leotta-JSEP,2014-leotta-WoSAR,Daniel:2011:AGR:2002931.2002937,2013-Ricca-wse}.
+This confirms the previous anecdotal findings on the problem of fragile web element locators~\cite{2016-Leotta-JSEP,2014-leotta-WoSAR,Daniel:2011:AGR:2002931.2002937,2013-Ricca-wse}.
 %
 Indeed, the mapping between locators and web elements is heavily affected by changes to the web page layout/structure, often performed only to accommodate cosmetic or stylistic changes to align the GUI with the latest trends~\cite{2016-leotta-Advances,2016-Leotta-JSEP}. These changes may render tests inapplicable, because the locators become ineffective, as thoroughly reported in the literature~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-ICST,2013-Ricca-wse}. 
 Indeed, locators that rely on properties of the DOM (e.g., HTML attributes or XPath expressions) are prone to break for a large variety of reasons such as attributes or nodes being removed/modified from the DOM~\cite{Choudhary:2011:WWA:2002931.2002935}.
 
-Hammoudi and colleagues give also a \textbf{temporal} characterization of test breakages, distinguishing into direct, propagated, and silent breakages. A breakage is called direct when the test stops at a statement $st_i$, and $st_i$ has to be repaired in order to let the test pass or continue its execution. With propagated breakages, on the other hand, the test stops at a statement $st_i$, but another statement $st_j$, usually preceding $st_i$ (i.e., $j > i$), has to be repaired in order to let the test pass or continue its execution. Finally, a silent breakages do not manifest explicitly because the test does not stop nor fail, but it yet diverges from its original intent, and only by manually checking its execution (perhaps by looking at the actions performed on the GUI), the tester can detect the mis-behaviour.
+Hammoudi and colleagues give also a \textbf{temporal} characterization of test breakages, distinguishing into direct, propagated, and silent breakages. A breakage is called direct when the test stops at a statement $st_i$, and $st_i$ has to be repaired in order to let the test pass or continue its execution. With propagated breakages, on the other hand, the test stops at a statement $st_i$, but another statement $st_j$, preceding $st_i$ (i.e., $j > i$), has to be repaired in order to let the test pass or continue its execution. Finally, a silent breakages do not manifest explicitly because the test does not stop nor fail, but it yet diverges from its original intent, and only by manually checking its execution (perhaps by looking at the actions performed on the GUI), the tester can detect the mis-behaviour.
 
-At this point, it should be clear that to do effective root cause analysis, the testers must take into consideration all aspects behind a breakage (e.g., its cause and its position in the test) and link them together to devise possible repairs that do not change the intended test scenario. This is why repairing web tests is often considered a burdensome activity that leads the the test suites to be abandoned~\cite{Christophe2014}. In our belief, this is due to the high frequency at which those tests break, and the little tooling support in the identification of the root causes behind a breakage and repair.
+At this point, it should be clear that in order to do effective root cause analysis, the testers must take into consideration all aspects behind a breakage (e.g., its cause and its position in the test) and link them together to devise possible repairs that do not change the intended test scenario. This is why repairing web tests is often considered a burdensome activity that leads the test suites to be abandoned~\cite{Christophe2014}. In our belief, this is due to the high frequency at which those tests break, and the little tooling support in the identification of the root causes behind a breakage and repair.
 %
 Let us just focus for a moment on locator problems. Indeed, despite repairing locators could seem mostly a mechanical and straightforward activity, it instead accounts for a number of different scenarios -- some of which are particularly challenging to identify -- and that make this activity extremely time-consuming and 
 definitely limit the applicability of existing automated repair techniques. In the following of this section, we describe some of the most complex scenarios. In~\autoref{sec:approach} we present our novel test breakage detection and repair technique for E2E web tests.
@@ -41,15 +41,39 @@ definitely limit the applicability of existing automated repair techniques. In t
 \label{claroline-together}
 \end{figure}
 
+\subsection{Breakage Scenarios}\label{sec:breakage-scenarios}
+
+Given the predominance of locator-related issues, we focus our analysis mostly on locator problems. In the following of this section, we present XXX\andrea{put number} challenging breakage scenarios, and we show how the visual analysis can help to mitigate or correct such problems. However, we first formally define the concept of locator.
+
+\begin{defn}[\textbf{Test statement}]
+At a high level, each Selenium test statement is a tuple \textit{<locator, action, value>}.
+\end{defn}
+
+\begin{defn}[\textbf{Locator}] 
+The locator component specifies the web element the test is interacting with. A locator is a function on a DOM state $D$. Notationally, $$l: D \rightarrow e$$ where $e$ is the target element returned by the locator $l$ when applied to $D$. 
+\end{defn}
+
+The locator function is surjective, that is every web element $e$ is mapped to by at least one locator (e.g., the XPath from the root to $e$), but there exist multiple locators {$\displaystyle \forall y\in Y,\exists x\in X{\text{ such that }}y=f(x).$} \andrea{stub. fix the definition}
+
+\begin{defn}[\textbf{Action}]
+The action component indicates either an event that is performed
+on a web element during recording, or an action specific to Selenium's control of the replay.
+\end{defn}
+
+\begin{defn}[\textbf{Value}] The value component refers to any input entered by the test within the element specified by the locator.
+\end{defn}
+
 \head{Scenario 1 (Non Selection Same State)} 
-The first and more common scenario occurs when a locator $l$ applied to a certain DOM state $D$, returns no elements---formally, $l: D \rightarrow \emptyset$. A possible repair requires to find another locator $l'$, such that $l': D \rightarrow e$.
+The first and perhaps more common scenario occurs when a locator $l$ applied to a certain DOM state $D$, returns no elements---formally, $l: D \rightarrow \emptyset$. 
+
+To address this issue, first, a detection algorithm should make sure that $e \in D$. Then,  possible repairs require to find other locators $l'$, such that $l': D \rightarrow e$.
 This scenario is depicted in~\autoref{claroline-together}:~\textcircled{\raisebox{-0.9pt}{1}} shows the login form of Claroline web application version 1.10.0, together with the corresponding HTML code~\textcircled{\raisebox{-0.9pt}{2}}.~\textcircled{\raisebox{-0.9pt}{3}} shows the login form of Claroline in version 1.11.0, and the corresponding HTML code~\textcircled{\raisebox{-0.9pt}{4}}. 
 
 Let us a test scenario in which a user 
 inserts \texttt{username} and \texttt{password} 
 in the login form, and if these credentials are correct, 
 the \texttt{username} is displayed on the the homepage (not shown for brevity).
-\autoref{claroline-together}~\textcircled{\raisebox{-0.9pt}{5}} shows an automated test case implementing such scenario, developed using the popular Selenium framework~\cite{selenium}.
+\autoref{claroline-together}~\textcircled{\raisebox{-0.9pt}{5}} shows an automated test case implementing such scenario, developed using the Selenium WebDriver~\cite{selenium}.
 In Line~3, an instance of WebDriver is created to control the Firefox browser. 
 In Line~4, the executable test case instruments WebDriver to 
 navigate to the URL of the target web application.  

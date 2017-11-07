@@ -18,7 +18,7 @@ While there are interesting research contributions that try to address the testw
 The problem of \textit{detecting breakages} in web tests is largely unexplored and no automatic solution have been proposed yet. Even though web test repair techniques have been proposed~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi:2016:WIA:2950290.2950294,2015-leotta-ICST}, they have drawbacks. 
 First, in many cases, such techniques are either unable to correct breakages, or produce a great number of false positives. 
 This is due to the DOM-narrowness of those techniques, all of which do not consider visual aspects of the AUT. In fact, repairing tests is an activity that often requires testers to inspect the GUI of the AUT, or replay a portion of test scenario, in order to find the root cause of the breakage.
-Second, breakages does not always occur at the precise point in which the test execution's stops, but rather at some later point (e.g., statement) in execution. Existing repair algorithms rely on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle such propagated breakages~\cite{Hammoudi-2016-ICST}.
+Second, breakages does not always occur at the precise point in which the test execution's stops, but rather at some later point (e.g., statement) in execution. Existing repair algorithms do not target detection and rely on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle such propagated breakages~\cite{Hammoudi-2016-ICST}.
 
 % our proposal
 

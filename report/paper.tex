@@ -13,7 +13,6 @@
 \usepackage{url,moreverb,xspace}
 \usepackage{tcolorbox}
 \usepackage{enumitem}
-\usepackage[lined,boxruled,norelsize]{algorithm2e}
 \usepackage{array,graphicx}
 \usepackage{soul}
 \usepackage{balance}
@@ -21,6 +20,7 @@
 \usepackage{etoolbox,siunitx}
 \sisetup{output-decimal-marker={.},group-separator={,},group-minimum-digits=4,detect-family=true}
 \usepackage[lined,boxruled,norelsize]{algorithm2e}
+\newtheorem{defn}{Definition}
 %\usepackage{standalone}
 %\usepackage{tikz}
 %\usepackage[edges]{forest}
@@ -44,9 +44,6 @@
 \definecolor{orange2}{rgb}{0.6,0,0.82}
 
 \lstset{frame=single,numbers=left,xleftmargin=3em,xrightmargin=1em,framexleftmargin=2.5em,framexrightmargin=0.5em}
-
-%\usepackage{amsthm}
-\newtheorem{defn}{Definition}
 
 \newcommand{\var}{\texttt}
 \newcommand{\proc}[2]{\textsl{#1}(#2)}
