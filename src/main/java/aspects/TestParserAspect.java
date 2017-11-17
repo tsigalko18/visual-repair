@@ -9,14 +9,16 @@ import config.Settings;
 @Aspect
 public class TestParserAspect {
 
-	@Pointcut("execution(@org.junit.Test * *())")
-	public void testMethodEntryPoint(JoinPoint joinPoint) {
-	}
-
-	@Before("testMethodEntryPoint(JoinPoint)")
-	public void executeBeforeEnteringTestMethod(JoinPoint joinPoint) {
-		if (Settings.aspectActive)
-			System.out.println("[LOG]\tEntering Test " + joinPoint.getStaticPart().getSignature().getName());
-	}
+	/* toy aspect class for quick experimentation. */
+	
+//	@Pointcut("execution(@org.junit.Test * *())")
+//	public void testMethodEntryPoint(JoinPoint joinPoint) {
+//	}
+//
+//	@Before("testMethodEntryPoint(JoinPoint)")
+//	public void executeBeforeEnteringTestMethod(JoinPoint joinPoint) {
+//		if (Settings.aspectActive)
+//			System.out.println("[LOG]\tEntering Test " + joinPoint.getStaticPart().getSignature().getName());
+//	}
 
 }
