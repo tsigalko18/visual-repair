@@ -9,6 +9,11 @@ import datatype.EnhancedException;
 
 public class UtilsRunner {
 
+	public static Result runTestSuite(Class<?> testSuite) {
+		Result result = JUnitCore.runClasses(testSuite);
+		return result;
+	}
+
 	/**
 	 * Run a single JUnit test case or an entire test suite if a runner class is
 	 * specified
