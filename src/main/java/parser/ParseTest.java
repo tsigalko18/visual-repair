@@ -21,7 +21,7 @@ import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.stmt.Statement;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import utils.UtilsParser;
-import utils.UtilsRepair;
+import utils.UtilsRunner;
 
 public class ParseTest {
 
@@ -121,7 +121,7 @@ public class ParseTest {
 		File fileMod = new File(clazz);
 		// FileUtils.writeStringToFile(fileMod, source);
 
-		Result r = UtilsRepair.runTestSuite(fileMod.getClass());
+		Result r = UtilsRunner.runTestSuite(fileMod.getClass());
 
 		return r;
 	}

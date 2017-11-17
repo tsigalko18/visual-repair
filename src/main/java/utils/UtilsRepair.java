@@ -10,8 +10,6 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 import config.Settings;
@@ -21,11 +19,6 @@ import datatype.HtmlElement;
 import datatype.SeleniumLocator;
 
 public class UtilsRepair {
-
-	public static Result runTestSuite(Class<?> testSuite) {
-		Result result = JUnitCore.runClasses(testSuite);
-		return result;
-	}
 
 	public static EnhancedException saveExceptionFromFailure(Failure f) {
 

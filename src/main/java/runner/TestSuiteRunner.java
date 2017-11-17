@@ -2,59 +2,16 @@ package runner;
 
 import java.io.IOException;
 
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
-
 import config.Settings;
-import datatype.EnhancedException;
-import utils.UtilsParser;
-import utils.UtilsRepair;
+import utils.UtilsRunner;
 
 public class TestSuiteRunner {
 
 	public static void main(String[] args) throws IOException {
 
-		/* specify the test suite and test name. */
-		runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
+		/* specify the test suite and test name or runner. */
+		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
 
-	}
-
-	private static void runTest(String testSuite, String testCase) {
-
-		/* build the class runner. */
-		String classRunner = testSuite + "." + testCase;
-
-		/* run the test programmatically. */
-		Result result = null;
-		try {
-			System.out.println("[LOG]\tRunning Test " + classRunner);
-			result = JUnitCore.runClasses(Class.forName(classRunner));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		/* if the test failed, save the exception. */
-		if (!result.wasSuccessful()) {
-
-			System.out.println("[LOG]\tTest " + classRunner + " failed, saving the exception");
-
-			/* for each breakage, save the exception on the filesystem. */
-			for (Failure fail : result.getFailures()) {
-
-				EnhancedException ea = UtilsRepair.saveExceptionFromFailure(fail);
-
-				String path = Settings.testingTestSuiteVisualTraceExecutionFolder
-						+ UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXTENSION;
-				String jsonPath = UtilsParser.toJsonPath(path);
-
-				UtilsParser.serializeException(ea, jsonPath);
-			}
-		} else {
-			System.out.println("[LOG]\tTest " + classRunner + " passed");
-		}
-
-		System.exit(0);
 	}
 
 }
