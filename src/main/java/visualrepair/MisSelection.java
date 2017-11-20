@@ -28,7 +28,7 @@ import datatype.WebDriverSingleton;
 import utils.PHash;
 import utils.UtilsGetters;
 import utils.UtilsRepair;
-import utils.UtilsScreenshots;
+import utils.UtilsComputerVision;
 import vision.ImageProcessing;
 
 public class MisSelection {
@@ -75,10 +75,10 @@ public class MisSelection {
 
 		// screenshot here
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
-		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
+		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
 		// find best visual match
-		Point match = UtilsScreenshots.findBestMatchCenter(currentScreenshot, template);
+		Point match = UtilsComputerVision.findBestMatchCenter(currentScreenshot, template);
 
 //		long startTime = System.currentTimeMillis();
 

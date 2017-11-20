@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.Select;
 import config.Settings;
 import config.Settings.CroppingType;
 import utils.UtilsAspect;
-import utils.UtilsScreenshots;
+import utils.UtilsComputerVision;
 
 @Aspect
 public class VisualTraceGenerator {
@@ -60,7 +60,7 @@ public class VisualTraceGenerator {
 			d = (WebDriver) jp.getTarget();
 
 			String withinType = jp.getStaticPart().getSourceLocation().getWithinType().toString();
-			String testSuiteName = UtilsScreenshots.getTestSuiteNameFromWithinType(withinType);
+			String testSuiteName = UtilsComputerVision.getTestSuiteNameFromWithinType(withinType);
 
 			UtilsAspect.createTestFolder(Settings.outputFolder + testSuiteName);
 
@@ -107,37 +107,37 @@ public class VisualTraceGenerator {
 			mainPage = d.getWindowHandle();
 
 			// save the screenshot before the execution of the event
-			UtilsScreenshots.saveScreenshot(d, screenshotBeforeEvent);
+			UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
 
 			try {
 
 				if (Settings.CROPPING_METHOD == CroppingType.PERFECT) {
 
 					/* save perfectly cropped visual locator. */
-					UtilsScreenshots.saveVisualCrop(d, screenshotBeforeEvent, we, visualLocatorPerfect);
+					UtilsComputerVision.saveVisualCrop(d, screenshotBeforeEvent, we, visualLocatorPerfect);
 
 					/* save the annotated screenshot as well. */
-					UtilsScreenshots.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
+					UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
 							annotatedscreenshotBeforeEvent);
 				} else if (Settings.CROPPING_METHOD == CroppingType.ENLARGED) {
 
 					/* save contextual based visual locator. */
-					UtilsScreenshots.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
+					UtilsComputerVision.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
 
 					/* save the annotated screenshot as well. */
-					UtilsScreenshots.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
+					UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
 							annotatedscreenshotBeforeEvent);
 
 				} else if (Settings.CROPPING_METHOD == CroppingType.BOTH) {
 
 					/* save perfectly cropped visual locator. */
-					UtilsScreenshots.saveVisualCrop(d, screenshotBeforeEvent, we, visualLocatorPerfect);
+					UtilsComputerVision.saveVisualCrop(d, screenshotBeforeEvent, we, visualLocatorPerfect);
 
 					/* save contextual based visual locator. */
-					UtilsScreenshots.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
+					UtilsComputerVision.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
 
 					/* save the annotated screenshot as well. */
-					UtilsScreenshots.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
+					UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
 							annotatedscreenshotBeforeEvent);
 				}
 
@@ -172,7 +172,7 @@ public class VisualTraceGenerator {
 			// save the HTML page
 			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
 
-			if (UtilsScreenshots.isAlertPresent(d)) {
+			if (UtilsComputerVision.isAlertPresent(d)) {
 				return;
 			} else {
 
@@ -182,7 +182,7 @@ public class VisualTraceGenerator {
 					e.printStackTrace();
 				}
 
-				UtilsScreenshots.saveScreenshot(d, screenshotBeforeEvent);
+				UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
 			}
 
 		}
@@ -204,7 +204,7 @@ public class VisualTraceGenerator {
 			// exception has been raised
 			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-" + statementName
 					+ Settings.PNG_EXTENSION;
-			UtilsScreenshots.saveScreenshot(d, screenshotBeforeEvent);
+			UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
 
 			// save the HTML page
 			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;

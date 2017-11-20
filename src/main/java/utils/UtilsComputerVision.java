@@ -37,7 +37,7 @@ import config.Settings;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
 
-public class UtilsScreenshots {
+public class UtilsComputerVision {
 
 	protected static WebDriver driver;
 	protected static Properties configFile;
@@ -48,7 +48,8 @@ public class UtilsScreenshots {
 	}
 
 	/**
-	 * Save the GUI of the current driver instance in a file name identified by name
+	 * Save the GUI of the current driver instance in a file name identified by
+	 * filename
 	 * 
 	 * @param d
 	 * @param filename
@@ -71,7 +72,7 @@ public class UtilsScreenshots {
 	}
 
 	/**
-	 * save the visual locator
+	 * save a unique visual locator for the web element
 	 * 
 	 * @param d
 	 * @param s
@@ -81,25 +82,7 @@ public class UtilsScreenshots {
 	public static void saveVisualLocator(WebDriver d, String s, WebElement we, String vl) {
 
 		try {
-			UtilsScreenshots.getUniqueVisualLocator(d, s, we, vl);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * save the visual locator
-	 * 
-	 * @param d
-	 * @param s
-	 * @param we
-	 * @param vl
-	 */
-	public static void saveVisualCrop(WebDriver d, String s, WebElement we, String vl) {
-
-		try {
-			UtilsScreenshots.getPreciseElementVisualCrop(d, s, we, vl);
+			UtilsComputerVision.getUniqueVisualLocator(d, s, we, vl);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -135,7 +118,25 @@ public class UtilsScreenshots {
 	}
 
 	/**
-	 * calculate a visual locator
+	 * save a precise crop for the web element (might not be unique)
+	 * 
+	 * @param d
+	 * @param s
+	 * @param we
+	 * @param vl
+	 */
+	public static void saveVisualCrop(WebDriver d, String s, WebElement we, String vl) {
+
+		try {
+			UtilsComputerVision.getPreciseElementVisualCrop(d, s, we, vl);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * get the precise crop for the web element
 	 * 
 	 * @param d
 	 * @param filename
@@ -381,12 +382,12 @@ public class UtilsScreenshots {
 		Mat img = Imgcodecs.imread(inFile);
 		Mat templ = Imgcodecs.imread(templateFile);
 
-		// / Create the result matrix
+		/* Create the result matrix. */
 		int result_cols = img.cols() - templ.cols() + 1;
 		int result_rows = img.rows() - templ.rows() + 1;
 		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
 
-		// / Do the Matching and Normalize
+		/* Do the Matching and Normalize. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
 		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
@@ -408,15 +409,15 @@ public class UtilsScreenshots {
 			System.err.println("[LOG]\tWARNING: Multiple matches!");
 		}
 
-		// Localizing the best match with minMaxLoc
+		/* Localizing the best match with minMaxLoc. */
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
 
-		// Show me what you got
+		/* Show me what you got. */
 		Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
-		// Save the visualized detection.
+		/* Save the visualized detection. */
 		File annotated = new File("annotated.png");
 		Imgcodecs.imwrite(annotated.getPath(), img);
 

@@ -90,9 +90,9 @@ public class UtilsVisualRepair {
 	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, String visualLocator) {
 	
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
-		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
+		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 	
-		Point matches = UtilsScreenshots.findBestMatchCenter(currentScreenshot, visualLocator);
+		Point matches = UtilsComputerVision.findBestMatchCenter(currentScreenshot, visualLocator);
 		// returnAllMatches(currentScreenshot, template);
 	
 		// System.out.println(matches);

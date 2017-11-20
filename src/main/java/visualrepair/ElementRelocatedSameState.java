@@ -26,7 +26,7 @@ import datatype.SeleniumLocator;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
 import utils.UtilsRepair;
-import utils.UtilsScreenshots;
+import utils.UtilsComputerVision;
 
 public class ElementRelocatedSameState {
 
@@ -106,12 +106,12 @@ public class ElementRelocatedSameState {
 
 		/* get the screenshot of the web page in the new version. */
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
-		UtilsScreenshots.saveScreenshot(driver, currentScreenshot);
+		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 		
 		WebDriverSingleton.closeDriver();
 
 		/* find the best visual matches. */
-		List<Point> matches = UtilsScreenshots.returnAllMatches(currentScreenshot, template);
+		List<Point> matches = UtilsComputerVision.returnAllMatches(currentScreenshot, template);
 		
 //		List<Point> matches = new LinkedList<Point>();
 //		matches.add(UtilsScreenshots.findBestMatchCenter(currentScreenshot, template));

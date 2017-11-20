@@ -13,10 +13,10 @@ public class PHash {
 	public static double getPHashSimiliarity(String imagepath1, String imagepath2) throws IOException {
 
 		if (imagepath1.endsWith("png"))
-			imagepath1 = UtilsScreenshots.convertPngToJpg(imagepath1);
+			imagepath1 = UtilsComputerVision.convertPngToJpg(imagepath1);
 
 		if (imagepath2.endsWith("png"))
-			imagepath2 = UtilsScreenshots.convertPngToJpg(imagepath2);
+			imagepath2 = UtilsComputerVision.convertPngToJpg(imagepath2);
 
 		RadialHash hash1 = jpHash.getImageRadialHash(imagepath1);
 
