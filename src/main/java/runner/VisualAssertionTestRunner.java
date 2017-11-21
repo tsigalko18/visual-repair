@@ -20,7 +20,24 @@ import utils.UtilsGetters;
 import utils.UtilsRepair;
 import utils.UtilsVisualRepair;
 
+/**
+ * The VisualAssertionTestRunner class runs the new evolved/regressed JUnit
+ * Selenium test suites and uses the visual execution traces captured previously
+ * to verify the correctness of the statements prior to their execution. In case
+ * of mismatches, automatic repair techniques are triggered.
+ * 
+ * @author astocco
+ *
+ */
 public class VisualAssertionTestRunner {
+
+	public VisualAssertionTestRunner() {
+		/*
+		 * aspectJ must be disable here. TODO: eventually enable it in the future to
+		 * re-create the new visual execution trace
+		 */
+		Settings.aspectActive = false;
+	}
 
 	public static void main(String[] args)
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -35,9 +52,6 @@ public class VisualAssertionTestRunner {
 	}
 
 	private static void runTestWithVisualAssertion(String prefix, String className) {
-
-		// this step runs the test suite and the aspect records the visual execution
-		// trace
 
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
 
