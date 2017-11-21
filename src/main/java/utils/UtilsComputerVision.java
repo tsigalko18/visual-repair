@@ -4,10 +4,14 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -36,6 +40,7 @@ import org.openqa.selenium.interactions.Actions;
 import config.Settings;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
+import utils.RectangleComparator;
 
 public class UtilsComputerVision {
 
@@ -483,8 +488,6 @@ public class UtilsComputerVision {
 
 	public static List<Point> returnAllMatches(String inFile, String templateFile) {
 
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
 		Mat img = Imgcodecs.imread(inFile);
 		Mat templ = Imgcodecs.imread(templateFile);
 
@@ -498,53 +501,115 @@ public class UtilsComputerVision {
 		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
 
 		List<Point> matches = new LinkedList<Point>();
-		List<Point> bestMatches = new LinkedList<Point>();
+		List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
 
 		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
-			System.out.println("[LOG]\tusing image recognition algorithm TM_CCOEFF_NORMED");
 		}
 
-		// Do the Matching and Normalize
+		/* Do the Matching and Thresholding. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
-		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-
-		for (int i = 0; i < result_rows; i++) {
-			for (int j = 0; j < result_cols; j++) {
-				if (result.get(i, j)[0] >= 0.99) {
-					matches.add(new Point(i, j));
-				}
-			}
-		}
-
-		if (matches.size() == 0) {
-			System.err.println("[LOG]\tWARNING: No visual matches found!");
-		} else if (matches.size() > 1) {
-			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
-		}
-
+		Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
+		double maxval;
 		while (true) {
-			MinMaxLocResult mmr = Core.minMaxLoc(result);
-			Point matchLoc = mmr.maxLoc;
-			if (mmr.maxVal >= 0.9) {
+			Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
+			Point maxp = maxr.maxLoc;
+			maxval = maxr.maxVal;
+			Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
+			if (maxval >= 0.9) {
 
-				Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-						new Scalar(0, 255, 0));
-				Imgproc.rectangle(result, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+				Imgproc.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+						new Scalar(0, 0, 255), 2);
+				Imgproc.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
 						new Scalar(0, 255, 0), -1);
 
-				/* add the centers of the rectangles as best matches. */
-				bestMatches.add(new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2));
+				matches.add(maxp);
+				boxes.add(new Rectangle((int) maxp.x, (int) maxp.y, templ.cols(), templ.rows()));
 			} else {
-				break; // No more results within tolerance, break search
+				break;
 			}
 		}
+
+		System.out.println("Found " + matches.size() + " matches with input image (threshold=0.99)");
+
+		/*
+		 * TODO: here we might need to implement a non-maxima suppression step to filter
+		 * the results.
+		 */
+		ArrayList<Rectangle2D> picked = nonMaxSuppression(boxes);
 
 		// Save the visualized detection
 		File annotated = new File("annotated.png");
 		Imgcodecs.imwrite(annotated.getPath(), img);
 
-		return bestMatches;
+		return matches;
+	}
+
+	private static ArrayList<Rectangle2D> nonMaxSuppression(List<Rectangle2D> boxes) {
+
+		ArrayList<Rectangle2D> picked = new ArrayList<Rectangle2D>();
+
+		if (boxes.size() == 0)
+			return picked;
+
+		ArrayList<Integer> x1 = getAllX1(boxes);
+		ArrayList<Integer> y1 = getAllY1(boxes);
+		ArrayList<Integer> x2 = getAllX2(boxes);
+		ArrayList<Integer> y2 = getAllY2(boxes);
+		ArrayList<Integer> area = getAllAreas(x1, y1, x2, y2);
+
+//		ArrayList<Rectangle2D> idxs = (ArrayList<Rectangle2D>) UtilsRepair.deepClone(boxes);
+
+		Comparator<Rectangle2D> comp = new RectangleComparator();
+		Collections.sort(boxes, comp);
+
+		RectangleComparator.print(boxes);
+
+		return picked;
+	}
+
+	private static ArrayList<Integer> getAllX1(List<Rectangle2D> boxes) {
+		ArrayList<Integer> x1 = new ArrayList<Integer>();
+		for (Rectangle2D rect : boxes) {
+			x1.add((int) rect.getX());
+		}
+		return x1;
+	}
+
+	private static ArrayList<Integer> getAllY1(List<Rectangle2D> boxes) {
+		ArrayList<Integer> y1 = new ArrayList<Integer>();
+		for (Rectangle2D rect : boxes) {
+			y1.add((int) rect.getY());
+		}
+		return y1;
+	}
+
+	private static ArrayList<Integer> getAllX2(List<Rectangle2D> boxes) {
+		ArrayList<Integer> x2 = new ArrayList<Integer>();
+		for (Rectangle2D rect : boxes) {
+			x2.add((int) (rect.getX() + rect.getWidth()));
+		}
+		return x2;
+	}
+
+	private static ArrayList<Integer> getAllY2(List<Rectangle2D> boxes) {
+		ArrayList<Integer> y2 = new ArrayList<Integer>();
+		for (Rectangle2D rect : boxes) {
+			y2.add((int) (rect.getY() + rect.getHeight()));
+		}
+		return y2;
+	}
+
+	private static ArrayList<Integer> getAllAreas(ArrayList<Integer> x1, ArrayList<Integer> y1, ArrayList<Integer> x2,
+			ArrayList<Integer> y2) {
+		ArrayList<Integer> area = new ArrayList<Integer>();
+		int howMany = x1.size();
+
+		for (int i = 0; i < howMany; i++) {
+			area.add((x2.get(i) - x1.get(i) + 1) * (y2.get(i) - x2.get(i) + 1));
+		}
+
+		return area;
 	}
 
 	public static List<Point> matchUsingCanny(String inFile, String templateFile) {
