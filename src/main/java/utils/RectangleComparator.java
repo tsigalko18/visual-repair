@@ -58,4 +58,11 @@ public class RectangleComparator implements Comparator<Rectangle2D> {
 		}
 	}
 
+	public static void print(Rectangle2D boxes) {
+
+		System.out.println(
+				"y=" + boxes.getY() + "\th=" + boxes.getHeight() + "\ty2=" + (boxes.getY() + boxes.getHeight()));
+
+	}
+
 }

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Core;
@@ -516,7 +517,7 @@ public class UtilsComputerVision {
 			Point maxp = maxr.maxLoc;
 			maxval = maxr.maxVal;
 			Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
-			if (maxval >= 0.9) {
+			if (maxval >= 0.95) {
 
 				Imgproc.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
 						new Scalar(0, 0, 255), 2);
@@ -530,14 +531,14 @@ public class UtilsComputerVision {
 			}
 		}
 
-		System.out.println("Found " + matches.size() + " matches with input image (threshold=0.99)");
+		System.out.println("Found " + matches.size() + " matches with input image");
 
 		/*
-		 * TODO: here we might need to implement a non-maxima suppression step to filter
-		 * the results.
+		 * non-maxima suppression step to filter the results. Needs to be tested!
 		 */
-		ArrayList<Rectangle2D> picked = nonMaxSuppression(boxes);
-
+//		Rectangle2D picked = nonMaxSuppression(boxes);
+		
+		
 		// Save the visualized detection
 		File annotated = new File("annotated.png");
 		Imgcodecs.imwrite(annotated.getPath(), img);
@@ -545,30 +546,78 @@ public class UtilsComputerVision {
 		return matches;
 	}
 
-	private static ArrayList<Rectangle2D> nonMaxSuppression(List<Rectangle2D> boxes) {
+	public static Rectangle2D nonMaxSuppression(List<Rectangle2D> boxes) {
 
 		ArrayList<Rectangle2D> picked = new ArrayList<Rectangle2D>();
 
 		if (boxes.size() == 0)
-			return picked;
+			return picked.get(0);
 
 		ArrayList<Integer> x1 = getAllX1(boxes);
 		ArrayList<Integer> y1 = getAllY1(boxes);
 		ArrayList<Integer> x2 = getAllX2(boxes);
 		ArrayList<Integer> y2 = getAllY2(boxes);
-		ArrayList<Integer> area = getAllAreas(x1, y1, x2, y2);
+		ArrayList<Double> area = getAllAreas(boxes);
 
-//		ArrayList<Rectangle2D> idxs = (ArrayList<Rectangle2D>) UtilsRepair.deepClone(boxes);
+		ArrayList<Rectangle2D> idxs = new ArrayList<Rectangle2D>();
+		idxs.addAll(boxes);
 
 		Comparator<Rectangle2D> comp = new RectangleComparator();
-		Collections.sort(boxes, comp);
+		Collections.sort(idxs, comp);
 
-		RectangleComparator.print(boxes);
+		ArrayList<Integer> pick = new ArrayList<Integer>();
+		ArrayList<Integer> suppress = new ArrayList<Integer>();
 
-		return picked;
+		while (idxs.size() > 0) {
+
+			int last = idxs.size() - 1;
+			Rectangle2D i = idxs.get(last);
+			pick.add(last);
+
+			ArrayList<Rectangle2D> idxs_temp = new ArrayList<Rectangle2D>();
+			idxs_temp.addAll(idxs);
+			idxs_temp.remove(last);
+
+			for (int pos = 0; pos < idxs_temp.size(); pos++) {
+
+				Rectangle2D j = idxs_temp.get(pos);
+
+				/*
+				 * find the largest (x, y) coordinates for the start of the bounding box and the
+				 * smallest (x, y) coordinates for the end of the bounding box
+				 */
+				double xx1 = Math.max(i.getX(), j.getX());
+				double yy1 = Math.max(i.getY(), j.getY());
+				double xx2 = Math.min(i.getX() + i.getWidth(), j.getX() + j.getWidth());
+				double yy2 = Math.min(i.getY() + i.getHeight(), j.getY() + j.getHeight());
+
+				/* compute the width and height of the bounding box. */
+				double w = Math.max(0, xx2 - xx1 + 1);
+				double h = Math.max(0, yy2 - yy1 + 1);
+
+				/*
+				 * compute the ratio of overlap between the computed bounding box and the
+				 * bounding box in the area list.
+				 */
+				double overlap = (w * h) / (j.getWidth() * j.getHeight());
+
+				/*
+				 * if there is sufficient overlap, suppress the current bounding box.
+				 */
+				if (overlap > 0.3)
+					suppress.add(pos);
+			}
+
+			idxs.remove(i);
+		}
+
+		pick.removeAll(suppress);
+		System.out.println("pick size: " + pick.size());
+		System.out.println("pick: " + pick.get(0));
+		return boxes.get(pick.get(0));
 	}
 
-	private static ArrayList<Integer> getAllX1(List<Rectangle2D> boxes) {
+	public static ArrayList<Integer> getAllX1(List<Rectangle2D> boxes) {
 		ArrayList<Integer> x1 = new ArrayList<Integer>();
 		for (Rectangle2D rect : boxes) {
 			x1.add((int) rect.getX());
@@ -576,7 +625,7 @@ public class UtilsComputerVision {
 		return x1;
 	}
 
-	private static ArrayList<Integer> getAllY1(List<Rectangle2D> boxes) {
+	public static ArrayList<Integer> getAllY1(List<Rectangle2D> boxes) {
 		ArrayList<Integer> y1 = new ArrayList<Integer>();
 		for (Rectangle2D rect : boxes) {
 			y1.add((int) rect.getY());
@@ -584,7 +633,7 @@ public class UtilsComputerVision {
 		return y1;
 	}
 
-	private static ArrayList<Integer> getAllX2(List<Rectangle2D> boxes) {
+	public static ArrayList<Integer> getAllX2(List<Rectangle2D> boxes) {
 		ArrayList<Integer> x2 = new ArrayList<Integer>();
 		for (Rectangle2D rect : boxes) {
 			x2.add((int) (rect.getX() + rect.getWidth()));
@@ -592,7 +641,7 @@ public class UtilsComputerVision {
 		return x2;
 	}
 
-	private static ArrayList<Integer> getAllY2(List<Rectangle2D> boxes) {
+	public static ArrayList<Integer> getAllY2(List<Rectangle2D> boxes) {
 		ArrayList<Integer> y2 = new ArrayList<Integer>();
 		for (Rectangle2D rect : boxes) {
 			y2.add((int) (rect.getY() + rect.getHeight()));
@@ -600,13 +649,11 @@ public class UtilsComputerVision {
 		return y2;
 	}
 
-	private static ArrayList<Integer> getAllAreas(ArrayList<Integer> x1, ArrayList<Integer> y1, ArrayList<Integer> x2,
-			ArrayList<Integer> y2) {
-		ArrayList<Integer> area = new ArrayList<Integer>();
-		int howMany = x1.size();
+	public static ArrayList<Double> getAllAreas(List<Rectangle2D> boxes) {
+		ArrayList<Double> area = new ArrayList<Double>();
 
-		for (int i = 0; i < howMany; i++) {
-			area.add((x2.get(i) - x1.get(i) + 1) * (y2.get(i) - x2.get(i) + 1));
+		for (int i = 0; i < boxes.size(); i++) {
+			area.add(boxes.get(i).getWidth() * boxes.get(i).getHeight());
 		}
 
 		return area;
