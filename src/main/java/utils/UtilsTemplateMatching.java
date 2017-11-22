@@ -9,8 +9,6 @@ import java.util.List;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
-import org.opencv.core.DMatch;
-import org.opencv.core.KeyPoint;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfDMatch;
@@ -18,11 +16,13 @@ import org.opencv.core.MatOfKeyPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.features2d.DMatch;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
-import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.features2d.KeyPoint;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 import config.Settings;
@@ -34,7 +34,7 @@ public class UtilsTemplateMatching {
 	}
 
 	/*
-	 * Run the SURF feature detector algorithms on the two input images and try to
+	 * Run the SIFT feature detector algorithms on the two input images and try to
 	 * match the features found in @object image into the @scene image
 	 * 
 	 */
@@ -43,21 +43,21 @@ public class UtilsTemplateMatching {
 		System.out.println("SURF Detector");
 		System.out.println("Started...");
 		System.out.println("Loading images...");
-		Mat objectImage = Imgcodecs.imread(object, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
-		Mat sceneImage = Imgcodecs.imread(scene, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
+		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		Mat sceneImage = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
-		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SURF);
+		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SIFT);
 		System.out.println("Detecting key points...");
 		featureDetector.detect(objectImage, objectKeyPoints);
 
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
-		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
+		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
 		System.out.println("Computing descriptors...");
 		descriptorExtractor.compute(objectImage, objectKeyPoints, objectDescriptors);
 
 		/* Create output image. */
-		Mat outputImage = new Mat(objectImage.rows(), objectImage.cols(), Imgcodecs.CV_LOAD_IMAGE_COLOR);
+		Mat outputImage = new Mat(objectImage.rows(), objectImage.cols(), Highgui.CV_LOAD_IMAGE_COLOR);
 		Scalar newKeypointColor = new Scalar(255, 0, 0);
 
 		System.out.println("Drawing key points on object image...");
@@ -71,7 +71,7 @@ public class UtilsTemplateMatching {
 		System.out.println("Computing descriptors in background image...");
 		descriptorExtractor.compute(sceneImage, sceneKeyPoints, sceneDescriptors);
 
-		Mat matchoutput = new Mat(sceneImage.rows() * 2, sceneImage.cols() * 2, Imgcodecs.CV_LOAD_IMAGE_COLOR);
+		Mat matchoutput = new Mat(sceneImage.rows() * 2, sceneImage.cols() * 2, Highgui.CV_LOAD_IMAGE_COLOR);
 		Scalar matchestColor = new Scalar(0, 255, 0);
 
 		List<MatOfDMatch> matches = new LinkedList<MatOfDMatch>();
@@ -83,7 +83,7 @@ public class UtilsTemplateMatching {
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.8f;
+		float nndrRatio = 0.5f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -96,6 +96,8 @@ public class UtilsTemplateMatching {
 			}
 		}
 
+		System.out.println("goodMatchesList size: " + goodMatchesList.size());
+		
 		/* If at least seven key features are found, I am happy. */
 		if (goodMatchesList.size() >= 7) {
 			System.out.println("Object Found!!!");
@@ -129,15 +131,15 @@ public class UtilsTemplateMatching {
 			System.out.println("Transforming object corners to scene corners...");
 			Core.perspectiveTransform(obj_corners, scene_corners, homography);
 
-			Mat img = Imgcodecs.imread(scene, Imgcodecs.CV_LOAD_IMAGE_COLOR);
+			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
 
-			Imgproc.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
+			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
 					new Scalar(0, 255, 0), 4);
-			Imgproc.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
+			Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
 					new Scalar(0, 255, 0), 4);
-			Imgproc.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
+			Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
 					new Scalar(0, 255, 0), 4);
-			Imgproc.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
+			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
 					new Scalar(0, 255, 0), 4);
 
 			System.out.println("Drawing matches image...");
@@ -147,9 +149,10 @@ public class UtilsTemplateMatching {
 			Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput,
 					matchestColor, newKeypointColor, new MatOfByte(), 2);
 
-			Imgcodecs.imwrite("outputImage.jpg", outputImage);
-			Imgcodecs.imwrite("matchoutput.jpg", matchoutput);
-			Imgcodecs.imwrite("img.jpg", img);
+			Highgui.imwrite("outputImage.jpg", outputImage);
+			Highgui.imwrite("matchoutput.jpg", matchoutput);
+			Highgui.imwrite("img.jpg", img);
+			
 			return true;
 
 		} else {
@@ -165,17 +168,17 @@ public class UtilsTemplateMatching {
 	public static List<Point> surfAndMultipleTemplateMatching(String templateFile, String imageFile, double threshold) {
 
 		List<Point> matches = new LinkedList<Point>();
-		
+
 		/* run sift. */
 		boolean isPresent = surfDetector(templateFile, imageFile);
 
 		if (isPresent) {
-			
+
 			/* Get the image. */
-			Mat img = Imgcodecs.imread(imageFile);
+			Mat img = Highgui.imread(imageFile);
 
 			/* Get the template. */
-			Mat templ = Imgcodecs.imread(templateFile);
+			Mat templ = Highgui.imread(templateFile);
 
 			/* Create the result matrix. */
 			int result_cols = img.cols() - templ.cols() + 1;
@@ -199,9 +202,9 @@ public class UtilsTemplateMatching {
 				maxval = maxr.maxVal;
 				if (maxval >= threshold) {
 
-					Imgproc.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+					Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
 							new Scalar(0, 0, 255), 2);
-					Imgproc.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+					Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
 							new Scalar(0, 255, 0), -1);
 
 					matches.add(maxp);
@@ -220,12 +223,12 @@ public class UtilsTemplateMatching {
 
 			// Save the visualized detection
 			File annotated = new File("annotated.png");
-			Imgcodecs.imwrite(annotated.getPath(), img);
+			Highgui.imwrite(annotated.getPath(), img);
 
 		}
-		
+
 		return matches;
-		
+
 	}
 
 }

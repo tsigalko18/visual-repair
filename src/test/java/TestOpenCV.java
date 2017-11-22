@@ -30,6 +30,7 @@ public class TestOpenCV {
 		System.out.println("mat = " + mat.dump());
 	}
 
+	
 	@Test
 	public void testTemplateMatchingTemplateOk() {
 

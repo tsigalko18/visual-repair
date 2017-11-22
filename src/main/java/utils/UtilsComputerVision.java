@@ -26,7 +26,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
@@ -173,8 +173,8 @@ public class UtilsComputerVision {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		Mat img = Imgcodecs.imread(inFile);
-		Mat templ = Imgcodecs.imread(templateFile);
+		Mat img = Highgui.imread(inFile);
+		Mat templ = Highgui.imread(templateFile);
 
 		// / Create the result matrix
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -207,12 +207,12 @@ public class UtilsComputerVision {
 		Point matchLoc = mmr.maxLoc;
 
 		// Show me what you got
-		Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
 		// Save the visualized detection.
 		File annotated = new File(outFile);
-		Imgcodecs.imwrite(annotated.getPath(), img);
+		Highgui.imwrite(annotated.getPath(), img);
 	}
 
 	/**
@@ -337,8 +337,8 @@ public class UtilsComputerVision {
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 		}
 
-		Mat img = Imgcodecs.imread(inFile);
-		Mat templ = Imgcodecs.imread(templateFile);
+		Mat img = Highgui.imread(inFile);
+		Mat templ = Highgui.imread(templateFile);
 
 		// / Create the result matrix
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -383,8 +383,8 @@ public class UtilsComputerVision {
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 		}
 
-		Mat img = Imgcodecs.imread(inFile);
-		Mat templ = Imgcodecs.imread(templateFile);
+		Mat img = Highgui.imread(inFile);
+		Mat templ = Highgui.imread(templateFile);
 
 		/* Create the result matrix. */
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -418,12 +418,12 @@ public class UtilsComputerVision {
 		Point matchLoc = mmr.maxLoc;
 
 		/* Show me what you got. */
-		Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
 		/* Save the visualized detection. */
 		File annotated = new File("annotated.png");
-		Imgcodecs.imwrite(annotated.getPath(), img);
+		Highgui.imwrite(annotated.getPath(), img);
 
 		return matchLoc;
 	}
@@ -440,8 +440,8 @@ public class UtilsComputerVision {
 		// inFile);
 		// }
 
-		Mat img = Imgcodecs.imread(inFile);
-		Mat templ = Imgcodecs.imread(templateFile);
+		Mat img = Highgui.imread(inFile);
+		Mat templ = Highgui.imread(templateFile);
 
 		// / Create the result matrix
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -475,24 +475,24 @@ public class UtilsComputerVision {
 		Point matchLoc = mmr.maxLoc;
 
 		// Show me what you got
-		Imgproc.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
 		// Save the visualized detection.
 		File annotated = new File("annotated.png");
-		Imgcodecs.imwrite(annotated.getPath(), img);
+		Highgui.imwrite(annotated.getPath(), img);
 
 		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
 	}
 
 	public static List<Point> returnAllMatches(String inFile, String templateFile) {
 
-		Mat img = Imgcodecs.imread(inFile);
-		Mat templ = Imgcodecs.imread(templateFile);
+		Mat img = Highgui.imread(inFile);
+		Mat templ = Highgui.imread(templateFile);
 
 		File visuallocator = new File("visuallocator.png");
-		Imgcodecs.imwrite(visuallocator.getPath(), templ);
-		templ = Imgcodecs.imread(visuallocator.getPath());
+		Highgui.imwrite(visuallocator.getPath(), templ);
+		templ = Highgui.imread(visuallocator.getPath());
 
 		// / Create the result matrix
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -517,9 +517,9 @@ public class UtilsComputerVision {
 			Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
 			if (maxval >= 0.95) {
 
-				Imgproc.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+				Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
 						new Scalar(0, 0, 255), 2);
-				Imgproc.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+				Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
 						new Scalar(0, 255, 0), -1);
 
 				matches.add(maxp);
@@ -534,12 +534,11 @@ public class UtilsComputerVision {
 		/*
 		 * non-maxima suppression step to filter the results. Needs to be tested!
 		 */
-//		Rectangle2D picked = nonMaxSuppression(boxes);
-		
-		
+		// Rectangle2D picked = nonMaxSuppression(boxes);
+
 		// Save the visualized detection
 		File annotated = new File("annotated.png");
-		Imgcodecs.imwrite(annotated.getPath(), img);
+		Highgui.imwrite(annotated.getPath(), img);
 
 		return matches;
 	}
@@ -667,7 +666,7 @@ public class UtilsComputerVision {
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 		}
 
-		Mat img = Imgcodecs.imread(inFile);
+		Mat img = Highgui.imread(inFile);
 		Mat grayImage = new Mat();
 
 		Imgproc.cvtColor(img, grayImage, Imgproc.COLOR_BGR2GRAY);
@@ -678,11 +677,11 @@ public class UtilsComputerVision {
 		Core.add(dest, Scalar.all(0), dest);
 
 		File annotated = new File("canny.png");
-		Imgcodecs.imwrite(annotated.getPath(), img);
+		Highgui.imwrite(annotated.getPath(), img);
 		//
-		img = Imgcodecs.imread(annotated.getPath());
+		img = Highgui.imread(annotated.getPath());
 		//
-		Mat templ = Imgcodecs.imread(templateFile);
+		Mat templ = Highgui.imread(templateFile);
 		Mat grayImageTempl = new Mat();
 
 		Imgproc.cvtColor(templ, grayImageTempl, Imgproc.COLOR_BGR2GRAY);
@@ -693,9 +692,9 @@ public class UtilsComputerVision {
 		Core.add(dest, Scalar.all(0), dest);
 
 		File visuallocator = new File("visuallocator.png");
-		Imgcodecs.imwrite(visuallocator.getPath(), templ);
+		Highgui.imwrite(visuallocator.getPath(), templ);
 
-		templ = Imgcodecs.imread(visuallocator.getPath());
+		templ = Highgui.imread(visuallocator.getPath());
 
 		// / Create the result matrix
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -732,13 +731,13 @@ public class UtilsComputerVision {
 
 		for (Point match : bestMatches) {
 			// Show me what you got
-			Imgproc.rectangle(img, match, new Point(match.x + templ.cols(), match.y + templ.rows()),
-					new Scalar(0, 255, 0), 1);
+			Core.rectangle(img, match, new Point(match.x + templ.cols(), match.y + templ.rows()), new Scalar(0, 255, 0),
+					1);
 		}
 
 		// Save the visualized detection.
 		annotated = new File("annotated.png");
-		Imgcodecs.imwrite(annotated.getPath(), img);
+		Highgui.imwrite(annotated.getPath(), img);
 
 		return bestMatches;
 	}

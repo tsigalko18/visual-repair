@@ -5,17 +5,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
-import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 public class ImageProcessing {
@@ -76,13 +73,14 @@ public class ImageProcessing {
 
 	public List<org.openqa.selenium.Point> compareImages(String referenceImagePath, String referenceImageName,
 			String comparisonImagePath, String comparisonImageName) {
+
 		List<org.openqa.selenium.Point> differencePixels = new ArrayList<org.openqa.selenium.Point>();
 
 		String img1 = referenceImagePath + File.separatorChar + referenceImageName;
 		String img2 = comparisonImagePath + File.separatorChar + comparisonImageName;
 
-		Mat img1Mat = Imgcodecs.imread(img1);
-		Mat img2Mat = Imgcodecs.imread(img2);
+		Mat img1Mat = Highgui.imread(img1);
+		Mat img2Mat = Highgui.imread(img2);
 
 		Mat outDiff = new Mat(Math.max(img1Mat.rows(), img2Mat.rows()), Math.max(img1Mat.cols(), img2Mat.cols()),
 				img1Mat.type());
@@ -123,7 +121,7 @@ public class ImageProcessing {
 				}
 			}
 		}
-		Imgcodecs.imwrite(comparisonImagePath + File.separatorChar + "diff"
+		Highgui.imwrite(comparisonImagePath + File.separatorChar + "diff"
 				+ (Util.getNumbersFromString(comparisonImageName).size() > 0
 						? Util.getNumbersFromString(comparisonImageName).get(0)
 						: "")
@@ -133,35 +131,39 @@ public class ImageProcessing {
 
 	public static double compareImagesByHistogram(String img1FullPath, String img2FullPath) {
 
-		Mat image1 = Imgcodecs.imread(img1FullPath);
-		Mat image2 = Imgcodecs.imread(img2FullPath);
-		
-//		Imgproc.resize(image1, image1, new Size(), 0.5, 0.5,Imgproc.INTER_AREA);
-//		Imgproc.resize(image2, image2, new Size(), 0.5, 0.5,Imgproc.INTER_AREA);
-//		Imgproc.resize(image1, image1, new Size(200,200)); //, 0.5, 0.5,Imgproc.INTER_AREA);
-//		Imgproc.resize(image2, image2, new Size(200,200)); //, 0.5, 0.5,Imgproc.INTER_AREA);
-//		
-//		Imgcodecs.imwrite("/Users/astocco/Desktop/image1.jpg", image1);
-//		Imgcodecs.imwrite("/Users/astocco/Desktop/image2.jpg", image2);
-//		
-//		Mat grayImage1 = new Mat(), grayImage2 = new Mat();
-//
-//		Imgproc.cvtColor(image1, image1, Imgproc.COLOR_RGB2GRAY);
-//		Imgproc.cvtColor(image2, image2, Imgproc.COLOR_RGB2GRAY);
-//
-//		Imgcodecs.imwrite("/Users/astocco/Desktop/grayImage1.jpg", grayImage1);
-//		Imgcodecs.imwrite("/Users/astocco/Desktop/grayImage2.jpg", grayImage2);
-//
-//		Mat h1 = new Mat();
-//		Mat h2 = new Mat();
-//		
-//		int hist_bins = 30;           //number of histogram bins
-//		int hist_range[]= {0,180};	//histogram range
-//		MatOfFloat ranges = new MatOfFloat(0f, 256f);
-//		MatOfInt histSize = new MatOfInt(25);
-//
-//		Imgproc.calcHist(Arrays.asList(grayImage1), new MatOfInt(0), new Mat(), h1, histSize, ranges);
-//		Imgproc.calcHist(Arrays.asList(grayImage2), new MatOfInt(0), new Mat(), h2, histSize, ranges);
+		Mat image1 = Highgui.imread(img1FullPath);
+		Mat image2 = Highgui.imread(img2FullPath);
+
+		// Imgproc.resize(image1, image1, new Size(), 0.5, 0.5,Imgproc.INTER_AREA);
+		// Imgproc.resize(image2, image2, new Size(), 0.5, 0.5,Imgproc.INTER_AREA);
+		// Imgproc.resize(image1, image1, new Size(200,200)); //, 0.5,
+		// 0.5,Imgproc.INTER_AREA);
+		// Imgproc.resize(image2, image2, new Size(200,200)); //, 0.5,
+		// 0.5,Imgproc.INTER_AREA);
+		//
+		// Imgcodecs.imwrite("/Users/astocco/Desktop/image1.jpg", image1);
+		// Imgcodecs.imwrite("/Users/astocco/Desktop/image2.jpg", image2);
+		//
+		// Mat grayImage1 = new Mat(), grayImage2 = new Mat();
+		//
+		// Imgproc.cvtColor(image1, image1, Imgproc.COLOR_RGB2GRAY);
+		// Imgproc.cvtColor(image2, image2, Imgproc.COLOR_RGB2GRAY);
+		//
+		// Imgcodecs.imwrite("/Users/astocco/Desktop/grayImage1.jpg", grayImage1);
+		// Imgcodecs.imwrite("/Users/astocco/Desktop/grayImage2.jpg", grayImage2);
+		//
+		// Mat h1 = new Mat();
+		// Mat h2 = new Mat();
+		//
+		// int hist_bins = 30; //number of histogram bins
+		// int hist_range[]= {0,180}; //histogram range
+		// MatOfFloat ranges = new MatOfFloat(0f, 256f);
+		// MatOfInt histSize = new MatOfInt(25);
+		//
+		// Imgproc.calcHist(Arrays.asList(grayImage1), new MatOfInt(0), new Mat(), h1,
+		// histSize, ranges);
+		// Imgproc.calcHist(Arrays.asList(grayImage2), new MatOfInt(0), new Mat(), h2,
+		// histSize, ranges);
 
 		List<Mat> images = new ArrayList<Mat>();
 		images.add(image1);
