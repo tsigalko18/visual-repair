@@ -16,6 +16,7 @@ import config.Settings;
 import config.Settings.CroppingType;
 import utils.UtilsAspect;
 import utils.UtilsComputerVision;
+import utils.UtilsParser;
 
 @Aspect
 public class VisualTraceGenerator {
@@ -60,7 +61,7 @@ public class VisualTraceGenerator {
 			d = (WebDriver) jp.getTarget();
 
 			String withinType = jp.getStaticPart().getSourceLocation().getWithinType().toString();
-			String testSuiteName = UtilsComputerVision.getTestSuiteNameFromWithinType(withinType);
+			String testSuiteName = UtilsParser.getTestSuiteNameFromWithinType(withinType);
 
 			UtilsAspect.createTestFolder(Settings.outputFolder + testSuiteName);
 

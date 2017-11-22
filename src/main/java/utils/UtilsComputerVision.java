@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Core;
@@ -41,7 +40,6 @@ import org.openqa.selenium.interactions.Actions;
 import config.Settings;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
-import utils.RectangleComparator;
 
 public class UtilsComputerVision {
 
@@ -786,18 +784,5 @@ public class UtilsComputerVision {
 
 		return newPath;
 
-	}
-
-	public static String getTestSuiteNameFromWithinType(String withinType) {
-		// class clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
-
-		if (withinType.contains("main.java")) {
-			withinType = withinType.replaceAll("class ", "");
-		} else {
-			withinType = withinType.replaceAll("class ", "");
-		}
-
-		withinType = withinType.substring(0, withinType.indexOf("."));
-		return withinType;
 	}
 }
