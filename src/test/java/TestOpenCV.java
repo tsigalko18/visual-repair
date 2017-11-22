@@ -30,14 +30,13 @@ public class TestOpenCV {
 		System.out.println("mat = " + mat.dump());
 	}
 
-	
 	@Test
 	public void testTemplateMatchingTemplateOk() {
 
-		String bookObject = "src/test/resources/indexsmall.jpg";
+		String template = "src/test/resources/indexsmall.jpg";
 		String bookScene = "src/test/resources/index.jpg";
 
-		System.out.println(UtilsTemplateMatching.surfAndMultipleTemplateMatching(bookScene, bookObject, 0.95));
+		System.out.println(UtilsTemplateMatching.surfAndMultipleTemplateMatching(bookScene, template, 0.95));
 
 	}
 

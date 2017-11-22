@@ -83,7 +83,7 @@ public class UtilsTemplateMatching {
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.5f;
+		float nndrRatio = 0.7f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -97,7 +97,7 @@ public class UtilsTemplateMatching {
 		}
 
 		System.out.println("goodMatchesList size: " + goodMatchesList.size());
-		
+
 		/* If at least seven key features are found, I am happy. */
 		if (goodMatchesList.size() >= 7) {
 			System.out.println("Object Found!!!");
@@ -152,7 +152,7 @@ public class UtilsTemplateMatching {
 			Highgui.imwrite("outputImage.jpg", outputImage);
 			Highgui.imwrite("matchoutput.jpg", matchoutput);
 			Highgui.imwrite("img.jpg", img);
-			
+
 			return true;
 
 		} else {
@@ -165,7 +165,7 @@ public class UtilsTemplateMatching {
 	/**
 	 * Ad-hoc visual locator detector feature.
 	 */
-	public static List<Point> surfAndMultipleTemplateMatching(String templateFile, String imageFile, double threshold) {
+	public static List<Point> surfAndMultipleTemplateMatching(String imageFile, String templateFile, double threshold) {
 
 		List<Point> matches = new LinkedList<Point>();
 
