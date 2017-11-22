@@ -14,6 +14,7 @@ import org.opencv.core.Mat;
 
 import utils.RectangleComparator;
 import utils.UtilsComputerVision;
+import utils.UtilsTemplateMatching;
 
 public class TestOpenCV {
 
@@ -24,13 +25,35 @@ public class TestOpenCV {
 
 	@Ignore
 	@Test
-	public void test() {
+	public void testOpenCVWorks() {
 		Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
 		System.out.println("mat = " + mat.dump());
 	}
 
 	@Test
-	public void testTM() {
+	public void testTemplateMatchingTemplateOk() {
+
+		String bookObject = "src/test/resources/indexsmall.jpg";
+		String bookScene = "src/test/resources/index.jpg";
+
+		System.out.println(UtilsTemplateMatching.surfAndMultipleTemplateMatching(bookScene, bookObject, 0.95));
+
+	}
+
+	@Ignore
+	@Test
+	public void testTemplateMatchingVisualDuplicates() {
+
+		String bookObject = "src/test/resources/indexsmall.jpg";
+		String bookScene = "src/test/resources/index.jpg";
+
+		System.out.println(UtilsComputerVision.returnAllMatches(bookScene, bookObject));
+
+	}
+
+	@Ignore
+	@Test
+	public void testTemplateMatchingTemplateAbsent() {
 
 		String bookObject = "src/test/resources/indexsmall.jpg";
 		String bookScene = "src/test/resources/index.jpg";
@@ -67,8 +90,6 @@ public class TestOpenCV {
 	@Test
 	public void testRectangleComparator() {
 
-		// Rectangle2D r1 = new Rectangle2D.Double(100, 100, 52, 52);
-		// Rectangle2D r2 = new Rectangle2D.Double(100, 100, 51, 51);
 		Rectangle2D r1 = new Rectangle2D.Double(100, 100, 50, 50);
 		Rectangle2D r2 = new Rectangle2D.Double(120, 80, 54, 75);
 
