@@ -3,6 +3,8 @@ package utils;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,16 +35,19 @@ public class UtilsTemplateMatching {
 		nu.pattern.OpenCV.loadShared();
 	}
 
+	static Point[] points = new Point[4];
+
 	/*
 	 * Run the SIFT feature detector algorithms on the two input images and try to
 	 * match the features found in @object image into the @scene image
 	 * 
 	 */
-	public static boolean surfDetector(String object, String scene) {
+	public static boolean siftDetector(String object, String scene) {
 
 		System.out.println("SURF Detector");
 		System.out.println("Started...");
 		System.out.println("Loading images...");
+
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		Mat sceneImage = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
@@ -96,7 +101,7 @@ public class UtilsTemplateMatching {
 			}
 		}
 
-		System.out.println("goodMatchesList size: " + goodMatchesList.size());
+		System.out.println("Found " + goodMatchesList.size() + " good matches");
 
 		/* If at least seven key features are found, I am happy. */
 		if (goodMatchesList.size() >= 7) {
@@ -133,14 +138,20 @@ public class UtilsTemplateMatching {
 
 			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
 
+			/*
+			 * retrieve the points of the bounding box, in the order upper-left,
+			 * upper-right, lower-right, lower-left.
+			 */
+			points = getPointsFromMatDump(scene_corners.dump());
+
 			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-					new Scalar(0, 255, 0), 4);
+					new Scalar(0, 255, 0), 2);
 			Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-					new Scalar(0, 255, 0), 4);
+					new Scalar(0, 255, 0), 2);
 			Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-					new Scalar(0, 255, 0), 4);
+					new Scalar(0, 255, 0), 2);
 			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-					new Scalar(0, 255, 0), 4);
+					new Scalar(0, 255, 0), 2);
 
 			System.out.println("Drawing matches image...");
 			MatOfDMatch goodMatches = new MatOfDMatch();
@@ -163,14 +174,33 @@ public class UtilsTemplateMatching {
 	}
 
 	/**
+	 * converts a Mat dump to an array of Points
+	 * 
+	 * @param dump
+	 * @return
+	 */
+	private static Point[] getPointsFromMatDump(String dump) {
+		Point[] result = new Point[4];
+		String[] split = dump.split(";");
+		for (int i = 0; i < split.length; i++) {
+			split[i] = split[i].replaceAll("\\[", "").trim();
+			split[i] = split[i].replaceAll("\\]", "").trim();
+			String[] coords = split[i].split(",");
+			result[i] = new Point(Double.parseDouble(coords[0].trim()), Double.parseDouble(coords[1].trim()));
+		}
+		return result;
+	}
+
+	/**
 	 * Ad-hoc visual locator detector feature.
 	 */
-	public static List<Point> surfAndMultipleTemplateMatching(String imageFile, String templateFile, double threshold) {
+	public static Point siftAndMultipleTemplateMatching(String imageFile, String templateFile, double threshold) {
 
 		List<Point> matches = new LinkedList<Point>();
+		Point best_result = null;
 
-		/* run sift. */
-		boolean isPresent = surfDetector(templateFile, imageFile);
+		/* run SIFT to check for the presence/absence of the template image. */
+		boolean isPresent = siftDetector(templateFile, imageFile);
 
 		if (isPresent) {
 
@@ -214,7 +244,29 @@ public class UtilsTemplateMatching {
 				}
 			}
 
-			System.out.println("Found " + matches.size() + " matches with input image");
+			System.out.println("Best Match with SIFT");
+			int x_sift = round(points[0].x, 0);
+			int y_sift = round(points[0].y, 0);
+			System.out.println("[" + 0 + "]\tx=" + x_sift + "\ty=" + y_sift);
+
+			System.out.println("Found " + matches.size() + " matches with Template Matching");
+
+			for (int i = 0; i < matches.size(); i++) {
+	
+				int x = round(matches.get(i).x, 0);
+				int y = round(matches.get(i).y, 0);
+				
+				System.out.println("[" + i + "]\tx=" + x + "\ty=" + y);
+
+				/* filter the results. */
+				if (x == x_sift && y == y_sift) {
+					best_result = matches.get(i);
+				}
+			}
+
+			/* filter the results. */
+			System.out.println("Best Template Matching result");
+			System.out.println("[" + 0 + "]\tx=" + best_result.x + "\ty=" + best_result.y);
 
 			/*
 			 * non-maxima suppression step to filter the results. Needs to be tested!
@@ -227,8 +279,18 @@ public class UtilsTemplateMatching {
 
 		}
 
-		return matches;
+		// return matches;
+		return best_result;
 
+	}
+
+	public static int round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		BigDecimal bd = new BigDecimal(value);
+		bd = bd.setScale(places, RoundingMode.FLOOR);
+		return bd.toBigInteger().intValue(); // toPlainString();
 	}
 
 }

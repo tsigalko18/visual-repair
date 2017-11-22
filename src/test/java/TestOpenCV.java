@@ -1,5 +1,7 @@
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -36,24 +38,23 @@ public class TestOpenCV {
 		String template = "src/test/resources/indexsmall.jpg";
 		String bookScene = "src/test/resources/index.jpg";
 
-		System.out.println(UtilsTemplateMatching.surfAndMultipleTemplateMatching(bookScene, template, 0.95));
+		assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(bookScene, template, 0.95));
+
+	}
+	
+	@Test
+	public void testTemplateMatchingTemplateAbsent() {
+
+		String bookObject = "src/test/resources/visuallocator.png";
+		String bookScene = "src/test/resources/index.jpg";
+
+		assertNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(bookScene, bookObject, 0.95));
 
 	}
 
 	@Ignore
 	@Test
 	public void testTemplateMatchingVisualDuplicates() {
-
-		String bookObject = "src/test/resources/indexsmall.jpg";
-		String bookScene = "src/test/resources/index.jpg";
-
-		System.out.println(UtilsComputerVision.returnAllMatches(bookScene, bookObject));
-
-	}
-
-	@Ignore
-	@Test
-	public void testTemplateMatchingTemplateAbsent() {
 
 		String bookObject = "src/test/resources/indexsmall.jpg";
 		String bookScene = "src/test/resources/index.jpg";
