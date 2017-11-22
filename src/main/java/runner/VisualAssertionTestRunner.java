@@ -47,12 +47,15 @@ public class VisualAssertionTestRunner {
 
 		/* class name. */
 		String className = "TestLoginAdmin";
+		
+		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
 
-		runTestWithVisualAssertion(prefix, className);
+		var.runTestWithVisualAssertion(prefix, className);
 	}
 
-	private static void runTestWithVisualAssertion(String prefix, String className) {
+	private void runTestWithVisualAssertion(String prefix, String className) {
 
+		/* get the path to the test that needs to be verified. */
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
 
 		Class<?> clazz = null;
@@ -69,10 +72,13 @@ public class VisualAssertionTestRunner {
 			e3.printStackTrace();
 		}
 
-		Object ret = runMethod(clazz, inst, "setUp");
+		/* run the setup method (typically opens the browser). */
+		runMethod(clazz, inst, "setUp");
 
+		/* retrieve the WebDriver instance. */
 		WebDriver driver = (WebDriver) runMethod(clazz, inst, "getDriver");
 
+		/* parse the test and create the abstraction. */
 		ParseTest pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
 		EnhancedTestCase etc = pt.parseAndSerialize(testBroken);
 
@@ -80,9 +86,13 @@ public class VisualAssertionTestRunner {
 		EnhancedTestCase testCorrect = pt
 				.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
+		/* maintains a map of the original statements. */
 		Map<Integer, Statement> statementMap = etc.getStatements();
+
+		/* maintains a map of the repaired statements. */
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 
+		/* for each statement. */
 		for (Integer statementNumber : statementMap.keySet()) {
 
 			Statement statement = statementMap.get(statementNumber);
@@ -93,11 +103,20 @@ public class VisualAssertionTestRunner {
 			WebElement webElementFromDomLocator = null;
 
 			try {
+
+				/* try to poll the DOM looking for the web element. */
 				webElementFromDomLocator = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver,
 						statement.getDomLocator());
+
 			} catch (NoSuchElementException Ex) {
 
+				/*
+				 * if NoSuchElementException is captured, it means that I'm incurred into a
+				 * non-selection that would lead to a direct breakage in the test.
+				 */
+
 				System.out.println("[LOG]\tDirect breakage detected at line " + statement.getLine());
+				System.out.println("[LOG]\tNon-selection of statement " + statement.getSeleniumAction());
 				System.out.println("[LOG]\tLocator " + statement.getDomLocator()
 						+ " not found in the current state. Applying visual detection of the web element");
 
@@ -241,12 +260,19 @@ public class VisualAssertionTestRunner {
 		WebElement webElementFromVisualLocatorPerfect = null;
 		WebElement webElementFromVisualLocatorLarge = null;
 
-		/* check the visual locators. */
-		visualLocatorPerfect = testCorrect.getStatements().get(i).getVisualLocatorPerfect().toString();
+		/* retrieve the visual locators. */
+		try {
+			visualLocatorPerfect = testCorrect.getStatements().get(i).getVisualLocatorPerfect().toString();
+			visualLocatorLarge = testCorrect.getStatements().get(i).getVisualLocatorLarge().toString();
+		} catch (NullPointerException e) {
+
+			System.out.println("[ERROR]\tVisual locator(s) not found in " + testCorrect.getStatements().get(i));
+			System.out.println("[ERROR]\tRe-run the TestSuiteRunner on " + testCorrect.getPath());
+			System.exit(1);
+		}
+
 		webElementFromVisualLocatorPerfect = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver,
 				visualLocatorPerfect);
-
-		visualLocatorLarge = testCorrect.getStatements().get(i).getVisualLocatorLarge().toString();
 		webElementFromVisualLocatorLarge = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver,
 				visualLocatorLarge);
 

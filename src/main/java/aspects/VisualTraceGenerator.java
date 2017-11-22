@@ -29,19 +29,19 @@ public class VisualTraceGenerator {
 		nu.pattern.OpenCV.loadShared();
 	}
 
-	// pointcuts definition
+	/* Pointcuts definition. */
 
-	// catch the findElement calls
+	/* catch the findElement calls. */
 	@Pointcut("call(* org.openqa.selenium.WebDriver.findElement(..))")
 	public void logFindElementCalls(JoinPoint jp) {
 	}
 
-	// catch the findElement execution
+	/* catch the findElement execution. */
 	@Pointcut("execution(* org.openqa.selenium.WebDriver.findElement(..))")
 	public void catchFindElementExecutions(JoinPoint jp) {
 	}
 
-	// catch the event calls
+	/* catch the event calls. */
 	@Pointcut("call(* org.openqa.selenium.WebElement.click()) || "
 			+ "call(* org.openqa.selenium.WebElement.sendKeys(..)) || "
 			+ "call(* org.openqa.selenium.WebElement.getText()) || "
@@ -50,13 +50,16 @@ public class VisualTraceGenerator {
 	public void logSeleniumCommands(JoinPoint jp) {
 	}
 
-	// advice definition
+	/* advice definition. */
 	@Before("logFindElementCalls(JoinPoint)")
 	public void loggingAdvice(JoinPoint jp) {
 
 		if (Settings.aspectActive) {
 
-			// CANT CAPTURE WEB ELEMENT IN THIS ASPECT, LEAD TO INFINITE RECURSIVE CALLS
+			/*
+			 * IMPORTANT: it is NOT possible to capture web element in this aspect, lead to
+			 * infinite recursive calls.
+			 */
 
 			d = (WebDriver) jp.getTarget();
 
@@ -89,10 +92,10 @@ public class VisualTraceGenerator {
 				we = (WebElement) sel.getOptions().get(0);
 			}
 
-			// for each statement, get a unique name in the form
+			/* for each statement, get a unique name. */
 			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
 
-			// for each statement, get the line number
+			/* for each statement, get the line number. */
 			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
 
 			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-1before-" + statementName
@@ -107,7 +110,7 @@ public class VisualTraceGenerator {
 
 			mainPage = d.getWindowHandle();
 
-			// save the screenshot before the execution of the event
+			/* save the screenshot before the execution of the event. */
 			UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
 
 			try {
@@ -159,18 +162,18 @@ public class VisualTraceGenerator {
 
 		if (Settings.aspectActive) {
 
-			// for each statement, get a unique name and the line number
+			/* for each statement, get a unique name and the line number. */
 			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
 			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
 
 			if (Settings.VERBOSE)
 				System.out.println("[LOG]\t@After " + statementName);
 
-			// save the screenshot before the execution of the event
+			/* save the screenshot before the execution of the event. */
 			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-2after-" + statementName
 					+ Settings.PNG_EXTENSION;
 
-			// save the HTML page
+			/* save the HTML page. */
 			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
 
 			if (UtilsComputerVision.isAlertPresent(d)) {
@@ -195,19 +198,21 @@ public class VisualTraceGenerator {
 
 		if (Settings.aspectActive) {
 
-			// for each statement, get a unique name in the form
+			/* for each statement, get a unique name. */
 			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
 
-			// for each statement, get the line number
+			/* for each statement, get the line number. */
 			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
 
-			// get screenshot of the page before the action is executed, but after the
-			// exception has been raised
+			/*
+			 * get screenshot of the page before the action is executed, but after the
+			 * exception has been raised.
+			 */
 			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-" + statementName
 					+ Settings.PNG_EXTENSION;
 			UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
 
-			// save the HTML page
+			/* save the HTML page. */
 			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
 			try {
 				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);

@@ -24,7 +24,7 @@ public class Settings {
 	public static String outputFolder = "output" + separator;
 	
 	/* specify if AspectJ is active. */
-	public static boolean aspectActive = false;
+	public static boolean aspectActive = true;
 
 	/* folder containing the visual execution trace of the reference test suite. */
 	public static String referenceTestSuiteVisualTraceExecutionFolder = outputFolder + testSuiteCorrect + separator;
