@@ -35,7 +35,8 @@ definitely limit the applicability of existing automated repair techniques. In t
 \begin{figure}[t]
 \centering
 %\fbox{
-\includegraphics[trim={0cm 6.5cm 5.5cm 0cm},clip,scale=0.27]{images/claroline-together-2}
+%\includegraphics[trim={0cm 6.5cm 5.5cm 0cm},clip,scale=0.27]{images/claroline-together-2}
+\includegraphics[trim={0cm 3.5cm 0cm 0cm},clip,scale=0.24]{images/claroline-together-3}
 %}
 \caption{Login page of the Claroline web application, version 1.10.0 (left) and 1.11.0 (right), along with a portion of the corresponding HTML code, and an automated Selenium WebDriver test}
 \label{claroline-together}
@@ -113,7 +114,7 @@ In this case, an algorithm taking into consideration the visual appearance of th
 \caption{\emph{Version 7.0.0}}
 \label{fig:ab2} 
 \end{subfigure}
-\caption{Examples of mis-selections. AddressBook web application, version 6.2.12 (\ref{fig:ab1}) and version 7.0.0 (\ref{fig:ab2}), along with a portion of the navigational graphs, and automated Selenium WebDriver tests}
+\caption{AddressBook web application, version 6.2.12 (\ref{fig:ab1}) and version 7.0.0 (\ref{fig:ab2}), along with a portion of the navigational graphs, and automated Selenium WebDriver tests}
 \label{misselection}
 \end{figure*}
 
@@ -159,17 +160,6 @@ Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to re
 %\label{misselection}
 %\end{figure}
 
-\begin{figure*}[t]
-\centering
-%\fbox{
-\includegraphics[trim={0.0cm 18cm 0.0cm 0cm},clip,scale=0.435]{images/approach-reduced2}
-%}
-\caption{High Level Overview of Visual Test Repair Approach}
-\label{approach}
-\end{figure*}
-
-
-
 \subsection{How Testers Repair}
 
 When a test $t$ that was used to function on a version $V$  breaks on a successive version $V'$, a tester needs to understand the root cause behind the breakage and a possible repair for it. 
@@ -197,7 +187,8 @@ However, we argue that visual image recognition can help to fix all the breakage
 \subsection{Computer Vision Stuff}
 
 \subsection{General Terms}
-In object detection problems you usually have two sets of images. The training set will be used for showing the computer what the desired object looks like. This can be done by calculating hue histograms (as you already know) or by computing keypoints and keypoint descriptors (as you will learn soon). Obviously, it is preferable that training images are either annotated (locations of objects of interest are specified by bounding boxes) or just contain the objects of interest and little else. The testing set contains images on which your algorithm will be used?in short, the use case of your application.
+
+In object detection problems we usually have two sets of images. The training set is used for showing the computer what the desired object looks like. This can be done by calculating hue histograms or by computing keypoints and keypoint descriptors. Obviously, it is preferable that training images are either annotated (locations of objects of interest are specified by bounding boxes) or just contain the objects of interest and little else. The testing set contains images on which the algorithm, in short, the use case of your application.
 
 \subsubsection{Histograms}
 
@@ -232,12 +223,25 @@ It is difficult to determine locally the movement of the edge from one frame to 
 To overcome this problem, a common approach in computer vision is to instead make use of corners, image features or interest points.
 Technically a corner is the intersection of two edges, whereas an interest point is any point that can be located robustly, which includes corners but also includes such features as small marks.
 
+\begin{figure*}[t]
+\centering
+%\fbox{
+\includegraphics[trim={0.0cm 18cm 0.0cm 0cm},clip,scale=0.435]{images/approach-reduced2}
+%}
+\caption{High Level Overview of Visual Test Repair Approach}
+\label{approach}
+\end{figure*}
+
+
 \subsubsection{Template Matching}
 
 \begin{itemize}
-\item I can try use multiple images (i.e. both the perfectly cropped and the larger visual locator).
+\item use SIFT to determine whether the image is present/absent
+\item SIFT returns also an estimate of where the majority of keypoints has been found
+\item Template matching usually returns multiple or inaccurate results
+\item the idea is to filter the TM results with SIFT's
+\item one try might be to use multiple images (i.e. both the perfectly cropped and the larger visual locator).
 \item try to implement Chamfer Matching
-\item One picture could be hard to identify a web element with (multiple visual matches). 
 \end{itemize}
 
 \subsubsection{Metrics}
@@ -251,10 +255,6 @@ Technically a corner is the intersection of two edges, whereas an interest point
 \item Precision is the percentage of the positive classifications which are correct (i.e. are not false alarms). Precision = TP / (TP + FP)
 \item Accuracy is the percentage of the total samples which are correct. Accuracy = TP + TN / TotalSamples
 \end{enumerate}
-
-
-
-
 
 
 
