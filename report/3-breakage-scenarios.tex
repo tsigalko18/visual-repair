@@ -101,7 +101,7 @@ In this case, an algorithm taking into consideration the visual appearance of th
 \begin{subfigure}{\columnwidth}
 \centering
 %  \fbox{
-\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true, scale=0.23]{images/misselection-part1.pdf}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true, scale=0.225]{images/misselection-part1.pdf}
 %  }
 \caption{\emph{Version 6.2.12}}
 \label{fig:ab1} 
@@ -109,7 +109,7 @@ In this case, an algorithm taking into consideration the visual appearance of th
 \begin{subfigure}{\columnwidth}
 \centering
 %    \fbox{
-\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true, scale=0.23]{images/misselection-part2.pdf}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true, scale=0.225]{images/misselection-part2.pdf}
 %  }
 \caption{\emph{Version 7.0.0}}
 \label{fig:ab2} 
@@ -147,9 +147,10 @@ A mis-selection of an element can lead to unpredictable misbehaviours of the tes
 Consider \autoref{misselection} again. 
 Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In the literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}, formally, $l: D \rightarrow e'$ where $e \ne e'$. The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a propagated or a silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Once again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakages patterns.
 
-\andrea{this kind of breakage is associated mostly to XPath locators, but it can happen with attributes too if, for instance, two different elements share the same attribute locator.}
+%\andrea{this kind of breakage is associated mostly to XPath locators, but it can happen with attributes too if, for instance, two different elements share the same attribute locator.}
 
-\andrea{emphasize the fact that a test might have multiple occurences of breakage, and those scenarios might interleave and occur together}
+\head{Summary}
+In this section, we have presented XXX \andrea{put number}  test breakage scenarios and we have shown how the visual appearance of the SUT can be utilized to overcome the existing test repair approaches and give an important contribution to the tester. We do not claim, however, that such a list represents all the possible scenarios. Note that the presented scenarios might (1)~occur together (i.e., leading to \textit{multiple} breakages in the same test) or (2)~interleave with each other.\andrea{is that possible possible?}
 
 %\begin{figure}[t]
 %\centering
