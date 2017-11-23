@@ -202,69 +202,87 @@ public class UtilsTemplateMatching {
 		/* run SIFT to check for the presence/absence of the template image. */
 		boolean isPresent = siftDetector(templateFile, imageFile);
 
+		// if (isPresent) {
+
+		/* Get the image. */
+		Mat img = Highgui.imread(imageFile);
+
+		/* Get the template. */
+		Mat templ = Highgui.imread(templateFile);
+
+		/* Create the result matrix. */
+		int result_cols = img.cols() - templ.cols() + 1;
+		int result_rows = img.rows() - templ.rows() + 1;
+		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+
+		List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
+
+		if (Settings.VERBOSE) {
+			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + imageFile);
+		}
+
+		/* Do the Matching and Thresholding. */
+		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
+		Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
+
+		double maxval;
+		while (true) {
+			Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
+			Point maxp = maxr.maxLoc;
+			maxval = maxr.maxVal;
+			if (maxval >= threshold) {
+
+				Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+						new Scalar(0, 0, 255), 2);
+				Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+						new Scalar(0, 255, 0), -1);
+
+				matches.add(maxp);
+				boxes.add(new Rectangle((int) maxp.x, (int) maxp.y, templ.cols(), templ.rows()));
+			} else {
+				break;
+			}
+		}
+
+		int x_sift = -1;
+		int y_sift = -1;
+		
 		if (isPresent) {
-
-			/* Get the image. */
-			Mat img = Highgui.imread(imageFile);
-
-			/* Get the template. */
-			Mat templ = Highgui.imread(templateFile);
-
-			/* Create the result matrix. */
-			int result_cols = img.cols() - templ.cols() + 1;
-			int result_rows = img.rows() - templ.rows() + 1;
-			Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
-
-			List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
-
-			if (Settings.VERBOSE) {
-				System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + imageFile);
-			}
-
-			/* Do the Matching and Thresholding. */
-			Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
-			Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
-
-			double maxval;
-			while (true) {
-				Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
-				Point maxp = maxr.maxLoc;
-				maxval = maxr.maxVal;
-				if (maxval >= threshold) {
-
-					Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
-							new Scalar(0, 0, 255), 2);
-					Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
-							new Scalar(0, 255, 0), -1);
-
-					matches.add(maxp);
-					boxes.add(new Rectangle((int) maxp.x, (int) maxp.y, templ.cols(), templ.rows()));
-				} else {
-					break;
-				}
-			}
-
 			System.out.println("Best Match with SIFT");
-			int x_sift = round(points[0].x, 0);
-			int y_sift = round(points[0].y, 0);
+			x_sift = round(points[0].x, 0);
+			y_sift = round(points[0].y, 0);
 			System.out.println("[" + 0 + "]\tx=" + x_sift + "\ty=" + y_sift);
-
-			System.out.println("Found " + matches.size() + " matches with Template Matching");
-
+		}
+		
+		if(matches.size() == 0) {
+			
+			System.out.println("Template Matching found no matches");
+			
+		} else if(matches.size() == 1) {
+			
+			System.out.println("Template Matching found " + matches.size() + " match");
+			best_result = matches.get(0);
+			
+		} else {
+			
+			System.out.println("Template Matching found multiple matches: " + matches.size());
+			System.out.println("Filtering results based on SIFT detection");
+			
 			for (int i = 0; i < matches.size(); i++) {
-	
+
 				int x = round(matches.get(i).x, 0);
 				int y = round(matches.get(i).y, 0);
-				
+
 				System.out.println("[" + i + "]\tx=" + x + "\ty=" + y);
 
 				/* filter the results. */
-				if (x == x_sift && y == y_sift) {
-					best_result = matches.get(i);
+				if (isPresent) {
+					if (x == x_sift && y == y_sift) {
+						best_result = matches.get(i);
+					}
 				}
 			}
-
-			/* filter the results. */
+			
 			System.out.println("Best Template Matching result");
 			System.out.println("[" + 0 + "]\tx=" + best_result.x + "\ty=" + best_result.y);
 
@@ -273,13 +291,11 @@ public class UtilsTemplateMatching {
 			 */
 			// Rectangle2D picked = nonMaxSuppression(boxes);
 
-			// Save the visualized detection
-			File annotated = new File("annotated.png");
+			/* Save the visualized detection. */
+			File annotated = new File("annotatedTemplateMatching.png");
 			Highgui.imwrite(annotated.getPath(), img);
-
 		}
-
-		// return matches;
+		
 		return best_result;
 
 	}

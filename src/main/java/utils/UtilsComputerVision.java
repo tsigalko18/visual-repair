@@ -430,16 +430,6 @@ public class UtilsComputerVision {
 
 	public static Point findBestMatchCenter(String inFile, String templateFile) {
 
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-		// if (Settings.VERBOSE) {
-		// System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
-		// + " using image recognition algorithm TM_CCOEFF_NORMED");
-		//
-		// System.out.println("[LOG]\tSearching matches of " + templateFile + " in " +
-		// inFile);
-		// }
-
 		Mat img = Highgui.imread(inFile);
 		Mat templ = Highgui.imread(templateFile);
 
