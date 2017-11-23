@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -268,16 +267,12 @@ public class VisualAssertionTestRunner {
 			}
 
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -285,7 +280,6 @@ public class VisualAssertionTestRunner {
 
 	public static void cleanup(Class<?> clazz, Object inst) {
 		runMethod(clazz, inst, "tearDown");
-		// pt.runTest(etc, testBroken);
 		System.exit(1);
 	}
 

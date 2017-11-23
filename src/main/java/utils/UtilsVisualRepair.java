@@ -120,32 +120,39 @@ public class UtilsVisualRepair {
 
 		}
 
-//		/* there is disagreement between the visual locators. */
-//		if (!UtilsVisualRepair.areWebElementsEquals(webElementFromVisualLocatorPerfect,
-//				webElementFromVisualLocatorLarge)) {
-//
-//			System.out.println("[LOG]\tThe two visual locators target two different elements");
-//			System.out.println("[LOG]\tApplying proximity procedure");
-//			webElementFromDomLocator = UtilsVisualRepair.applyProximityVoting((JavascriptExecutor) driver,
-//					webElementFromDomLocator, webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge);
-//		}
-//
-//		if (!UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorLarge)
-//				|| !UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator,
-//						webElementFromVisualLocatorPerfect)) {
-//
-//			System.out.println("[LOG]\tChance of propagated breakage at line " + statement.getLine());
-//			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
-//
-//			// System.out.println(webElementFromVisualLocatorLarge);
-//			// System.out.println(webElementFromVisualLocatorPerfect);
-//			// System.out.println(webElementFromDomLocator);
-//
-//			/* DECIDE WHAT TO DO HERE: which one should I trust? */
-//			webElementFromDomLocator = webElementFromVisualLocatorPerfect;
-//		} else {
-//			System.out.println("[LOG]\tVisual Assertion correct");
-//		}
+		// /* there is disagreement between the visual locators. */
+		// if
+		// (!UtilsVisualRepair.areWebElementsEquals(webElementFromVisualLocatorPerfect,
+		// webElementFromVisualLocatorLarge)) {
+		//
+		// System.out.println("[LOG]\tThe two visual locators target two different
+		// elements");
+		// System.out.println("[LOG]\tApplying proximity procedure");
+		// webElementFromDomLocator =
+		// UtilsVisualRepair.applyProximityVoting((JavascriptExecutor) driver,
+		// webElementFromDomLocator, webElementFromVisualLocatorPerfect,
+		// webElementFromVisualLocatorLarge);
+		// }
+		//
+		// if (!UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator,
+		// webElementFromVisualLocatorLarge)
+		// || !UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator,
+		// webElementFromVisualLocatorPerfect)) {
+		//
+		// System.out.println("[LOG]\tChance of propagated breakage at line " +
+		// statement.getLine());
+		// System.out.println("[LOG]\tDOM locator and visual locator target two
+		// different elements");
+		//
+		// // System.out.println(webElementFromVisualLocatorLarge);
+		// // System.out.println(webElementFromVisualLocatorPerfect);
+		// // System.out.println(webElementFromDomLocator);
+		//
+		// /* DECIDE WHAT TO DO HERE: which one should I trust? */
+		// webElementFromDomLocator = webElementFromVisualLocatorPerfect;
+		// } else {
+		// System.out.println("[LOG]\tVisual Assertion correct");
+		// }
 
 		return webElementFromDomLocator;
 	}
@@ -307,12 +314,10 @@ public class UtilsVisualRepair {
 	}
 
 	public static WebElement removeStatement() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public static WebElement localCrawling() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
