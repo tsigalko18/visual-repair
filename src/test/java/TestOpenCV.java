@@ -35,20 +35,20 @@ public class TestOpenCV {
 	@Test
 	public void testTemplateMatchingTemplateOk() {
 
+		String image = "src/test/resources/index.jpg";
 		String template = "src/test/resources/indexsmall.jpg";
-		String bookScene = "src/test/resources/index.jpg";
 
-		assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(bookScene, template, 0.95));
+		assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image, template, 0.95));
 
 	}
-	
+
 	@Test
 	public void testTemplateMatchingTemplateAbsent() {
 
-		String bookObject = "src/test/resources/visuallocator.png";
-		String bookScene = "src/test/resources/index.jpg";
+		String image = "src/test/resources/index.jpg";
+		String template = "src/test/resources/visuallocator.png";
 
-		assertNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(bookScene, bookObject, 0.95));
+		assertNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image, template, 0.95));
 
 	}
 
@@ -56,10 +56,10 @@ public class TestOpenCV {
 	@Test
 	public void testTemplateMatchingVisualDuplicates() {
 
-		String bookObject = "src/test/resources/indexsmall.jpg";
-		String bookScene = "src/test/resources/index.jpg";
+		String image = "src/test/resources/index.jpg";
+		String template = "src/test/resources/indexsmall.jpg";
 
-		System.out.println(UtilsComputerVision.returnAllMatches(bookScene, bookObject));
+		System.out.println(UtilsComputerVision.returnAllMatches(image, template));
 
 	}
 
