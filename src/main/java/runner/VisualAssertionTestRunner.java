@@ -47,7 +47,7 @@ public class VisualAssertionTestRunner {
 
 		/* class name. */
 		String className = "TestLoginAdmin";
-		
+
 		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
 
 		var.runTestWithVisualAssertion(prefix, className);
@@ -141,19 +141,20 @@ public class VisualAssertionTestRunner {
 
 				if (webElementFromDomLocator == null) {
 					webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub method
+				} else {
+					/*
+					 * at this point, if the visual check is failing, webElementFromDomLocator
+					 * should be set to null???
+					 */
+					webElementFromDomLocator = null;
 				}
-
-				/*
-				 * at this point, if the visual check is failing, webElementFromDomLocator
-				 * should be set to null.
-				 */
 
 			}
 
 			if (webElementFromDomLocator != null) {
 
-				webElementFromDomLocator = visualAssertWebElement(driver, webElementFromDomLocator, testCorrect,
-						statementNumber, statement);
+				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
+						testCorrect, statementNumber, statement);
 
 				Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
 				newStatement.setDomLocator(webElementFromDomLocator);
@@ -250,60 +251,6 @@ public class VisualAssertionTestRunner {
 		// }
 
 		System.exit(0);
-	}
-
-	private static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator,
-			EnhancedTestCase testCorrect, Integer i, Statement statement) {
-
-		String visualLocatorPerfect = null;
-		String visualLocatorLarge = null;
-		WebElement webElementFromVisualLocatorPerfect = null;
-		WebElement webElementFromVisualLocatorLarge = null;
-
-		/* retrieve the visual locators. */
-		try {
-			visualLocatorPerfect = testCorrect.getStatements().get(i).getVisualLocatorPerfect().toString();
-			visualLocatorLarge = testCorrect.getStatements().get(i).getVisualLocatorLarge().toString();
-		} catch (NullPointerException e) {
-
-			System.out.println("[ERROR]\tVisual locator(s) not found in " + testCorrect.getStatements().get(i));
-			System.out.println("[ERROR]\tRe-run the TestSuiteRunner on " + testCorrect.getPath());
-			System.exit(1);
-		}
-
-		webElementFromVisualLocatorPerfect = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver,
-				visualLocatorPerfect);
-		webElementFromVisualLocatorLarge = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver,
-				visualLocatorLarge);
-
-		/* there is disagreement between the visual locators. */
-		if (!UtilsVisualRepair.areWebElementsEquals(webElementFromVisualLocatorPerfect,
-				webElementFromVisualLocatorLarge)) {
-
-			System.out.println("[LOG]\tThe two visual locators target two different elements");
-			System.out.println("[LOG]\tApplying proximity procedure");
-			webElementFromDomLocator = UtilsVisualRepair.applyProximityVoting((JavascriptExecutor) driver,
-					webElementFromDomLocator, webElementFromVisualLocatorPerfect, webElementFromVisualLocatorLarge);
-		}
-
-		if (!UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocatorLarge)
-				|| !UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator,
-						webElementFromVisualLocatorPerfect)) {
-
-			System.out.println("[LOG]\tChance of propagated breakage at line " + statement.getLine());
-			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
-
-			// System.out.println(webElementFromVisualLocatorLarge);
-			// System.out.println(webElementFromVisualLocatorPerfect);
-			// System.out.println(webElementFromDomLocator);
-
-			/* DECIDE WHAT TO DO HERE: which one should I trust? */
-			webElementFromDomLocator = webElementFromVisualLocatorPerfect;
-		} else {
-			System.out.println("[LOG]\tVisual Assertion correct");
-		}
-
-		return webElementFromDomLocator;
 	}
 
 	private static Object runMethod(Class<?> clazz, Object inst, String methodName) {
