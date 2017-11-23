@@ -63,11 +63,16 @@ on a web element during recording, or an action specific to Selenium's control o
 \begin{defn}[\textbf{Value}] The value component refers to any input entered by the test within the element specified by the locator.
 \end{defn}
 
-\head{Scenario 1 (Non-Selection Same State (Direct))} 
-The first and perhaps more common scenario occurs when a locator $l$ applied to a certain DOM state $D$, returns no elements---formally, $l: D \rightarrow \emptyset$. 
+\subsection{Non-Selection}\label{sec:nonselection}
 
-To address this issue, first, a detection algorithm should make sure that $e \in D$. Then,  possible repairs require to find another locator $l'$, such that $l': D \rightarrow e$.
-This scenario is depicted in~\autoref{claroline-together}: \textcircled{\raisebox{-0.9pt}{1}}~shows the login form of Claroline web application version 1.10.0, together with the corresponding HTML code~\textcircled{\raisebox{-0.9pt}{2}}. \textcircled{\raisebox{-0.9pt}{3}}~shows the login form on the next major version of Claroline (1.11.0), and how the corresponding HTML code has evolved~\textcircled{\raisebox{-0.9pt}{4}}. 
+The first and perhaps most common scenario occurs when a locator $l$ applied to a certain DOM state $D$, returns no elements---formally, $l: D \rightarrow \emptyset$. 
+%
+
+\head{Scenario 1 (Non-Selection $\bullet$ Element Present)} 
+Let us focus on the scenario in which the desired web element is still present on the page ($e \in D$). 
+%To address this issue, first, a detection algorithm should make sure that $e \in D$. 
+Then, possible repairs require to find another locator $l'$, such that $l': D \rightarrow e$.
+This scenario is depicted in~\autoref{claroline-together}: \textcircled{\raisebox{-0.8pt}{1}}~shows the login form of Claroline web application version 1.10.0, together with the corresponding HTML code~\textcircled{\raisebox{-0.8pt}{2}}. \textcircled{\raisebox{-0.8pt}{3}}~shows the login form on the next major version of Claroline (1.11.0), and how the corresponding HTML code has evolved~\textcircled{\raisebox{-0.9pt}{4}}. 
 %Let us a test scenario in which a user 
 %inserts \texttt{username} and \texttt{password} 
 %in the login form, and if these credentials are correct, 
@@ -80,7 +85,7 @@ fills in the username and password input boxes (Lines~5-6), and submits the form
 %Finally, Line~9 shuts down the WebDriver instance 
 %and closes the browser.
 
-When executed on version 1.11.0~\textcircled{\raisebox{-0.9pt}{1}}, instead, the test will stop at Line~7, when attempting to locate the ``Enter'' button~\textcircled{\raisebox{-0.9pt}{3}}, because the attribute \mbox{\texttt{name="submitAuth"}} has been removed from the HTML~\textcircled{\raisebox{-0.9pt}{4}}. Typically non selection problems manifest as direct breakages, because the broken statement is the one that needs to be repaired.  
+When executed on version 1.11.0~\textcircled{\raisebox{-0.8pt}{1}}, instead, the test will stop at Line~7, when attempting to locate the ``Enter'' button~\textcircled{\raisebox{-0.9pt}{3}}, because the attribute \mbox{\texttt{name="submitAuth"}} has been removed from the HTML~\textcircled{\raisebox{-0.9pt}{4}}. Typically non selection problems manifest as direct breakages, because the broken statement is the one that needs to be repaired.  
 %
 At a visual inspection of the two GUIs, a tester would expect the test to work, because her perception is immaterial where changes at DOM-level are concerned. Moreover, it is evident that the target element (i.e., the ``Enter'' button) is \textit{visually} still present on the page, and its position \textit{on the GUI} has not changed.
  
@@ -90,44 +95,69 @@ At this aim, a tester may wish to use the \water  technique~\cite{Choudhary:2011
  
 In this case, an algorithm taking into consideration the visual appearance of the test state might be able to match the target element between the two GUIs (in a similar way as a human tester would do). However, this task is challenging to be automated because several issues needs to be solved. Among all (1)~finding an accurate visual matching technique, and, in the case a visual match is found, (2)~retrieving the corresponding element in the DOM. \andrea{once all the scenarios will be described, this part might be refactored up}
 
-\noindent
-\textbf{Scenario 2 (Mis-Selection).} 
-Problems occur not only when web elements are being deleted, but also when they get modified, either in their position on the DOM tree, or their position in the application state space. This causes other evolution-driven web breakage scenarios, concerning the mis-selection of elements. 
+\begin{figure*}[t]
+\centering
+\begin{subfigure}{\columnwidth}
+\centering
+%  \fbox{
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true, scale=0.23]{images/misselection-part1.pdf}
+%  }
+\caption{\emph{Version 6.2.12}}
+\label{fig:ab1} 
+\end{subfigure}
+\begin{subfigure}{\columnwidth}
+\centering
+%    \fbox{
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true, scale=0.23]{images/misselection-part2.pdf}
+%  }
+\caption{\emph{Version 7.0.0}}
+\label{fig:ab2} 
+\end{subfigure}
+\caption{Examples of mis-selections. AddressBook web application, version 6.2.12 (\ref{fig:ab1}) and version 7.0.0 (\ref{fig:ab2}), along with a portion of the navigational graphs, and automated Selenium WebDriver tests}
+\label{misselection}
+\end{figure*}
 
-A mis-selection occurs when a locator selects a different DOM element from the one that was used to target. Suppose having version $V$ and a test $t$, composed of a statement $st_i$, which uses a locator $l$ (where $l: D \rightarrow \{e\}$).
+\noindent
+\textbf{Scenario 2 (Propagated) or Non Selection Neighbouring State.} 
+As a concrete example consider \autoref{fig:ab1}, showing Addressbook web application version 6.2.12~\textcircled{\raisebox{-0.7pt}{1}}, specifically the pages in which the user can insert a new entry. The test~\textcircled{\raisebox{-0.7pt}{2}} clicks on the ``add new'' link on the home page (Line~5), and fills in the First name, Last name and Company text fields (Lines~6--8).
+Suppose now to replay the test on the successive version 7.0.0~\textcircled{\raisebox{-0.7pt}{3}}, for regression purposes. The test will raise an exception of kind \texttt{NoSuchElementException} at Line~6, when attempting to locate the ``First name'' text field~\textcircled{\raisebox{-0.7pt}{2}}. 
+Indeed, a new intermediate confirmation page has been added~\textcircled{\raisebox{-0.9pt}{3}}, and the navigational workflow of the test must be corrected to reflect that of the new modified web application.
+
+From a tester perspective, the ``First name'' text field can no longer be found in the web page (test state) following the execution of the statement at Line~5. However, conceptually, the repair action that needs to be triggered in order to correct the test has nothing to do with the locator at Line~6.
+In fact, by only looking at the exception raised by JUnit, it is  challenging for the tester to detect this problem, unless the \textit{visual execution} of the test is taken into consideration.
+%
+Even the use of \water~\cite{Choudhary:2011:WWA:2002931.2002935} is unsuccessful, because it would attempt at repairing the broken statement at Line~6. (the technique only handles addition of statements within forms, and does not apply to general broken workflow scenarios).
+
+In order to address this issue, we need to (1)~identify that the target state following the execution of a statement $st_i$ has changed between the two versions, (2)~mapping the web element $e \in st_i$ in version $V$ onto $st_j$, i.e., a neighbouring state of $st_i$  in the new version $V'$, which requires to (3)~finding  a web element $e' \in st_i$ such that $(e', st_i) \rightarrow st_j$ (the ``Next'' button in our example~\textcircled{\raisebox{-0.7pt}{3}}).
+
+\noindent
+\textbf{Scenario 3 (Non-Selection $\bullet$ Element Removed).} 
+
+\subsection{Mis-Selection}\label{sec:misselection}
+Problems occur not only when web elements are being deleted, but also when they get modified, either in their position on the DOM tree, or their position in the application state space. This can cause tests to ``mis-select'' elements, which is another breakage scenario we aim to address.
+
+Specifically, a mis-selection occurs when a locator selects a different DOM element from the one that was used to target. Suppose having version $V$ and a test $t$, composed of a statement $st_i$, which uses a locator $l$ (where $l: D \rightarrow \{e\}$).
 In the next version $V'$, $l: D' \rightarrow \{e'\}$ where $e \ne e'$.
-A mis-selection of an element can lead to unpredictable misbehaviours of test replay. In the following of this paragraph we analize two scenarios: (1)~the execution of a statement $st_i$ is supposed to trigger a certain state transition. Due to the mis-selection of the locator contained $st_i$, the transition does not take place (i.e., the app remains in the same state), and a later statement $st_k$ (with $k>i$) breaks.
-(2)~the execution of a statement $st_i$ triggers an unexpected state transition, that makes a successive statement $st_k$ (with $k>i$) to break (propagated).
-
- (Propagated) Non Selection Neighbouring State)
-
-
-
-a web element $e$ that in version $V$ appears in a test state $st_i$ and in the new version $V'$ it has been repositioned to a neighbouring state of $st_i$. 
-As a concrete example consider \autoref{misselection}, showing Addressbook web application version 6.2.12~\textcircled{\raisebox{-0.9pt}{1}}, specifically the pages in which the user can insert a new entry. The test~\textcircled{\raisebox{-0.9pt}{2}} clicks on the Add New link on the home page (Line~5), and fills in the First name, Last name and Company text fields (Lines~6--8).
-Suppose now to replay the test on the successive version 7.0.0~\textcircled{\raisebox{-0.9pt}{3}}. The test will stop at Line~6 because a new intermediate confirmation page has been added, and the First name web element can no longer be found. In this scenario, the navigational workflow of the test is broken, and no longer reflects the web application intended behaviour.
-In this scenario, JUnit will raise an exception of kind \texttt{NoSuchElementException}, even though, conceptually, the repair action has nothing to do with the locator at Line~6. 
-This scenario can be challenging to detect for the tester (as well as for any automatic repair technique), unless the visual execution of the test is taken into account.
-%A mis-selection of an element mainly manifests as two different misbehaviours of the application: (1)~the execution of a statement $st_i$ is supposed to trigger a state transition. Due to the 
-%the mis-selection of the locator contained $st_i$, the transition does not take place (i.e., the app remains in the same state), and a later statement $st_k$ (with $k>i$) breaks.
-%(2)~the execution of a statement $st_i$ triggers an unexpected state transition, that makes a successive statement $st_k$ (with $k>i$) to break.
+A mis-selection of an element can lead to unpredictable misbehaviours of the test. In the following of this paragraph we analize two scenarios pertaining to mis-selection problems. 
+%In the following of this paragraph we analize two scenarios: (1)~the execution of a statement $st_i$ is supposed to trigger a certain state transition. Due to the mis-selection of the locator contained $st_i$, the transition does not take place (i.e., the app remains in the same state), and a later statement $st_k$ (with $k>i$) breaks. (2)~the execution of a statement $st_i$ triggers an unexpected state transition, that makes a successive statement $st_k$ (with $k>i$) to break (propagated).
 
 \noindent
-\textbf{Scenario 3 (Mis-Selection (Direct)).} Consider \autoref{misselection} again. 
+\textbf{Scenario 3 (Mis-Selection (Direct)).} 
+Consider \autoref{misselection} again. 
 Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In the literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}, formally, $l: D \rightarrow e'$ where $e \ne e'$. The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a propagated or a silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Once again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakages patterns.
 
 \andrea{this kind of breakage is associated mostly to XPath locators, but it can happen with attributes too if, for instance, two different elements share the same attribute locator.}
 
 \andrea{emphasize the fact that a test might have multiple occurences of breakage, and those scenarios might interleave and occur together}
 
-\begin{figure}[t]
-\centering
-%\fbox{
-\includegraphics[trim={0cm 1cm 0cm 0cm},clip,scale=0.23]{images/misselection}
-%}
-\caption{Examples of mis-selection}
-\label{misselection}
-\end{figure}
+%\begin{figure}[t]
+%\centering
+%%\fbox{
+%\includegraphics[trim={0cm 1cm 0cm 0cm},clip,scale=0.23]{images/misselection}
+%%}
+%\caption{Examples of mis-selection}
+%\label{misselection}
+%\end{figure}
 
 \begin{figure*}[t]
 \centering

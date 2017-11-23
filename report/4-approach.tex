@@ -51,3 +51,16 @@ We implemented our approach in a tool called \tool, which is publicly available 
 The tool is written in Java, and supports Selenium test suites written in Java. However, our overall approach is more general and applicable to test suites developed using other programming languages or testing frameworks. 
 \tool gets as input the path to the test suites, collects the visual execution traces by means of an AspectJ module, and runs the visual repair algorithms. 
 \tool makes use of the traces to generate potential repairs and generates a list of repaired test cases.
+
+\head{Requirements and Limitations}
+
+A running requirement is that the browser needs to be displayed and the web elements rendered on the screen (i.e., headless browsers such as PhantomJS are currently not supported).
+
+A limitation is that the tests numbers need to be synchronized between the two versions. \andrea{Rahul: how do we deal with that when we added/removed statements?}
+
+
+
+
+
+
+
