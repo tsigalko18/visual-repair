@@ -44,36 +44,36 @@ public class UtilsTemplateMatching {
 	 */
 	public static boolean siftDetector(String object, String scene) {
 
-		System.out.println("SURF Detector");
-		System.out.println("Started...");
-		System.out.println("Loading images...");
+		// System.out.println("SURF Detector");
+		// System.out.println("Started...");
+		// System.out.println("Loading images...");
 
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		Mat sceneImage = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SIFT);
-		System.out.println("Detecting key points...");
+		// System.out.println("Detecting key points...");
 		featureDetector.detect(objectImage, objectKeyPoints);
 
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
 		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
-		System.out.println("Computing descriptors...");
+		// System.out.println("Computing descriptors...");
 		descriptorExtractor.compute(objectImage, objectKeyPoints, objectDescriptors);
 
 		/* Create output image. */
 		Mat outputImage = new Mat(objectImage.rows(), objectImage.cols(), Highgui.CV_LOAD_IMAGE_COLOR);
 		Scalar newKeypointColor = new Scalar(255, 0, 0);
 
-		System.out.println("Drawing key points on object image...");
+		// System.out.println("Drawing key points on object image...");
 		Features2d.drawKeypoints(objectImage, objectKeyPoints, outputImage, newKeypointColor, 0);
 
 		/* Match object image with the scene image. */
 		MatOfKeyPoint sceneKeyPoints = new MatOfKeyPoint();
 		MatOfKeyPoint sceneDescriptors = new MatOfKeyPoint();
-		System.out.println("Detecting key points in background image...");
+		// System.out.println("Detecting key points in background image...");
 		featureDetector.detect(sceneImage, sceneKeyPoints);
-		System.out.println("Computing descriptors in background image...");
+		// System.out.println("Computing descriptors in background image...");
 		descriptorExtractor.compute(sceneImage, sceneKeyPoints, sceneDescriptors);
 
 		Mat matchoutput = new Mat(sceneImage.rows() * 2, sceneImage.cols() * 2, Highgui.CV_LOAD_IMAGE_COLOR);
@@ -81,10 +81,10 @@ public class UtilsTemplateMatching {
 
 		List<MatOfDMatch> matches = new LinkedList<MatOfDMatch>();
 		DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
-		System.out.println("Matching object and scene images...");
+		// System.out.println("Matching object and scene images...");
 		descriptorMatcher.knnMatch(objectDescriptors, sceneDescriptors, matches, 2);
 
-		System.out.println("Calculating good match list...");
+		// System.out.println("Calculating good match list...");
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
@@ -105,7 +105,7 @@ public class UtilsTemplateMatching {
 
 		/* If at least seven key features are found, I am happy. */
 		if (goodMatchesList.size() >= 7) {
-			System.out.println("Object Found!!!");
+			// System.out.println("Object Found!!!");
 
 			List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
 			List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
@@ -133,7 +133,7 @@ public class UtilsTemplateMatching {
 			obj_corners.put(2, 0, new double[] { objectImage.cols(), objectImage.rows() });
 			obj_corners.put(3, 0, new double[] { 0, objectImage.rows() });
 
-			System.out.println("Transforming object corners to scene corners...");
+			// System.out.println("Transforming object corners to scene corners...");
 			Core.perspectiveTransform(obj_corners, scene_corners, homography);
 
 			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
@@ -142,6 +142,7 @@ public class UtilsTemplateMatching {
 			 * retrieve the points of the bounding box, in the order upper-left,
 			 * upper-right, lower-right, lower-left.
 			 */
+			System.out.println(scene_corners.dump());
 			points = getPointsFromMatDump(scene_corners.dump());
 
 			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
@@ -153,21 +154,21 @@ public class UtilsTemplateMatching {
 			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
 					new Scalar(0, 255, 0), 2);
 
-			System.out.println("Drawing matches image...");
+			// System.out.println("Drawing matches image...");
 			MatOfDMatch goodMatches = new MatOfDMatch();
 			goodMatches.fromList(goodMatchesList);
 
 			Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput,
 					matchestColor, newKeypointColor, new MatOfByte(), 2);
 
-			Highgui.imwrite("outputImage.jpg", outputImage);
-			Highgui.imwrite("matchoutput.jpg", matchoutput);
-			Highgui.imwrite("img.jpg", img);
+			Highgui.imwrite("1outputImage.jpg", outputImage);
+			Highgui.imwrite("2matchoutput.jpg", matchoutput);
+			Highgui.imwrite("3img.jpg", img);
 
 			return true;
 
 		} else {
-			System.out.println("Object Not Found");
+			// System.out.println("Object Not Found");
 			return false;
 		}
 
@@ -202,6 +203,7 @@ public class UtilsTemplateMatching {
 		/* run SIFT to check for the presence/absence of the template image. */
 		boolean isPresent = siftDetector(templateFile, imageFile);
 
+		System.out.println("isPresent: " + isPresent);
 		// if (isPresent) {
 
 		/* Get the image. */
@@ -217,9 +219,8 @@ public class UtilsTemplateMatching {
 
 		List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
 
-		if (Settings.VERBOSE) {
-			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + imageFile);
-		}
+		// System.out.println("[LOG]\tSearching matches of " + templateFile + " in " +
+		// imageFile);
 
 		/* Do the Matching and Thresholding. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
@@ -246,28 +247,28 @@ public class UtilsTemplateMatching {
 
 		int x_sift = -1;
 		int y_sift = -1;
-		
+
 		if (isPresent) {
 			System.out.println("Best Match with SIFT");
 			x_sift = round(points[0].x, 0);
 			y_sift = round(points[0].y, 0);
 			System.out.println("[" + 0 + "]\tx=" + x_sift + "\ty=" + y_sift);
 		}
-		
-		if(matches.size() == 0) {
-			
-			System.out.println("Template Matching found no matches");
-			
-		} else if(matches.size() == 1) {
-			
+
+		if (matches.size() == 0) {
+
+			System.out.println("[LOG]\tTemplate Matching found no matches");
+
+		} else if (matches.size() == 1) {
+
 			System.out.println("Template Matching found " + matches.size() + " match");
 			best_result = matches.get(0);
-			
+
 		} else {
-			
+
 			System.out.println("Template Matching found multiple matches: " + matches.size());
 			System.out.println("Filtering results based on SIFT detection");
-			
+
 			for (int i = 0; i < matches.size(); i++) {
 
 				int x = round(matches.get(i).x, 0);
@@ -282,7 +283,7 @@ public class UtilsTemplateMatching {
 					}
 				}
 			}
-			
+
 			System.out.println("Best Template Matching result");
 			System.out.println("[" + 0 + "]\tx=" + best_result.x + "\ty=" + best_result.y);
 
@@ -291,11 +292,12 @@ public class UtilsTemplateMatching {
 			 */
 			// Rectangle2D picked = nonMaxSuppression(boxes);
 
-			/* Save the visualized detection. */
-			File annotated = new File("annotatedTemplateMatching.png");
-			Highgui.imwrite(annotated.getPath(), img);
 		}
-		
+
+		/* Save the visualized detection. */
+		File annotated = new File("annotatedTemplateMatching.png");
+		Highgui.imwrite(annotated.getPath(), img);
+
 		return best_result;
 
 	}

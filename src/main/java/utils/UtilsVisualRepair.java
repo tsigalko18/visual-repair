@@ -43,7 +43,7 @@ public class UtilsVisualRepair {
 
 		if (webElementFromVisualLocatorPerfect == null && webElementFromVisualLocatorLarge == null) {
 
-			System.out.println("[WARNING]\tElement not found (visually) in the state. Visual assertion failed.");
+			System.err.println("[LOG]\tElement not found (visually) in the state. Visual assertion failed.");
 
 		} else if (webElementFromVisualLocatorPerfect != null && webElementFromVisualLocatorLarge == null) {
 
@@ -187,7 +187,7 @@ public class UtilsVisualRepair {
 
 		if (webElementFromVisualLocatorPerfect == null && webElementFromVisualLocatorLarge == null) {
 
-			System.out.println("[WARNING]\tElement not found (visually) in the state. Visual assertion failed.");
+			System.err.println("[LOG]\tElement not found (visually) in the state. Visual assertion failed.");
 			return null;
 
 		} else if (webElementFromVisualLocatorPerfect != null && webElementFromVisualLocatorLarge == null) {
