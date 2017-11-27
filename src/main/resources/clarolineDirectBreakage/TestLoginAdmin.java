@@ -19,7 +19,7 @@ public class TestLoginAdmin {
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();// Settings.getDriver();
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-		driver.get("http://localhost:8888/claroline/claroline-1.11.10/");
+		driver.get("http://localhost:8888/claroline" + Settings.getVersion());
 	}
 
 	@Test

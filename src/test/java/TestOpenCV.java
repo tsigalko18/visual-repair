@@ -39,7 +39,7 @@ public class TestOpenCV {
 		String image = "src/test/resources/index.jpg";
 		String template = "src/test/resources/indexsmall.jpg";
 
-		assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image, template, 0.95));
+		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 
 	}
 
@@ -50,7 +50,7 @@ public class TestOpenCV {
 		String image = "src/test/resources/index.jpg";
 		String template = "src/test/resources/visuallocator.png";
 
-		assertNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image, template, 0.95));
+		assertNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 
 	}
 
@@ -68,34 +68,21 @@ public class TestOpenCV {
 	@Test
 	public void testTemplateMatchingVisualLocatorPresent() {
 
-		String image = "src/test/resources/currentScreenshot.png";
-
 		String template = "src/test/resources/27-visualLocatorLarge-TestLoginAdmin-27.png";
-//		assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image, template, 0.70));
-		System.out.println(UtilsComputerVision.findBestMatchCenter(image, template));
+		String image = "src/test/resources/27-1before-TestLoginAdmin-27.png";
+		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 
-		// template =
-		// "src/test/resources/27-visualLocatorPerfect-TestLoginAdmin-27.png";
-		// assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image,
-		// template, 0.95));
-		//
-		// template = "src/test/resources/28-visualLocatorLarge-TestLoginAdmin-28.png";
-		// assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image,
-		// template, 0.95));
-		//
-		// template =
-		// "src/test/resources/28-visualLocatorPerfect-TestLoginAdmin-28.png";
-		// assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image,
-		// template, 0.95));
-		//
-		// template = "src/test/resources/-visualLocatorLarge-TestLoginAdmin-29.png";
-		// assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image,
-		// template, 0.95));
-		//
-		// template =
-		// "src/test/resources/29-visualLocatorPerfect-TestLoginAdmin-29.png";
-		// assertNotNull(UtilsTemplateMatching.siftAndMultipleTemplateMatching(image,
-		// template, 0.95));
+		template = "src/test/resources/28-visualLocatorLarge-TestLoginAdmin-28.png";
+		image = "src/test/resources/28-1before-TestLoginAdmin-28.png";
+		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
+
+		template = "src/test/resources/29-visualLocatorLarge-TestLoginAdmin-29.png";
+		image = "src/test/resources/29-1before-TestLoginAdmin-29.png";
+		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
+		
+		template = "src/test/resources/30-visualLocatorLarge-TestLoginAdmin-30.png";
+		image = "src/test/resources/30-1before-TestLoginAdmin-30.png";
+		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 
 	}
 
