@@ -53,7 +53,7 @@ public class UtilsComputerVision {
 
 	/**
 	 * Save the GUI of the current driver instance in a file name identified by
-	 * filename
+	 * filename.
 	 * 
 	 * @param d
 	 * @param filename
@@ -76,7 +76,7 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * save a unique visual locator for the web element
+	 * Save a unique visual locator for the web element.
 	 * 
 	 * @param d
 	 * @param s
@@ -94,7 +94,7 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * calculate a visual locator
+	 * Calculate a visual locator.
 	 * 
 	 * @param d
 	 * @param filename
@@ -121,7 +121,7 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * save a precise crop for the web element (might not be unique)
+	 * Save a precise crop for the web element (might not be unique).
 	 * 
 	 * @param d
 	 * @param s
@@ -139,7 +139,7 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * get the precise crop for the web element
+	 * Get the precise crop for the web element.
 	 * 
 	 * @param d
 	 * @param filename
@@ -160,7 +160,7 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * save the annotated screenshot locator
+	 * Save the annotated screenshot locator.
 	 * 
 	 * @param d
 	 * @param filename
@@ -201,21 +201,21 @@ public class UtilsComputerVision {
 				System.err.println("[LOG]\tWARNING: Multiple matches!");
 		}
 
-		// Localizing the best match with minMaxLoc
+		/* Localizing the best match with minMaxLoc. */
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
 
-		// Show me what you got
+		/* Show me what you got. */
 		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
-		// Save the visualized detection.
+		/* Save the visualized detection. */
 		File annotated = new File(outFile);
 		Highgui.imwrite(annotated.getPath(), img);
 	}
 
 	/**
-	 * get the visual locator
+	 * Get the visual locator.
 	 * 
 	 * @param d
 	 * @param filename
@@ -270,7 +270,7 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * get the visual locator
+	 * Get the visual locator.
 	 * 
 	 * @param d
 	 * @param filename
@@ -332,7 +332,6 @@ public class UtilsComputerVision {
 		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED");
-
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 		}
 
@@ -432,12 +431,12 @@ public class UtilsComputerVision {
 		Mat img = Highgui.imread(inFile);
 		Mat templ = Highgui.imread(templateFile);
 
-		// / Create the result matrix
+		/* Create the result matrix. */
 		int result_cols = img.cols() - templ.cols() + 1;
 		int result_rows = img.rows() - templ.rows() + 1;
 		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
 
-		// / Do the Matching and Normalize
+		/* Do the Matching and Normalize. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
 		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
@@ -459,21 +458,32 @@ public class UtilsComputerVision {
 			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
 		}
 
-		// Localizing the best match with minMaxLoc
+		/* Localizing the best match with minMaxLoc. */
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
+		
+		if(mmr.maxVal > 0.95) {
+			
+			/* Show me what you got. */
+			Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+					new Scalar(0, 255, 0), 2);
 
-		// Show me what you got
-		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-				new Scalar(0, 255, 0), 2);
+			/* Save the visualized detection. */
+			File annotated = new File("annotated.png");
+			Highgui.imwrite(annotated.getPath(), img);
 
-		// Save the visualized detection.
-		File annotated = new File("annotated.png");
-		Highgui.imwrite(annotated.getPath(), img);
+			/*
+			 * TODO: a way to check over or filter the results could be to get the subset
+			 * image and compare it with the template.
+			 */
 
-		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
+			return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
+			
+		} else
+			return null;
+		
 	}
-	
+
 	public static Point findAllCenters(String inFile, String templateFile) {
 
 		Mat img = Highgui.imread(inFile);
@@ -506,15 +516,15 @@ public class UtilsComputerVision {
 			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
 		}
 
-		// Localizing the best match with minMaxLoc
+		/* Localizing the best match with minMaxLoc. */
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
 
-		// Show me what you got
+		/* Show me what you got. */
 		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
-		// Save the visualized detection.
+		/* Save the visualized detection. */
 		File annotated = new File("annotated.png");
 		Highgui.imwrite(annotated.getPath(), img);
 
@@ -550,7 +560,9 @@ public class UtilsComputerVision {
 			Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
 			Point maxp = maxr.maxLoc;
 			maxval = maxr.maxVal;
-			Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
+
+			// Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
+
 			if (maxval >= 0.95) {
 
 				Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
@@ -572,7 +584,7 @@ public class UtilsComputerVision {
 		 */
 		// Rectangle2D picked = nonMaxSuppression(boxes);
 
-		// Save the visualized detection
+		/* Save the visualized detection. */
 		File annotated = new File("annotated.png");
 		Highgui.imwrite(annotated.getPath(), img);
 
@@ -586,11 +598,11 @@ public class UtilsComputerVision {
 		if (boxes.size() == 0)
 			return picked.get(0);
 
-		ArrayList<Integer> x1 = getAllX1(boxes);
-		ArrayList<Integer> y1 = getAllY1(boxes);
-		ArrayList<Integer> x2 = getAllX2(boxes);
-		ArrayList<Integer> y2 = getAllY2(boxes);
-		ArrayList<Double> area = getAllAreas(boxes);
+		// ArrayList<Integer> x1 = getAllX1(boxes);
+		// ArrayList<Integer> y1 = getAllY1(boxes);
+		// ArrayList<Integer> x2 = getAllX2(boxes);
+		// ArrayList<Integer> y2 = getAllY2(boxes);
+		// ArrayList<Double> area = getAllAreas(boxes);
 
 		ArrayList<Rectangle2D> idxs = new ArrayList<Rectangle2D>();
 		idxs.addAll(boxes);
@@ -617,7 +629,7 @@ public class UtilsComputerVision {
 
 				/*
 				 * find the largest (x, y) coordinates for the start of the bounding box and the
-				 * smallest (x, y) coordinates for the end of the bounding box
+				 * smallest (x, y) coordinates for the end of the bounding box.
 				 */
 				double xx1 = Math.max(i.getX(), j.getX());
 				double yy1 = Math.max(i.getY(), j.getY());
@@ -744,34 +756,32 @@ public class UtilsComputerVision {
 		List<Point> bestMatches = new LinkedList<Point>();
 
 		for (int meth : methods) {
-			// Do the Matching and Normalize
+
+			/* Do the Matching and Normalize. */
 			Imgproc.matchTemplate(img, templ, result, meth);
 			Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
 			for (int i = 0; i < result_rows; i++) {
 				for (int j = 0; j < result_cols; j++) {
-
 					if (result.get(i, j)[0] >= 0.99) {
 						matches.add(new Point(i, j));
 					}
-
 				}
-
 			}
 
+			/* TODO: maxLoc does not work for all methods. */
 			MinMaxLocResult mmr = Core.minMaxLoc(result);
 			Point matchLoc = mmr.maxLoc;
 			bestMatches.add(matchLoc);
 
 		}
 
-		for (Point match : bestMatches) {
-			// Show me what you got
-			Core.rectangle(img, match, new Point(match.x + templ.cols(), match.y + templ.rows()), new Scalar(0, 255, 0),
-					1);
+		for (Point m : bestMatches) {
+			/* Show me what you got. */
+			Core.rectangle(img, m, new Point(m.x + templ.cols(), m.y + templ.rows()), new Scalar(0, 255, 0), 1);
 		}
 
-		// Save the visualized detection.
+		/* Save the visualized detection. */
 		annotated = new File("annotated.png");
 		Highgui.imwrite(annotated.getPath(), img);
 
@@ -788,29 +798,28 @@ public class UtilsComputerVision {
 	}
 
 	/**
-	 * converts a png image to jpg
+	 * Converts a PNG image to JPG
 	 * 
-	 * @param imagePath
-	 *            to png image
-	 * @return imagePath to jpg image
+	 * @param path
+	 *            to PNG image
+	 * @return path to new JPG image
 	 */
-	public static String convertPngToJpg(String imagePath) {
+	public static String convertPngToJpg(String imgPath) {
 
 		BufferedImage bufferedImage;
-		String newPath = imagePath.replace("png", "jpg");
+		String newPath = imgPath.replace("png", "jpg");
 
 		try {
 
-			// read image file
-			bufferedImage = ImageIO.read(new File(imagePath));
+			/* read image file. */
+			bufferedImage = ImageIO.read(new File(imgPath));
 
-			// create a blank, RGB, same width and height, and a white
-			// background
+			/* create a blank, RGB, same width and height, and a white background.˙ */
 			BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
 					BufferedImage.TYPE_INT_RGB);
 			newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
 
-			// write to jpeg file
+			/* write to jpeg file. */
 			ImageIO.write(newBufferedImage, "jpg", new File(newPath));
 
 		} catch (IOException e) {

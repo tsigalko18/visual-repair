@@ -15,9 +15,11 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.features2d.DMatch;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
@@ -27,8 +29,6 @@ import org.opencv.features2d.KeyPoint;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
-import config.Settings;
-
 public class UtilsTemplateMatching {
 
 	static {
@@ -36,59 +36,98 @@ public class UtilsTemplateMatching {
 	}
 
 	static Point[] points = new Point[4];
+	static int matchesSize = 7;
 
 	/*
 	 * Run the SIFT feature detector algorithms on the two input images and try to
-	 * match the features found in @object image into the @scene image
-	 * 
+	 * match the features found in @object image into the @scene image.
 	 */
 	public static boolean siftDetector(String object, String scene) {
 
-		// System.out.println("SURF Detector");
-		// System.out.println("Started...");
-		// System.out.println("Loading images...");
-
+		/* load the images in grayscale. */
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		Mat sceneImage = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
+		/* Run Shi-Tomasi algorithm to detect the corners. */
+		MatOfPoint corners = new MatOfPoint();
+		Imgproc.goodFeaturesToTrack(objectImage, corners, 100, 0.10, 5);
+		System.out.println("Corners found by Shi-Tomasi: " + corners.toArray().length);
+
+		System.out.println(corners.toArray().length);
+
+		Mat imgTomasi = Highgui.imread(object);
+		for (Point p : corners.toArray()) {
+			Core.circle(imgTomasi, p, 5, new Scalar(0, 0, 255), 1);
+		}
+
+		/* Save output. */
+		String filename = "4shiTomasi.png";
+		Highgui.imwrite(filename, imgTomasi);
+
+		if (corners.toArray().length == 4) {
+			System.out.println("I found 4 corners only. Probably it is a text field. I have set matchesSize to 4");
+			matchesSize = 4;
+		}
+
+		/* Detecting key points using SIFT or FAST. */
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
-		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SIFT);
-		// System.out.println("Detecting key points...");
+		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
 		featureDetector.detect(objectImage, objectKeyPoints);
 
+		System.out.println(objectKeyPoints.toArray().length);
+
+		MatOfKeyPoint newMat = new MatOfKeyPoint();
+		objectKeyPoints.copyTo(newMat);
+		List<KeyPoint> l = newMat.toList();
+
+		for (Point corner : corners.toList()) {
+			KeyPoint k = new KeyPoint();
+			k.pt = corner;
+			//l.add(k);
+		}
+
+		Imgproc.resize(newMat, newMat, new Size(newMat.width() * corners.width(), newMat.height() + corners.height()));
+
+		System.out.println(newMat.toArray().length);
+
+		for (KeyPoint kp : newMat.toList()) {
+//			System.out.println(kp.pt);
+		}
+		
+		newMat.copyTo(objectKeyPoints);
+				
+		/* Computing descriptors in template image. */
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
 		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
-		// System.out.println("Computing descriptors...");
 		descriptorExtractor.compute(objectImage, objectKeyPoints, objectDescriptors);
 
 		/* Create output image. */
 		Mat outputImage = new Mat(objectImage.rows(), objectImage.cols(), Highgui.CV_LOAD_IMAGE_COLOR);
 		Scalar newKeypointColor = new Scalar(255, 0, 0);
 
-		// System.out.println("Drawing key points on object image...");
+		/* Drawing key points on object image. */
 		Features2d.drawKeypoints(objectImage, objectKeyPoints, outputImage, newKeypointColor, 0);
 
-		/* Match object image with the scene image. */
+		/* Computing descriptors in background image. */
 		MatOfKeyPoint sceneKeyPoints = new MatOfKeyPoint();
 		MatOfKeyPoint sceneDescriptors = new MatOfKeyPoint();
-		// System.out.println("Detecting key points in background image...");
 		featureDetector.detect(sceneImage, sceneKeyPoints);
-		// System.out.println("Computing descriptors in background image...");
 		descriptorExtractor.compute(sceneImage, sceneKeyPoints, sceneDescriptors);
 
+		/* Create an image for visualizing the result. */
 		Mat matchoutput = new Mat(sceneImage.rows() * 2, sceneImage.cols() * 2, Highgui.CV_LOAD_IMAGE_COLOR);
 		Scalar matchestColor = new Scalar(0, 255, 0);
 
+		/* Matching object and scene images. */
 		List<MatOfDMatch> matches = new LinkedList<MatOfDMatch>();
 		DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
-		// System.out.println("Matching object and scene images...");
 		descriptorMatcher.knnMatch(objectDescriptors, sceneDescriptors, matches, 2);
 
-		// System.out.println("Calculating good match list...");
+		/* Calculating good match list. */
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.7f;
+		float nndrRatio = 0.8f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -104,8 +143,7 @@ public class UtilsTemplateMatching {
 		System.out.println("Found " + goodMatchesList.size() + " good matches");
 
 		/* If at least seven key features are found, I am happy. */
-		if (goodMatchesList.size() >= 7) {
-			// System.out.println("Object Found!!!");
+		if (goodMatchesList.size() >= matchesSize) {
 
 			List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
 			List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
@@ -124,7 +162,7 @@ public class UtilsTemplateMatching {
 			scnMatOfPoint2f.fromList(scenePoints);
 
 			/* Get the rectangle the the potential match is. */
-			Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
+			Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 1);
 			Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
 			Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
 
@@ -133,7 +171,7 @@ public class UtilsTemplateMatching {
 			obj_corners.put(2, 0, new double[] { objectImage.cols(), objectImage.rows() });
 			obj_corners.put(3, 0, new double[] { 0, objectImage.rows() });
 
-			// System.out.println("Transforming object corners to scene corners...");
+			/* Transforming object corners to scene corners. */
 			Core.perspectiveTransform(obj_corners, scene_corners, homography);
 
 			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
@@ -154,7 +192,7 @@ public class UtilsTemplateMatching {
 			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
 					new Scalar(0, 255, 0), 2);
 
-			// System.out.println("Drawing matches image...");
+			/* Drawing matches image. */
 			MatOfDMatch goodMatches = new MatOfDMatch();
 			goodMatches.fromList(goodMatchesList);
 
@@ -168,14 +206,13 @@ public class UtilsTemplateMatching {
 			return true;
 
 		} else {
-			// System.out.println("Object Not Found");
+			/* Object Not Found. */
 			return false;
 		}
-
 	}
 
 	/**
-	 * converts a Mat dump to an array of Points
+	 * converts a Mat dump to an array of Point
 	 * 
 	 * @param dump
 	 * @return
@@ -187,14 +224,18 @@ public class UtilsTemplateMatching {
 			split[i] = split[i].replaceAll("\\[", "").trim();
 			split[i] = split[i].replaceAll("\\]", "").trim();
 			String[] coords = split[i].split(",");
-			result[i] = new Point(Double.parseDouble(coords[0].trim()), Double.parseDouble(coords[1].trim()));
+			double x = Double.parseDouble(coords[0].trim());
+			double y = Double.parseDouble(coords[1].trim());
+			if (x < 0 || y < 0) {
+				return null;
+			} else {
+				result[i] = new Point(x, y);
+			}
 		}
 		return result;
 	}
 
-	/**
-	 * Ad-hoc visual locator detector feature.
-	 */
+	/* Ad-hoc visual locator detector feature. */
 	public static Point siftAndMultipleTemplateMatching(String imageFile, String templateFile, double threshold) {
 
 		List<Point> matches = new LinkedList<Point>();
@@ -248,13 +289,6 @@ public class UtilsTemplateMatching {
 		int x_sift = -1;
 		int y_sift = -1;
 
-		if (isPresent) {
-			System.out.println("Best Match with SIFT");
-			x_sift = round(points[0].x, 0);
-			y_sift = round(points[0].y, 0);
-			System.out.println("[" + 0 + "]\tx=" + x_sift + "\ty=" + y_sift);
-		}
-
 		if (matches.size() == 0) {
 
 			System.out.println("[LOG]\tTemplate Matching found no matches");
@@ -268,6 +302,13 @@ public class UtilsTemplateMatching {
 
 			System.out.println("Template Matching found multiple matches: " + matches.size());
 			System.out.println("Filtering results based on SIFT detection");
+
+			if (points != null && isPresent) {
+				System.out.println("Best Match with SIFT");
+				x_sift = round(points[0].x, 0);
+				y_sift = round(points[0].y, 0);
+				System.out.println("[" + 0 + "]\tx=" + x_sift + "\ty=" + y_sift);
+			}
 
 			for (int i = 0; i < matches.size(); i++) {
 
@@ -308,7 +349,7 @@ public class UtilsTemplateMatching {
 
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, RoundingMode.FLOOR);
-		return bd.toBigInteger().intValue(); // toPlainString();
+		return bd.toBigInteger().intValue();
 	}
 
 }

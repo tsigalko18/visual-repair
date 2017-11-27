@@ -289,20 +289,30 @@ public class UtilsVisualRepair {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
-		Point bestMatch = UtilsTemplateMatching.siftAndMultipleTemplateMatching(currentScreenshot, visualLocator, 0.95);
+		Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot, visualLocator); 
+				//UtilsTemplateMatching.siftAndMultipleTemplateMatching(currentScreenshot, visualLocator, 0.95);
 
-		if (bestMatch == null) {
+		String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
+		// System.out.println("XPath for match: " + xpathForMatches);
 
-			return null;
-
-		} else {
-
-			String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
-			// System.out.println("XPath for match: " + xpathForMatches);
-
-			WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
-			return fromVisual;
-		}
+		WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
+		return fromVisual;
+		
+//		if (bestMatch == null) {
+//			//return null;
+//			bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot, visualLocator);
+//		}
+		
+//		if (bestMatch == null) {
+//			return null;
+//		} else {
+//			
+//			String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
+//			// System.out.println("XPath for match: " + xpathForMatches);
+//
+//			WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
+//			return fromVisual;
+//		}
 
 	}
 
