@@ -52,11 +52,13 @@ public class VisualAssertionTestRunner {
 		var.runTestWithVisualAssertion(prefix, className);
 	}
 
-	private void runTestWithVisualAssertion(String prefix, String className) {
+	private void runTestWithVisualAssertion(String prefix, String className) throws IOException {
 
 		/* get the path to the test that needs to be verified. */
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
 
+		System.out.println("[LOG]\tVerifying test " + prefix + className);
+		
 		Class<?> clazz = null;
 		Object inst = null;
 
@@ -115,7 +117,7 @@ public class VisualAssertionTestRunner {
 				 */
 
 				System.out.println("[LOG]\tDirect breakage detected at line " + statement.getLine());
-				System.out.println("[LOG]\tNon-selection of statement " + statement.getSeleniumAction());
+				System.out.println("[LOG]\tCause: Non-selection of statement " + statement.getSeleniumAction());
 				System.out.println("[LOG]\tLocator " + statement.getDomLocator()
 						+ " not found in the current state. Applying visual detection of the web element");
 
@@ -250,6 +252,9 @@ public class VisualAssertionTestRunner {
 		// }
 
 		System.exit(0);
+		
+		Runtime rt = Runtime.getRuntime();
+		rt.exec("killall firefox-bin");
 	}
 
 	private static Object runMethod(Class<?> clazz, Object inst, String methodName) {
