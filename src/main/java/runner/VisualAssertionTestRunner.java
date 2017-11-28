@@ -58,7 +58,7 @@ public class VisualAssertionTestRunner {
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
 
 		System.out.println("[LOG]\tVerifying test " + prefix + className);
-		
+
 		Class<?> clazz = null;
 		Object inst = null;
 
@@ -103,6 +103,8 @@ public class VisualAssertionTestRunner {
 
 			WebElement webElementFromDomLocator = null;
 
+			Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
+
 			try {
 
 				/* try to poll the DOM looking for the web element. */
@@ -142,12 +144,20 @@ public class VisualAssertionTestRunner {
 
 				if (webElementFromDomLocator == null) {
 					webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub method
-				} else {
+				}
+
+				if (webElementFromDomLocator == null) {
 					/*
 					 * at this point, if the visual check is failing, webElementFromDomLocator
-					 * should be set to null???
+					 * should be set to null?
 					 */
-					webElementFromDomLocator = null;
+					// webElementFromDomLocator = null;
+					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
+				} else {
+
+					newStatement.setDomLocator(webElementFromDomLocator);
+					/* add the repaired statement to the test. */
+					repairedTest.put(statementNumber, newStatement);
 				}
 
 			}
@@ -157,7 +167,6 @@ public class VisualAssertionTestRunner {
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
 
-				Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
 				newStatement.setDomLocator(webElementFromDomLocator);
 
 				try {
@@ -183,12 +192,14 @@ public class VisualAssertionTestRunner {
 							System.out.println(
 									"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText()
 											+ "\"" + " <> " + "\"" + statement.getValue() + "\"");
+							System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
+									+ webElementFromDomLocator.getText() + "\"");
 							newStatement.setValue(webElementFromDomLocator.getText());
 						}
 
 					}
 
-					// add the repaired statement to the test
+					/* add the repaired statement to the test. */
 					repairedTest.put(statementNumber, newStatement);
 
 				} catch (Exception ex) {
@@ -196,9 +207,10 @@ public class VisualAssertionTestRunner {
 					// Apply repair strategies
 					break;
 				}
-			} else {
-				System.out.println("[LOG]\tVisual correctness and repair failed");
 			}
+			// else {
+			// System.out.println("[LOG]\tVisual correctness and repair failed");
+			// }
 
 			System.out.println();
 
@@ -213,48 +225,12 @@ public class VisualAssertionTestRunner {
 		System.out.println("[LOG]\trepaired test case");
 		UtilsRepair.printTestCaseWithLineNumbers(temp);
 
-		driver.close();
-
-		// cleanup(clazz, inst);
-		// runMethod(clazz, inst, "tearDown");
-		// pt.runTest(etc, testBroken);
-		// System.exit(1);
-
-		// Result result = null;
-		// try {
-		// System.out.println("[LOG]\tRunning Test " + classRunner);
-		//
-		// result = JUnitCore.runClasses(Class.forName(classRunner));
-		// } catch (ClassNotFoundException e) {
-		// e.printStackTrace();
-		// }
-		//
-		// // if tests have failed, save the exception
-		// if (!result.wasSuccessful()) {
-		//
-		// System.out.println("[LOG]\tTest " + classRunner + " failed, saving the
-		// exception");
-		//
-		// // for each breakage, I save the exception on the filesystem
-		// for (Failure fail : result.getFailures()) {
-		//
-		// EnhancedException ea = UtilsRepair.saveExceptionFromFailure(fail);
-		//
-		// String path = Settings.testingTestSuiteVisualTraceExecutionFolder
-		// + UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) +
-		// Settings.JAVA_EXTENSION;
-		// String jsonPath = UtilsParser.toJsonPath(path);
-		//
-		// UtilsParser.serializeException(ea, jsonPath);
-		// }
-		// } else {
-		// System.out.println("[LOG]\tTest " + classRunner + " passed");
-		// }
-
-		System.exit(0);
-		
+		cleanup(clazz, inst);
+		 
 		Runtime rt = Runtime.getRuntime();
 		rt.exec("killall firefox-bin");
+		
+		System.exit(0);
 	}
 
 	private static Object runMethod(Class<?> clazz, Object inst, String methodName) {
@@ -285,7 +261,6 @@ public class VisualAssertionTestRunner {
 
 	public static void cleanup(Class<?> clazz, Object inst) {
 		runMethod(clazz, inst, "tearDown");
-		System.exit(1);
 	}
 
 }

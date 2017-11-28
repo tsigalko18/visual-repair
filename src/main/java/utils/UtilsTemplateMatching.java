@@ -30,6 +30,8 @@ import org.opencv.features2d.KeyPoint;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
+import config.Settings;
+
 public class UtilsTemplateMatching {
 
 	static {
@@ -198,8 +200,8 @@ public class UtilsTemplateMatching {
 	}
 
 	/**
-	 * Run the TM_CCOEFF_NORMED template matching algorithm. Returns the top-left
-	 * corner of the rectangle where the best match has been found.
+	 * Run the TM_CCOEFF_NORMED template matching algorithm. Returns the center of
+	 * the rectangle where the best match has been found.
 	 * 
 	 * @param templateFile
 	 * @param imageFile
@@ -207,10 +209,11 @@ public class UtilsTemplateMatching {
 	 */
 	private static Point templateMatching(String templateFile, String imageFile) {
 
+		/* load the images. */
 		Mat img = Highgui.imread(imageFile);
 		Mat templ = Highgui.imread(templateFile);
 
-		// / Create the result matrix
+		/* Create the result matrix. */
 		int result_cols = img.cols() - templ.cols() + 1;
 		int result_rows = img.rows() - templ.rows() + 1;
 		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
@@ -223,14 +226,13 @@ public class UtilsTemplateMatching {
 
 		for (int i = 0; i < result_rows; i++) {
 			for (int j = 0; j < result_cols; j++) {
-
 				if (result.get(i, j)[0] >= 0.95) {
 					matches.add(new Point(i, j));
 				}
-
 			}
 		}
 
+		/* check the results. */
 		if (matches.size() == 0) {
 			System.err.println("[LOG]\tWARNING: No matches found!");
 		} else if (matches.size() > 1) {
@@ -241,18 +243,28 @@ public class UtilsTemplateMatching {
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
 
-		/* Show me what you got. */
+		/* Draws a rectangle over the detected area. */
 		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
-		
-		String filename = templateFile.replace("src/test/resources/", "");
-		filename = filename.replace(".png", "");
+
+		/* Draws a cross mark at the center of the detected area. */
+		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
+				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
+				2);
+		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
+				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
+				2);
 
 		/* Save the visualized detection. */
+		String filename = templateFile.toString();
+		int i = filename.lastIndexOf("/");
+		filename = filename.substring(i + 1, filename.length());
+		filename = filename.replace(".png", "");
 		File annotated = new File("output/templateMatching/TM-" + filename + ".png");
 		Highgui.imwrite(annotated.getPath(), img);
 
-		return matchLoc;
+		/* Return the center. */
+		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
 	}
 
 	/*
@@ -271,14 +283,14 @@ public class UtilsTemplateMatching {
 	 */
 	private static boolean fastDetector(String object, String scene) {
 
-		System.out.println("FAST Detector");
+		//System.out.println("FAST Detector");
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		Mat sceneImage = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
 		featureDetector.detect(objectImage, objectKeyPoints);
-		System.out.println("Detected key points by FAST: " + objectKeyPoints.toList().size());
+		//System.out.println("Detected key points by FAST: " + objectKeyPoints.toList().size());
 
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
 		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
@@ -309,7 +321,7 @@ public class UtilsTemplateMatching {
 		// System.out.println("Calculating good match list...");
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
-		/* The treshold ratio used for the distance. */
+		/* The threshold ratio used for the distance. */
 		float nndrRatio = 0.7f;
 
 		for (int i = 0; i < matches.size(); i++) {
@@ -323,13 +335,13 @@ public class UtilsTemplateMatching {
 			}
 		}
 
-		System.out.println("Good matches: " + goodMatchesList.size());
+		//System.out.println("Good matches: " + goodMatchesList.size());
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
 		if (goodMatchesList.size() >= min_accepted_matches) {
 
-			System.out.println("Object Found!");
+			//System.out.println("Object Found!");
 
 			List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
 			List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
@@ -378,7 +390,9 @@ public class UtilsTemplateMatching {
 			Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput,
 					matchestColor, newKeypointColor, new MatOfByte(), 2);
 
-			String filename = object.replace("src/test/resources/", "");
+			String filename = object.toString();
+			int i = filename.lastIndexOf("/");
+			filename = filename.substring(i + 1, filename.length());
 			filename = filename.replace(".png", "");
 
 			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-outputImage.jpg", outputImage);
@@ -387,7 +401,7 @@ public class UtilsTemplateMatching {
 			return true;
 
 		} else {
-			System.out.println("Object Not Found");
+			//System.out.println("Object Not Found");
 			return false;
 		}
 
@@ -400,14 +414,14 @@ public class UtilsTemplateMatching {
 	 */
 	private static boolean siftDetector(String object, String scene) {
 
-		System.out.println("SIFT Detector");
+//		System.out.println("SIFT Detector");
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		Mat sceneImage = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SIFT);
 		featureDetector.detect(objectImage, objectKeyPoints);
-		System.out.println("Detected key points by SIFT: " + objectKeyPoints.toList().size());
+//		System.out.println("Detected key points by SIFT: " + objectKeyPoints.toList().size());
 
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
 		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
@@ -452,13 +466,13 @@ public class UtilsTemplateMatching {
 			}
 		}
 
-		System.out.println("Good matches: " + goodMatchesList.size());
+//		System.out.println("Good matches: " + goodMatchesList.size());
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
 		if (goodMatchesList.size() >= min_accepted_matches) {
 
-			System.out.println("Object Found!");
+//			System.out.println("Object Found!");
 
 			List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
 			List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
@@ -507,7 +521,9 @@ public class UtilsTemplateMatching {
 			Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput,
 					matchestColor, newKeypointColor, new MatOfByte(), 2);
 
-			String filename = object.replace("src/test/resources/", "");
+			String filename = object.toString();
+			int i = filename.lastIndexOf("/");
+			filename = filename.substring(i + 1, filename.length());
 			filename = filename.replace(".png", "");
 
 			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-outputImage.jpg", outputImage);
@@ -516,7 +532,7 @@ public class UtilsTemplateMatching {
 			return true;
 
 		} else {
-			System.out.println("Object Not Found");
+//			System.out.println("Object Not Found");
 			return false;
 		}
 

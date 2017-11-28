@@ -35,6 +35,7 @@ public class UtilsVisualRepair {
 			System.exit(1);
 		}
 
+		/* retrieve the web element visually. */
 		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, visualLocator);
 
 		if (webElementFromVisualLocator == null) {
@@ -43,7 +44,7 @@ public class UtilsVisualRepair {
 
 		} else if(webElementFromDomLocator == null) {
 			
-			System.out.println("[LOG]\tApplied visual repair.");
+			System.out.println("[LOG]\tApplied visual repair");
 			System.out.println("[LOG]\tNew repaired element is " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
 			
@@ -55,8 +56,8 @@ public class UtilsVisualRepair {
 			// System.out.println(webElementFromVisualLocatorLarge);
 			// System.out.println(webElementFromDomLocator);
 
-			/* DECIDE WHAT TO DO HERE: which one should I trust? */
-			System.out.println("[LOG]\tApplied visual repair.");
+			/* I trust the element found by the visual locator. */
+			System.out.println("[LOG]\tApplied visual repair");
 			System.out.println("[LOG]\tNew repaired element is " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
 
@@ -95,8 +96,8 @@ public class UtilsVisualRepair {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
-		// Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot,
-		// visualLocator);
+//		Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot,
+//		visualLocator);
 		Point bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
 
 		if (bestMatch == null) {
