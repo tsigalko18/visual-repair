@@ -1,5 +1,8 @@
 package utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -56,6 +59,36 @@ public class UtilsRunner {
 		}
 
 		System.exit(0);
+	}
+
+	public static Object runMethod(Class<?> clazz, Object inst, String methodName) {
+	
+		Object result = null;
+	
+		try {
+	
+			Method[] allMethods = clazz.getDeclaredMethods();
+			for (Method m : allMethods) {
+				if (m.getName().equalsIgnoreCase(methodName)) {
+					m.setAccessible(true);
+					result = m.invoke(inst, null);
+				}
+			}
+	
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public static void cleanup(Class<?> clazz, Object inst) {
+		runMethod(clazz, inst, "tearDown");
 	}
 
 }

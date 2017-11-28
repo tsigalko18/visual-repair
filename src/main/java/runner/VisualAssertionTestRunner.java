@@ -1,8 +1,6 @@
 package runner;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,6 +15,7 @@ import datatype.Statement;
 import parser.ParseTest;
 import utils.UtilsGetters;
 import utils.UtilsRepair;
+import utils.UtilsRunner;
 import utils.UtilsVisualRepair;
 
 /**
@@ -49,7 +48,14 @@ public class VisualAssertionTestRunner {
 
 		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
 
+		long startTime = System.currentTimeMillis();
+
 		var.runTestWithVisualAssertion(prefix, className);
+
+		long stopTime = System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
+		System.out.println("\nelapsedTime (s): " + elapsedTime / 1000);
+		
 	}
 
 	private void runTestWithVisualAssertion(String prefix, String className) throws IOException {
@@ -74,10 +80,10 @@ public class VisualAssertionTestRunner {
 		}
 
 		/* run the setup method (typically opens the browser). */
-		runMethod(clazz, inst, "setUp");
+		UtilsRunner.runMethod(clazz, inst, "setUp");
 
 		/* retrieve the WebDriver instance. */
-		WebDriver driver = (WebDriver) runMethod(clazz, inst, "getDriver");
+		WebDriver driver = (WebDriver) UtilsRunner.runMethod(clazz, inst, "getDriver");
 
 		/* parse the test and create the abstraction. */
 		ParseTest pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
@@ -87,10 +93,10 @@ public class VisualAssertionTestRunner {
 		EnhancedTestCase testCorrect = pt
 				.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
-		/* maintains a map of the original statements. */
+		/* map of the original statements. */
 		Map<Integer, Statement> statementMap = etc.getStatements();
 
-		/* maintains a map of the repaired statements. */
+		/* map of the repaired statements. */
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 
 		/* for each statement. */
@@ -119,9 +125,8 @@ public class VisualAssertionTestRunner {
 				 */
 
 				System.out.println("[LOG]\tDirect breakage detected at line " + statement.getLine());
-				System.out.println("[LOG]\tCause: Non-selection of statement " + statement.getSeleniumAction());
-				System.out.println("[LOG]\tLocator " + statement.getDomLocator()
-						+ " not found in the current state. Applying visual detection of the web element");
+				System.out.println("[LOG]\tCause: Non-selection of elements by the locator " + statement.getDomLocator()
+						+ " in the current DOM state. Applying visual detection of the web element");
 
 				/*
 				 * if the element is not found it can either be:
@@ -155,7 +160,9 @@ public class VisualAssertionTestRunner {
 					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
 				} else {
 
+					/* repair locator. */
 					newStatement.setDomLocator(webElementFromDomLocator);
+
 					/* add the repaired statement to the test. */
 					repairedTest.put(statementNumber, newStatement);
 				}
@@ -167,10 +174,11 @@ public class VisualAssertionTestRunner {
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
 
+				/* repair locator. */
 				newStatement.setDomLocator(webElementFromDomLocator);
 
 				try {
-					// after ascertaining the right element, perform the action
+					/* after ascertaining the right element, perform the action. */
 					if (statement.getAction().equalsIgnoreCase("click")) {
 
 						webElementFromDomLocator.click();
@@ -186,14 +194,19 @@ public class VisualAssertionTestRunner {
 					} else if (statement.getAction().equalsIgnoreCase("getText")) {
 
 						if (webElementFromDomLocator.getText() == statement.getValue()) {
+
 							System.out.println("[LOG]\tAssertion value correct");
 							System.out.println(statement.toString());
+
 						} else {
+
 							System.out.println(
 									"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText()
 											+ "\"" + " <> " + "\"" + statement.getValue() + "\"");
 							System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
 									+ webElementFromDomLocator.getText() + "\"");
+
+							/* repair assertion value. */
 							newStatement.setValue(webElementFromDomLocator.getText());
 						}
 
@@ -225,42 +238,11 @@ public class VisualAssertionTestRunner {
 		System.out.println("[LOG]\trepaired test case");
 		UtilsRepair.printTestCaseWithLineNumbers(temp);
 
-		cleanup(clazz, inst);
-		 
+		UtilsRunner.cleanup(clazz, inst);
+
 		Runtime rt = Runtime.getRuntime();
 		rt.exec("killall firefox-bin");
-		
-		System.exit(0);
-	}
 
-	private static Object runMethod(Class<?> clazz, Object inst, String methodName) {
-
-		Object result = null;
-
-		try {
-
-			Method[] allMethods = clazz.getDeclaredMethods();
-			for (Method m : allMethods) {
-				if (m.getName().equalsIgnoreCase(methodName)) {
-					m.setAccessible(true);
-					result = m.invoke(inst, null);
-				}
-			}
-
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	public static void cleanup(Class<?> clazz, Object inst) {
-		runMethod(clazz, inst, "tearDown");
 	}
 
 }

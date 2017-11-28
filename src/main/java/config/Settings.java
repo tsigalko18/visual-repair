@@ -4,12 +4,12 @@ import java.io.File;
 
 public class Settings {
 
-	/* specify where to find the correct test suite. */
+	/* package name of the correct test suite. */
 	// public static String testSuiteCorrect = "addressbook6211";
 	// public static String testSuiteCorrect = "claroline";
 	public static String testSuiteCorrect = "claroline1811";
 
-	/* specify where to find the broken/regressed test suite. */
+	/* package name of the broken/regressed test suite. */
 	public static String testSuiteBroken = "clarolineDirectBreakage";
 	// public static String testSuiteBroken = "addressbook825";
 	// public static String testSuiteBroken = "claroline190";
@@ -51,9 +51,5 @@ public class Settings {
 
 	public static boolean VERBOSE = true;
 	public static double SIMILARITY_THRESHOLD = 0.5;
-
-	public enum CroppingType {
-		PERFECT, ENLARGED, BOTH
-	}
 
 }

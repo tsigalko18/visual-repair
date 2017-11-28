@@ -51,7 +51,7 @@ public class ElementRelocatedSameState {
 		Statement newst = b.getStatements().get(brokenStatementLine);
 
 		/* get the visual locator of the statement in the correct test case. */
-		String template = oldst.getVisualLocatorPerfect().toString();
+		String template = oldst.getVisualLocator().toString();
 
 		/* open the web page of the new version. */
 		String htmlFile;

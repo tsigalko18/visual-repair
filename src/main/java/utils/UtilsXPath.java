@@ -33,8 +33,6 @@ public class UtilsXPath {
 
 	public static String getXPathFromLocation(Point matches, WebDriver driver) {
 		String getXpathScript = "window.getPathTo = function(element) {"
-				// + " if (element.id!=='') "
-				// + " return 'id(\"'+element.id+'\")'; "
 				+ "	if (element===document.body) " + "		return element.tagName; " + "	var ix= 0; "
 				+ "	var siblings= element.parentNode.childNodes; " + "	for (var i= 0; i<siblings.length; i++) {"
 				+ "		var sibling= siblings[i];" + "		if (sibling===element)"
@@ -55,6 +53,5 @@ public class UtilsXPath {
 		res = res.substring(0, res.length() - 1);
 		return res;
 	}
-	
-	
+
 }

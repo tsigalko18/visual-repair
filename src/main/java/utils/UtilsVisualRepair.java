@@ -64,7 +64,7 @@ public class UtilsVisualRepair {
 		} else {
 
 			System.out.println("[LOG]\tDOM locator and visual locator target the same element");
-			System.out.println("[LOG]\tVisual verification succeeded.");
+			System.out.println("[LOG]\tVisual verification succeeded");
 
 		}
 		return webElementFromDomLocator;
@@ -101,7 +101,8 @@ public class UtilsVisualRepair {
 		Point bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
 
 		if (bestMatch == null) {
-
+			
+			FileUtils.deleteQuietly(new File(currentScreenshot));
 			return null;
 
 		} else {
@@ -109,9 +110,12 @@ public class UtilsVisualRepair {
 			String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
 			// System.out.println("XPath for match: " + xpathForMatches);
 			WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
+			
+			FileUtils.deleteQuietly(new File(currentScreenshot));
+			
 			return fromVisual;
 		}
-
+		
 	}
 
 	public static boolean areWebElementsEquals(WebElement webElementFromDomLocator,

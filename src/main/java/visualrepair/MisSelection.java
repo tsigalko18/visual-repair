@@ -54,7 +54,7 @@ public class MisSelection {
 		Statement newst = b.getStatements().get(brokenStatementLine);
 
 		// get the visual locator on the old page
-		String template = oldst.getVisualLocatorPerfect().toString();
+		String template = oldst.getVisualLocator().toString();
 
 		String htmlFile;
 		if (oldst.getDomBefore() == null) {
