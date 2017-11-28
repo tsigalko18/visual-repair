@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import config.Settings;
-import config.Settings.CroppingType;
 import utils.UtilsAspect;
 import utils.UtilsComputerVision;
 import utils.UtilsParser;
@@ -102,8 +101,6 @@ public class VisualTraceGenerator {
 					+ Settings.PNG_EXTENSION;
 			String annotatedscreenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-"
 					+ statementName + Settings.PNG_EXTENSION;
-			String visualLocatorPerfect = testFolderName + Settings.separator + line + "-visualLocatorPerfect-"
-					+ statementName + Settings.PNG_EXTENSION;
 			String visualLocatorLarge = testFolderName + Settings.separator + line + "-visualLocatorLarge-"
 					+ statementName + Settings.PNG_EXTENSION;
 			String htmlPath = testFolderName + Settings.separator + line + "-1before-" + statementName;
@@ -115,35 +112,12 @@ public class VisualTraceGenerator {
 
 			try {
 
-				if (Settings.CROPPING_METHOD == CroppingType.PERFECT) {
+				/* save contextual based visual locator. */
+				UtilsComputerVision.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
 
-					/* save perfectly cropped visual locator. */
-					UtilsComputerVision.saveVisualCrop(d, screenshotBeforeEvent, we, visualLocatorPerfect);
-
-					/* save the annotated screenshot as well. */
-					UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
-							annotatedscreenshotBeforeEvent);
-				} else if (Settings.CROPPING_METHOD == CroppingType.ENLARGED) {
-
-					/* save contextual based visual locator. */
-					UtilsComputerVision.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
-
-					/* save the annotated screenshot as well. */
-					UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
-							annotatedscreenshotBeforeEvent);
-
-				} else if (Settings.CROPPING_METHOD == CroppingType.BOTH) {
-
-					/* save perfectly cropped visual locator. */
-					UtilsComputerVision.saveVisualCrop(d, screenshotBeforeEvent, we, visualLocatorPerfect);
-
-					/* save contextual based visual locator. */
-					UtilsComputerVision.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
-
-					/* save the annotated screenshot as well. */
-					UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
-							annotatedscreenshotBeforeEvent);
-				}
+				/* save the annotated screenshot as well. */
+				UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
+						annotatedscreenshotBeforeEvent);
 
 				/* save the HTML page. */
 				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);

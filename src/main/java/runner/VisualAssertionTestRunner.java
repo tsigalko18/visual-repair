@@ -129,7 +129,7 @@ public class VisualAssertionTestRunner {
 				 * 
 				 */
 
-				webElementFromDomLocator = UtilsVisualRepair.searchWithinTheSameState(driver, webElementFromDomLocator,
+				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
 
 				/*
@@ -155,7 +155,7 @@ public class VisualAssertionTestRunner {
 			if (webElementFromDomLocator != null) {
 
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-						testCorrect, statementNumber, statement);
+						testCorrect, statementNumber);
 
 				Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
 				newStatement.setDomLocator(webElementFromDomLocator);
