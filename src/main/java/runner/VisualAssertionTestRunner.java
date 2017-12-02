@@ -90,13 +90,23 @@ public class VisualAssertionTestRunner {
 		/* retrieve the WebDriver instance. */
 		WebDriver driver = (WebDriver) UtilsRunner.runMethod(clazz, inst, "getDriver");
 
-		/* parse the test and create the abstraction. */
-		ParseTest pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-		EnhancedTestCase etc = pt.parseAndSerialize(testBroken);
+		/* parse the tests and create the abstractions. */
+		ParseTest pt = null;
+		EnhancedTestCase etc = null;
+		EnhancedTestCase testCorrect = null;
 
-		pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-		EnhancedTestCase testCorrect = pt
-				.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
+		try {
+			pt = new ParseTest(Settings.referenceTestSuiteVisualTraceExecutionFolder);
+			etc = pt.parseAndSerialize(testBroken);
+
+			pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
+			testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
+
+		} catch (NullPointerException e) {
+			System.out.println("[ERROR]\tTest folder not found. Verify the Settings.");
+			driver.close();
+			System.exit(1);
+		}
 
 		/* map of the original statements. */
 		Map<Integer, Statement> statementMap = etc.getStatements();
@@ -114,7 +124,6 @@ public class VisualAssertionTestRunner {
 
 			WebElement webElementFromDomLocator = null;
 
-			/* this shall become a List. */
 			Statement repairedStatement = (Statement) UtilsRepair.deepClone(statement);
 
 			try {
@@ -142,7 +151,7 @@ public class VisualAssertionTestRunner {
 				 * 
 				 */
 
-				/* strategy 1. search web element visually on the same state. */ 
+				/* strategy 1. search web element visually on the same state. */
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
 
@@ -153,60 +162,82 @@ public class VisualAssertionTestRunner {
 				if (webElementFromDomLocator == null) {
 					webElementFromDomLocator = UtilsVisualRepair.localCrawling(); // stub method
 				}
-				
+
 				if (webElementFromDomLocator == null) {
 					webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub method
 				}
-				
+
 				if (webElementFromDomLocator == null) {
-					
+
 					/* the visual check has failed. */
 					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
-					
+
 				} else {
 
-					String domtree = driver.getPageSource();
-					String fileName = "output/savedHTML/" + prefix + className + "-" + statementNumber + Settings.HTML_EXTENSION;
-					File thePage = new File(fileName);
-					FileUtils.write(thePage, domtree);
-					
-					HtmlDomTree page = null;
-					try {
-						page = new HtmlDomTree(driver, fileName);
-						page.buildHtmlDomTree();
-					} catch (SAXException e) {
-						e.printStackTrace();
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					}
-					
-					SeleniumLocator fixedLocator = UtilsRepair.getLocators(page, webElementFromDomLocator);
-					System.out.println(fixedLocator);
-					
-					/* uncomment if you want to delete some leftover files. */ 
-					//FileUtils.deleteQuietly(thePage);
-					
+//					String domtree = driver.getPageSource();
+//					String fileName = "output/savedHTML/" + prefix + className + "-" + statementNumber
+//							+ Settings.HTML_EXTENSION;
+//					File thePage = new File(fileName);
+//					FileUtils.write(thePage, domtree);
+//
+//					HtmlDomTree page = null;
+//					try {
+//						page = new HtmlDomTree(driver, fileName);
+//						page.buildHtmlDomTree();
+//					} catch (SAXException e) {
+//						e.printStackTrace();
+//					} catch (NullPointerException e) {
+//						e.printStackTrace();
+//					}
+//
+//					SeleniumLocator fixedLocator = UtilsRepair.getLocators(page, webElementFromDomLocator);
+					// System.out.println(fixedLocator);
+
+					/* uncomment if you want to delete some leftover files. */
+					// FileUtils.deleteQuietly(thePage);
+
 					/* repair locator. */
 					repairedStatement.setDomLocator(webElementFromDomLocator);
 
 					/* add the repaired statement to the test. */
 					repairedTest.put(statementNumber, repairedStatement);
-					
+
 				}
 
 			}
 
 			if (webElementFromDomLocator != null) {
 
-				WebElement webElementVisual  = null;
-				
-				/* check the web element visually. */ 
+				WebElement webElementVisual = null;
+
+				/* check the web element visually. */
 				webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
-				
-				if(webElementVisual != null) {
+
+				if (webElementVisual != null) {
+
 					webElementFromDomLocator = webElementVisual;
+
 					/* repair locator. */
+//					String domtree = driver.getPageSource();
+//					String fileName = "output/savedHTML/" + prefix + className + "-" + statementNumber
+//							+ Settings.HTML_EXTENSION;
+//					File thePage = new File(fileName);
+//					FileUtils.write(thePage, domtree);
+//
+//					HtmlDomTree page = null;
+//					try {
+//						page = new HtmlDomTree(driver, fileName);
+//						page.buildHtmlDomTree();
+//					} catch (SAXException e) {
+//						e.printStackTrace();
+//					} catch (NullPointerException e) {
+//						e.printStackTrace();
+//					}
+//
+//					SeleniumLocator fixedLocator = UtilsRepair.getLocators(page, webElementFromDomLocator);
+//					System.out.println(fixedLocator);
+
 					repairedStatement.setDomLocator(webElementFromDomLocator);
 				}
 
@@ -236,7 +267,7 @@ public class VisualAssertionTestRunner {
 							System.out.println(
 									"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText()
 											+ "\"" + " <> " + "\"" + statement.getValue() + "\"");
-							
+
 							System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
 									+ webElementFromDomLocator.getText() + "\"");
 
@@ -251,7 +282,6 @@ public class VisualAssertionTestRunner {
 
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					// Apply repair strategies
 					break;
 				}
 			}
@@ -270,6 +300,8 @@ public class VisualAssertionTestRunner {
 		UtilsRepair.printTestCaseWithLineNumbers(temp);
 
 		UtilsRunner.cleanup(clazz, inst);
+
+		UtilsRepair.saveTest(prefix, className, temp);
 
 		Runtime rt = Runtime.getRuntime();
 		rt.exec("killall firefox-bin");

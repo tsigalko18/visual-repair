@@ -65,37 +65,39 @@ public class ParseTest {
 	}
 
 	/**
-	 * parse a test, get its static information and serialize a JSON file
+	 * parse a test, get its static information and serialize a Java file
 	 * 
 	 * @param clazz
 	 * @return EnhancedTestCase
 	 * @throws IOException
 	 */
-	public static EnhancedTestCase parseAndSaveToJava(EnhancedTestCase newTest, String clazz) throws IOException {
+	public static EnhancedTestCase parseAndSaveToJava(EnhancedTestCase newTest, String oldclazz, String newclazz)
+			throws IOException {
 
 		tc = newTest;
 
 		CompilationUnit cu = null;
 
 		try {
-			cu = JavaParser.parse(new File(clazz));
+			cu = JavaParser.parse(new File(oldclazz));
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
 
 		// replace body method with that present in tc
-		new ChangeMethodMethodVisitor().visit(cu, clazz);
+		new ChangeMethodMethodVisitor().visit(cu, oldclazz);
 
 		// save back to java
 		String source = cu.toString();
-		File fileMod = new File(clazz);
+		File fileMod = new File(newclazz);
+		FileUtils.touch(fileMod);
 		FileUtils.writeStringToFile(fileMod, source);
 
 		return tc;
 	}
 
 	/**
-	 * parse a test, get its static information and serialize a JSON file
+	 * run a test
 	 * 
 	 * @param clazz
 	 * @return EnhancedTestCase

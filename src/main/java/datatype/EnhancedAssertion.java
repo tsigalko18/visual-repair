@@ -32,7 +32,7 @@ public class EnhancedAssertion extends EnhancedWebElement {
 
 	@Override
 	public String toString() {
-		return assertion + "(" + getDomLocator() + ")" + "." + getAction() + "()." + predicate + "(\"" + getValue()
+		return assertion + "(driver.findElement(" + getDomLocator() + ")" + "." + getAction() + "()." + predicate + "(\"" + getValue()
 				+ "\"));";
 	}
 

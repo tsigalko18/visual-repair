@@ -17,9 +17,9 @@ import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTree;
-import datatype.HtmlDomTreeSimple;
 import datatype.HtmlElement;
 import datatype.SeleniumLocator;
+import parser.ParseTest;
 
 public class UtilsRepair {
 
@@ -175,10 +175,24 @@ public class UtilsRepair {
 	}
 
 	public static SeleniumLocator getLocators(HtmlDomTree page, WebElement webElementFromDomLocator) {
-		
+
 		String xpath = "/" + UtilsXPath.generateXPathForWebElement(webElementFromDomLocator, "");
 		HtmlElement htmlElement = page.searchHtmlDomTreeByXPath(xpath);
 		return generateLocator(htmlElement);
+
+	}
+
+	public static void saveTest(String prefix, String className, EnhancedTestCase temp) {
+
+		String oldPath = Settings.resourcesFolder + prefix.replace(".", "/") + className + Settings.JAVA_EXTENSION;
+		String newPath = Settings.resourcesFolder + prefix.replace(".", "Repaired/") + className.concat("Repaired")
+				+ Settings.JAVA_EXTENSION;
+
+		try {
+			temp = ParseTest.parseAndSaveToJava(temp, oldPath, newPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
