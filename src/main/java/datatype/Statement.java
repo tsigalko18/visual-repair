@@ -197,8 +197,8 @@ public abstract class Statement implements Serializable {
 		return visualLocator;
 	}
 
-	public void setVisualLocator(File visualLocatorLarge) {
-		this.visualLocator = visualLocatorLarge;
+	public void setVisualLocator(File vl) {
+		this.visualLocator = vl;
 	}
 
 	public String getXpath() {

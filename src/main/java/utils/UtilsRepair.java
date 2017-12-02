@@ -11,10 +11,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.runner.notification.Failure;
+import org.openqa.selenium.WebElement;
 
 import config.Settings;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
+import datatype.HtmlDomTree;
+import datatype.HtmlDomTreeSimple;
 import datatype.HtmlElement;
 import datatype.SeleniumLocator;
 
@@ -169,6 +172,14 @@ public class UtilsRepair {
 		locs.add(new SeleniumLocator("xpath", htmlElement.getXPath()));
 
 		return locs;
+	}
+
+	public static SeleniumLocator getLocators(HtmlDomTree page, WebElement webElementFromDomLocator) {
+		
+		String xpath = "/" + UtilsXPath.generateXPathForWebElement(webElementFromDomLocator, "");
+		HtmlElement htmlElement = page.searchHtmlDomTreeByXPath(xpath);
+		return generateLocator(htmlElement);
+
 	}
 
 }

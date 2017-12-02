@@ -110,7 +110,7 @@ public class UtilsComputerVision {
 
 		File visualLocator = new File(webElementImageName);
 
-		int scale = 4;
+		int scale = 5;
 		getScaledSubImage(d, img, element, visualLocator, scale);
 
 		while (!isUnique(destFile.getAbsolutePath(), visualLocator.getAbsolutePath())) {
@@ -233,7 +233,7 @@ public class UtilsComputerVision {
 			elementCoordinates = element.getLocation();
 		} catch (StaleElementReferenceException e) {
 			if (Settings.VERBOSE)
-				System.out.println("[LOG]\ttest might have changed its state");
+				System.out.println("[LOG]\tTest might have changed its state");
 		}
 
 		int width = element.getSize().getWidth();
@@ -244,9 +244,20 @@ public class UtilsComputerVision {
 		int min_offset_x = Math.min(element.getLocation().x, img.getWidth() - rect.width - element.getLocation().x);
 		int min_offset_y = Math.min(element.getLocation().y, img.getHeight() - rect.height - element.getLocation().y);
 		int offset = Math.min(min_offset_x, min_offset_y);
-		// int offset = Math.max(min_offset_x, min_offset_y);
+		
+//		System.out.println("min_offset_x: " + min_offset_x);
+//		System.out.println("min_offset_y: " + min_offset_y);
+//		System.out.println("offset: " + offset);
 		offset = offset / scale;
-
+//		System.out.println("offset scaled: " + offset);
+//		System.out.println("rectangle is : " + 2 * offset + rect.width + ", " + 2 * offset + rect.height);
+//		
+//		int max_offset = Math.max(min_offset_x, min_offset_y);
+//		System.out.println("max_offset: " + max_offset);
+//		max_offset = max_offset / scale;
+//		System.out.println("max_offset scaled: " + max_offset);
+//		System.out.println("rectangle is : " + 2 * max_offset + rect.width + ", " + 2 * max_offset + rect.height);
+		
 		try {
 			if (element.getTagName().equals("option")) {
 

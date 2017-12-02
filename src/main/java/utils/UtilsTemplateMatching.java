@@ -1,8 +1,6 @@
 package utils;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,81 +46,13 @@ public class UtilsTemplateMatching {
 
 	}
 
-	/**
-	 * Run the TM_CCOEFF_NORMED template matching algorithm. Returns the center of
-	 * the rectangle where the best match has been found.
-	 * 
-	 * @param templateFile
-	 * @param imageFile
-	 * @return
-	 */
-	private static Point templateMatching(String templateFile, String imageFile) {
-
-		/* load the images. */
-		Mat img = Highgui.imread(imageFile);
-		Mat templ = Highgui.imread(templateFile);
-
-		/* Create the result matrix. */
-		int result_cols = img.cols() - templ.cols() + 1;
-		int result_rows = img.rows() - templ.rows() + 1;
-		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
-
-		/* Do the Matching and Normalize. */
-		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
-		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-
-		List<Point> matches = new LinkedList<Point>();
-
-		for (int i = 0; i < result_rows; i++) {
-			for (int j = 0; j < result_cols; j++) {
-				if (result.get(i, j)[0] >= 0.99) {
-					matches.add(new Point(i, j));
-				}
-			}
-		}
-
-		/* check the results. */
-		if (matches.size() == 0) {
-			System.err.println("[LOG]\tWARNING: No matches found!");
-		} else if (matches.size() > 1) {
-			System.err.println("[LOG]\tWARNING: Multiple matches: " + matches.size());
-		}
-
-		/* Localizing the best match with minMaxLoc. */
-		MinMaxLocResult mmr = Core.minMaxLoc(result);
-		Point matchLoc = mmr.maxLoc;
-
-		/* Draws a rectangle over the detected area. */
-		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-				new Scalar(0, 255, 0), 2);
-
-		/* Draws a cross mark at the center of the detected area. */
-		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
-				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
-				2);
-		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
-				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
-				2);
-
-		/* Save the visualized detection. */
-		String filename = templateFile.toString();
-		int i = filename.lastIndexOf("/");
-		filename = filename.substring(i + 1, filename.length());
-		filename = filename.replace(".png", "");
-		File annotated = new File("output/templateMatching/TM-" + filename + ".png");
-		Highgui.imwrite(annotated.getPath(), img);
-
-		/* Return the center. */
-		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
-	}
-
 	/*
 	 * Run the FAST and SIFT feature detector algorithms on the two input images and
 	 * try to match the features found in @object image into the @scene image
 	 * 
 	 */
-	public static boolean runFeatureDetection(String object, String scene) {
-		return (fastDetector(object, scene) || siftDetector(object, scene));
+	public static boolean runFeatureDetection(String templ, String img) {
+		return (fastDetector(templ, img) || siftDetector(templ, img));
 	}
 
 	/*
@@ -388,39 +318,107 @@ public class UtilsTemplateMatching {
 		}
 
 	}
-
-	private static int round(double value, int places) {
-		if (places < 0)
-			throw new IllegalArgumentException();
-
-		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.FLOOR);
-		return bd.toBigInteger().intValue();
-	}
-
+	
 	/**
-	 * converts a Mat dump to an array of Point
+	 * Run the TM_CCOEFF_NORMED template matching algorithm. Returns the center of
+	 * the rectangle where the best match has been found.
 	 * 
-	 * @param dump
+	 * @param templateFile
+	 * @param imageFile
 	 * @return
 	 */
-	private static Point[] getPointsFromMatDump(String dump) {
-		Point[] result = new Point[4];
-		String[] split = dump.split(";");
-		for (int i = 0; i < split.length; i++) {
-			split[i] = split[i].replaceAll("\\[", "").trim();
-			split[i] = split[i].replaceAll("\\]", "").trim();
-			String[] coords = split[i].split(",");
-			double x = Double.parseDouble(coords[0].trim());
-			double y = Double.parseDouble(coords[1].trim());
-			if (x < 0 || y < 0) {
-				return null;
-			} else {
-				result[i] = new Point(x, y);
+	private static Point templateMatching(String templateFile, String imageFile) {
+
+		/* load the images. */
+		Mat img = Highgui.imread(imageFile);
+		Mat templ = Highgui.imread(templateFile);
+
+		/* Create the result matrix. */
+		int result_cols = img.cols() - templ.cols() + 1;
+		int result_rows = img.rows() - templ.rows() + 1;
+		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+
+		/* Do the Matching and Normalize. */
+		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
+		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+
+		List<Point> matches = new LinkedList<Point>();
+
+		for (int i = 0; i < result_rows; i++) {
+			for (int j = 0; j < result_cols; j++) {
+				if (result.get(i, j)[0] >= 0.99) {
+					matches.add(new Point(i, j));
+				}
 			}
 		}
-		return result;
+
+		/* check the results. */
+		if (matches.size() == 0) {
+			System.err.println("[LOG]\tWARNING: No matches found!");
+		} else if (matches.size() > 1) {
+			System.err.println("[LOG]\tWARNING: Multiple matches: " + matches.size());
+		}
+
+		/* Localizing the best match with minMaxLoc. */
+		MinMaxLocResult mmr = Core.minMaxLoc(result);
+		Point matchLoc = mmr.maxLoc;
+
+		/* Draws a rectangle over the detected area. */
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
+				new Scalar(0, 255, 0), 2);
+
+		/* Draws a cross mark at the center of the detected area. */
+		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
+				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
+				2);
+		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
+				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
+				2);
+
+		/* Save the visualized detection. */
+		String filename = templateFile.toString();
+		int i = filename.lastIndexOf("/");
+		filename = filename.substring(i + 1, filename.length());
+		filename = filename.replace(".png", "");
+		File annotated = new File("output/templateMatching/TM-" + filename + ".png");
+		Highgui.imwrite(annotated.getPath(), img);
+
+		/* Return the center. */
+		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
 	}
+
+//	private static int round(double value, int places) {
+//		if (places < 0)
+//			throw new IllegalArgumentException();
+//
+//		BigDecimal bd = new BigDecimal(value);
+//		bd = bd.setScale(places, RoundingMode.FLOOR);
+//		return bd.toBigInteger().intValue();
+//	}
+
+//	/**
+//	 * converts a Mat dump to an array of Point
+//	 * 
+//	 * @param dump
+//	 * @return
+//	 */
+//	private static Point[] getPointsFromMatDump(String dump) {
+//		Point[] result = new Point[4];
+//		String[] split = dump.split(";");
+//		for (int i = 0; i < split.length; i++) {
+//			split[i] = split[i].replaceAll("\\[", "").trim();
+//			split[i] = split[i].replaceAll("\\]", "").trim();
+//			String[] coords = split[i].split(",");
+//			double x = Double.parseDouble(coords[0].trim());
+//			double y = Double.parseDouble(coords[1].trim());
+//			if (x < 0 || y < 0) {
+//				return null;
+//			} else {
+//				result[i] = new Point(x, y);
+//			}
+//		}
+//		return result;
+//	}
 
 	// /* Ad-hoc visual locator detector feature. */
 	// public static Point siftAndMultipleTemplateMatching(String imageFile, String

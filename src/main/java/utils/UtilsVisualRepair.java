@@ -5,20 +5,17 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import config.Settings;
 import datatype.EnhancedTestCase;
 import datatype.SeleniumLocator;
-import datatype.Statement;
 
 public class UtilsVisualRepair {
 
 	/**
-	 * Procedure to verify a DOM element locator by means of visual locators. The
-	 * procedure implies that the DOM locator exists on the test state.
+	 * Procedure to verify a DOM element locator by means of a visual locator.
 	 */
 	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator,
 			EnhancedTestCase testCorrect, Integer i) {
@@ -42,21 +39,21 @@ public class UtilsVisualRepair {
 
 			System.err.println("[LOG]\tElement not found (visually) in the state. Visual assertion failed.");
 
-		} else if(webElementFromDomLocator == null) {
-			
+		} else if (webElementFromDomLocator == null) {
+
 			System.out.println("[LOG]\tApplied visual repair");
 			System.out.println("[LOG]\tNew repaired element is " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
-			
+
 		} else if (!UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocator)) {
 
 			System.out.println("[LOG]\tChance of propagated breakage at line " + i);
 			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
 
-			// System.out.println(webElementFromVisualLocatorLarge);
+			// System.out.println(webElementFromVisualLocator);
 			// System.out.println(webElementFromDomLocator);
 
-			/* I trust the element found by the visual locator. */
+			/* I trust the element found by the visual locator. Is that correct? */
 			System.out.println("[LOG]\tApplied visual repair");
 			System.out.println("[LOG]\tNew repaired element is " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
@@ -67,6 +64,7 @@ public class UtilsVisualRepair {
 			System.out.println("[LOG]\tVisual verification succeeded");
 
 		}
+
 		return webElementFromDomLocator;
 	}
 
@@ -96,12 +94,12 @@ public class UtilsVisualRepair {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
-//		Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot,
-//		visualLocator);
+		// Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot,
+		// visualLocator);
 		Point bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
 
 		if (bestMatch == null) {
-			
+
 			FileUtils.deleteQuietly(new File(currentScreenshot));
 			return null;
 
@@ -110,12 +108,12 @@ public class UtilsVisualRepair {
 			String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
 			// System.out.println("XPath for match: " + xpathForMatches);
 			WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
-			
+
 			FileUtils.deleteQuietly(new File(currentScreenshot));
-			
+
 			return fromVisual;
 		}
-		
+
 	}
 
 	public static boolean areWebElementsEquals(WebElement webElementFromDomLocator,

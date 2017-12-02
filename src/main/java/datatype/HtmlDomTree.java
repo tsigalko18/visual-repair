@@ -95,11 +95,6 @@ public class HtmlDomTree {
 
 					// set html attributes
 					newChild.setHtmlAttributes(htmlAttributesParser.getHTMLAttributesForElement(newChild.getXPath()));
-					
-//					if(newChild.getTagName().equalsIgnoreCase("a")) {
-//						System.out.println(newChild);
-//						System.out.println("\t"+newChild.getHtmlAttributes());
-//					}
 
 					buildHtmlDomTreeFromNode(newNode);
 				}
@@ -119,9 +114,6 @@ public class HtmlDomTree {
 		if (node == null) {
 			return;
 		}
-
-		// System.out.println(node.getData().getTagName() + "\t" +
-		// node.getData().getXPath());
 
 		if (node.getChildren() != null) {
 			for (Node<HtmlElement> child : node.getChildren()) {
@@ -164,7 +156,6 @@ public class HtmlDomTree {
 			result = result + paths.get(0);
 		}
 
-		// System.out.println(result);
 		return result;
 	}
 
@@ -196,7 +187,7 @@ public class HtmlDomTree {
 		while (!q.isEmpty()) {
 			Node<HtmlElement> node = q.remove();
 
-			// System.out.println(node.getData().getXPath());
+			//System.out.println(node.getData().getXPath());
 
 			if (node.getData().getXPath().equalsIgnoreCase(xpath)) {
 				return node.getData();

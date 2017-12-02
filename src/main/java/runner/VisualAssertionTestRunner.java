@@ -1,16 +1,21 @@
 package runner;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.xml.sax.SAXException;
 
 import config.Settings;
 import datatype.EnhancedTestCase;
+import datatype.HtmlDomTree;
+import datatype.SeleniumLocator;
 import datatype.Statement;
 import parser.ParseTest;
 import utils.UtilsGetters;
@@ -55,7 +60,7 @@ public class VisualAssertionTestRunner {
 		long stopTime = System.currentTimeMillis();
 		long elapsedTime = stopTime - startTime;
 		System.out.println("\nelapsedTime (s): " + elapsedTime / 1000);
-		
+
 	}
 
 	private void runTestWithVisualAssertion(String prefix, String className) throws IOException {
@@ -109,7 +114,8 @@ public class VisualAssertionTestRunner {
 
 			WebElement webElementFromDomLocator = null;
 
-			Statement newStatement = (Statement) UtilsRepair.deepClone(statement);
+			/* this shall become a List. */
+			Statement repairedStatement = (Statement) UtilsRepair.deepClone(statement);
 
 			try {
 
@@ -136,6 +142,7 @@ public class VisualAssertionTestRunner {
 				 * 
 				 */
 
+				/* strategy 1. search web element visually on the same state. */ 
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
 
@@ -146,36 +153,62 @@ public class VisualAssertionTestRunner {
 				if (webElementFromDomLocator == null) {
 					webElementFromDomLocator = UtilsVisualRepair.localCrawling(); // stub method
 				}
-
+				
 				if (webElementFromDomLocator == null) {
 					webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub method
 				}
-
+				
 				if (webElementFromDomLocator == null) {
-					/*
-					 * at this point, if the visual check is failing, webElementFromDomLocator
-					 * should be set to null?
-					 */
-					// webElementFromDomLocator = null;
+					
+					/* the visual check has failed. */
 					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
+					
 				} else {
 
+					String domtree = driver.getPageSource();
+					String fileName = "output/savedHTML/" + prefix + className + "-" + statementNumber + Settings.HTML_EXTENSION;
+					File thePage = new File(fileName);
+					FileUtils.write(thePage, domtree);
+					
+					HtmlDomTree page = null;
+					try {
+						page = new HtmlDomTree(driver, fileName);
+						page.buildHtmlDomTree();
+					} catch (SAXException e) {
+						e.printStackTrace();
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+					}
+					
+					SeleniumLocator fixedLocator = UtilsRepair.getLocators(page, webElementFromDomLocator);
+					System.out.println(fixedLocator);
+					
+					/* uncomment if you want to delete some leftover files. */ 
+					//FileUtils.deleteQuietly(thePage);
+					
 					/* repair locator. */
-					newStatement.setDomLocator(webElementFromDomLocator);
+					repairedStatement.setDomLocator(webElementFromDomLocator);
 
 					/* add the repaired statement to the test. */
-					repairedTest.put(statementNumber, newStatement);
+					repairedTest.put(statementNumber, repairedStatement);
+					
 				}
 
 			}
 
 			if (webElementFromDomLocator != null) {
 
-				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
+				WebElement webElementVisual  = null;
+				
+				/* check the web element visually. */ 
+				webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 						testCorrect, statementNumber);
-
-				/* repair locator. */
-				newStatement.setDomLocator(webElementFromDomLocator);
+				
+				if(webElementVisual != null) {
+					webElementFromDomLocator = webElementVisual;
+					/* repair locator. */
+					repairedStatement.setDomLocator(webElementFromDomLocator);
+				}
 
 				try {
 					/* after ascertaining the right element, perform the action. */
@@ -203,17 +236,18 @@ public class VisualAssertionTestRunner {
 							System.out.println(
 									"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText()
 											+ "\"" + " <> " + "\"" + statement.getValue() + "\"");
+							
 							System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
 									+ webElementFromDomLocator.getText() + "\"");
 
 							/* repair assertion value. */
-							newStatement.setValue(webElementFromDomLocator.getText());
+							repairedStatement.setValue(webElementFromDomLocator.getText());
 						}
 
 					}
 
 					/* add the repaired statement to the test. */
-					repairedTest.put(statementNumber, newStatement);
+					repairedTest.put(statementNumber, repairedStatement);
 
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -221,11 +255,8 @@ public class VisualAssertionTestRunner {
 					break;
 				}
 			}
-			// else {
-			// System.out.println("[LOG]\tVisual correctness and repair failed");
-			// }
 
-			System.out.println();
+			System.out.print("\n");
 
 		}
 

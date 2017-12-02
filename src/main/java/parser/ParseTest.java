@@ -180,7 +180,7 @@ public class ParseTest {
 							ewe.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
 							ewe.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
 							ewe.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocatorLarge", getFolder()));
+									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
 
 							ewe.setAnnotatedScreenshot(
 									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
@@ -220,7 +220,7 @@ public class ParseTest {
 							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
 							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
 							esl.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocatorLarge", getFolder()));
+									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
 
 							esl.setAnnotatedScreenshot(
 									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
@@ -257,7 +257,7 @@ public class ParseTest {
 							ea.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
 							ea.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
 							ea.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocatorLarge", getFolder()));
+									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
 
 							ea.setAnnotatedScreenshot(
 									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));

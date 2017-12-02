@@ -97,30 +97,30 @@ public class VisualTraceGenerator {
 			/* for each statement, get the line number. */
 			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
 
-			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-1before-" + statementName
+			String screenshotBefore = testFolderName + Settings.separator + line + "-1before-" + statementName
 					+ Settings.PNG_EXTENSION;
-			String annotatedscreenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-"
-					+ statementName + Settings.PNG_EXTENSION;
-			String visualLocatorLarge = testFolderName + Settings.separator + line + "-visualLocatorLarge-"
-					+ statementName + Settings.PNG_EXTENSION;
+			String annotatedScreenshot = testFolderName + Settings.separator + line + "-Annotated-" + statementName
+					+ Settings.PNG_EXTENSION;
+			String visualLocator = testFolderName + Settings.separator + line + "-visualLocator-" + statementName
+					+ Settings.PNG_EXTENSION;
 			String htmlPath = testFolderName + Settings.separator + line + "-1before-" + statementName;
 
 			mainPage = d.getWindowHandle();
 
 			/* save the screenshot before the execution of the event. */
-			UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
+			UtilsComputerVision.saveScreenshot(d, screenshotBefore);
 
 			try {
 
 				/* save contextual based visual locator. */
-				UtilsComputerVision.saveVisualLocator(d, screenshotBeforeEvent, we, visualLocatorLarge);
+				UtilsComputerVision.saveVisualLocator(d, screenshotBefore, we, visualLocator);
 
 				/* save the annotated screenshot as well. */
-				UtilsComputerVision.saveAnnotatedScreenshot(screenshotBeforeEvent, visualLocatorLarge,
-						annotatedscreenshotBeforeEvent);
+				UtilsComputerVision.saveAnnotatedScreenshot(screenshotBefore, visualLocator, annotatedScreenshot);
 
 				/* save the HTML page. */
 				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -144,7 +144,7 @@ public class VisualTraceGenerator {
 				System.out.println("[LOG]\t@After " + statementName);
 
 			/* save the screenshot before the execution of the event. */
-			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-2after-" + statementName
+			String screenshotBefore = testFolderName + Settings.separator + line + "-2after-" + statementName
 					+ Settings.PNG_EXTENSION;
 
 			/* save the HTML page. */
@@ -160,7 +160,7 @@ public class VisualTraceGenerator {
 					e.printStackTrace();
 				}
 
-				UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
+				UtilsComputerVision.saveScreenshot(d, screenshotBefore);
 			}
 
 		}
@@ -182,9 +182,9 @@ public class VisualTraceGenerator {
 			 * get screenshot of the page before the action is executed, but after the
 			 * exception has been raised.
 			 */
-			String screenshotBeforeEvent = testFolderName + Settings.separator + line + "-Annotated-" + statementName
+			String screenshotBefore = testFolderName + Settings.separator + line + "-Annotated-" + statementName
 					+ Settings.PNG_EXTENSION;
-			UtilsComputerVision.saveScreenshot(d, screenshotBeforeEvent);
+			UtilsComputerVision.saveScreenshot(d, screenshotBefore);
 
 			/* save the HTML page. */
 			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
