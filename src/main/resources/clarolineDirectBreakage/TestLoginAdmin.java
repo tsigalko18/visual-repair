@@ -17,16 +17,16 @@ public class TestLoginAdmin {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();// Settings.getDriver();
+		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-		driver.get("http://localhost:8888/claroline" + Settings.getVersion());
+		driver.get("http://localhost:8888/claroline/claroline-1.9.0/index.php");
 	}
 
 	@Test
 	public void testHomePage() {
 		driver.findElement(By.id("login")).sendKeys("admin"); // username
 		driver.findElement(By.id("password")).sendKeys("admin"); // password
-		driver.findElement(By.xpath("html/body/div[1]/div[2]/div[1]/p[1]/a")).click(); // breaks HERE
+		driver.findElement(By.xpath("html/body/s[1]/div[2]/div[1]/p[1]/a")).click(); // breaks HERE
 		assertTrue(driver.findElement(By.id("username")).getText().contains("John Doe"));
 	}
 

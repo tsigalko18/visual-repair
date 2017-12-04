@@ -101,13 +101,13 @@ public class UtilsRepair {
 
 	public static void printTestCase(EnhancedTestCase tc) {
 		for (Integer i : tc.getStatements().keySet()) {
-			System.out.println(tc.getStatements().get(i));
+			System.out.println(tc.getStatements().get(i) + ";");
 		}
 	}
 
 	public static void printTestCaseWithLineNumbers(EnhancedTestCase tc) {
 		for (Integer i : tc.getStatements().keySet()) {
-			System.out.println(tc.getStatements().get(i).getLine() + ":\t" + tc.getStatements().get(i));
+			System.out.println(tc.getStatements().get(i).getLine() + ":\t" + tc.getStatements().get(i) + ";");
 		}
 	}
 
@@ -185,7 +185,7 @@ public class UtilsRepair {
 	public static void saveTest(String prefix, String className, EnhancedTestCase temp) {
 
 		String oldPath = Settings.resourcesFolder + prefix.replace(".", "/") + className + Settings.JAVA_EXTENSION;
-		String newPath = Settings.resourcesFolder + prefix.replace(".", "Repaired/") + className.concat("Repaired")
+		String newPath = Settings.resourcesFolder + prefix.replace(".", "Repaired/") + className
 				+ Settings.JAVA_EXTENSION;
 
 		try {

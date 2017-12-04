@@ -14,7 +14,14 @@ public class EnhancedWebElement extends Statement {
 	
 	@Override
 	public String toString() {
-		return "driver.findElement(" + getDomLocator() + ")." + getAction() + "(" + getValue() + ");";
+		
+		if(getAction().equals("sendKeys")) {
+			return "driver.findElement(" + getDomLocator() + ")." + getAction() + "(\"" + getValue() + "\")";
+		} else if(getAction().equals("click")) {
+			return "driver.findElement(" + getDomLocator() + ")." + getAction() + "(" + getValue() + ")";
+		}
+		
+		return null;
 	}
 
 	

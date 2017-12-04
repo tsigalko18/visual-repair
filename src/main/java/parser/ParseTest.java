@@ -15,6 +15,7 @@ import japa.parser.ASTHelper;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.PackageDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.expr.NameExpr;
 import japa.parser.ast.stmt.BlockStmt;
@@ -75,7 +76,6 @@ public class ParseTest {
 			throws IOException {
 
 		tc = newTest;
-
 		CompilationUnit cu = null;
 
 		try {
@@ -83,11 +83,15 @@ public class ParseTest {
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
-
-		// replace body method with that present in tc
+		
+		/* generate and change package name. */
+		String packageName = UtilsParser.getPackageName(newclazz);
+		changePackage(cu, packageName);
+		
+		/* replace test method with that present in the repaired test. */
 		new ChangeMethodMethodVisitor().visit(cu, oldclazz);
 
-		// save back to java
+		/* save back to java. */
 		String source = cu.toString();
 		File fileMod = new File(newclazz);
 		FileUtils.touch(fileMod);
@@ -298,6 +302,26 @@ public class ParseTest {
 				m.setBody(newBlockStmt);
 
 			}
+		}
+	}
+
+	/**
+	 * Modifies the Java package declaration of the repaired tests
+	 * 
+	 * @param cu
+	 * @param packageName 
+	 */
+	public static void changePackage(CompilationUnit cu, String packageName) {
+		new PackageVisitor().visit(cu, packageName);
+	}
+
+	/**
+	 * Simple visitor implementation for visiting package nodes.
+	 */
+	private static class PackageVisitor extends VoidVisitorAdapter<Object> {
+
+		public void visit(PackageDeclaration p, Object arg) {
+			p.setName(new NameExpr(arg.toString()));
 		}
 	}
 

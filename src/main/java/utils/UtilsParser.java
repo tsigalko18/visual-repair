@@ -572,4 +572,11 @@ public class UtilsParser {
 		return withinType;
 	}
 
+	public static String getPackageName(String newclazz) {
+		// src/main/resources/clarolineDirectBreakageRepaired/TestLoginAdminRepaired.java
+		newclazz = newclazz.replace("src/main/resources/", "");
+		newclazz = newclazz.substring(0, newclazz.indexOf("/"));
+		return newclazz;
+	}
+
 }
