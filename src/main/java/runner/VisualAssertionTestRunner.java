@@ -1,20 +1,17 @@
 package runner;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-import org.xml.sax.SAXException;
 
 import config.Settings;
 import datatype.EnhancedTestCase;
-import datatype.HtmlDomTree;
 import datatype.SeleniumLocator;
 import datatype.Statement;
 import parser.ParseTest;
@@ -174,31 +171,27 @@ public class VisualAssertionTestRunner {
 
 				} else {
 
-//					String domtree = driver.getPageSource();
-//					String fileName = "output/savedHTML/" + prefix + className + "-" + statementNumber
-//							+ Settings.HTML_EXTENSION;
-//					File thePage = new File(fileName);
-//					FileUtils.write(thePage, domtree);
-//
-//					HtmlDomTree page = null;
-//					try {
-//						page = new HtmlDomTree(driver, fileName);
-//						page.buildHtmlDomTree();
-//					} catch (SAXException e) {
-//						e.printStackTrace();
-//					} catch (NullPointerException e) {
-//						e.printStackTrace();
-//					}
-//
-//					SeleniumLocator fixedLocator = UtilsRepair.getLocators(page, webElementFromDomLocator);
-					// System.out.println(fixedLocator);
-
-					/* uncomment if you want to delete some leftover files. */
-					// FileUtils.deleteQuietly(thePage);
-
-					/* repair locator. */
-					repairedStatement.setDomLocator(webElementFromDomLocator);
-
+					String source = webElementFromDomLocator.getAttribute("outerHTML");
+					if (source == null || source.length() == 0) {
+						source = (String)((JavascriptExecutor)driver).executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+					}
+					
+					if(source == null || source.length() == 0) {
+						System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+						
+						/* repaired locator is an XPath. */
+						repairedStatement.setDomLocator(webElementFromDomLocator);
+					} 
+					else {
+						
+						/* generate a smartest locator based on the attributes of the element. */
+						
+						SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
+						
+						repairedStatement.setDomLocator(fixedLocator);
+						
+					}
+					
 					/* add the repaired statement to the test. */
 					repairedTest.put(statementNumber, repairedStatement);
 
@@ -218,27 +211,27 @@ public class VisualAssertionTestRunner {
 
 					webElementFromDomLocator = webElementVisual;
 
-					/* repair locator. */
-//					String domtree = driver.getPageSource();
-//					String fileName = "output/savedHTML/" + prefix + className + "-" + statementNumber
-//							+ Settings.HTML_EXTENSION;
-//					File thePage = new File(fileName);
-//					FileUtils.write(thePage, domtree);
-//
-//					HtmlDomTree page = null;
-//					try {
-//						page = new HtmlDomTree(driver, fileName);
-//						page.buildHtmlDomTree();
-//					} catch (SAXException e) {
-//						e.printStackTrace();
-//					} catch (NullPointerException e) {
-//						e.printStackTrace();
-//					}
-//
-//					SeleniumLocator fixedLocator = UtilsRepair.getLocators(page, webElementFromDomLocator);
-//					System.out.println(fixedLocator);
-
-					repairedStatement.setDomLocator(webElementFromDomLocator);
+					String source = webElementFromDomLocator.getAttribute("outerHTML");
+					if (source == null || source.length() == 0) {
+						source = (String)((JavascriptExecutor)driver).executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+					}
+					
+					if(source == null || source.length() == 0) {
+						System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+						
+						/* repaired locator is an XPath. */
+						repairedStatement.setDomLocator(webElementFromDomLocator);
+					} 
+					else {
+						
+						/* generate a smartest locator based on the attributes of the element. */
+						
+						SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
+						
+						repairedStatement.setDomLocator(fixedLocator);
+						
+					}
+					
 				}
 
 				try {

@@ -7,13 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.junit.runner.notification.Failure;
 import org.openqa.selenium.WebElement;
 
 import config.Settings;
+import datatype.AttributesComparator;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTree;
@@ -111,6 +117,10 @@ public class UtilsRepair {
 		}
 	}
 
+	/*
+	 * Get the minimum of three arrays of integers
+	 * 
+	 * */
 	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace,
 			File[] beforeBrokenTrace) {
 
@@ -138,6 +148,10 @@ public class UtilsRepair {
 		}
 	}
 
+	/*
+	 * Old stuff (probably will be used by WATER).
+	 * 
+	 * */
 	public static SeleniumLocator generateLocator(HtmlElement htmlElement) {
 
 		SeleniumLocator loc = null;
@@ -155,6 +169,11 @@ public class UtilsRepair {
 		return loc;
 	}
 
+
+	/*
+	 * Old stuff (probably will be used by WATER).
+	 * 
+	 * */
 	public static List<SeleniumLocator> generateAllLocators(HtmlElement htmlElement) {
 
 		List<SeleniumLocator> locs = new LinkedList<SeleniumLocator>();
@@ -174,6 +193,10 @@ public class UtilsRepair {
 		return locs;
 	}
 
+	/*
+	 * Old stuff (probably will be used by WATER).
+	 * 
+	 * */
 	public static SeleniumLocator getLocators(HtmlDomTree page, WebElement webElementFromDomLocator) {
 
 		String xpath = "/" + UtilsXPath.generateXPathForWebElement(webElementFromDomLocator, "");
@@ -182,6 +205,10 @@ public class UtilsRepair {
 
 	}
 
+	/**
+	 * Save the abstract test @temp to file, where @className identifies the name of
+	 * the Java class and @prefix the package name
+	 */
 	public static void saveTest(String prefix, String className, EnhancedTestCase temp) {
 
 		String oldPath = Settings.resourcesFolder + prefix.replace(".", "/") + className + Settings.JAVA_EXTENSION;
@@ -192,6 +219,85 @@ public class UtilsRepair {
 			temp = ParseTest.parseAndSaveToJava(temp, oldPath, newPath);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+
+	}
+
+	/*
+	 * Method to parse the attributes of an outerHTML of a web element, and retrieve
+	 * the best SeleniumLocator according to the heustic used in Leotta et al.
+	 * (http://dx.doi.org/10.1002/smr.1771)
+	 * 
+	 */
+	public static SeleniumLocator getLocatorsFromOuterHtml(String source) {
+
+		// <input value="Enter" name="submitAuth" tabindex="3" type="submit">
+		String tag = source.substring(1, source.indexOf(" "));
+
+		if (tag.equals("a")) {
+
+			/* retrieve the text of the link. */
+			String text = source.substring(source.indexOf(">") + 1, source.length());
+			text = text.substring(0, text.indexOf("<")).trim();
+
+			/* build a text-based locator. */
+			return new SeleniumLocator("linkText", text);
+
+		} else {
+
+			String attributes = source.substring(source.indexOf(" "));
+			attributes = attributes.replace(">", "").trim();
+
+			/* manage the case in which the tag is still open. */
+			if (attributes.contains("<")) {
+				/* retain the attributes and discard the rest. */
+				attributes = attributes.substring(0, attributes.lastIndexOf("\"") + 1);
+			}
+
+			/* separate each key=value pair. */
+			String[] splitted = attributes.split(" ");
+
+			/* build the map of attributes. */
+			Map<String, String> attributesMap = new HashMap<>();
+			for (String string : splitted) {
+
+				String[] keyvalue = string.split("=");
+
+				/* retain only the attributes that are white-listed. */
+				if (Arrays.asList(Settings.ATTRIBUTES_WHITELIST).contains(keyvalue[0]))
+					attributesMap.put(keyvalue[0], keyvalue[1]);
+
+			}
+
+			/*
+			 * sort the map according to the heuristic used in Leotta et al.
+			 * (http://dx.doi.org/10.1002/smr.1771).
+			 */
+			AttributesComparator comparator = new AttributesComparator();
+			SortedMap<String, String> sorted = new TreeMap<String, String>(comparator);
+			sorted.putAll(attributesMap);
+
+			/* create SeleniumLocator object. */
+			return getLocatorFromTreeMap(sorted);
+
+		}
+
+	}
+
+	/**
+	 * create SeleniumLocator object in case of attribute-based locators
+	 **/
+	private static SeleniumLocator getLocatorFromTreeMap(SortedMap<String, String> sorted) {
+
+		/* retrieve the first key (likely to be the best locator). */
+		Object o = sorted.keySet().iterator().next();
+
+		if (o.equals("id")) {
+			return new SeleniumLocator("id", sorted.get(o).replaceAll("\"", ""));
+		} else if (o.equals("name")) {
+			return new SeleniumLocator("name", sorted.get(o).replaceAll("\"", ""));
+		} else {
+			return new SeleniumLocator("xpath", "//*[@" + o + "=" + sorted.get(o) + "]");
 		}
 
 	}
