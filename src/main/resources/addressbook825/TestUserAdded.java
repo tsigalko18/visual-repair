@@ -17,7 +17,7 @@ public class TestUserAdded {
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		driver.get("http://localhost:8888" + Settings.getVersion());
+		driver.get("http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/index.php");
 	}
 
 	@Test
@@ -36,6 +36,10 @@ public class TestUserAdded {
 		driver.findElement(By.name("byear")).sendKeys("1969");
 		driver.findElement(By.xpath("html/body/div[1]/div[4]/form/input[15]")).click(); // insertButton
 		assertTrue(driver.findElement(By.xpath("html/body/div[1]/div[4]/label/strong/span")).getText().contains("1"));
+	}
+	
+	public WebDriver getDriver() {
+		return driver;
 	}
 
 }

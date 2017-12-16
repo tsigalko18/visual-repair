@@ -32,7 +32,7 @@ public class UtilsTemplateMatching {
 
 	/* Ad-hoc visual locator detector feature. */
 	public static Point featureDetectorAndTemplateMatching(String imageFile, String templateFile) {
-
+		
 		Point result = null;
 
 		/* run SIFT and FAST to check for the presence/absence of the template image. */
@@ -102,7 +102,7 @@ public class UtilsTemplateMatching {
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.7f;
+		float nndrRatio = 0.9f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -140,30 +140,30 @@ public class UtilsTemplateMatching {
 			scnMatOfPoint2f.fromList(scenePoints);
 
 			/* Get the rectangle the the potential match is. */
-			Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
-			Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
-			Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
+//			Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
+//			Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
+//			Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
+//
+//			obj_corners.put(0, 0, new double[] { 0, 0 });
+//			obj_corners.put(1, 0, new double[] { objectImage.cols(), 0 });
+//			obj_corners.put(2, 0, new double[] { objectImage.cols(), objectImage.rows() });
+//			obj_corners.put(3, 0, new double[] { 0, objectImage.rows() });
+//
+//			System.out.println("Transforming object corners to scene corners...");
+//			Core.perspectiveTransform(obj_corners, scene_corners, homography);
+//
+//			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
+//
+//			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
+//					new Scalar(0, 255, 0), 4);
+//			Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
+//					new Scalar(0, 255, 0), 4);
+//			Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
+//					new Scalar(0, 255, 0), 4);
+//			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
+//					new Scalar(0, 255, 0), 4);
 
-			obj_corners.put(0, 0, new double[] { 0, 0 });
-			obj_corners.put(1, 0, new double[] { objectImage.cols(), 0 });
-			obj_corners.put(2, 0, new double[] { objectImage.cols(), objectImage.rows() });
-			obj_corners.put(3, 0, new double[] { 0, objectImage.rows() });
-
-			System.out.println("Transforming object corners to scene corners...");
-			Core.perspectiveTransform(obj_corners, scene_corners, homography);
-
-			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
-
-			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-					new Scalar(0, 255, 0), 4);
-			Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-					new Scalar(0, 255, 0), 4);
-			Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-					new Scalar(0, 255, 0), 4);
-			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-					new Scalar(0, 255, 0), 4);
-
-			System.out.println("Drawing matches image...");
+//			System.out.println("Drawing matches image...");
 			MatOfDMatch goodMatches = new MatOfDMatch();
 			goodMatches.fromList(goodMatchesList);
 
@@ -177,7 +177,7 @@ public class UtilsTemplateMatching {
 
 			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-outputImage.jpg", outputImage);
 			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-matchoutput.jpg", matchoutput);
-			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-img.jpg", img);
+//			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-img.jpg", img);
 			return true;
 
 		} else {
@@ -233,7 +233,7 @@ public class UtilsTemplateMatching {
 		// System.out.println("Calculating good match list...");
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
-		/* The treshold ratio used for the distance. */
+		/* The threshold ratio used for the distance. */
 		float nndrRatio = 0.9f;
 
 		for (int i = 0; i < matches.size(); i++) {
@@ -272,28 +272,28 @@ public class UtilsTemplateMatching {
 			scnMatOfPoint2f.fromList(scenePoints);
 
 			/* Get the rectangle the the potential match is. */
-			Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
-			Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
-			Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
-
-			obj_corners.put(0, 0, new double[] { 0, 0 });
-			obj_corners.put(1, 0, new double[] { objectImage.cols(), 0 });
-			obj_corners.put(2, 0, new double[] { objectImage.cols(), objectImage.rows() });
-			obj_corners.put(3, 0, new double[] { 0, objectImage.rows() });
-
-			// System.out.println("Transforming object corners to scene corners...");
-			Core.perspectiveTransform(obj_corners, scene_corners, homography);
-
-			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
-
-			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-					new Scalar(0, 255, 0), 4);
-			Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-					new Scalar(0, 255, 0), 4);
-			Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-					new Scalar(0, 255, 0), 4);
-			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-					new Scalar(0, 255, 0), 4);
+//			Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
+//			Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
+//			Mat scene_corners = new Mat(4, 1, CvType.CV_32FC2);
+//
+//			obj_corners.put(0, 0, new double[] { 0, 0 });
+//			obj_corners.put(1, 0, new double[] { objectImage.cols(), 0 });
+//			obj_corners.put(2, 0, new double[] { objectImage.cols(), objectImage.rows() });
+//			obj_corners.put(3, 0, new double[] { 0, objectImage.rows() });
+//
+//			 System.out.println("Transforming object corners to scene corners...");
+//			Core.perspectiveTransform(obj_corners, scene_corners, homography);
+//
+//			Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
+//
+//			Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
+//					new Scalar(0, 255, 0), 4);
+//			Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
+//					new Scalar(0, 255, 0), 4);
+//			Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
+//					new Scalar(0, 255, 0), 4);
+//			Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
+//					new Scalar(0, 255, 0), 4);
 
 			// System.out.println("Drawing matches image...");
 			MatOfDMatch goodMatches = new MatOfDMatch();
@@ -309,7 +309,7 @@ public class UtilsTemplateMatching {
 
 			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-outputImage.jpg", outputImage);
 			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-matchoutput.jpg", matchoutput);
-			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-img.jpg", img);
+//			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-img.jpg", img);
 			return true;
 
 		} else {

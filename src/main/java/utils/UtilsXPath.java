@@ -32,8 +32,8 @@ public class UtilsXPath {
 	}
 
 	public static String getXPathFromLocation(Point matches, WebDriver driver) {
-		String getXpathScript = "window.getPathTo = function(element) {"
-				+ "	if (element===document.body) " + "		return element.tagName; " + "	var ix= 0; "
+		String getXpathScript = "window.getPathTo = function(element) {" + "	if (element===document.body) "
+				+ "		return element.tagName; " + "	var ix= 0; "
 				+ "	var siblings= element.parentNode.childNodes; " + "	for (var i= 0; i<siblings.length; i++) {"
 				+ "		var sibling= siblings[i];" + "		if (sibling===element)"
 				+ "			return getPathTo(element.parentNode)+'/'+element.tagName+'['+(ix+1)+']';"
@@ -54,4 +54,14 @@ public class UtilsXPath {
 		return res;
 	}
 
+	public static boolean isLeaf(WebElement fromVisual) {
+		// TODO Auto-generated method stub
+		List<WebElement> children = fromVisual.findElements(By.xpath(".//*"));
+		if (children.size() == 1 && (children.get(0).getTagName().equalsIgnoreCase("text")
+				|| children.get(0).getTagName().equalsIgnoreCase("#text")))
+			return true;
+		if (children.size() == 0)
+			return true;
+		return false;
+	}
 }

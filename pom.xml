@@ -140,17 +140,14 @@
 			<artifactId>ini4j</artifactId>
 			<version>0.5.4</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>com.crawljax</groupId>
-			<artifactId>crawljax-core</artifactId>
-			<version>3.6</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>org.jgrapht</groupId>
+  			<artifactId>jgrapht-core</artifactId>
+  			<version>1.0.1</version>
 		</dependency>
-
+		<!-- <dependency> <groupId>com.crawljax</groupId> <artifactId>crawljax-core</artifactId> 
+			<version>3.6</version> <exclusions> <exclusion> <groupId>org.slf4j</groupId> 
+			<artifactId>slf4j-api</artifactId> </exclusion> </exclusions> </dependency> -->
 	</dependencies>
 </project>

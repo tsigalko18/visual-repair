@@ -110,7 +110,7 @@ public class UtilsComputerVision {
 
 		File visualLocator = new File(webElementImageName);
 
-		int scale = 5;
+		int scale = 10;
 		getScaledSubImage(d, img, element, visualLocator, scale);
 
 		while (!isUnique(destFile.getAbsolutePath(), visualLocator.getAbsolutePath())) {

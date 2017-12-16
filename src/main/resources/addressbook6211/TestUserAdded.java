@@ -17,7 +17,7 @@ public class TestUserAdded {
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		driver.get("http://localhost:8888" + Settings.getVersion());
+		driver.get("http://localhost:8888/addressbook/addressbookv6.2.11/index.php");
 	}
 
 	@Test

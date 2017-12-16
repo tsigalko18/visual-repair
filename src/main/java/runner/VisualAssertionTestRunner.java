@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import config.Settings;
+import crawler.Crawler;
 import datatype.EnhancedTestCase;
 import datatype.SeleniumLocator;
 import datatype.Statement;
@@ -43,10 +44,10 @@ public class VisualAssertionTestRunner {
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		/* package name. */
-		String prefix = "clarolineDirectBreakage.";
+		String prefix = "addressbook825.";
 
 		/* class name. */
-		String className = "TestLoginAdmin";
+		String className = "TestUserAdded";
 
 		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
 
@@ -86,6 +87,8 @@ public class VisualAssertionTestRunner {
 
 		/* retrieve the WebDriver instance. */
 		WebDriver driver = (WebDriver) UtilsRunner.runMethod(clazz, inst, "getDriver");
+
+		String url = driver.getCurrentUrl();
 
 		/* parse the tests and create the abstractions. */
 		ParseTest pt = null;
@@ -157,12 +160,18 @@ public class VisualAssertionTestRunner {
 				 * longer possible.
 				 */
 				if (webElementFromDomLocator == null) {
-					webElementFromDomLocator = UtilsVisualRepair.localCrawling(); // stub method
+					// webElementFromDomLocator = UtilsVisualRepair.localCrawling(); // stub method
+					// new
+					// Crawler("http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/index.php",
+					// null, null,
+					// -1, null).runLocalCrawling();
+					//new Crawler(url, etc, testCorrect, statementNumber, null).runLocalCrawling();
 				}
 
-				if (webElementFromDomLocator == null) {
-					webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub method
-				}
+				// if (webElementFromDomLocator == null) {
+				// webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub
+				// method
+				// }
 
 				if (webElementFromDomLocator == null) {
 
@@ -173,25 +182,26 @@ public class VisualAssertionTestRunner {
 
 					String source = webElementFromDomLocator.getAttribute("outerHTML");
 					if (source == null || source.length() == 0) {
-						source = (String)((JavascriptExecutor)driver).executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+						source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
+								webElementFromDomLocator);
 					}
-					
-					if(source == null || source.length() == 0) {
-						System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
-						
+
+					if (source == null || source.length() == 0) {
+						System.out.println(
+								"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+
 						/* repaired locator is an XPath. */
 						repairedStatement.setDomLocator(webElementFromDomLocator);
-					} 
-					else {
-						
+					} else {
+
 						/* generate a smartest locator based on the attributes of the element. */
-						
+
 						SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
-						
+
 						repairedStatement.setDomLocator(fixedLocator);
-						
+
 					}
-					
+
 					/* add the repaired statement to the test. */
 					repairedTest.put(statementNumber, repairedStatement);
 
@@ -213,25 +223,26 @@ public class VisualAssertionTestRunner {
 
 					String source = webElementFromDomLocator.getAttribute("outerHTML");
 					if (source == null || source.length() == 0) {
-						source = (String)((JavascriptExecutor)driver).executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+						source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
+								webElementFromDomLocator);
 					}
-					
-					if(source == null || source.length() == 0) {
-						System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
-						
+
+					if (source == null || source.length() == 0) {
+						System.out.println(
+								"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+
 						/* repaired locator is an XPath. */
 						repairedStatement.setDomLocator(webElementFromDomLocator);
-					} 
-					else {
-						
+					} else {
+
 						/* generate a smartest locator based on the attributes of the element. */
-						
+
 						SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
-						
+
 						repairedStatement.setDomLocator(fixedLocator);
-						
+
 					}
-					
+
 				}
 
 				try {

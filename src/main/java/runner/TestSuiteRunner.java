@@ -25,7 +25,8 @@ public class TestSuiteRunner {
 	public static void main(String[] args) throws IOException {
 
 		/* specify the test suite and test name or runner. */
-		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
+//		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
+		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestUserAdded");
 
 	}
 

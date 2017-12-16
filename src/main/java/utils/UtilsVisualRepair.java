@@ -106,7 +106,7 @@ public class UtilsVisualRepair {
 		} else {
 
 			String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
-			// System.out.println("XPath for match: " + xpathForMatches);
+			System.out.println("XPath for match: " + xpathForMatches);
 			WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
 
 			FileUtils.deleteQuietly(new File(currentScreenshot));
