@@ -25,7 +25,7 @@
         "path": "output/addressbook6211/TestUserAdded/25-visualLocator-TestUserAdded-25.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"admin\"",
+      "value": "admin",
       "line": 25
     },
     "26": {
@@ -52,7 +52,7 @@
         "path": "output/addressbook6211/TestUserAdded/26-visualLocator-TestUserAdded-26.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"admin\"",
+      "value": "admin",
       "line": 26
     },
     "27": {
@@ -133,7 +133,7 @@
         "path": "output/addressbook6211/TestUserAdded/29-visualLocator-TestUserAdded-29.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"John\"",
+      "value": "John",
       "line": 29
     },
     "30": {
@@ -160,7 +160,7 @@
         "path": "output/addressbook6211/TestUserAdded/30-visualLocator-TestUserAdded-30.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"Doe\"",
+      "value": "Doe",
       "line": 30
     },
     "31": {
@@ -187,7 +187,7 @@
         "path": "output/addressbook6211/TestUserAdded/31-visualLocator-TestUserAdded-31.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"Times Square\"",
+      "value": "Times Square",
       "line": 31
     },
     "32": {
@@ -214,7 +214,7 @@
         "path": "output/addressbook6211/TestUserAdded/32-visualLocator-TestUserAdded-32.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\".com\"",
+      "value": ".com",
       "line": 32
     },
     "33": {
@@ -241,7 +241,7 @@
         "path": "output/addressbook6211/TestUserAdded/33-visualLocator-TestUserAdded-33.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"123456789\"",
+      "value": "123456789",
       "line": 33
     },
     "34": {
@@ -322,7 +322,7 @@
         "path": "output/addressbook6211/TestUserAdded/36-visualLocator-TestUserAdded-36.png"
       },
       "seleniumAction": "sendKeys",
-      "value": "\"1969\"",
+      "value": "1969",
       "line": 36
     },
     "37": {
@@ -354,7 +354,7 @@
     },
     "38": {
       "assertion": "assertTrue",
-      "predicate": "contains(\"1\")",
+      "predicate": "contains",
       "domBefore": {
         "path": "output/addressbook6211/TestUserAdded/38-1before-TestUserAdded-38/index.php.html"
       },
@@ -378,9 +378,9 @@
         "path": "output/addressbook6211/TestUserAdded/38-visualLocator-TestUserAdded-38.png"
       },
       "seleniumAction": "getText",
-      "value": "",
+      "value": "1",
       "line": 38
     }
   },
-  "path": "/Users/astocco/git/visual-repair/src/main/resources/addressbook6211/TestUserAdded.java"
+  "path": "/Users/tsigalko18/git/visual-repair/src/main/resources/addressbook6211/TestUserAdded.java"
 }

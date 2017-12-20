@@ -23,6 +23,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Core.MinMaxLocResult;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -244,20 +245,22 @@ public class UtilsComputerVision {
 		int min_offset_x = Math.min(element.getLocation().x, img.getWidth() - rect.width - element.getLocation().x);
 		int min_offset_y = Math.min(element.getLocation().y, img.getHeight() - rect.height - element.getLocation().y);
 		int offset = Math.min(min_offset_x, min_offset_y);
-		
-//		System.out.println("min_offset_x: " + min_offset_x);
-//		System.out.println("min_offset_y: " + min_offset_y);
-//		System.out.println("offset: " + offset);
+
+		// System.out.println("min_offset_x: " + min_offset_x);
+		// System.out.println("min_offset_y: " + min_offset_y);
+		// System.out.println("offset: " + offset);
 		offset = offset / scale;
-//		System.out.println("offset scaled: " + offset);
-//		System.out.println("rectangle is : " + 2 * offset + rect.width + ", " + 2 * offset + rect.height);
-//		
-//		int max_offset = Math.max(min_offset_x, min_offset_y);
-//		System.out.println("max_offset: " + max_offset);
-//		max_offset = max_offset / scale;
-//		System.out.println("max_offset scaled: " + max_offset);
-//		System.out.println("rectangle is : " + 2 * max_offset + rect.width + ", " + 2 * max_offset + rect.height);
-		
+		// System.out.println("offset scaled: " + offset);
+		// System.out.println("rectangle is : " + 2 * offset + rect.width + ", " + 2 *
+		// offset + rect.height);
+		//
+		// int max_offset = Math.max(min_offset_x, min_offset_y);
+		// System.out.println("max_offset: " + max_offset);
+		// max_offset = max_offset / scale;
+		// System.out.println("max_offset scaled: " + max_offset);
+		// System.out.println("rectangle is : " + 2 * max_offset + rect.width + ", " + 2
+		// * max_offset + rect.height);
+
 		try {
 			if (element.getTagName().equals("option")) {
 
@@ -472,9 +475,9 @@ public class UtilsComputerVision {
 		/* Localizing the best match with minMaxLoc. */
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
-		
-		if(mmr.maxVal > 0.95) {
-			
+
+		if (mmr.maxVal > 0.95) {
+
 			/* Show me what you got. */
 			Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 					new Scalar(0, 255, 0), 2);
@@ -489,10 +492,10 @@ public class UtilsComputerVision {
 			 */
 
 			return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
-			
+
 		} else
 			return null;
-		
+
 	}
 
 	public static Point findAllCenters(String inFile, String templateFile) {
@@ -600,6 +603,39 @@ public class UtilsComputerVision {
 		Highgui.imwrite(annotated.getPath(), img);
 
 		return matches;
+	}
+
+	/**
+	 * Run the Shi-Tomasi algorithm on the @object image
+	 * 
+	 * @param object
+	 */
+	public static void shiTomasi(String object) {
+
+		System.out.println("Running Shi-Tomasi for corners detection");
+
+		/* Load the image in grayscale. */
+		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		MatOfPoint corners = new MatOfPoint();
+
+		/* Run Shi-Tomasi algorithm. */
+		Imgproc.goodFeaturesToTrack(objectImage, corners, 100, 0.10, 5);
+
+		Point[] points = corners.toArray();
+		System.out.println("points: ");
+
+		/* draw circles around the corner points. */
+		Mat img = Highgui.imread(object);
+		for (Point p : points) {
+			System.out.println(p);
+			Core.circle(img, p, 5, new Scalar(0, 0, 255), 1);
+		}
+
+		/* Save output. */
+		String filename = "output/templateMatching/shiTomasi.png";
+		Highgui.imwrite(filename, img);
+		System.out.println("Output saved in " + filename);
+
 	}
 
 	public static Rectangle2D nonMaxSuppression(List<Rectangle2D> boxes) {
@@ -720,7 +756,7 @@ public class UtilsComputerVision {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
-					+ " using image recognition algorithm TM_CCOEFF_NORMED");
+					+ " using image recognition algorithm TM_CCOEFF_NORMED with Canny preprocessing");
 
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 		}
@@ -735,11 +771,17 @@ public class UtilsComputerVision {
 		Mat dest = new Mat();
 		Core.add(dest, Scalar.all(0), dest);
 
-		File annotated = new File("canny.png");
+		/* output filename. */
+		String filename = inFile.toString();
+		int index = filename.lastIndexOf("/");
+		filename = filename.substring(index + 1, filename.length());
+		filename = filename.replace(".png", "");
+
+		File annotated = new File("output/templateMatching/CANNY-IMAGE-" + filename + ".png");
 		Highgui.imwrite(annotated.getPath(), img);
-		//
+
 		img = Highgui.imread(annotated.getPath());
-		//
+
 		Mat templ = Highgui.imread(templateFile);
 		Mat grayImageTempl = new Mat();
 
@@ -750,18 +792,26 @@ public class UtilsComputerVision {
 		dest = new Mat();
 		Core.add(dest, Scalar.all(0), dest);
 
-		File visuallocator = new File("visuallocator.png");
+		/* output filename. */
+		filename = templateFile.toString();
+		index = filename.lastIndexOf("/");
+		filename = filename.substring(index + 1, filename.length());
+		filename = filename.replace(".png", "");
+
+		File visuallocator = new File("output/templateMatching/CANNY-TEMPLATE-" + filename + ".png");
 		Highgui.imwrite(visuallocator.getPath(), templ);
 
 		templ = Highgui.imread(visuallocator.getPath());
 
-		// / Create the result matrix
+		// Create the result matrix
 		int result_cols = img.cols() - templ.cols() + 1;
 		int result_rows = img.rows() - templ.rows() + 1;
 		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
 
-		int methods[] = { Imgproc.TM_SQDIFF_NORMED, Imgproc.TM_SQDIFF, Imgproc.TM_CCOEFF_NORMED, Imgproc.TM_CCOEFF,
-				Imgproc.TM_CCORR, Imgproc.TM_CCORR_NORMED };
+		// int methods[] = { Imgproc.TM_SQDIFF_NORMED, Imgproc.TM_SQDIFF,
+		// Imgproc.TM_CCOEFF_NORMED, Imgproc.TM_CCOEFF,
+		// Imgproc.TM_CCORR, Imgproc.TM_CCORR_NORMED };
+		int methods[] = { Imgproc.TM_CCORR_NORMED };
 
 		List<Point> matches = new LinkedList<Point>();
 		List<Point> bestMatches = new LinkedList<Point>();
@@ -791,9 +841,15 @@ public class UtilsComputerVision {
 			/* Show me what you got. */
 			Core.rectangle(img, m, new Point(m.x + templ.cols(), m.y + templ.rows()), new Scalar(0, 255, 0), 1);
 		}
+		
+		/* output filename. */
+		filename = inFile.toString();
+		index = filename.lastIndexOf("/");
+		filename = filename.substring(index + 1, filename.length());
+		filename = filename.replace(".png", "");
 
 		/* Save the visualized detection. */
-		annotated = new File("annotated.png");
+		annotated = new File("output/templateMatching/CANNY-TM-" + filename + ".png");
 		Highgui.imwrite(annotated.getPath(), img);
 
 		return bestMatches;
