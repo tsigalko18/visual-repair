@@ -24,9 +24,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/crawljax-core-3.7-SNAPSHOT.jar" sourcepath="lib/crawljax-core-3.7-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="lib" path="lib/crawloverview-plugin-3.7-SNAPSHOT.jar" sourcepath="lib/crawloverview-plugin-3.7-SNAPSHOT-sources.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/crawljax-core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/crawloverview-plugin"/>
+	<classpathentry exported="true" kind="lib" path="lib/crawljax-core-3.7-SNAPSHOT-jar-with-dependencies.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/crawloverview-plugin-3.7-SNAPSHOT-jar-with-dependencies.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
