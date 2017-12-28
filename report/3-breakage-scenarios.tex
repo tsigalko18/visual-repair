@@ -16,12 +16,12 @@ This confirms the previous anecdotal findings on the problem of fragile web elem
 Indeed, the mapping between locators and web elements is heavily affected by changes to the web page layout/structure, often performed only to accommodate cosmetic or stylistic changes to align the GUI with the latest trends~\cite{2016-leotta-Advances,2016-Leotta-JSEP}. These changes may render tests inapplicable, because the locators become ineffective, as thoroughly reported in the literature~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-ICST,2013-Ricca-wse}. 
 Indeed, locators that rely on properties of the DOM (e.g., HTML attributes or XPath expressions) are prone to break for a large variety of reasons such as attributes or nodes being removed/modified from the DOM~\cite{Choudhary:2011:WWA:2002931.2002935}.
 
-Hammoudi and colleagues give also a \textbf{temporal} characterization of test breakages, distinguishing into direct, propagated, and silent breakages. A breakage is called direct when the test stops at a statement $st_i$, and $st_i$ has to be repaired in order to let the test pass or continue its execution. With propagated breakages, on the other hand, the test stops at a statement $st_i$, but another statement $st_j$, preceding $st_i$ (i.e., $j > i$), has to be repaired in order to let the test pass or continue its execution. Finally, a silent breakages do not manifest explicitly because the test does not stop nor fail, but yet it diverges from its original intent, and only by manually checking its execution (perhaps by looking at the actions performed on the GUI), the tester can detect the mis-behaviour.
+Hammoudi and colleagues give also a \textbf{temporal} characterization of test breakages, distinguishing into direct, propagated, and silent breakages. A breakage is called \textit{direct} when the test stops at a statement $st_i$, and $st_i$ has to be repaired in order to let the test pass or continue its execution. With \textit{propagated} breakages, on the other hand, the test stops at a statement $st_i$, but another statement $st_j$, preceding $st_i$ (i.e., $j > i$), must be repaired in order to let the test pass or continue its execution. Finally, \textit{silent} breakages do not manifest explicitly because the test does not stop nor fail, but yet it diverges from its original intent, and only by manually checking its execution (for example by looking at the actions performed on the GUI), the tester can detect the mis-behaviour.
 
 At this point, it should be clear that in order to do effective root cause analysis, the testers must take into consideration all aspects behind a breakage (e.g., its cause and its position in the test) and link them together to devise possible repairs that do not change the intended test scenario. This is why repairing web tests is often considered a burdensome activity that leads the test suites to be abandoned~\cite{Christophe2014}. In our belief, this is due to the high frequency at which those tests break, and the little tooling support in the identification of the root causes behind a breakage and repair.
 %
 Let us focus on locator problems only. Indeed, despite repairing locators could seem mostly a mechanical and straightforward activity, it instead accounts for a number of different scenarios -- some of which are particularly challenging to identify -- and that make this activity extremely time-consuming and 
-definitely limit the applicability of existing automated repair techniques. In the following of this section, we describe some of the most complex scenarios. In~\autoref{sec:approach} we present our novel test breakage detection and repair technique for E2E web tests.
+definitely limit the applicability of existing automated repair techniques. In the following of this section, we describe some of the most challenging test breakage scenarios. In~\autoref{sec:approach} we present our novel test breakage detection and repair technique for E2E web tests.
 
 %\begin{figure}[t]
 %\centering
@@ -44,7 +44,7 @@ definitely limit the applicability of existing automated repair techniques. In t
 
 \subsection{Breakage Scenarios}\label{sec:breakage-scenarios}
 
-Given the predominance of locator-related issues, we focus our analysis mostly on locator problems. In the following of this section, we present XXX\andrea{put number} challenging test breakage scenarios, and we show how the visual analysis can help to mitigate or correct such problems. However, we first formally define the concept of locator.
+Given the predominance of locator-related issues, we focus our analysis mostly on locator problems. In the following of this section, we present four (4) challenging test breakage scenarios, and we show how the visual analysis can help to mitigate or correct such problems. However, we first formally define the concept of locator.
 
 \begin{defn}[\textbf{Test statement}]
 At a high level, each Selenium test statement is a tuple \textit{<locator, action, value>}.
@@ -56,20 +56,20 @@ The locator component specifies the web element the test statement is interactin
 
 The locator function is surjective, that is every web element $e$ is mapped to by at least one locator (e.g., the XPath from the root to $e$), but there exist multiple locators {$\displaystyle \forall y\in Y,\exists x\in X{\text{ such that }}y=f(x).$} \andrea{stub. fix the definition}
 
-\begin{defn}[\textbf{Action}]
-The action component indicates either an event that is performed
-on a web element during recording, or an action specific to Selenium's control of the replay.
-\end{defn}
-
-\begin{defn}[\textbf{Value}] The value component refers to any input entered by the test within the element specified by the locator.
-\end{defn}
+%\begin{defn}[\textbf{Action}]
+%The action component indicates either an event that is performed
+%on a web element during recording, or an action specific to Selenium's control of the replay.
+%\end{defn}
+%
+%\begin{defn}[\textbf{Value}] The value component refers to any input entered by the test within the element specified by the locator.
+%\end{defn}
 
 \subsection{Non-Selection}\label{sec:nonselection}
 
 The first and perhaps most common scenario occurs when a locator $l$ applied to a certain DOM state $D$, returns no elements---formally, $l: D \rightarrow \emptyset$. 
 %
 
-\head{Scenario 1 (Non-Selection $\bullet$ Element Present)} 
+\subsubsection{Scenario 1 (Non-Selection $\bullet$ Element Present Same State)} 
 Let us focus on the scenario in which the desired web element is still present on the page ($e \in D$). 
 %To address this issue, first, a detection algorithm should make sure that $e \in D$. 
 Then, possible repairs require to find another locator $l'$, such that $l': D \rightarrow e$.
@@ -78,8 +78,7 @@ This scenario is depicted in~\autoref{claroline-together}: \textcircled{\raisebo
 %inserts \texttt{username} and \texttt{password} 
 %in the login form, and if these credentials are correct, 
 %the \texttt{username} is displayed on the the homepage (not shown for brevity).
-Finally, \autoref{claroline-together}~\textcircled{\raisebox{-0.9pt}{5}} shows a portion of a Selenium WebDriver test~\cite{selenium} which 
-fills in the username and password input boxes (Lines~5-6), and submits the form (Line~7). Suppose the test was developed for (or evolved until) version 1.10.0, where it ran correctly.
+Finally, \autoref{claroline-together}~\textcircled{\raisebox{-0.9pt}{5}} shows a portion of a Selenium WebDriver test~\cite{selenium} which fills in the username and password input boxes (Lines~5-6), and submits the form (Line~7). Suppose the test was developed for (or evolved until) version 1.10.0, where it ran correctly.
 %Line~8 verifies, by means of an assertion, the presence 
 %of an HTML element containing the username in the home page, 
 %and asserts that it equals the string ``admin''. 
@@ -118,8 +117,7 @@ In this case, an algorithm taking into consideration the visual appearance of th
 \label{misselection}
 \end{figure*}
 
-\noindent
-\textbf{Scenario 2 (Propagated) or Non Selection Neighbouring State.} 
+\subsubsection{Scenario 2 (Non-Selection $\bullet$ Element Moved to Neighbouring State)}
 As a concrete example consider \autoref{fig:ab1}, showing Addressbook web application version 6.2.12~\textcircled{\raisebox{-0.7pt}{1}}, specifically the pages in which the user can insert a new entry. The test~\textcircled{\raisebox{-0.7pt}{2}} clicks on the ``add new'' link on the home page (Line~5), and fills in the First name, Last name and Company text fields (Lines~6--8).
 Suppose now to replay the test on the successive version 7.0.0~\textcircled{\raisebox{-0.7pt}{3}}, for regression purposes. The test will raise an exception of kind \texttt{NoSuchElementException} at Line~6, when attempting to locate the ``First name'' text field~\textcircled{\raisebox{-0.7pt}{2}}. 
 Indeed, a new intermediate confirmation page has been added~\textcircled{\raisebox{-0.9pt}{3}}, and the navigational workflow of the test must be corrected to reflect that of the new modified web application.
@@ -131,8 +129,12 @@ Even the use of \water~\cite{Choudhary:2011:WWA:2002931.2002935} is unsuccessful
 
 In order to address this issue, we need to (1)~identify that the target state following the execution of a statement $st_i$ has changed between the two versions, (2)~mapping the web element $e \in st_i$ in version $V$ onto $st_j$, i.e., a neighbouring state of $st_i$  in the new version $V'$, which requires to (3)~finding  a web element $e' \in st_i$ such that $(e', st_i) \rightarrow st_j$ (the ``Next'' button in our example~\textcircled{\raisebox{-0.7pt}{3}}).
 
-\noindent
-\textbf{Scenario 3 (Non-Selection $\bullet$ Element Removed).} 
+\subsubsection{Scenario 3 (Non-Selection $\bullet$ Element Removed)} 
+%
+A third last non-selection scenario concerns a web element being deleted from a web page. This can be seen as the opposite scenario of Scenarios 1 and 2. 
+As a concrete example, consider the example of \autoref{fig:ab2}, with the application being evolved in the reverse order as depicted in the figure (thus considering going from version 7.0.0 to version 6.2.12). The test ~\textcircled{\raisebox{-0.7pt}{4}} would stop at Line 6, when trying to select the ``Next'' button, which was on a page that is no longer present. In this case, the only possible fix is to delete the statement.
+
+In order to identify this issue, we need to (1)~make sure that the locator $l$ returns no elements when applied to the DOM $D_i$ of $st_i$, and all possible DOMs $D_j$ of $st_j$, i.e., a neighbouring state of $st_i$.
 
 \subsection{Mis-Selection}\label{sec:misselection}
 Problems occur not only when web elements are being deleted, but also when they get modified, either in their position on the DOM tree, or their position in the application state space. This can cause tests to ``mis-select'' elements, which is another breakage scenario we aim to address.
@@ -142,15 +144,13 @@ In the next version $V'$, $l: D' \rightarrow \{e'\}$ where $e \ne e'$.
 A mis-selection of an element can lead to unpredictable misbehaviours of the test. In the following of this paragraph we analize two scenarios pertaining to mis-selection problems. 
 %In the following of this paragraph we analize two scenarios: (1)~the execution of a statement $st_i$ is supposed to trigger a certain state transition. Due to the mis-selection of the locator contained $st_i$, the transition does not take place (i.e., the app remains in the same state), and a later statement $st_k$ (with $k>i$) breaks. (2)~the execution of a statement $st_i$ triggers an unexpected state transition, that makes a successive statement $st_k$ (with $k>i$) to break (propagated).
 
-\noindent
-\textbf{Scenario 3 (Mis-Selection (Direct)).} 
+\subsubsection{Scenario 4 (Mis-Selection)} 
 Consider \autoref{misselection} again. 
-Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In the literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}, formally, $l: D \rightarrow e'$ where $e \ne e'$. The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a propagated or a silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Once again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakages patterns.
+Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}. %, formally, $l: D \rightarrow e'$ where $e \ne e'$. 
+The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a propagated or a silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Once again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakages patterns.
 
-%\andrea{this kind of breakage is associated mostly to XPath locators, but it can happen with attributes too if, for instance, two different elements share the same attribute locator.}
-
-\head{Summary}
-In this section, we have presented XXX \andrea{put number}  test breakage scenarios and we have shown how the visual appearance of the SUT can be utilized to overcome the existing test repair approaches and give an important contribution to the tester. We do not claim, however, that such a list represents all the possible scenarios. Note that the presented scenarios might (1)~occur together (i.e., leading to \textit{multiple} breakages in the same test) or (2)~interleave with each other.\andrea{is that possible possible?}
+\subsubsection{Summary}
+In this section, we have presented four (4) test breakage scenarios and we have shown how the visual appearance of the SUT can be utilized to overcome the existing test repair approaches and give an important contribution to the tester. We do not claim, however, that such a list represents all the possible scenarios. Note that the presented scenarios might occur together (i.e., leading to \textit{multiple} breakages in the same test), which complicates repair activities even further.
 
 %\begin{figure}[t]
 %\centering
@@ -165,11 +165,11 @@ In this section, we have presented XXX \andrea{put number}  test breakage scenar
 
 When a test $t$ that was used to function on a version $V$  breaks on a successive version $V'$, a tester needs to understand the root cause behind the breakage and a possible repair for it. 
 
-In doing so, at least four steps are involved: 
-(1)~the tester inspects the error stack trace or the console, which may contain information about the origin of breakage (e.g., ``\texttt{NoSuchElementException} occurred. Unable to locate element with \mbox{\texttt{name=password}}''). 
-(2)~the tester inspects $t$ to find the statement $st$ responsible for the failure; %which is also likely to be the one that needs to be corrected (note that this is not always true).
-(3)~the tester navigates the GUI of $V'$, trying to identify the portion of the GUI which is related to $st$. 
-(4)~depending on the kind of breakage, the tester inspects either the (i)~DOM of $V'$, or (ii)~the GUI of $V'$, or (iii)~both the DOM and the GUI, to find candidate repair solutions. In doing so, the tester may possibly need to exercise manually the same broken scenario of $t$ (i.e., all the actions in the statements preceding $st$), in order to replicate the breakage occurred at $st$ and gather insights on possible repair actions.
+In doing so, at least four steps are involved. 
+(1)~The tester inspects the error stack trace or the console, which may contain information about the origin of breakage (e.g., ``\texttt{NoSuchElementException} occurred. Unable to locate element with \mbox{\texttt{name=password}}''). 
+(2)~The tester inspects $t$ to find the statement $st$ responsible for the failure. %which is also likely to be the one that needs to be corrected (note that this is not always true).
+(3)~The tester navigates the GUI of $V'$, trying to identify the portion of the GUI related to $st$. 
+(4)~Depending on the kind of breakage, the tester inspects either the (i)~DOM of $V'$, or (ii)~the GUI of $V'$, or (iii)~both the DOM and the GUI, to find candidate repair solutions. In doing so, the tester may possibly need to exercise manually the same broken scenario of $t$ (i.e., all the actions in the statements preceding $st$), in order to replicate the breakage occurred at $st$ and gather insights on possible repair actions.
 
 To wrap up, a \textbf{first challenge} in repairing web tests derives from the fact that  
 %Thus, in E2E web tests such as Selenium's 
@@ -183,7 +183,8 @@ In this paper we wish to make step ahead to provide such understanding.
 Our aim is to combine the knowledge present in the DOM of the application with its visual appearance, so as to effectively aid the tester in the test repair problem. Our approach aims at automating the mental model the testers create when a test case is executed against a web application GUI. In our belief, such a model is a viable means for automating test case repair.
 
 Existing locator repair techniques are indeed limited when the web application undergoes drastic structural changes because they only consider the DOM as source where to find possible repairs.
-However, we argue that visual image recognition can help to fix all the breakages that pertain to ineffective locators that target web elements that are still present and visually displayed within the same web page.
+However, we argue that visual image recognition can help verify each test step (i.e., locator), signalling 
+to fix all the breakages that pertain to ineffective locators that target web elements that are still present and visually displayed within the same web page.
 
 \subsection{Computer Vision Stuff}
 
@@ -233,7 +234,6 @@ Technically a corner is the intersection of two edges, whereas an interest point
 \label{approach}
 \end{figure*}
 
-
 \subsubsection{Template Matching}
 
 \begin{itemize}
@@ -244,21 +244,6 @@ Technically a corner is the intersection of two edges, whereas an interest point
 \item one try might be to use multiple images (i.e. both the perfectly cropped and the larger visual locator).
 \item try to implement Chamfer Matching
 \end{itemize}
-
-\subsubsection{Metrics}
-
-\begin{enumerate}
-\item The number of \textit{true positives} (TP):The number of samples that have been correctly identified as being the class being sought (e.g. that a face exists at a particular location).
-\item The number of \textit{false positives} (FP): The number of samples that have been incorrectly identified as being the class being sought (e.g. that a face exists at a particular location when there is no face present).
-\item The number of \textit{true negatives} (TN): The number of samples that have been correctly identified as not being the class being sought (e.g. that a face does not exist at a particular location).
-\item The number of \textit{false negatives} (FN): The number of samples that have been incorrectly identified as not being the class being sought (e.g. that a face does not exist at a particular location when there is a face present at that location).
-\item Recall is the percentage of the objects being sought which have been successfully located. Recall = TP / (TP + FN)
-\item Precision is the percentage of the positive classifications which are correct (i.e. are not false alarms). Precision = TP / (TP + FP)
-\item Accuracy is the percentage of the total samples which are correct. Accuracy = TP + TN / TotalSamples
-\end{enumerate}
-
-
-
 
 
 

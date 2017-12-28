@@ -22,6 +22,19 @@ We selected XXX open source web applications for which Selenium test cases were 
 
 \subsection{Procedure}\label{sec:procedure}
 
+\subsubsection{Metrics}
+
+\begin{enumerate}
+\item The number of \textit{true positives} (TP):The number of samples that have been correctly identified as being the class being sought (e.g. that a face exists at a particular location).
+\item The number of \textit{false positives} (FP): The number of samples that have been incorrectly identified as being the class being sought (e.g. that a face exists at a particular location when there is no face present).
+\item The number of \textit{true negatives} (TN): The number of samples that have been correctly identified as not being the class being sought (e.g. that a face does not exist at a particular location).
+\item The number of \textit{false negatives} (FN): The number of samples that have been incorrectly identified as not being the class being sought (e.g. that a face does not exist at a particular location when there is a face present at that location).
+\item Recall is the percentage of the objects being sought which have been successfully located. Recall = TP / (TP + FN)
+\item Precision is the percentage of the positive classifications which are correct (i.e. are not false alarms). Precision = TP / (TP + FP)
+\item Accuracy is the percentage of the total samples which are correct. Accuracy = TP + TN / TotalSamples
+\end{enumerate}
+
+\noindent
 (1)~use \textit{many} (10-15) subjects (e.g., test suites) and only two (2) major releases. Advantage is that there is threat to internal/construct validity where applying a different repair is concerned. There is the TTV of the selection of the releases. \\
 
 \noindent
