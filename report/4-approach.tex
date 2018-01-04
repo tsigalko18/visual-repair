@@ -2,6 +2,15 @@
 \section{Approach}\label{sec:approach}
 
 \begin{itemize}
+\item use SIFT to determine whether the image is present/absent
+\item SIFT returns also an estimate of where the majority of keypoints has been found
+\item Template matching usually returns multiple or inaccurate results
+\item the idea is to filter the TM results with SIFT's
+\item one try might be to use multiple images (i.e. both the perfectly cropped and the larger visual locator).
+\item try to implement Chamfer Matching
+\end{itemize}
+
+\begin{itemize}
 \item The scope of this paper is to repair test breakages. 
 \item What about detection?
 \item We focus on locators because they represent the main problem

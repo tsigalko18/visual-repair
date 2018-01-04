@@ -54,7 +54,7 @@ At a high level, each Selenium test statement is a tuple \textit{<locator, actio
 The locator component specifies the web element the test statement is interacting with. A locator is a function on a DOM state $D$. Notationally, $$l: D \rightarrow \{e\}$$ where $e$ is the web element returned by the locator $l$ when applied to $D$. 
 \end{defn}
 
-The locator function is surjective, that is every web element $e$ is mapped to by at least one locator (e.g., the XPath from the root to $e$), but there exist multiple locators {$\displaystyle \forall y\in Y,\exists x\in X{\text{ such that }}y=f(x).$} \andrea{stub. fix the definition}
+The locator function is surjective, that is every web element $e$ is mapped to by at least one locator (e.g., the XPath from the root to $e$), but there exist multiple locators {$\displaystyle \forall l\in L,\exists e\in D{\text{ such that }} l: D \rightarrow \{e\}$}.
 
 %\begin{defn}[\textbf{Action}]
 %The action component indicates either an event that is performed
@@ -93,7 +93,8 @@ This is a simple instance of \textit{test breakage}, because the test scenario i
 At this aim, a tester may wish to use the \water  technique~\cite{Choudhary:2011:WWA:2002931.2002935} to automatically repair the broken statement at Line~7. Specifically, another locator for the ``Enter'' button~\textcircled{\raisebox{-0.9pt}{3}} needs to be found, rather the relying on ``broken'' attribute \texttt{name}. \water will attempt to gather information about the broken element (such as the XPath, and the various attributes) by analysing the DOM of the previous version 1.10.0, and match such information on the evolved DOM of version 1.11.0. Unfortunately, \water's technique is ineffective in such a scenario, because (1)~the attribute \texttt{name} has been deleted from the DOM, and (2)~the XPath and the tag of the target element have changed (from \mbox{\texttt{input}} to \mbox{\texttt{button}}), which renders impossible for \water's heuristic to identify it on the evolved DOM and apply its automatic repair.
 %such as the XPath of the element, which is unfortunately inapplicable given that the tag of the element has changed (from \mbox{\texttt{input}} to \mbox{\texttt{button}}).
  
-In this case, an algorithm taking into consideration the visual appearance of the test state might be able to match the target element between the two GUIs (in a similar way as a human tester would do). However, this task is challenging to be automated because several issues needs to be solved. Among all (1)~finding an accurate visual matching technique, and, in the case a visual match is found, (2)~retrieving the corresponding element in the DOM. \andrea{once all the scenarios will be described, this part might be refactored up}
+In this case, an algorithm taking into consideration the visual appearance of the test state might be able to match the target element between the two GUIs (in a similar way as a human tester would do). However, this task is challenging to be automated because several issues needs to be solved. Among all (1)~finding an accurate visual matching technique, and, in the case a visual match is found, (2)~retrieving the corresponding element in the DOM. 
+%\andrea{once all the scenarios will be described, this part might be refactored up}
 
 \begin{figure*}[t]
 \centering
@@ -186,44 +187,9 @@ Existing locator repair techniques are indeed limited when the web application u
 However, we argue that visual image recognition can help verify each test step (i.e., locator), signalling 
 to fix all the breakages that pertain to ineffective locators that target web elements that are still present and visually displayed within the same web page.
 
-\subsection{Computer Vision Stuff}
+\subsection{Brief Computer Vision Background}
 
-\subsection{General Terms}
-
-In object detection problems we usually have two sets of images. The training set is used for showing the computer what the desired object looks like. This can be done by calculating hue histograms or by computing keypoints and keypoint descriptors. Obviously, it is preferable that training images are either annotated (locations of objects of interest are specified by bounding boxes) or just contain the objects of interest and little else. The testing set contains images on which the algorithm, in short, the use case of your application.
-
-\subsubsection{Histograms}
-
-\head{1-D histograms}
-An image histogram is an abstraction of an image where the frequency of each image (brightness/intensity) value is determined.
-The histogram contains global information about the image and that information is completely independent of the position and orientation of objects in the scene. In some cases, the histogram or information derived from it (such as the average intensity and its standard deviation) can be used to perform classification (e.g. apples with bruises will result in dark spots, which will change the shape of the histogram when compared to histograms from good apples). However, care must be taken as image histograms are not unique and hence many very different images may have similar (or even the same) histogram.
-
-\head{Coloured histograms}
-Another issue that arises is what to do with colour images. Often histograms are determined for each channel independently. 
-The choice of colour model can have a huge effect on the usefulness of the colour histogram.
-
-\head{3-D histograms}
-If we want to achieve better segmentation, we would need to look at a 3D histogram of the colours.
-To overcome the explosion in the number of cells within the histogram, we reduce the quantisation of the histogram. 
-
-\head{Histogram Comparison}
-Retrieving images that are similar to a given image or that contain particular content is a well-known imaging problem.
-It is possible to provide assistance to this process by analysing the colour distribution present in an image and this can be done by comparing histograms derived from the images.
-
-\head{Thresholding}
-A binary image is created from a grey-scale image by thresholding. 
-Otsu's thresholding is among the most effective techniques.
-
-\head{Hough Transform}
-The Hough transformation is a very elegant transformation that directly maps from image space to the probability of the existence of some features (such as lines, circles or generalised shapes). Works for lines, circles, etc.
-
-\subsubsection{Feature Detection}
-
-The philosophy of this method is that one should not make the computer ``learn'' the characteristics of the whole object template (like calculating the histogram of flood-filled points) and look for similar instances in other images. Instead, one should find certain ``important'' points (keypoints) in the object template and store information about the neighbourhood of those keypoints (keypoint descriptors) as a description of the object. In other test images, one should find keypoint descriptors of keypoints in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
-
-It is difficult to determine locally the movement of the edge from one frame to the next frame in an image sequence. 
-To overcome this problem, a common approach in computer vision is to instead make use of corners, image features or interest points.
-Technically a corner is the intersection of two edges, whereas an interest point is any point that can be located robustly, which includes corners but also includes such features as small marks.
+Being the intention of using computer vision to mimic how a user sees a web page, and decides whether an element is present or not, we provide the reader with a short background of the computer vision techniques that are useful in this setting.
 
 \begin{figure*}[t]
 \centering
@@ -236,14 +202,21 @@ Technically a corner is the intersection of two edges, whereas an interest point
 
 \subsubsection{Template Matching}
 
-\begin{itemize}
-\item use SIFT to determine whether the image is present/absent
-\item SIFT returns also an estimate of where the majority of keypoints has been found
-\item Template matching usually returns multiple or inaccurate results
-\item the idea is to filter the TM results with SIFT's
-\item one try might be to use multiple images (i.e. both the perfectly cropped and the larger visual locator).
-\item try to implement Chamfer Matching
-\end{itemize}
+Identifying web elements visually across different versions (i.e., pages) of a web application falls within a common branch of image analysis known as template matching. 
+
+Template matching aims to detect the occurrence of a specific pattern or object in an image~\cite{Brunelli:2009:TMT:1643435}. This is done by defining a small image of the object -- a template -- and searching for a similar occurrence in a given image. In general, the search is limited to a region of interest inside which we think the object being searched can be found. The template is then slid over this region, and a similarity measure is computed at each pixel location.
+
+\andrea{insert example here}
+
+Unfortunately, template matching does not do a good job of telling us if an object does not appear in an image. Sure, we could set thresholds on the correlation coefficient, but in practice this is not reliable and robust. Looking for a more robust approach, we have to explore keypoint matching.
+
+\subsubsection{Feature Detection}
+
+The philosophy of this method is that one should not make the computer ``learn'' the characteristics of the whole object template (like calculating the histogram of flood-filled points) and look for similar instances in other images. Instead, one should find certain ``important'' points (keypoints) in the object template and store information about the neighbourhood of those keypoints (keypoint descriptors) as a description of the object. In other test images, one should find keypoint descriptors of keypoints in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
+
+It is difficult to determine locally the movement of the edge from one frame to the next frame in an image sequence. 
+To overcome this problem, a common approach in computer vision is to instead make use of corners, image features or interest points.
+Technically a corner is the intersection of two edges, whereas an interest point is any point that can be located robustly, which includes corners but also includes such features as small marks.
 
 
 
