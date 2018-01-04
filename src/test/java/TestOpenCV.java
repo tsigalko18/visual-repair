@@ -48,32 +48,43 @@ public class TestOpenCV {
 	}
 
 	@Test
+	public void testTemplateMatchingTemplateExampleForPaper() {
+
+		String image = "src/test/resources/29-1before-TestLoginAdmin-29.png";
+		String template = "src/test/resources/29-visualLocatorLarge-TestLoginAdmin-29.png";
+
+		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
+
+	}
+
+	@Ignore
+	@Test
 	public void testTemplateMatchingTemplateAddressBook() {
 
 		String image = "src/test/resources/addressbook/25-1before-TestUserAdded-25.png";
 		String template = "src/test/resources/addressbook/25-visualLocator-TestUserAdded-25.png";
 		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-		
+
 		image = "src/test/resources/addressbook/26-1before-TestUserAdded-26.png";
 		template = "src/test/resources/addressbook/26-visualLocator-TestUserAdded-26.png";
 		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-		
+
 		image = "src/test/resources/addressbook/27-1before-TestUserAdded-27.png";
 		template = "src/test/resources/addressbook/27-visualLocator-TestUserAdded-27.png";
 		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-		
+
 		image = "src/test/resources/addressbook/28-1before-TestUserAdded-28.png";
 		template = "src/test/resources/addressbook/28-visualLocator-TestUserAdded-28.png";
 		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-		
+
 		image = "src/test/resources/addressbook/29-Annotated-TestUserAdded-29.png";
 		template = "src/test/resources/addressbook/29-visualLocator-TestUserAdded-29.png";
 		assertNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-		
+
 	}
 
 	@Ignore

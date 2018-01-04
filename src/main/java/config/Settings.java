@@ -5,13 +5,13 @@ import java.io.File;
 public class Settings {
 
 	/* package name of the correct test suite. */
-	// public static String testSuiteCorrect = "addressbook6211";
+	public static String testSuiteCorrect = "addressbook6211";
 	// public static String testSuiteCorrect = "claroline";
-	public static String testSuiteCorrect = "claroline1811";
+	// public static String testSuiteCorrect = "claroline1811";
 
 	/* package name of the broken/regressed test suite. */
-	public static String testSuiteBroken = "clarolineDirectBreakage";
-	// public static String testSuiteBroken = "addressbook825";
+	// public static String testSuiteBroken = "clarolineDirectBreakage";
+	public static String testSuiteBroken = "addressbook825";
 	// public static String testSuiteBroken = "claroline190";
 
 	/*
@@ -22,7 +22,7 @@ public class Settings {
 	public static String projectBaseFolder = "src" + separator + "main" + separator + "java" + separator;
 	public static String resourcesFolder = "src" + separator + "main" + separator + "resources" + separator;
 	public static String outputFolder = "output" + separator;
-	
+
 	/* specify if AspectJ is active. */
 	public static boolean aspectActive = true;
 
@@ -46,7 +46,8 @@ public class Settings {
 
 	/* regexp. */
 	public static final String[] TAGS_BLACKLIST = new String[] { "head", "script", "link", "meta", "style", "canvas" };
-	public static final String[] ATTRIBUTES_WHITELIST = new String[] { "id", "name", "class", "title", "alt", "value" }; // id, name, class, title, alt and value
+	public static final String[] ATTRIBUTES_WHITELIST = new String[] { "id", "name", "class", "title", "alt", "value" };
+
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 

@@ -104,7 +104,7 @@ public class UtilsTemplateMatching {
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.9f;
+		float nndrRatio = 0.7f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -173,13 +173,13 @@ public class UtilsTemplateMatching {
 				Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
 
 				Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 				Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 				Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 				Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 
 				// System.out.println("Drawing matches image...");
 				MatOfDMatch goodMatches = new MatOfDMatch();
@@ -321,13 +321,13 @@ public class UtilsTemplateMatching {
 				Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
 
 				Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 				Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 				Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 				Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-						new Scalar(0, 255, 0), 4);
+						new Scalar(255, 0, 0), 2);
 
 				// System.out.println("Drawing matches image...");
 				MatOfDMatch goodMatches = new MatOfDMatch();
@@ -367,9 +367,19 @@ public class UtilsTemplateMatching {
 	 */
 	private static Point templateMatching(String templateFile, String imageFile) {
 
-		/* load the images. */
+		/* load the images in grayscale. */
+//		Mat img = Highgui.imread(imageFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+//		Mat templ = Highgui.imread(templateFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		
+		/* load the images full color. */
 		Mat img = Highgui.imread(imageFile);
 		Mat templ = Highgui.imread(templateFile);
+		
+		File t = new File("output/templateMatching/TM-template.png");
+		Highgui.imwrite(t.getPath(), templ);
+		
+		File o = new File("output/templateMatching/TM-imageoriginal.png");
+		Highgui.imwrite(o.getPath(), img);
 
 		/* Create the result matrix. */
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -379,11 +389,15 @@ public class UtilsTemplateMatching {
 		/* Do the Matching and Normalize. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
 		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-
+		
+		File risultato = new File("output/templateMatching/TM-risultato.png");
+		Highgui.imwrite(risultato.getPath(), result);
+		
 		List<Point> matches = new LinkedList<Point>();
 
 		for (int i = 0; i < result_rows; i++) {
 			for (int j = 0; j < result_cols; j++) {
+				
 				if (result.get(i, j)[0] >= 0.99) {
 					matches.add(new Point(i, j));
 				}
@@ -401,27 +415,29 @@ public class UtilsTemplateMatching {
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
 
+		System.out.println("Max point found at: " + matchLoc.x + ", " + matchLoc.y);
+		
 		/* Draws a rectangle over the detected area. */
 		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
-		/* Draws a cross mark at the center of the detected area. */
-		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
-				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
-				2);
-		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
-				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
-				2);
-
-		/* Draws a cross mark at the center of the detected area. */
-		for (Point point : matches) {
-			/* Draws a rectangle over the detected area. */
-			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 0, 255),
-					1);
-		}
+//		/* Draws a cross mark at the center of the detected area. */
+//		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
+//				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
+//				2);
+//		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
+//				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
+//				2);
+//
+//		/* Draws the others detected matches. */
+//		for (Point point : matches) {
+//			/* Draws a rectangle over the detected area. */
+//			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 0, 255),
+//					1);
+//		}
 
 		/* Save the visualized detection. */
-		String filename = templateFile.toString();
+		String filename = imageFile.toString();
 		int i = filename.lastIndexOf("/");
 		filename = filename.substring(i + 1, filename.length());
 		filename = filename.replace(".png", "");

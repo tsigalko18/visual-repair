@@ -12,7 +12,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<selenium.version>2.53.0</selenium.version>
 	</properties>
 
 	<build>
@@ -146,6 +145,24 @@
   			<artifactId>jgrapht-core</artifactId>
   			<version>1.0.1</version>
 		</dependency>
+		
+		<!-- Crawljax with dependencies -->
+		<dependency>
+			<groupId>com.crawljax</groupId>
+			<artifactId>crawljax-core</artifactId>
+			<version>3.7</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/crawljax-core-3.7-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.crawljax.plugins</groupId>
+			<artifactId>crawloverview-plugin</artifactId>
+			<version>3.7</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/crawloverview-plugin-3.7-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+		</dependency>
+		
 		<!-- <dependency> <groupId>com.crawljax</groupId> <artifactId>crawljax-core</artifactId> 
 			<version>3.6</version> <exclusions> <exclusion> <groupId>org.slf4j</groupId> 
 			<artifactId>slf4j-api</artifactId> </exclusion> </exclusions> </dependency> -->
