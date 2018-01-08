@@ -78,14 +78,14 @@ This scenario is depicted in~\autoref{claroline-together}: \textcircled{\raisebo
 %inserts \texttt{username} and \texttt{password} 
 %in the login form, and if these credentials are correct, 
 %the \texttt{username} is displayed on the the homepage (not shown for brevity).
-Finally, \autoref{claroline-together}~\textcircled{\raisebox{-0.9pt}{5}} shows a portion of a Selenium WebDriver test~\cite{selenium} which fills in the username and password input boxes (Lines~5-6), and submits the form (Line~7). Suppose the test was developed for (or evolved until) version 1.10.0, where it ran correctly.
+Finally,~\textcircled{\raisebox{-0.9pt}{5}} shows a portion of a Selenium WebDriver test~\cite{selenium} which fills in the username and password input boxes (Lines~5-6), and submits the form (Line~7). Suppose the test was developed for (or evolved until) version 1.10.0, where it ran correctly.
 %Line~8 verifies, by means of an assertion, the presence 
 %of an HTML element containing the username in the home page, 
 %and asserts that it equals the string ``admin''. 
 %Finally, Line~9 shuts down the WebDriver instance 
 %and closes the browser.
 
-When executed on version 1.11.0~\textcircled{\raisebox{-0.8pt}{1}}, instead, the test will stop at Line~7, when attempting to locate the ``Enter'' button~\textcircled{\raisebox{-0.9pt}{3}}, because the attribute \mbox{\texttt{name="submitAuth"}} has been removed from the HTML~\textcircled{\raisebox{-0.9pt}{4}}. Typically non selection problems manifest as direct breakages, because the broken statement is the one that needs to be repaired.  
+When executed on version 1.11.0~\textcircled{\raisebox{-0.8pt}{3}}, instead, the test will stop at Line~7, when attempting to locate the ``Enter'' button, because the attribute \mbox{\texttt{name="submitAuth"}} has been removed from the HTML~\textcircled{\raisebox{-0.9pt}{4}}. Typically non-selection problems manifest as direct breakages, because the broken statement is the one that needs to be repaired.  
 %
 At a visual inspection of the two GUIs, a tester would expect the test to work, because her perception is immaterial where changes at DOM-level are concerned. Moreover, it is evident that the target element (i.e., the ``Enter'' button) is \textit{visually} still present on the page, and its position \textit{on the GUI} has not changed.
  
@@ -123,22 +123,22 @@ As a concrete example consider \autoref{fig:ab1}, showing Addressbook web applic
 Suppose now to replay the test on the successive version 7.0.0~\textcircled{\raisebox{-0.7pt}{3}}, for regression purposes. The test will raise an exception of kind \texttt{NoSuchElementException} at Line~6, when attempting to locate the ``First name'' text field~\textcircled{\raisebox{-0.7pt}{2}}. 
 Indeed, a new intermediate confirmation page has been added~\textcircled{\raisebox{-0.9pt}{3}}, and the navigational workflow of the test must be corrected to reflect that of the new modified web application.
 
-From a tester perspective, the ``First name'' text field can no longer be found in the web page (test state) following the execution of the statement at Line~5. However, conceptually, the repair action that needs to be triggered in order to correct the test has nothing to do with the locator at Line~6.
+From a testing perspective, the ``First name'' text field can no longer be found on the web page (test state) following the execution of the statement at Line~5. However, conceptually, the repair action that needs to be triggered in order to correct the test has nothing to do with the locator at Line~6.
 In fact, by only looking at the exception raised by JUnit, it is  challenging for the tester to detect this problem, unless the \textit{visual execution} of the test is taken into consideration.
 %
-Even the use of \water~\cite{Choudhary:2011:WWA:2002931.2002935} is unsuccessful, because it would attempt at repairing the broken statement at Line~6. (the technique only handles addition of statements within forms, and does not apply to general broken workflow scenarios).
+Even the use of \water is unsuccessful, because it would attempt at repairing the broken statement at Line~6. (the technique only handles addition of statements within forms, and does not apply to general broken workflow scenarios).
 
-In order to address this issue, we need to (1)~identify that the target state following the execution of a statement $st_i$ has changed between the two versions, (2)~mapping the web element $e \in st_i$ in version $V$ onto $st_j$, i.e., a neighbouring state of $st_i$  in the new version $V'$, which requires to (3)~finding  a web element $e' \in st_i$ such that $(e', st_i) \rightarrow st_j$ (the ``Next'' button in our example~\textcircled{\raisebox{-0.7pt}{3}}).
+In order to address this issue, we need to (1)~identify that the target state following the execution of a statement $st_i$ has changed between the two versions, (2)~trace the web element $e \in st_i$ in version $V$ onto $st_j$, i.e., a neighbouring state of $st_i$  in the new version $V'$, which requires to (3)~find  a web element $e' \in st_i$ such that $(e', st_i) \rightarrow st_j$ (the ``Next'' button in our example~\textcircled{\raisebox{-0.7pt}{3}}).
 
 \subsubsection{Scenario 3 (Non-Selection $\bullet$ Element Removed)} 
 %
-A third last non-selection scenario concerns a web element being deleted from a web page. This can be seen as the opposite scenario of Scenarios 1 and 2. 
+The third and last non-selection scenario we present concerns a web element being deleted from a web page. This can be seen as the opposite scenario of Scenario 2. 
 As a concrete example, consider the example of \autoref{fig:ab2}, with the application being evolved in the reverse order as depicted in the figure (thus considering going from version 7.0.0 to version 6.2.12). The test ~\textcircled{\raisebox{-0.7pt}{4}} would stop at Line 6, when trying to select the ``Next'' button, which was on a page that is no longer present. In this case, the only possible fix is to delete the statement.
-
+%
 In order to identify this issue, we need to (1)~make sure that the locator $l$ returns no elements when applied to the DOM $D_i$ of $st_i$, and all possible DOMs $D_j$ of $st_j$, i.e., a neighbouring state of $st_i$.
 
 \subsection{Mis-Selection}\label{sec:misselection}
-Problems occur not only when web elements are being deleted, but also when they get modified, either in their position on the DOM tree, or their position in the application state space. This can cause tests to ``mis-select'' elements, which is another breakage scenario we aim to address.
+Problems occur not only when web elements are being deleted, but also when they get modified, either in their position on the DOM tree, or their position in the application state space. This can cause tests to ``mis-select'' elements, which is another challenging breakage scenario we aim to address in this work.
 
 Specifically, a mis-selection occurs when a locator selects a different DOM element from the one that was used to target. Suppose having version $V$ and a test $t$, composed of a statement $st_i$, which uses a locator $l$ (where $l: D \rightarrow \{e\}$).
 In the next version $V'$, $l: D' \rightarrow \{e'\}$ where $e \ne e'$.
@@ -147,11 +147,11 @@ A mis-selection of an element can lead to unpredictable misbehaviours of the tes
 
 \subsubsection{Scenario 4 (Mis-Selection)} 
 Consider \autoref{misselection} again. 
-Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}. %, formally, $l: D \rightarrow e'$ where $e \ne e'$. 
-The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a propagated or a silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Once again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakages patterns.
+Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, a click on the Next button has been added between Line~5 and Line~6 as in~\textcircled{\raisebox{-0.9pt}{4}}). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas the statement at Line~8 will fill the field Nickname, instead of the field Company. In literature, this is known as mis-selection problem~\cite{Choudhary:2011:WWA:2002931.2002935}. %, formally, $l: D \rightarrow e'$ where $e \ne e'$. 
+The mis-selection problem leads to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a direct, propagated or silent breakage~\cite{Hammoudi-2016-ICST}. A propagated breakage occurs when the test breaks in a different point from the one in which the breakage originates. Typically, the test continues its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}. Once again, those scenarios are challenging to discover for the tester, because only at a careful manual inspection of the test execution, one can recognize such breakage patterns.
 
 \subsubsection{Summary}
-In this section, we have presented four (4) test breakage scenarios and we have shown how the visual appearance of the SUT can be utilized to overcome the existing test repair approaches and give an important contribution to the tester. We do not claim, however, that such a list represents all the possible scenarios. Note that the presented scenarios might occur together (i.e., leading to \textit{multiple} breakages in the same test), which complicates repair activities even further.
+In this section, we have presented four (4) test breakage scenarios and we have discussed how the visual appearance of the SUT can be utilized to overcome the existing test repair approaches and give an important contribution to the tester. We do not claim, however, that such a list represents all the possible scenarios. It is worth remarking that the context is further complicated by the fact that the presented scenarios can occur together (i.e., leading to \textit{multiple} breakages in the same test), which complicates detecting and repair activities even further.
 
 %\begin{figure}[t]
 %\centering
@@ -189,15 +189,6 @@ However, we argue that visual image recognition can help verify each test step (
 \subsection{Brief Computer Vision Background}
 
 One of our motivations of conducting this research is to use computer vision techniques to assist software-engineering tasks. In particular, we aim to propose a method that mimics how a user sees a web page, and how she decides whether an element is present or not. We provide the reader with a short background of the computer vision techniques that are useful in this setting.
-
-\begin{figure}[t]
-\centering
-%\fbox{
-\includegraphics[trim={0.2cm 13cm 5cm 0.2cm},clip,scale=0.24]{images/approach2}
-%}
-\caption{High Level Overview of Visual Test Repair Approach}
-\label{approach}
-\end{figure}
 
 \subsubsection{Template Matching}
 
