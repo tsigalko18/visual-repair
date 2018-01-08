@@ -174,7 +174,7 @@ In doing so, at least four steps are involved.
 
 To wrap up, a \textbf{first challenge} in repairing web tests derives from the fact that  
 %Thus, in E2E web tests such as Selenium's 
-the tester often needs to inspect and link the behaviour of the test code execution, along with the modification perpetrated to the GUI and the DOM of the application. 
+the tester often needs to inspect and link the behaviour of the test code execution, to the modification perpetrated to the GUI and the DOM of the application. 
 In other words, breakages are often repaired by finding candidate solutions through the inspection of the DOM and the GUI \textit{at the same time}.
 For this reason, it is arguably more difficult (or more time consuming) to repair Selenium's tests than standard JUnit tests for desktop applications (for which the error messages are typically more informative and IDE features make the debugging activities easier).
 
@@ -184,39 +184,34 @@ In this paper we wish to make step ahead to provide such understanding.
 Our aim is to combine the knowledge present in the DOM of the application with its visual appearance, so as to effectively aid the tester in the test repair problem. Our approach aims at automating the mental model the testers create when a test case is executed against a web application GUI. In our belief, such a model is a viable means for automating test case repair.
 
 Existing locator repair techniques are indeed limited when the web application undergoes drastic structural changes because they only consider the DOM as source where to find possible repairs.
-However, we argue that visual image recognition can help verify each test step (i.e., locator), signalling 
-to fix all the breakages that pertain to ineffective locators that target web elements that are still present and visually displayed within the same web page.
+However, we argue that visual image recognition can help verify each test step (i.e., locator), signalling and fixing the breakages that pertain to locators.
 
 \subsection{Brief Computer Vision Background}
 
-Being the intention of using computer vision to mimic how a user sees a web page, and decides whether an element is present or not, we provide the reader with a short background of the computer vision techniques that are useful in this setting.
+One of our motivations of conducting this research is to use computer vision techniques to assist software-engineering tasks. In particular, we aim to propose a method that mimics how a user sees a web page, and how she decides whether an element is present or not. We provide the reader with a short background of the computer vision techniques that are useful in this setting.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 %\fbox{
-\includegraphics[trim={0.0cm 18cm 0.0cm 0cm},clip,scale=0.435]{images/approach-reduced2}
+\includegraphics[trim={0.2cm 13cm 5cm 0.2cm},clip,scale=0.24]{images/approach2}
 %}
 \caption{High Level Overview of Visual Test Repair Approach}
 \label{approach}
-\end{figure*}
+\end{figure}
 
 \subsubsection{Template Matching}
 
-Identifying web elements visually across different versions (i.e., pages) of a web application falls within a common branch of image analysis known as template matching. 
-
+Identifying web elements \textit{visually} across different versions (i.e., pages) of a web application falls within a common branch of image analysis known as template matching. 
+%
 Template matching aims to detect the occurrence of a specific pattern or object in an image~\cite{Brunelli:2009:TMT:1643435}. This is done by defining a small image of the object -- a template -- and searching for a similar occurrence in a given image. In general, the search is limited to a region of interest inside which we think the object being searched can be found. The template is then slid over this region, and a similarity measure is computed at each pixel location.
 
-\andrea{insert example here}
-
-Unfortunately, template matching does not do a good job of telling us if an object does not appear in an image. Sure, we could set thresholds on the correlation coefficient, but in practice this is not reliable and robust. Looking for a more robust approach, we have to explore keypoint matching.
+Matching images can be challenging as the algorithm must account for factors such as scaling, rotation, and lighting. Fortunately, the images we match in this work are screen captures from web applications rendered by the same browser. Thus, in this context, the above issues are ameliorated, and the main problems are, for instance, the shifting of GUI elements or the fact that some elements are not displayed at all~\cite{}.
+% 
+To this aim, template matching alone does not do a good job of telling us if an object does not appear in an image. Sure, we could set thresholds on the correlation coefficient, but in practice this is not robust. Looking for a more reliable approach, we have to explore keypoint matching.
 
 \subsubsection{Feature Detection}
 
-The philosophy of this method is that one should not make the computer ``learn'' the characteristics of the whole object template (like calculating the histogram of flood-filled points) and look for similar instances in other images. Instead, one should find certain ``important'' points (keypoints) in the object template and store information about the neighbourhood of those keypoints (keypoint descriptors) as a description of the object. In other test images, one should find keypoint descriptors of keypoints in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
-
-It is difficult to determine locally the movement of the edge from one frame to the next frame in an image sequence. 
-To overcome this problem, a common approach in computer vision is to instead make use of corners, image features or interest points.
-Technically a corner is the intersection of two edges, whereas an interest point is any point that can be located robustly, which includes corners but also includes such features as small marks.
+The philosophy of this method is to find certain ``important'' points (keypoints) in the object template and store information about the neighbourhood of those keypoints (keypoint descriptors) as a description of the object. In other test images, one should find keypoint descriptors of keypoints in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
 
 
 
