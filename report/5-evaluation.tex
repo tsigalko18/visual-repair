@@ -5,20 +5,54 @@
 We consider the following research questions:
 
 \noindent
-\textbf{RQ\textsubscript{1}:} How prevalent are the various breakage scenarios in practice?
+\textbf{RQ\textsubscript{1} (detection):} How effective is our proposed visual-aided approach in visually verifying test statements?
 
 \noindent
-\textbf{RQ\textsubscript{2}:} How do visual-based and DOM-based test repair approaches compare in terms of effectiveness?
-
-\noindent%\quad\hangindent=0.35cm
-\textbf{RQ\textsubscript{3}:} this is research question 3
+\textbf{RQ\textsubscript{2} (repair):} How do visual-aided and DOM-based test repair approaches compare in terms of effectiveness?
 
 \noindent
-In our study, the visual-based approach is represented by \tool, and the DOM-based approach is represented by \water.
+\textbf{RQ\textsubscript{3} (running time):} What is the running time of executing our visual-aided approach as compared to a DOM-based one?
+
+\noindent
+\textbf{RQ\textsubscript{4} (duration):} Does \tool decrease the duration of web test repair tasks?
+
+\noindent
+\textbf{RQ\textsubscript{5} (accuracy):} Does \tool increase the accuracy of web test repair tasks? \\
+
+\noindent
+In our study, the visual-aided approach is represented by \tool, and the DOM-based approach is represented by \water. RQ\textsubscript{1} aims at evaluating how effective the detection algorithm implemented in \tool is at indicating the causes of test breakages, and does its effectiveness vary across breakageclasses. RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing our proposal against the state of the art web testing repair solution under different effectiveness and efficiency measures. Finally, we aim at evaluating whether the tool can effectively aid human in detecting and repairing test breakages, as compared to a manual fashion.
+
+\begin{table}%[h]
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.9}
+\centering
+\caption{Subject systems and their characteristics}
+\begin{tabular}{lSSrSr}
+\toprule
+
+& \multicolumn{2}{c}{\sc Lines of Code (K)} 
+& \multicolumn{3}{c}{\sc Test Cases} \\
+
+\cmidrule(r){2-3} \cmidrule(r){4-6}
+
+& {Prod.} & {Test} & \# & {Par. Redundant} & \% \\
+ 
+\midrule
+Addressbook  & 12.3      & 20.3      & 459          & 110              & 24 \\
+Claroline        & 45.2      & 59.1      & 3,990        & 1354            & 34 \\
+App3             & 26.6      & 41.6      & 2,344        & 604              & 26 \\
+App4 		  & 2.7       & 3.0       & 141          & 21               & 15 \\
+\midrule
+Total/Average & 642.0     & 319.6     & 19,350       & 4639            & 24 \\
+
+\bottomrule
+\end{tabular}
+\label{table:subjectSystems}
+\end{table}
 
 \subsection{Subjects}\label{sec:subjects}
 
-We selected four open source web applications for which Selenium test cases were available. Such applications span different application domains and have been used in the context of previous research on web testing~\cite{}.
+In the intention of supporting a real-world test regression scenarios, we selected four open source web applications for which (1)~multiple versions and (2)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no web test suite of reasonable size for our study. Fortunately, the selected applications have been used extensively in the context of previous research on web testing~\cite{}. Thus, we obtained from the authors of those papers four working Selenium test suites. This limits the threat to validity and bias of having produced test suites ourselves, and ensures to some extent that the chosen object of analysis are non-trivial, hence representative of a test suites that a junior tester would implement.
 
 \subsection{Procedure}\label{sec:procedure}
 
@@ -34,14 +68,12 @@ We selected four open source web applications for which Selenium test cases were
 \item Accuracy is the percentage of the total samples which are correct. Accuracy = TP + TN / TotalSamples
 \end{enumerate}
 
-\noindent
-(1)~use \textit{many} (10-15) subjects (e.g., test suites) and only two (2) major releases. Advantage is that there is threat to internal/construct validity where applying a different repair is concerned. There is the TTV of the selection of the releases. \\
 
 \noindent
-(2)~use \textit{few} (4-5) subjects (e.g., test suites) but span multiple releases  (30-50) releases. Disadvantage is that the kind of repair applied during the evolution can greatly influence the breakage occurrences. \\
+(1)~use \textit{few} (4-5) subjects (e.g., test suites) but span multiple releases  (30-50) releases. Disadvantage is that the kind of repair applied during the evolution can greatly influence the breakage occurrences. \\
 
 \noindent
-(3)~user study to measure how effective the tool is in the identification of the root cause, and how much time it allows to save.
+(2)~user study to measure how effective the tool is in the identification of the root cause, and how much time it allows to save.
 
 \subsection{Results}\label{sec:results}
 
