@@ -18,6 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.runner.notification.Failure;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ import datatype.HtmlDomTreeWithRTree;
 import datatype.HtmlElement;
 import datatype.Node;
 import datatype.SeleniumLocator;
+import datatype.DOMInformation;
 import japa.parser.ast.stmt.Statement;
 
 public class UtilsParser {
@@ -561,13 +563,13 @@ public class UtilsParser {
 
 	public static String getTestSuiteNameFromWithinType(String withinType) {
 		// class clarolineDirectBreakage.TestLoginAdmin -> clarolineDirectBreakage
-	
+
 		if (withinType.contains("main.java")) {
 			withinType = withinType.replaceAll("class ", "");
 		} else {
 			withinType = withinType.replaceAll("class ", "");
 		}
-	
+
 		withinType = withinType.substring(0, withinType.indexOf("."));
 		return withinType;
 	}
@@ -577,6 +579,29 @@ public class UtilsParser {
 		newclazz = newclazz.replace("src/main/resources/", "");
 		newclazz = newclazz.substring(0, newclazz.indexOf("/"));
 		return newclazz;
+	}
+
+	/**
+	 * Save pertinent DOM information for the given web element and stores them in
+	 * JSON file
+	 * 
+	 * @param d
+	 * 
+	 * @param we
+	 * @param domInfoJsonFile
+	 */
+	public static void saveDOMInformation(WebDriver d, WebElement we, String domInfoJsonFile) {
+
+		JavascriptExecutor js = (JavascriptExecutor) d;
+		DOMInformation webElementWithDomInfo = new DOMInformation(js, we);
+
+		try {
+			FileUtils.writeStringToFile(new File(domInfoJsonFile),
+					gson.toJson(webElementWithDomInfo, DOMInformation.class));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

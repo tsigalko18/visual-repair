@@ -22,10 +22,10 @@ public class Settings {
 	public static String projectBaseFolder = "src" + separator + "main" + separator + "java" + separator;
 	public static String resourcesFolder = "src" + separator + "main" + separator + "resources" + separator;
 	public static String outputFolder = "output" + separator;
-
+	
 	/* specify if AspectJ is active. */
 	public static boolean aspectActive = true;
-
+	
 	/* folder containing the visual execution trace of the reference test suite. */
 	public static String referenceTestSuiteVisualTraceExecutionFolder = outputFolder + testSuiteCorrect + separator;
 

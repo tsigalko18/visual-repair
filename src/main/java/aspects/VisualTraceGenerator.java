@@ -99,12 +99,18 @@ public class VisualTraceGenerator {
 
 			String screenshotBefore = testFolderName + Settings.separator + line + "-1before-" + statementName
 					+ Settings.PNG_EXTENSION;
+			
 			String annotatedScreenshot = testFolderName + Settings.separator + line + "-Annotated-" + statementName
 					+ Settings.PNG_EXTENSION;
+			
 			String visualLocator = testFolderName + Settings.separator + line + "-visualLocator-" + statementName
 					+ Settings.PNG_EXTENSION;
+			
 			String htmlPath = testFolderName + Settings.separator + line + "-1before-" + statementName;
-
+			
+			String domInfoJsonFile = testFolderName + Settings.separator + line + "-domInfo-" + statementName
+					+ Settings.JSON_EXTENSION;
+			
 			mainPage = d.getWindowHandle();
 
 			/* save the screenshot before the execution of the event. */
@@ -120,6 +126,9 @@ public class VisualTraceGenerator {
 
 				/* save the HTML page. */
 				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+				
+				/* save DOM-related information for the web element. */
+				UtilsParser.saveDOMInformation(d, we, domInfoJsonFile);
 
 			} catch (IOException e) {
 				e.printStackTrace();
