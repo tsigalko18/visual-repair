@@ -6,5 +6,6 @@
 \begin{itemize}
 \item Having perfectly cropped visual locators improves the number of visual matches, in case of duplicates elements (and thus the number of false positives).
 \item In case of multiple matches, the position of the correct repair is given by position on the DOM tree or the GUI (which is inspected from left to right, and from top to bottom). Hence, if I am looking for the fourth element on a list of visually identical elements, the repair will be in fourth position. A similar reasoning holds for the DOM, which is inspected from the root to the leaves, in a breadth-first fashion.
+\item on the whole, the potential benefits outweigh the foreseeable overhead
 \end{itemize}
 
