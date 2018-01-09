@@ -5,3 +5,6 @@
 .setting
 .project
 .settings/*
+out
+crawljax.log
+crawloutput.txt
