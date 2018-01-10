@@ -33,7 +33,7 @@ public class TestOpenCV {
 		System.out.println("mat = " + mat.dump());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testTemplateMatchingTemplateOk() {
 
@@ -42,7 +42,7 @@ public class TestOpenCV {
 
 		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
 		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-		// UtilsComputerVision.shiTomasi(template);
+		UtilsComputerVision.shiTomasi(template);
 		// UtilsComputerVision.shiTomasi(image);
 
 	}
@@ -98,16 +98,16 @@ public class TestOpenCV {
 
 	}
 
-	@Ignore
-	@Test
-	public void testTemplateMatchingVisualDuplicates() {
-
-		String image = "src/test/resources/index.jpg";
-		String template = "src/test/resources/indexsmall.jpg";
-
-		System.out.println(UtilsComputerVision.returnAllMatches(image, template));
-
-	}
+//	@Ignore
+//	@Test
+//	public void testTemplateMatchingVisualDuplicates() {
+//
+//		String image = "src/test/resources/index.jpg";
+//		String template = "src/test/resources/indexsmall.jpg";
+//
+//		System.out.println(UtilsComputerVision.returnAllMatches(image, template));
+//
+//	}
 
 	@Ignore
 	@Test
