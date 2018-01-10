@@ -24,7 +24,12 @@ public abstract class Statement implements Serializable {
 	private File domAfter;
 	private SeleniumLocator domLocator; // on domBefore
 	private String xpath;
-
+	private String tagName;
+	private String id;
+	private String classAttribute;
+	private String nameAttribute;
+	private String text;
+	
 	// visual-based information
 	private File screenshotBefore;
 	private File screenshotAfter;
@@ -207,6 +212,46 @@ public abstract class Statement implements Serializable {
 
 	public void setXpath(String xpath) {
 		this.xpath = xpath;
+	}
+
+	public String getTagName() {
+		return tagName;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getClassAttribute() {
+		return classAttribute;
+	}
+
+	public void setClassAttribute(String classAttribute) {
+		this.classAttribute = classAttribute;
+	}
+
+	public String getNameAttribute() {
+		return nameAttribute;
+	}
+
+	public void setNameAttribute(String nameAttribute) {
+		this.nameAttribute = nameAttribute;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.Result;
 
+import datatype.DOMInformation;
 import datatype.DriverGet;
 import datatype.EnhancedAssertion;
 import datatype.EnhancedSelect;
@@ -83,11 +84,11 @@ public class ParseTest {
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		/* generate and change package name. */
 		String packageName = UtilsParser.getPackageName(newclazz);
 		changePackage(cu, packageName);
-		
+
 		/* replace test method with that present in the repaired test. */
 		new ChangeMethodMethodVisitor().visit(cu, oldclazz);
 
@@ -148,7 +149,11 @@ public class ParseTest {
 
 				for (Statement st : m.getBody().getStmts()) {
 
-					// driver get is managed separately
+					/*
+					 * driver get is managed separately, but current implementation does not support
+					 * it fully. The driver.get commands are expected to be moved into the setUp
+					 * method of the test class.
+					 */
 					if (st.toString().contains("driver.get(")) {
 
 						DriverGet dg = new DriverGet();
@@ -194,6 +199,17 @@ public class ParseTest {
 							/* get the DOMs. */
 							ewe.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
 							ewe.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
+
+							/* get the other DOM information. */
+							DOMInformation info = UtilsParser.getDOMInformationFromJsonFile(className, line, "domInfo",
+									getFolder());
+							ewe.setTagName(info.getTagName());
+							ewe.setXpath(info.getXPath());
+							ewe.setId(info.getId());
+							ewe.setClassAttribute(info.getClassAttribute());
+							ewe.setName(info.getNameAttribute());
+							ewe.setText(info.getTextualContent());
+
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -234,6 +250,17 @@ public class ParseTest {
 							// get the DOMs
 							esl.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
 							esl.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
+
+							/* get the other DOM information. */
+							DOMInformation info = UtilsParser.getDOMInformationFromJsonFile(className, line, "domInfo",
+									getFolder());
+							esl.setTagName(info.getTagName());
+							esl.setXpath(info.getXPath());
+							esl.setId(info.getId());
+							esl.setClassAttribute(info.getClassAttribute());
+							esl.setName(info.getNameAttribute());
+							esl.setText(info.getTextualContent());
+
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -271,6 +298,17 @@ public class ParseTest {
 							// get the DOMs
 							ea.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
 							ea.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
+
+							/* get the other DOM information. */
+							DOMInformation info = UtilsParser.getDOMInformationFromJsonFile(className, line, "domInfo",
+									getFolder());
+							ea.setTagName(info.getTagName());
+							ea.setXpath(info.getXPath());
+							ea.setId(info.getId());
+							ea.setClassAttribute(info.getClassAttribute());
+							ea.setName(info.getNameAttribute());
+							ea.setText(info.getTextualContent());
+
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -309,7 +347,7 @@ public class ParseTest {
 	 * Modifies the Java package declaration of the repaired tests
 	 * 
 	 * @param cu
-	 * @param packageName 
+	 * @param packageName
 	 */
 	public static void changePackage(CompilationUnit cu, String packageName) {
 		new PackageVisitor().visit(cu, packageName);

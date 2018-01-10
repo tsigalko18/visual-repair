@@ -26,6 +26,7 @@ public class VisualTraceGenerator {
 
 	static {
 		nu.pattern.OpenCV.loadShared();
+		nu.pattern.OpenCV.loadLocally();
 	}
 
 	/* Pointcuts definition. */
