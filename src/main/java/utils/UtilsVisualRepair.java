@@ -1,11 +1,15 @@
 package utils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -100,7 +104,7 @@ public class UtilsVisualRepair {
 		Point bestMatch = null;
 		if(Settings.HYBRID) {
 			List<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot, visualLocator);
-			bestMatch = getBestMatch(allMatches);
+			bestMatch = getBestMatch(allMatches, driver);
 		}
 		else {
 			bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
@@ -124,11 +128,31 @@ public class UtilsVisualRepair {
 
 	}
 
-	private static Point getBestMatch(List<Point> allMatches) {
-		// TODO Auto-generated method stub
+	private static Point getBestMatch(List<Point> allMatches, WebDriver driver) {
 		if(allMatches == null)
 			return null;
 		
+		List<Rect> seenRectangles = new ArrayList<Rect>();
+		List<WebElement> distinctWebElements = new ArrayList<WebElement>();
+		for(Point match : allMatches) {
+			for(Rect seenRect :seenRectangles) {
+				if(match.inside(seenRect))
+					continue;
+				
+			}
+			
+			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
+			
+			WebElement webElementForMatch = driver.findElement(By.xpath(xpathForMatch));
+			
+			//check if other points belong to this rectangle
+			Rectangle rect = webElementForMatch.getRect();
+			
+			Rect r = new Rect(rect.x, rect.y, rect.width, rect.height);
+			
+			seenRectangles.add(r);
+			distinctWebElements.add(webElementForMatch);
+		}
 		return null;
 	}
 
