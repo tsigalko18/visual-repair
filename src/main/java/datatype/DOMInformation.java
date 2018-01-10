@@ -12,13 +12,7 @@ public class DOMInformation {
 	private String id;
 	private String classAttribute;
 	private String nameAttribute;
-	private String text;
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	// private WebElement seleniumWebElement;
+	private String textualcontent;
 
 	// location of top left hand corner
 	private int x;
@@ -32,11 +26,13 @@ public class DOMInformation {
 		this.xpath = UtilsParser.getElementXPath(js, e);
 		this.tagName = e.getTagName();
 		this.id = e.getAttribute("id");
-		// this.seleniumWebElement = e;
 		this.x = e.getLocation().x;
 		this.y = e.getLocation().y;
 		this.width = e.getSize().width;
 		this.height = e.getSize().height;
+		this.classAttribute = e.getAttribute("class");
+		this.nameAttribute = e.getAttribute("name");
+		this.textualcontent = e.getAttribute("textContent");
 	}
 
 	public String getXPath() {
@@ -62,14 +58,6 @@ public class DOMInformation {
 	public void setId(String id) {
 		this.id = id;
 	}
-
-	// public WebElement getSeleniumWebElement() {
-	// return seleniumWebElement;
-	// }
-	//
-	// public void setSeleniumWebElement(WebElement seleniumWebElement) {
-	// this.seleniumWebElement = seleniumWebElement;
-	// }
 
 	public int getX() {
 		return x;
@@ -103,14 +91,6 @@ public class DOMInformation {
 		this.height = height;
 	}
 
-	public String getXpath() {
-		return xpath;
-	}
-
-	public void setXpath(String xpath) {
-		this.xpath = xpath;
-	}
-
 	public String getClassAttribute() {
 		return classAttribute;
 	}
@@ -127,15 +107,19 @@ public class DOMInformation {
 		this.nameAttribute = nameAttribute;
 	}
 
-	public String getText() {
-		return text;
+	public String getTextualContent() {
+		return textualcontent;
+	}
+
+	public void setTextualContent(String text) {
+		this.textualcontent = text;
 	}
 
 	@Override
 	public String toString() {
-		return "DOMInformation [xpath=" + xpath + ", tagName=" + tagName + ", id=" + id + ", class=" + classAttribute
-				+ ", name=" + nameAttribute + ", text=" + text + ", x=" + x + ", y=" + y + ", width=" + width
-				+ ", height=" + height + "]";
+		return "DOMInformation [xpath=" + xpath + ", tagName=" + tagName + ", id=" + id + ", classAttribute="
+				+ classAttribute + ", nameAttr=" + nameAttribute + ", textualcontent=" + textualcontent + ", x=" + x + ", y="
+				+ y + ", width=" + width + ", height=" + height + "]";
 	}
 
 	@Override

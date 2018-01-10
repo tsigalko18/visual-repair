@@ -50,6 +50,7 @@ public class UtilsComputerVision {
 
 	static {
 		nu.pattern.OpenCV.loadShared();
+		nu.pattern.OpenCV.loadLocally();
 	}
 
 	/**
@@ -170,8 +171,6 @@ public class UtilsComputerVision {
 	 * @throws IOException
 	 */
 	public static void saveAnnotatedScreenshot(String inFile, String templateFile, String outFile) throws IOException {
-
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 		Mat img = Highgui.imread(inFile);
 		Mat templ = Highgui.imread(templateFile);
@@ -342,13 +341,6 @@ public class UtilsComputerVision {
 
 	public static boolean isUnique(String inFile, String templateFile) {
 
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		if (Settings.VERBOSE) {
-			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
-					+ " using image recognition algorithm TM_CCOEFF_NORMED");
-			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
-		}
-
 		Mat img = Highgui.imread(inFile);
 		Mat templ = Highgui.imread(templateFile);
 
@@ -386,14 +378,6 @@ public class UtilsComputerVision {
 	}
 
 	public static Point findBestMatch(String inFile, String templateFile) {
-
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		if (Settings.VERBOSE) {
-			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
-					+ " using image recognition algorithm TM_CCOEFF_NORMED");
-
-			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
-		}
 
 		Mat img = Highgui.imread(inFile);
 		Mat templ = Highgui.imread(templateFile);
@@ -753,7 +737,6 @@ public class UtilsComputerVision {
 
 	public static List<Point> matchUsingCanny(String inFile, String templateFile) {
 
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		if (Settings.VERBOSE) {
 			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
 					+ " using image recognition algorithm TM_CCOEFF_NORMED with Canny preprocessing");

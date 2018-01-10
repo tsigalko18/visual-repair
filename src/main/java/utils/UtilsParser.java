@@ -1,6 +1,8 @@
 package utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,6 +97,46 @@ public class UtilsParser {
 			return null;
 		} else if (listOfFiles.length == 1) {
 			return listOfFiles[0];
+		} else {
+			throw new Exception("[LOG]\tToo many files retrieved");
+		}
+
+	}
+
+	/**
+	 * Auxiliary method to get the JSON file with the DOM information
+	 * 
+	 * @param st
+	 * @return
+	 * @throws Exception
+	 */
+	public static DOMInformation getDOMInformationFromJsonFile(String name, int beginLine, String type, String folder)
+			throws Exception {
+
+		String p = folder + name + Settings.separator;
+
+		File dir = new File(p);
+		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String n) {
+				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.JSON_EXTENSION)
+						&& n.contains(name) && n.contains(type));
+			}
+			
+		});
+
+		if (listOfFiles.length == 0) {
+			
+			throw new Exception("[LOG]\tNo JSON file retrieved");
+			
+		} else if (listOfFiles.length == 1) {
+
+			DOMInformation obj = gson.fromJson(new BufferedReader(new FileReader(listOfFiles[0])),
+					DOMInformation.class);
+			
+			return obj;
+
 		} else {
 			throw new Exception("[LOG]\tToo many files retrieved");
 		}
