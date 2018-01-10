@@ -40,7 +40,11 @@ public class UtilsVisualRepair {
 		/* retrieve the web element visually. */
 		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, visualLocator);
 
-		if (webElementFromVisualLocator == null) {
+		if(webElementFromVisualLocator ==null && webElementFromDomLocator==null) {
+		
+			System.err.println("[LOG] \tElement could not be found from either dom or visually. Visual Assertion failed. Stopping execution");
+		
+		} else if (webElementFromVisualLocator == null) {
 
 			System.err.println("[LOG]\tElement not found (visually) in the state. Visual assertion failed.");
 

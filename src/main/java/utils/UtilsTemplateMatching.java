@@ -63,7 +63,7 @@ public class UtilsTemplateMatching {
 		
 		if (isPresent) {
 			//result = templateMatching(templateFile, imageFile);
-			List<Point> templateMatches = UtilsComputerVision.returnAllMatches(imageFile, templateFile);
+			List<Point> templateMatches = UtilsComputerVision.findAllMatches(imageFile, templateFile);
 			allMatches.addAll(templateMatches);
 			return allMatches;
 		}

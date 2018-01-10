@@ -44,10 +44,10 @@ public class VisualAssertionTestRunner {
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		/* package name. */
-		String prefix = "clarolineDirectBreakage.";
+		String prefix = "addressbook825.";
 
 		/* class name. */
-		String className = "TestLoginAdmin";
+		String className = "TestUserAdded";
 
 		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
 

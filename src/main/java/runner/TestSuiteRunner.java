@@ -27,10 +27,10 @@ public class TestSuiteRunner {
 		/* specify the test suite and test name or runner. */
 		
 		/* Claroline example */
-		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
+		//UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
 		
 		/* AddressBook example */
-//		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestUserAdded");
+		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestUserAdded");
 
 	}
 
