@@ -529,6 +529,61 @@ public class UtilsComputerVision {
 		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
 	}
 
+	public static List<Point> findAllMatches(String inFile, String templateFile) {
+
+		Mat img = Highgui.imread(inFile);
+		Mat templ = Highgui.imread(templateFile);
+
+		/* Create the result matrix. */
+		int result_cols = img.cols() - templ.cols() + 1;
+		int result_rows = img.rows() - templ.rows() + 1;
+		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+
+		// / Do the Matching and Normalize
+		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
+		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+
+		List<Point> matches = new LinkedList<Point>();
+
+		for (int i = 0; i < result_rows; i++) {
+			for (int j = 0; j < result_cols; j++) {
+
+				if (result.get(i, j)[0] >= 0.99) {
+					matches.add(new Point(i, j));
+				}
+
+			}
+		}
+
+		if (matches.size() == 0) {
+			System.err.println("[LOG]\tWARNING: No visual matches found!");
+		} else if (matches.size() > 1) {
+			System.err.println("[LOG]\tWARNING: Multiple visual matches!");
+		}
+
+		/* Localizing the best match with minMaxLoc. */
+		// MinMaxLocResult mmr = Core.minMaxLoc(result);
+		// Point matchLoc = mmr.maxLoc;
+
+		List<Point> allMatchesCenter = new ArrayList<Point>();
+
+		for (Point point : matches) {
+
+			Point center = new Point(point.x + templ.cols() / 2, point.y + templ.rows() / 2);
+
+			allMatchesCenter.add(center);
+
+			/* Show me what you got. */
+			Core.rectangle(img, point, center, new Scalar(0, 255, 0), 2);
+		}
+
+		/* Save the visualized detection. */
+		File annotated = new File("annotated.png");
+		Highgui.imwrite(annotated.getPath(), img);
+
+		return allMatchesCenter;
+	}
+
 	public static List<Point> returnAllMatches(String inFile, String templateFile) {
 
 		Mat img = Highgui.imread(inFile);
@@ -553,6 +608,7 @@ public class UtilsComputerVision {
 		/* Do the Matching and Thresholding. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
 		Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
+
 		double maxval;
 		while (true) {
 			Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
@@ -824,7 +880,7 @@ public class UtilsComputerVision {
 			/* Show me what you got. */
 			Core.rectangle(img, m, new Point(m.x + templ.cols(), m.y + templ.rows()), new Scalar(0, 255, 0), 1);
 		}
-		
+
 		/* output filename. */
 		filename = inFile.toString();
 		index = filename.lastIndexOf("/");
