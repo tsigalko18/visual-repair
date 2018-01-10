@@ -2,8 +2,10 @@ package utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
@@ -36,49 +38,45 @@ public class UtilsTemplateMatching {
 
 		Point result = null;
 
-		List<Point> allMatches = new ArrayList<Point>();
+		Set<Point> allMatches = new HashSet<Point>();
 
 		/* run SIFT and FAST to check for the presence/absence of the template image. */
 		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
 
 		if (isPresent) {
-			result = templateMatching(templateFile, imageFile);
+			result = templateMatchingBestResult(templateFile, imageFile);
 		}
 
 		return result;
 
 	}
+
 	/*
 	 * Get the best point out of all possible points by using dom information
 	 */
-	public static List<Point> featureDetectorAndTemplateMatching_dom(String imageFile, String templateFile) {
+	public static Set<Point> featureDetectorAndTemplateMatching_dom(String imageFile, String templateFile) {
 
-		Point result = null;
-		
-		List<Point> allMatches = new ArrayList<Point>();
+		Set<Point> allMatches = new HashSet<Point>();
 
 		/* run SIFT and FAST to check for the presence/absence of the template image. */
 		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
-		
-		
+
 		if (isPresent) {
-			//result = templateMatching(templateFile, imageFile);
-			List<Point> templateMatches = UtilsComputerVision.findAllMatches(imageFile, templateFile);
+			Set<Point> templateMatches = templateMatchingAllResults(templateFile, imageFile);
 			allMatches.addAll(templateMatches);
 			return allMatches;
 		}
-		
+
 		return null;
-		
 
 	}
-	
+
 	/*
 	 * Run the FAST and SIFT feature detector algorithms on the two input images and
 	 * try to match the features found in @object image into the @scene image
 	 * 
 	 */
-	public static boolean runFeatureDetection(String templ, String img, List<Point> allMatches) {
+	public static boolean runFeatureDetection(String templ, String img, Set<Point> allMatches) {
 		boolean sift = siftDetector(templ, img, allMatches);
 		boolean fast = fastDetector(templ, img, allMatches);
 		return (sift || fast);
@@ -89,7 +87,7 @@ public class UtilsTemplateMatching {
 	 * match the features found in @object image into the @scene image
 	 * 
 	 */
-	private static boolean fastDetector(String object, String scene, List<Point> allMatches) {
+	private static boolean fastDetector(String object, String scene, Set<Point> allMatches) {
 
 		// System.out.println("FAST Detector");
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
@@ -131,7 +129,7 @@ public class UtilsTemplateMatching {
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.7f;
+		float nndrRatio = 0.9f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -152,7 +150,7 @@ public class UtilsTemplateMatching {
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
-		System.out.println("Min matches (FAST): " + min_accepted_matches);
+//		System.out.println("Min matches (FAST): " + min_accepted_matches);
 
 		if (goodMatchesList.size() > min_accepted_matches) {
 
@@ -168,10 +166,11 @@ public class UtilsTemplateMatching {
 				objectPoints.addLast(objKeypointlist.get(goodMatchesList.get(i).queryIdx).pt);
 				scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
 			}
-			
-			// Add  good matches to the list of all matches
+
+			// Add good matches to the list of all matches
 			allMatches.addAll(scenePoints);
-			
+			System.out.println(scenePoints);
+
 			MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
 			objMatOfPoint2f.fromList(objectPoints);
 			MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
@@ -239,7 +238,7 @@ public class UtilsTemplateMatching {
 	 * match the features found in @object image into the @scene image
 	 * 
 	 */
-	private static boolean siftDetector(String object, String scene, List<Point> allMatches) {
+	private static boolean siftDetector(String object, String scene, Set<Point> allMatches) {
 
 		// System.out.println("SIFT Detector");
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
@@ -281,7 +280,7 @@ public class UtilsTemplateMatching {
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
 
 		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.7f;
+		float nndrRatio = 0.9f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -298,11 +297,11 @@ public class UtilsTemplateMatching {
 			return false;
 		}
 
-		System.out.println("Good matches (SIFT): " + goodMatchesList.size());
+		 System.out.println("Good matches (SIFT): " + goodMatchesList.size());
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
-		System.out.println("Min matches (SIFT): " + min_accepted_matches);
+		// System.out.println("Min matches (SIFT): " + min_accepted_matches);
 
 		if (goodMatchesList.size() > min_accepted_matches) {
 
@@ -319,9 +318,10 @@ public class UtilsTemplateMatching {
 				scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
 			}
 
-			// add the scenepoints to list of all matching points 
+			// add the scenepoints to list of all matching points
 			allMatches.addAll(scenePoints);
-			
+			System.out.println(scenePoints);
+
 			MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
 			objMatOfPoint2f.fromList(objectPoints);
 			MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
@@ -391,26 +391,27 @@ public class UtilsTemplateMatching {
 	}
 
 	/**
-	 * Run the TM_CCOEFF_NORMED template matching algorithm. Returns the center of
-	 * the rectangle where the best match has been found.
+	 * Run the TM_CCOEFF_NORMED template matching algorithm when normalization has
+	 * been applied to the results. Returns the center of the rectangle where the
+	 * best match has been found.
 	 * 
 	 * @param templateFile
 	 * @param imageFile
 	 * @return
 	 */
-	private static Point templateMatching(String templateFile, String imageFile) {
+	private static Point templateMatchingBestResult(String templateFile, String imageFile) {
 
 		/* load the images in grayscale. */
-//		Mat img = Highgui.imread(imageFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-//		Mat templ = Highgui.imread(templateFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-		
+		// Mat img = Highgui.imread(imageFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		// Mat templ = Highgui.imread(templateFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+
 		/* load the images full color. */
 		Mat img = Highgui.imread(imageFile);
 		Mat templ = Highgui.imread(templateFile);
-		
+
 		File t = new File("output/templateMatching/TM-template.png");
 		Highgui.imwrite(t.getPath(), templ);
-		
+
 		File o = new File("output/templateMatching/TM-imageoriginal.png");
 		Highgui.imwrite(o.getPath(), img);
 
@@ -422,15 +423,15 @@ public class UtilsTemplateMatching {
 		/* Do the Matching and Normalize. */
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
 		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-		
-		File risultato = new File("output/templateMatching/TM-risultato.png");
+
+		File risultato = new File("output/templateMatching/TM-result-normalized.png");
 		Highgui.imwrite(risultato.getPath(), result);
-		
+
 		List<Point> matches = new LinkedList<Point>();
 
 		for (int i = 0; i < result_rows; i++) {
 			for (int j = 0; j < result_cols; j++) {
-				
+
 				if (result.get(i, j)[0] >= 0.99) {
 					matches.add(new Point(i, j));
 				}
@@ -448,188 +449,123 @@ public class UtilsTemplateMatching {
 		MinMaxLocResult mmr = Core.minMaxLoc(result);
 		Point matchLoc = mmr.maxLoc;
 
-		System.out.println("Max point found at: " + matchLoc.x + ", " + matchLoc.y);
-		
+		// System.out.println("Max point found at: " + matchLoc.x + ", " + matchLoc.y);
+
 		/* Draws a rectangle over the detected area. */
 		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
 				new Scalar(0, 255, 0), 2);
 
-//		/* Draws a cross mark at the center of the detected area. */
-//		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
-//				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
-//				2);
-//		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
-//				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
-//				2);
-//
-//		/* Draws the others detected matches. */
-//		for (Point point : matches) {
-//			/* Draws a rectangle over the detected area. */
-//			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 0, 255),
-//					1);
-//		}
+		/* Draws a cross mark at the center of the detected area. */
+		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
+				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
+				2);
+		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
+				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
+				2);
+
+		/* Draws the others detected matches. */
+		for (Point point : matches) {
+			/* Draws a rectangle over the detected area. */
+			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 0, 255),
+					1);
+		}
 
 		/* Save the visualized detection. */
 		String filename = imageFile.toString();
 		int i = filename.lastIndexOf("/");
 		filename = filename.substring(i + 1, filename.length());
 		filename = filename.replace(".png", "");
-		File annotated = new File("output/templateMatching/TM-" + filename + ".png");
+		File annotated = new File("output/templateMatching/TM-normalized-" + filename + ".png");
 		Highgui.imwrite(annotated.getPath(), img);
 
 		/* Return the center. */
 		return new Point(matchLoc.x + templ.cols() / 2, matchLoc.y + templ.rows() / 2);
 	}
 
-	// private static int round(double value, int places) {
-	// if (places < 0)
-	// throw new IllegalArgumentException();
-	//
-	// BigDecimal bd = new BigDecimal(value);
-	// bd = bd.setScale(places, RoundingMode.FLOOR);
-	// return bd.toBigInteger().intValue();
-	// }
+	/**
+	 * Run the TM_CCOEFF_NORMED template matching algorithm when normalization has
+	 * been applied to the results. Returns the center of the rectangle where the
+	 * best match has been found.
+	 * 
+	 * @param templateFile
+	 * @param imageFile
+	 * @return
+	 */
+	private static Set<Point> templateMatchingAllResults(String templateFile, String imageFile) {
 
-	// /**
-	// * converts a Mat dump to an array of Point
-	// *
-	// * @param dump
-	// * @return
-	// */
-	// private static Point[] getPointsFromMatDump(String dump) {
-	// Point[] result = new Point[4];
-	// String[] split = dump.split(";");
-	// for (int i = 0; i < split.length; i++) {
-	// split[i] = split[i].replaceAll("\\[", "").trim();
-	// split[i] = split[i].replaceAll("\\]", "").trim();
-	// String[] coords = split[i].split(",");
-	// double x = Double.parseDouble(coords[0].trim());
-	// double y = Double.parseDouble(coords[1].trim());
-	// if (x < 0 || y < 0) {
-	// return null;
-	// } else {
-	// result[i] = new Point(x, y);
-	// }
-	// }
-	// return result;
-	// }
+		/* load the images in grayscale. */
+		// Mat img = Highgui.imread(imageFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		// Mat templ = Highgui.imread(templateFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
-	// /* Ad-hoc visual locator detector feature. */
-	// public static Point siftAndMultipleTemplateMatching(String imageFile, String
-	// templateFile, double threshold) {
-	//
-	// List<Point> matches = new LinkedList<Point>();
-	// Point best_result = null;
-	//
-	// /* run SIFT to check for the presence/absence of the template image. */
-	// boolean isPresent = runFeatureDetection(templateFile, imageFile);
-	//
-	// System.out.println("isPresent: " + isPresent);
-	// // if (isPresent) {
-	//
-	// /* Get the image. */
-	// Mat img = Highgui.imread(imageFile);
-	//
-	// /* Get the template. */
-	// Mat templ = Highgui.imread(templateFile);
-	//
-	// /* Create the result matrix. */
-	// int result_cols = img.cols() - templ.cols() + 1;
-	// int result_rows = img.rows() - templ.rows() + 1;
-	// Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
-	//
-	// List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
-	//
-	// // System.out.println("[LOG]\tSearching matches of " + templateFile + " in "
-	// +
-	// // imageFile);
-	//
-	// /* Do the Matching and Thresholding. */
-	// Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
-	// Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
-	//
-	// double maxval;
-	// while (true) {
-	// Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
-	// Point maxp = maxr.maxLoc;
-	// maxval = maxr.maxVal;
-	// if (maxval >= threshold) {
-	//
-	// Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y +
-	// templ.rows()),
-	// new Scalar(0, 0, 255), 2);
-	// Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y +
-	// templ.rows()),
-	// new Scalar(0, 255, 0), -1);
-	//
-	// matches.add(maxp);
-	// boxes.add(new Rectangle((int) maxp.x, (int) maxp.y, templ.cols(),
-	// templ.rows()));
-	// } else {
-	// break;
-	// }
-	// }
-	//
-	// int x_sift = -1;
-	// int y_sift = -1;
-	//
-	// if (matches.size() == 0) {
-	//
-	// System.out.println("[LOG]\tTemplate Matching found no matches");
-	//
-	// } else if (matches.size() == 1) {
-	//
-	// System.out.println("Template Matching found " + matches.size() + " match");
-	// best_result = matches.get(0);
-	//
-	// } else {
-	//
-	// System.out.println("Template Matching found multiple matches: " +
-	// matches.size());
-	// System.out.println("Filtering results based on SIFT detection");
-	//
-	// if (points != null && isPresent) {
-	// System.out.println("Best Match with SIFT");
-	// x_sift = round(points[0].x, 0);
-	// y_sift = round(points[0].y, 0);
-	// System.out.println("[" + 0 + "]\tx=" + x_sift + "\ty=" + y_sift);
-	// }
-	//
-	// for (int i = 0; i < matches.size(); i++) {
-	//
-	// int x = round(matches.get(i).x, 0);
-	// int y = round(matches.get(i).y, 0);
-	//
-	// System.out.println("[" + i + "]\tx=" + x + "\ty=" + y);
-	//
-	// /* filter the results. */
-	// if (isPresent) {
-	// if (x == x_sift && y == y_sift) {
-	// best_result = matches.get(i);
-	// }
-	// }
-	// }
-	//
-	// System.out.println("Best Template Matching result");
-	// System.out.println("[" + 0 + "]\tx=" + best_result.x + "\ty=" +
-	// best_result.y);
-	//
-	// /*
-	// * non-maxima suppression step to filter the results. Needs to be tested!
-	// */
-	// // Rectangle2D picked = nonMaxSuppression(boxes);
-	//
-	// }
-	//
-	// /* Save the visualized detection. */
-	// File template = new File("5template.png");
-	// Highgui.imwrite(template.getPath(), templ);
-	//
-	// File annotated = new File("6annotatedTemplateMatching.png");
-	// Highgui.imwrite(annotated.getPath(), img);
-	//
-	// return best_result;
-	//
-	// }
+		/* load the images full color. */
+		Mat img = Highgui.imread(imageFile);
+		Mat templ = Highgui.imread(templateFile);
+
+		File t = new File("output/templateMatching/TM-template.png");
+		Highgui.imwrite(t.getPath(), templ);
+
+		File o = new File("output/templateMatching/TM-imageoriginal.png");
+		Highgui.imwrite(o.getPath(), img);
+
+		/* Create the result matrix. */
+		int result_cols = img.cols() - templ.cols() + 1;
+		int result_rows = img.rows() - templ.rows() + 1;
+		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+
+		/* Do the Matching and Normalize. */
+		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
+		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+
+		File risultato = new File("output/templateMatching/TM-result-normalized.png");
+		Highgui.imwrite(risultato.getPath(), result);
+
+		List<Point> matches = new LinkedList<Point>();
+		for (int i = 0; i < result_rows; i++) {
+			for (int j = 0; j < result_cols; j++) {
+
+				if (result.get(i, j)[0] >= 0.99) {
+					matches.add(new Point(i, j));
+				}
+			}
+		}
+
+		/* check the results. */
+		if (matches.size() == 0) {
+			System.err.println("[LOG]\tWARNING: No matches found!");
+		} else if (matches.size() > 1) {
+			System.err.println("[LOG]\tWARNING: Multiple matches: " + matches.size());
+		}
+
+		Set<Point> allMatchesCenter = new HashSet<Point>();
+
+		for (Point point : matches) {
+
+			Point center = new Point(point.x + templ.cols() / 2, point.y + templ.rows() / 2);
+			allMatchesCenter.add(center);
+
+			/* Draws a rectangle over the detected area. */
+			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 255, 0),
+					2);
+
+			/* Draws a cross mark at the center of the detected area. */
+			Core.line(img, new Point(center.x + templ.cols() / 2, (center.y + templ.rows() / 2) - 5),
+					new Point(center.x + templ.cols() / 2, (center.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
+					2);
+			Core.line(img, new Point(((center.x + templ.cols() / 2) - 5), center.y + templ.rows() / 2),
+					new Point(((center.x + templ.cols() / 2) + 5), center.y + templ.rows() / 2), new Scalar(0, 0, 255),
+					2);
+		}
+
+		/* Save the visualized detection. */
+		String filename = imageFile.toString();
+		int i = filename.lastIndexOf("/");
+		filename = filename.substring(i + 1, filename.length());
+		filename = filename.replace(".png", "");
+		File annotated = new File("output/templateMatching/TM-normalized-" + filename + ".png");
+		Highgui.imwrite(annotated.getPath(), img);
+
+		/* Return all centers. */
+		return allMatchesCenter;
+	}
 
 }

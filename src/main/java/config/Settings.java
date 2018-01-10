@@ -51,7 +51,11 @@ public class Settings {
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 
+	/* different repair modalities. */
 	public static boolean HYBRID = false;
+	public static enum RepairMode {
+		DOM, VISUAL, HYBRID
+	}
 
 	public static boolean VERBOSE = true;
 	public static double SIMILARITY_THRESHOLD = 0.5;

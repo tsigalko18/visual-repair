@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
@@ -30,20 +31,26 @@ public class UtilsVisualRepair {
 
 		/* retrieve the visual locator. */
 		try {
+
 			visualLocator = testCorrect.getStatements().get(i).getVisualLocator().toString();
+
 		} catch (NullPointerException e) {
+
 			System.out.println("[ERROR]\tVisual locator not found in " + testCorrect.getStatements().get(i));
 			System.out.println("[ERROR]\tRe-run the TestSuiteRunner on " + testCorrect.getPath());
 			System.exit(1);
+
 		}
 
 		/* retrieve the web element visually. */
 		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, visualLocator);
 
-		if(webElementFromVisualLocator ==null && webElementFromDomLocator==null) {
-		
-			System.err.println("[LOG] \tElement could not be found from either dom or visually. Visual Assertion failed. Stopping execution");
-		
+		if (webElementFromVisualLocator == null && webElementFromDomLocator == null) {
+
+			System.err.println(
+					"[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Stopping execution");
+			System.exit(1);
+
 		} else if (webElementFromVisualLocator == null) {
 
 			System.err.println("[LOG]\tElement not found (visually) in the state. Visual assertion failed.");
@@ -58,9 +65,6 @@ public class UtilsVisualRepair {
 
 			System.out.println("[LOG]\tChance of propagated breakage at line " + i);
 			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
-
-			// System.out.println(webElementFromVisualLocator);
-			// System.out.println(webElementFromDomLocator);
 
 			/* I trust the element found by the visual locator. Is that correct? */
 			System.out.println("[LOG]\tApplied visual repair");
@@ -103,17 +107,25 @@ public class UtilsVisualRepair {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
-		// Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot,
-		// visualLocator);
 		Point bestMatch = null;
-		if(Settings.HYBRID) {
-			List<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot, visualLocator);
+
+		if (Settings.HYBRID) {
+
+			Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
+					visualLocator);
+
+			for (Point point : allMatches) {
+				System.out.println(UtilsXPath.getXPathFromLocation(point, driver));
+			}
+
 			bestMatch = getBestMatch(allMatches, driver);
-		}
-		else {
+
+		} else {
+
 			bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
+
 		}
-		
+
 		if (bestMatch == null) {
 
 			FileUtils.deleteQuietly(new File(currentScreenshot));
@@ -132,31 +144,34 @@ public class UtilsVisualRepair {
 
 	}
 
-	private static Point getBestMatch(List<Point> allMatches, WebDriver driver) {
-		if(allMatches == null)
+	private static Point getBestMatch(Set<Point> allMatches, WebDriver driver) {
+
+		if (allMatches == null)
 			return null;
-		
+
 		List<Rect> seenRectangles = new ArrayList<Rect>();
 		List<WebElement> distinctWebElements = new ArrayList<WebElement>();
-		for(Point match : allMatches) {
-			for(Rect seenRect :seenRectangles) {
-				if(match.inside(seenRect))
+
+		for (Point match : allMatches) {
+
+			for (Rect seenRect : seenRectangles) {
+				if (match.inside(seenRect))
 					continue;
-				
 			}
-			
+
 			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
-			
+
 			WebElement webElementForMatch = driver.findElement(By.xpath(xpathForMatch));
-			
-			//check if other points belong to this rectangle
+
+			// check if other points belong to this rectangle
 			Rectangle rect = webElementForMatch.getRect();
-			
+
 			Rect r = new Rect(rect.x, rect.y, rect.width, rect.height);
-			
+
 			seenRectangles.add(r);
 			distinctWebElements.add(webElementForMatch);
 		}
+
 		return null;
 	}
 

@@ -31,7 +31,7 @@ public class RepairStrategies {
 //			repairs.addAll(ElementMovedNewStateWithLocalCrawling.searchElementNewState(e, b, c, checkOnBrowser));
 			
 //			 apply strategy 1
-			repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c, checkOnBrowser));
+			//repairs.addAll(ElementRelocatedSameState.searchLocatorWithinTheSameState(e, b, c, checkOnBrowser));
 
 			// apply strategy 2
 //			if (repairs.isEmpty())

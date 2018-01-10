@@ -584,66 +584,66 @@ public class UtilsComputerVision {
 		return allMatchesCenter;
 	}
 
-	public static List<Point> returnAllMatches(String inFile, String templateFile) {
-
-		Mat img = Highgui.imread(inFile);
-		Mat templ = Highgui.imread(templateFile);
-
-		File visuallocator = new File("visuallocator.png");
-		Highgui.imwrite(visuallocator.getPath(), templ);
-		templ = Highgui.imread(visuallocator.getPath());
-
-		// / Create the result matrix
-		int result_cols = img.cols() - templ.cols() + 1;
-		int result_rows = img.rows() - templ.rows() + 1;
-		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
-
-		List<Point> matches = new LinkedList<Point>();
-		List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
-
-		if (Settings.VERBOSE) {
-			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
-		}
-
-		/* Do the Matching and Thresholding. */
-		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
-		Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
-
-		double maxval;
-		while (true) {
-			Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
-			Point maxp = maxr.maxLoc;
-			maxval = maxr.maxVal;
-
-			// Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
-
-			if (maxval >= 0.95) {
-
-				Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
-						new Scalar(0, 0, 255), 2);
-				Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
-						new Scalar(0, 255, 0), -1);
-
-				matches.add(maxp);
-				boxes.add(new Rectangle((int) maxp.x, (int) maxp.y, templ.cols(), templ.rows()));
-			} else {
-				break;
-			}
-		}
-
-		System.out.println("Found " + matches.size() + " matches with input image");
-
-		/*
-		 * non-maxima suppression step to filter the results. Needs to be tested!
-		 */
-		// Rectangle2D picked = nonMaxSuppression(boxes);
-
-		/* Save the visualized detection. */
-		File annotated = new File("annotated.png");
-		Highgui.imwrite(annotated.getPath(), img);
-
-		return matches;
-	}
+//	public static List<Point> returnAllMatches(String inFile, String templateFile) {
+//
+//		Mat img = Highgui.imread(inFile);
+//		Mat templ = Highgui.imread(templateFile);
+//
+//		File visuallocator = new File("visuallocator.png");
+//		Highgui.imwrite(visuallocator.getPath(), templ);
+//		templ = Highgui.imread(visuallocator.getPath());
+//
+//		// / Create the result matrix
+//		int result_cols = img.cols() - templ.cols() + 1;
+//		int result_rows = img.rows() - templ.rows() + 1;
+//		Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+//
+//		List<Point> matches = new LinkedList<Point>();
+//		List<Rectangle2D> boxes = new LinkedList<Rectangle2D>();
+//
+//		if (Settings.VERBOSE) {
+//			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
+//		}
+//
+//		/* Do the Matching and Thresholding. */
+//		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
+//		Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);
+//
+//		double maxval;
+//		while (true) {
+//			Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
+//			Point maxp = maxr.maxLoc;
+//			maxval = maxr.maxVal;
+//
+//			// Point maxop = new Point(maxp.x + templ.width(), maxp.y + templ.height());
+//
+//			if (maxval >= 0.95) {
+//
+//				Core.rectangle(img, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+//						new Scalar(0, 0, 255), 2);
+//				Core.rectangle(result, maxp, new Point(maxp.x + templ.cols(), maxp.y + templ.rows()),
+//						new Scalar(0, 255, 0), -1);
+//
+//				matches.add(maxp);
+//				boxes.add(new Rectangle((int) maxp.x, (int) maxp.y, templ.cols(), templ.rows()));
+//			} else {
+//				break;
+//			}
+//		}
+//
+//		System.out.println("Found " + matches.size() + " matches with input image");
+//
+//		/*
+//		 * non-maxima suppression step to filter the results. Needs to be tested!
+//		 */
+//		// Rectangle2D picked = nonMaxSuppression(boxes);
+//
+//		/* Save the visualized detection. */
+//		File annotated = new File("annotated.png");
+//		Highgui.imwrite(annotated.getPath(), img);
+//
+//		return matches;
+//	}
 
 	/**
 	 * Run the Shi-Tomasi algorithm on the @object image
