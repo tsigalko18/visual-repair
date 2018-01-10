@@ -51,6 +51,8 @@ public class Settings {
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 
+	public static final boolean HYBRID = true;
+
 	public static boolean VERBOSE = true;
 	public static double SIMILARITY_THRESHOLD = 0.5;
 

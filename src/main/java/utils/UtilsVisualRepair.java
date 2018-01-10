@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Point;
@@ -96,8 +97,15 @@ public class UtilsVisualRepair {
 
 		// Point bestMatch = UtilsComputerVision.findBestMatchCenter(currentScreenshot,
 		// visualLocator);
-		Point bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
-
+		Point bestMatch = null;
+		if(Settings.HYBRID) {
+			List<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot, visualLocator);
+			bestMatch = getBestMatch(allMatches);
+		}
+		else {
+			bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
+		}
+		
 		if (bestMatch == null) {
 
 			FileUtils.deleteQuietly(new File(currentScreenshot));
@@ -114,6 +122,14 @@ public class UtilsVisualRepair {
 			return fromVisual;
 		}
 
+	}
+
+	private static Point getBestMatch(List<Point> allMatches) {
+		// TODO Auto-generated method stub
+		if(allMatches == null)
+			return null;
+		
+		return null;
 	}
 
 	public static boolean areWebElementsEquals(WebElement webElementFromDomLocator,

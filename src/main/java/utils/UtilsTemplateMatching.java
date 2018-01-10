@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,8 +36,10 @@ public class UtilsTemplateMatching {
 
 		Point result = null;
 
+		List<Point> allMatches = new ArrayList<Point>();
+
 		/* run SIFT and FAST to check for the presence/absence of the template image. */
-		boolean isPresent = runFeatureDetection(templateFile, imageFile);
+		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
 
 		if (isPresent) {
 			result = templateMatching(templateFile, imageFile);
@@ -45,15 +48,39 @@ public class UtilsTemplateMatching {
 		return result;
 
 	}
+	/*
+	 * Get the best point out of all possible points by using dom information
+	 */
+	public static List<Point> featureDetectorAndTemplateMatching_dom(String imageFile, String templateFile) {
 
+		Point result = null;
+		
+		List<Point> allMatches = new ArrayList<Point>();
+
+		/* run SIFT and FAST to check for the presence/absence of the template image. */
+		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
+		
+		
+		if (isPresent) {
+			//result = templateMatching(templateFile, imageFile);
+			List<Point> templateMatches = UtilsComputerVision.returnAllMatches(imageFile, templateFile);
+			allMatches.addAll(templateMatches);
+			return allMatches;
+		}
+		
+		return null;
+		
+
+	}
+	
 	/*
 	 * Run the FAST and SIFT feature detector algorithms on the two input images and
 	 * try to match the features found in @object image into the @scene image
 	 * 
 	 */
-	public static boolean runFeatureDetection(String templ, String img) {
-		boolean sift = siftDetector(templ, img);
-		boolean fast = fastDetector(templ, img);
+	public static boolean runFeatureDetection(String templ, String img, List<Point> allMatches) {
+		boolean sift = siftDetector(templ, img, allMatches);
+		boolean fast = fastDetector(templ, img, allMatches);
 		return (sift || fast);
 	}
 
@@ -62,7 +89,7 @@ public class UtilsTemplateMatching {
 	 * match the features found in @object image into the @scene image
 	 * 
 	 */
-	private static boolean fastDetector(String object, String scene) {
+	private static boolean fastDetector(String object, String scene, List<Point> allMatches) {
 
 		// System.out.println("FAST Detector");
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
@@ -141,7 +168,10 @@ public class UtilsTemplateMatching {
 				objectPoints.addLast(objKeypointlist.get(goodMatchesList.get(i).queryIdx).pt);
 				scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
 			}
-
+			
+			// Add  good matches to the list of all matches
+			allMatches.addAll(scenePoints);
+			
 			MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
 			objMatOfPoint2f.fromList(objectPoints);
 			MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
@@ -209,7 +239,7 @@ public class UtilsTemplateMatching {
 	 * match the features found in @object image into the @scene image
 	 * 
 	 */
-	private static boolean siftDetector(String object, String scene) {
+	private static boolean siftDetector(String object, String scene, List<Point> allMatches) {
 
 		// System.out.println("SIFT Detector");
 		Mat objectImage = Highgui.imread(object, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
@@ -289,6 +319,9 @@ public class UtilsTemplateMatching {
 				scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
 			}
 
+			// add the scenepoints to list of all matching points 
+			allMatches.addAll(scenePoints);
+			
 			MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
 			objMatOfPoint2f.fromList(objectPoints);
 			MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
