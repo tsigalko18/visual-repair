@@ -32,7 +32,7 @@ public class DOMInformation {
 		this.height = e.getSize().height;
 		this.classAttribute = e.getAttribute("class");
 		this.nameAttribute = e.getAttribute("name");
-		this.textualcontent = e.getAttribute("textContent");
+		this.textualcontent = e.getAttribute("textContent").trim();
 	}
 
 	public String getXPath() {

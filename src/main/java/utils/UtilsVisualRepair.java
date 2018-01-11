@@ -17,6 +17,7 @@ import org.openqa.selenium.WebElement;
 import config.Settings;
 import datatype.EnhancedTestCase;
 import datatype.SeleniumLocator;
+import datatype.Statement;
 
 public class UtilsVisualRepair {
 
@@ -27,13 +28,15 @@ public class UtilsVisualRepair {
 			EnhancedTestCase testCorrect, Integer i) {
 
 		String visualLocator = null;
+		Statement statement = null;
 		WebElement webElementFromVisualLocator = null;
 
 		/* retrieve the visual locator. */
 		try {
 
 			visualLocator = testCorrect.getStatements().get(i).getVisualLocator().toString();
-
+			 statement = testCorrect.getStatements().get(i);
+			
 		} catch (NullPointerException e) {
 
 			System.out.println("[ERROR]\tVisual locator not found in " + testCorrect.getStatements().get(i));
@@ -43,7 +46,7 @@ public class UtilsVisualRepair {
 		}
 
 		/* retrieve the web element visually. */
-		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, visualLocator);
+		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, statement);
 
 		if (webElementFromVisualLocator == null && webElementFromDomLocator == null) {
 
@@ -102,8 +105,9 @@ public class UtilsVisualRepair {
 		return element;
 	}
 
-	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, String visualLocator) {
+	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, Statement statement) {
 
+		String visualLocator = statement.getVisualLocator().toString();
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
@@ -114,11 +118,11 @@ public class UtilsVisualRepair {
 			Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
 					visualLocator);
 
-			for (Point point : allMatches) {
+			/*for (Point point : allMatches) {
 				System.out.println(UtilsXPath.getXPathFromLocation(point, driver));
-			}
+			}*/
 
-			bestMatch = getBestMatch(allMatches, driver);
+			return getBestMatch(allMatches, driver, statement);
 
 		} else {
 
@@ -144,7 +148,7 @@ public class UtilsVisualRepair {
 
 	}
 
-	private static Point getBestMatch(Set<Point> allMatches, WebDriver driver) {
+	private static WebElement getBestMatch(Set<Point> allMatches, WebDriver driver, Statement statement) {
 
 		if (allMatches == null)
 			return null;
@@ -160,7 +164,7 @@ public class UtilsVisualRepair {
 			}
 
 			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
-
+			System.out.println(xpathForMatch);
 			WebElement webElementForMatch = driver.findElement(By.xpath(xpathForMatch));
 
 			// check if other points belong to this rectangle
@@ -171,7 +175,31 @@ public class UtilsVisualRepair {
 			seenRectangles.add(r);
 			distinctWebElements.add(webElementForMatch);
 		}
-
+		
+		// filter a single element from amongst the distinct webelements obtained from the visual algos
+		// filter based on tagname 
+		List<WebElement> filtered_tagName = new ArrayList<WebElement>();
+		String tagName = statement.getTagName();
+		for(WebElement distinct : distinctWebElements) {
+			if(distinct.getTagName().equalsIgnoreCase(tagName))
+				filtered_tagName.add(distinct);
+		}
+		if(filtered_tagName.size() ==1 )
+			return filtered_tagName.get(0);
+		
+		// if tagName couldn't get unique element go for further filtering using text 
+		String textContent = statement.getText();
+		List<WebElement> filtered_text = new ArrayList<WebElement>();
+		if(!textContent.trim().isEmpty()) {
+			for(WebElement elem: filtered_tagName) {
+				if(elem.getAttribute("textContent").trim().equalsIgnoreCase(textContent))
+					filtered_text.add(elem);
+			}
+		}
+		if(filtered_text.size() ==1)
+			return filtered_text.get(0);
+		
+		
 		return null;
 	}
 
