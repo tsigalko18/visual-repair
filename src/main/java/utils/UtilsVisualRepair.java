@@ -2,7 +2,6 @@ package utils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,16 +26,18 @@ public class UtilsVisualRepair {
 	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator,
 			EnhancedTestCase testCorrect, Integer i) {
 
-		String visualLocator = null;
 		Statement statement = null;
 		WebElement webElementFromVisualLocator = null;
 
-		/* retrieve the visual locator. */
+		/*
+		 * try to retrieve the visual locator and raises an exception if it does not
+		 * exist on the filesystem.
+		 */
 		try {
 
-			visualLocator = testCorrect.getStatements().get(i).getVisualLocator().toString();
-			 statement = testCorrect.getStatements().get(i);
-			
+			testCorrect.getStatements().get(i).getVisualLocator().toString();
+			statement = testCorrect.getStatements().get(i);
+
 		} catch (NullPointerException e) {
 
 			System.out.println("[ERROR]\tVisual locator not found in " + testCorrect.getStatements().get(i));
@@ -118,11 +119,8 @@ public class UtilsVisualRepair {
 			Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
 					visualLocator);
 
-			/*for (Point point : allMatches) {
-				System.out.println(UtilsXPath.getXPathFromLocation(point, driver));
-			}*/
-
-			return getBestMatch(allMatches, driver, statement);
+			WebElement res = getBestMatch(allMatches, driver, statement);
+			return res;
 
 		} else {
 
@@ -148,6 +146,22 @@ public class UtilsVisualRepair {
 
 	}
 
+	private static boolean insideSeenRectangles(Point p, List<Rect> rects) {
+		for (Rect seenRect : rects) {
+			if (p.inside(seenRect))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Filter the results obtained by the visual locators.
+	 * 
+	 * @param allMatches
+	 * @param driver
+	 * @param statement
+	 * @return
+	 */
 	private static WebElement getBestMatch(Set<Point> allMatches, WebDriver driver, Statement statement) {
 
 		if (allMatches == null)
@@ -158,10 +172,8 @@ public class UtilsVisualRepair {
 
 		for (Point match : allMatches) {
 
-			for (Rect seenRect : seenRectangles) {
-				if (match.inside(seenRect))
-					continue;
-			}
+			if (insideSeenRectangles(match, seenRectangles))
+				continue;
 
 			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
 			System.out.println(xpathForMatch);
@@ -174,32 +186,78 @@ public class UtilsVisualRepair {
 
 			seenRectangles.add(r);
 			distinctWebElements.add(webElementForMatch);
+
 		}
-		
-		// filter a single element from amongst the distinct webelements obtained from the visual algos
-		// filter based on tagname 
+
+		/*
+		 * Filter results obtained by the visual locators with DOM information. An
+		 * alternative might be calculate a similarity score.
+		 */
+
+		/* filter by XPath. */
+		List<WebElement> filtered_xpath = new ArrayList<WebElement>();
+		String xpath = statement.getXpath();
+		for (WebElement distinct : distinctWebElements) {
+			String xp = UtilsXPath.generateXPathForWebElement(distinct, "");
+			if (xp.equalsIgnoreCase(xpath))
+				filtered_xpath.add(distinct);
+		}
+		if (filtered_xpath.size() == 1)
+			return filtered_xpath.get(0);
+
+		/* filter by tag name. */
 		List<WebElement> filtered_tagName = new ArrayList<WebElement>();
 		String tagName = statement.getTagName();
-		for(WebElement distinct : distinctWebElements) {
-			if(distinct.getTagName().equalsIgnoreCase(tagName))
+		for (WebElement distinct : distinctWebElements) {
+			if (distinct.getTagName().equalsIgnoreCase(tagName))
 				filtered_tagName.add(distinct);
 		}
-		if(filtered_tagName.size() ==1 )
+		if (filtered_tagName.size() == 1)
 			return filtered_tagName.get(0);
-		
-		// if tagName couldn't get unique element go for further filtering using text 
+
+		/* filter by id. */
+		List<WebElement> filtered_id = new ArrayList<WebElement>();
+		String idattr = statement.getId();
+		for (WebElement distinct : distinctWebElements) {
+			if (distinct.getAttribute("id").equalsIgnoreCase(idattr))
+				filtered_id.add(distinct);
+		}
+		if (filtered_id.size() == 1)
+			return filtered_id.get(0);
+
+		/* filter by class. */
+		List<WebElement> filtered_class = new ArrayList<WebElement>();
+		String classattr = statement.getClassAttribute();
+		for (WebElement distinct : distinctWebElements) {
+			if (distinct.getAttribute("class").equalsIgnoreCase(classattr))
+				filtered_class.add(distinct);
+		}
+		if (filtered_class.size() == 1)
+			return filtered_class.get(0);
+
+		/* filter by name. */
+		List<WebElement> filtered_name = new ArrayList<WebElement>();
+		String nameattr = statement.getName();
+		for (WebElement distinct : distinctWebElements) {
+			if (distinct.getAttribute("name").equalsIgnoreCase(nameattr))
+				filtered_name.add(distinct);
+		}
+		if (filtered_name.size() == 1)
+			return filtered_name.get(0);
+
+		/* filter by textual content. */
 		String textContent = statement.getText();
 		List<WebElement> filtered_text = new ArrayList<WebElement>();
-		if(!textContent.trim().isEmpty()) {
-			for(WebElement elem: filtered_tagName) {
-				if(elem.getAttribute("textContent").trim().equalsIgnoreCase(textContent))
+		if (!textContent.trim().isEmpty()) {
+			for (WebElement elem : filtered_tagName) {
+				if (elem.getAttribute("textContent").trim().equalsIgnoreCase(textContent))
 					filtered_text.add(elem);
 			}
 		}
-		if(filtered_text.size() ==1)
+		if (filtered_text.size() == 1)
 			return filtered_text.get(0);
-		
-		
+
+		/* if none of the filters has been applied, null is returned. */
 		return null;
 	}
 

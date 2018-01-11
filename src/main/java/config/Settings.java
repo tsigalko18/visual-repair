@@ -52,7 +52,7 @@ public class Settings {
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 
 	/* different repair modalities. */
-	public static boolean HYBRID = false;
+	public static boolean HYBRID = true;
 	public static enum RepairMode {
 		DOM, VISUAL, HYBRID
 	}

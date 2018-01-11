@@ -62,7 +62,9 @@ public class UtilsTemplateMatching {
 		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
 
 		if (isPresent) {
-			Set<Point> templateMatches = templateMatchingAllResults(templateFile, imageFile);
+//			Set<Point> templateMatches = templateMatchingAllResults(templateFile, imageFile);
+			Set<Point> templateMatches = new HashSet<Point>();
+			templateMatches.add(templateMatchingBestResult(templateFile, imageFile));
 			allMatches.addAll(templateMatches);
 			return allMatches;
 		}
