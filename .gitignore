@@ -8,3 +8,5 @@
 out
 crawljax.log
 crawloutput.txt
+/output/
+/.classpath
