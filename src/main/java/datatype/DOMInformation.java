@@ -23,7 +23,7 @@ public class DOMInformation {
 	private int height;
 
 	public DOMInformation(JavascriptExecutor js, WebElement e) {
-		this.xpath = UtilsParser.getElementXPath(js, e);
+		this.xpath = UtilsParser.getElementXPath(js, e).substring(1);
 		this.tagName = e.getTagName();
 		this.id = e.getAttribute("id");
 		this.x = e.getLocation().x;
@@ -32,7 +32,7 @@ public class DOMInformation {
 		this.height = e.getSize().height;
 		this.classAttribute = e.getAttribute("class");
 		this.nameAttribute = e.getAttribute("name");
-		this.textualcontent = e.getAttribute("textContent");
+		this.textualcontent = e.getAttribute("textContent").trim();
 	}
 
 	public String getXPath() {
