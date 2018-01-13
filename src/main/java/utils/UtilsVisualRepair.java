@@ -53,7 +53,7 @@ public class UtilsVisualRepair {
 
 			System.err.println(
 					"[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Stopping execution");
-			System.exit(1);
+			//System.exit(1);
 
 		} else if (webElementFromVisualLocator == null) {
 
@@ -176,23 +176,80 @@ public class UtilsVisualRepair {
 				continue;
 
 			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
-			System.out.println(xpathForMatch);
+			//System.out.println(xpathForMatch);
 			WebElement webElementForMatch = driver.findElement(By.xpath(xpathForMatch));
-
-			// check if other points belong to this rectangle
-			Rectangle rect = webElementForMatch.getRect();
-
-			Rect r = new Rect(rect.x, rect.y, rect.width, rect.height);
-
-			seenRectangles.add(r);
-			distinctWebElements.add(webElementForMatch);
-
+			
+			// Consider only the leaf elements
+			if(UtilsXPath.isLeaf(webElementForMatch)) {
+				// check if other points belong to this rectangle
+				Rectangle rect = webElementForMatch.getRect();
+	
+				Rect r = new Rect(rect.x, rect.y, rect.width, rect.height);
+	
+				seenRectangles.add(r);
+				distinctWebElements.add(webElementForMatch);
+			}
 		}
 
 		/*
 		 * Filter results obtained by the visual locators with DOM information. An
 		 * alternative might be calculate a similarity score.
 		 */
+
+		/* filter by id. */
+		List<WebElement> filtered_id = new ArrayList<WebElement>();
+		String idattr = statement.getId();
+		for (WebElement distinct : distinctWebElements) {
+			String id = distinct.getAttribute("id");
+			if(id != null) {
+				if (id.equalsIgnoreCase(idattr))
+					filtered_id.add(distinct);
+			}
+		}
+		if (filtered_id.size() == 1)
+			return filtered_id.get(0);
+
+		/* filter by textual content. */
+		String textContent = statement.getText();
+		List<WebElement> filtered_text = new ArrayList<WebElement>();
+		if (!textContent.trim().isEmpty()) {
+			for (WebElement elem : distinctWebElements) {
+				if (elem.getAttribute("textContent").trim().equalsIgnoreCase(textContent))
+					filtered_text.add(elem);
+			}
+		}
+		if (filtered_text.size() == 1)
+			return filtered_text.get(0);
+
+
+		/* filter by name. */
+		List<WebElement> filtered_name = new ArrayList<WebElement>();
+		String nameattr = statement.getName();
+		for (WebElement distinct : distinctWebElements) {
+			String name = distinct.getAttribute("name");
+			if(name!=null) {
+				if (name.equalsIgnoreCase(nameattr))
+					filtered_name.add(distinct);
+			}
+		}
+		if (filtered_name.size() == 1)
+			return filtered_name.get(0);
+
+		
+		
+		/* filter by class. */
+		List<WebElement> filtered_class = new ArrayList<WebElement>();
+		String classattr = statement.getClassAttribute();
+		for (WebElement distinct : distinctWebElements) {
+			String clazz= distinct.getAttribute("class");
+			if(clazz != null) {
+				if (clazz.equalsIgnoreCase(classattr))
+					filtered_class.add(distinct);
+			}
+		}
+		if (filtered_class.size() == 1)
+			return filtered_class.get(0);
+
 
 		/* filter by XPath. */
 		List<WebElement> filtered_xpath = new ArrayList<WebElement>();
@@ -214,49 +271,7 @@ public class UtilsVisualRepair {
 		}
 		if (filtered_tagName.size() == 1)
 			return filtered_tagName.get(0);
-
-		/* filter by id. */
-		List<WebElement> filtered_id = new ArrayList<WebElement>();
-		String idattr = statement.getId();
-		for (WebElement distinct : distinctWebElements) {
-			if (distinct.getAttribute("id").equalsIgnoreCase(idattr))
-				filtered_id.add(distinct);
-		}
-		if (filtered_id.size() == 1)
-			return filtered_id.get(0);
-
-		/* filter by class. */
-		List<WebElement> filtered_class = new ArrayList<WebElement>();
-		String classattr = statement.getClassAttribute();
-		for (WebElement distinct : distinctWebElements) {
-			if (distinct.getAttribute("class").equalsIgnoreCase(classattr))
-				filtered_class.add(distinct);
-		}
-		if (filtered_class.size() == 1)
-			return filtered_class.get(0);
-
-		/* filter by name. */
-		List<WebElement> filtered_name = new ArrayList<WebElement>();
-		String nameattr = statement.getName();
-		for (WebElement distinct : distinctWebElements) {
-			if (distinct.getAttribute("name").equalsIgnoreCase(nameattr))
-				filtered_name.add(distinct);
-		}
-		if (filtered_name.size() == 1)
-			return filtered_name.get(0);
-
-		/* filter by textual content. */
-		String textContent = statement.getText();
-		List<WebElement> filtered_text = new ArrayList<WebElement>();
-		if (!textContent.trim().isEmpty()) {
-			for (WebElement elem : filtered_tagName) {
-				if (elem.getAttribute("textContent").trim().equalsIgnoreCase(textContent))
-					filtered_text.add(elem);
-			}
-		}
-		if (filtered_text.size() == 1)
-			return filtered_text.get(0);
-
+		
 		/* if none of the filters has been applied, null is returned. */
 		return null;
 	}
