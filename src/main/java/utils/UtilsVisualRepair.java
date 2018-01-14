@@ -199,15 +199,18 @@ public class UtilsVisualRepair {
 		/* filter by id. */
 		List<WebElement> filtered_id = new ArrayList<WebElement>();
 		String idattr = statement.getId();
-		for (WebElement distinct : distinctWebElements) {
-			String id = distinct.getAttribute("id");
-			if(id != null) {
-				if (id.equalsIgnoreCase(idattr))
-					filtered_id.add(distinct);
+		if(!idattr.isEmpty()) {
+			for (WebElement distinct : distinctWebElements) {
+				String id = distinct.getAttribute("id");
+				if(id != null) {
+					if (id.equalsIgnoreCase(idattr))
+						filtered_id.add(distinct);
+				}
 			}
+			if (filtered_id.size() == 1)
+				return filtered_id.get(0);
 		}
-		if (filtered_id.size() == 1)
-			return filtered_id.get(0);
+		
 
 		/* filter by textual content. */
 		String textContent = statement.getText();
@@ -217,39 +220,42 @@ public class UtilsVisualRepair {
 				if (elem.getAttribute("textContent").trim().equalsIgnoreCase(textContent))
 					filtered_text.add(elem);
 			}
+			if (filtered_text.size() == 1)
+				return filtered_text.get(0);
 		}
-		if (filtered_text.size() == 1)
-			return filtered_text.get(0);
+		
 
 
 		/* filter by name. */
 		List<WebElement> filtered_name = new ArrayList<WebElement>();
 		String nameattr = statement.getName();
-		for (WebElement distinct : distinctWebElements) {
-			String name = distinct.getAttribute("name");
-			if(name!=null) {
-				if (name.equalsIgnoreCase(nameattr))
-					filtered_name.add(distinct);
+		if(!nameattr.isEmpty()) {
+			for (WebElement distinct : distinctWebElements) {
+				String name = distinct.getAttribute("name");
+				if(name!=null) {
+					if (name.equalsIgnoreCase(nameattr))
+						filtered_name.add(distinct);
+				}
 			}
+			if (filtered_name.size() == 1)
+				return filtered_name.get(0);
 		}
-		if (filtered_name.size() == 1)
-			return filtered_name.get(0);
-
 		
 		
 		/* filter by class. */
 		List<WebElement> filtered_class = new ArrayList<WebElement>();
 		String classattr = statement.getClassAttribute();
-		for (WebElement distinct : distinctWebElements) {
-			String clazz= distinct.getAttribute("class");
-			if(clazz != null) {
-				if (clazz.equalsIgnoreCase(classattr))
-					filtered_class.add(distinct);
+		if(!classattr.isEmpty()) {
+			for (WebElement distinct : distinctWebElements) {
+				String clazz= distinct.getAttribute("class");
+				if(clazz != null) {
+					if (clazz.equalsIgnoreCase(classattr))
+						filtered_class.add(distinct);
+				}
 			}
+			if (filtered_class.size() == 1)
+				return filtered_class.get(0);
 		}
-		if (filtered_class.size() == 1)
-			return filtered_class.get(0);
-
 
 		/* filter by XPath. */
 		List<WebElement> filtered_xpath = new ArrayList<WebElement>();

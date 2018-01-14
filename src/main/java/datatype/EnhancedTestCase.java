@@ -60,6 +60,8 @@ public class EnhancedTestCase implements Serializable {
 					newMap.put(statement.getLine(), statement);
 				} else if (statement.getLine() == i) {
 					newMap.put(i, st);
+					statement.setLine(1 + statement.getLine());
+					newMap.put(statement.getLine(), statement);
 				} else if (statement.getLine() > i) {
 					statement.setLine(1 + statement.getLine());
 					newMap.put(statement.getLine(), statement);

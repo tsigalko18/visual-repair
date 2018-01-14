@@ -41,9 +41,9 @@ import utils.UtilsVisualRepair;
  * @author astocco
  *
  */
-public class VisualAssertionTestRunner {
+public class VisualAssertionTestRunnerWithCrawler {
 
-	public VisualAssertionTestRunner() {
+	public VisualAssertionTestRunnerWithCrawler() {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
 		 * re-create the new visual execution trace
@@ -62,7 +62,7 @@ public class VisualAssertionTestRunner {
 		String className = "TestAddGroup";
 
 		
-		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
+		VisualAssertionTestRunnerWithCrawler var = new VisualAssertionTestRunnerWithCrawler();
 
 		long startTime = System.currentTimeMillis();
 
@@ -126,6 +126,9 @@ public class VisualAssertionTestRunner {
 
 		/* map of the repaired statements. */
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
+		Map<Integer, Statement> addedSteps = new LinkedHashMap<Integer, Statement>();
+		int numStepsAdded = 0 ;
+		boolean noSuchElementException = false;
 
 		/* for each statement. */
 		for (Integer statementNumber : statementMap.keySet()) {
@@ -144,9 +147,9 @@ public class VisualAssertionTestRunner {
 				/* try to poll the DOM looking for the web element. */
 				webElementFromDomLocator = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver,
 						statement.getDomLocator());
-
+				noSuchElementException = false;
 			} catch (NoSuchElementException Ex) {
-
+				noSuchElementException = true;
 				/*
 				 * if NoSuchElementException is captured, it means that I'm incurred into a
 				 * non-selection that would lead to a direct breakage in the test.
@@ -172,7 +175,7 @@ public class VisualAssertionTestRunner {
 				 * actually the local crawling step might also check whether the step is no
 				 * longer possible.
 				 */
-				/*if (webElementFromDomLocator == null) {
+				if (webElementFromDomLocator == null) {
 					
 					File resultFile = new File(System.getProperty("user.dir") + Settings.separator + "matchingStates.txt");
 					try {
@@ -187,17 +190,55 @@ public class VisualAssertionTestRunner {
 							// Add a test step here
 							CrawlPathExport matchingState = matchingStates.get(0);
 							List<EventableExport> eventList =  matchingState.eventableExportList;
+							
+							/* For each event in crawl, add a statement to added steps */
 							for(EventableExport event : eventList) {
 								//How getHow = event.getHow;
 								String xpath = event.getValue;
 								WebElement elementFromCrawl = driver.findElement(By.xpath(xpath));
+								
+								/* Create a new statement and add it to added steps*/
+								Statement added = (Statement) UtilsRepair.deepClone(statement);
+								
+								String source = elementFromCrawl.getAttribute("outerHTML");
+								if (source == null || source.length() == 0) {
+									source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
+											elementFromCrawl);
+								}
+
+								if (source == null || source.length() == 0) {
+									System.out.println(
+											"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+
+									/* repaired locator is an XPath. */
+									added.setDomLocator(elementFromCrawl);
+								} else {
+
+									/* generate a smartest locator based on the attributes of the element. */
+
+									SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
+
+									added.setDomLocator(fixedLocator);
+
+								}
+								addedSteps.put(new Integer(statementNumber + numStepsAdded), added);
+								numStepsAdded += 1;
+								
+								/* Click on the element from the crawl to navigate to the page */
+								elementFromCrawl.click();
+								
 							}
+							
+							/* After all steps are added, rerun the find element on the web page for the current statement*/
+							
+							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
+									testCorrect, statementNumber);
 						}
 						else {
 							// Delete the step 
 						}
 					}
-				}*/
+				}
 				 
 				// if (webElementFromDomLocator == null) {
 				// webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub
@@ -241,39 +282,40 @@ public class VisualAssertionTestRunner {
 			}
 
 			if (webElementFromDomLocator != null) {
-
-				WebElement webElementVisual = null;
-
-				/* check the web element visually. */
-				webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-						testCorrect, statementNumber);
-
-				if (webElementVisual != null) {
-
-					webElementFromDomLocator = webElementVisual;
-
-					String source = webElementFromDomLocator.getAttribute("outerHTML");
-					if (source == null || source.length() == 0) {
-						source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
-								webElementFromDomLocator);
+				if(!noSuchElementException) {
+					WebElement webElementVisual = null;
+	
+					/* check the web element visually. */
+					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
+							testCorrect, statementNumber);
+	
+					if (webElementVisual != null) {
+	
+						webElementFromDomLocator = webElementVisual;
+	
+						String source = webElementFromDomLocator.getAttribute("outerHTML");
+						if (source == null || source.length() == 0) {
+							source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
+									webElementFromDomLocator);
+						}
+	
+						if (source == null || source.length() == 0) {
+							System.out.println(
+									"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+	
+							/* repaired locator is an XPath. */
+							repairedStatement.setDomLocator(webElementFromDomLocator);
+						} else {
+	
+							/* generate a smartest locator based on the attributes of the element. */
+	
+							SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
+	
+							repairedStatement.setDomLocator(fixedLocator);
+	
+						}
+	
 					}
-
-					if (source == null || source.length() == 0) {
-						System.out.println(
-								"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
-
-						/* repaired locator is an XPath. */
-						repairedStatement.setDomLocator(webElementFromDomLocator);
-					} else {
-
-						/* generate a smartest locator based on the attributes of the element. */
-
-						SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
-
-						repairedStatement.setDomLocator(fixedLocator);
-
-					}
-
 				}
 
 				try {
@@ -330,6 +372,12 @@ public class VisualAssertionTestRunner {
 
 		EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(etc);
 		temp.replaceStatements(repairedTest);
+		
+		/* For each added statement, add it to the test case */
+		for(Integer addedStatement : addedSteps.keySet()) {
+			temp.addStatementAtPosition(addedStatement, addedSteps.get(addedStatement));
+		}
+		
 
 		System.out.println("[LOG]\trepaired test case");
 		UtilsRepair.printTestCaseWithLineNumbers(temp);

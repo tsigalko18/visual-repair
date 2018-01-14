@@ -52,6 +52,7 @@ import datatype.SeleniumLocator;
 import datatype.Statement;
 import utils.UtilsComputerVision;
 import utils.UtilsTemplateMatching;
+import utils.UtilsVisualRepair;
 import utils.UtilsXPath;
 
 /*
@@ -74,19 +75,19 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	private String templateToMatch = null;
 
-	private HashMap<Integer, String> appliedRepairs;
+	private HashMap<Integer, Statement> repairedTest;
 
 	private EnhancedTestCase testBroken;
 
 	private EnhancedTestCase testCorrect;
 
 	public Plugin(HostInterfaceImpl hostInterfaceImpl, EnhancedTestCase testBroken, EnhancedTestCase testCorrect,
-			int brokenStep, HashMap<Integer, String> appliedRepairs) {
+			int brokenStep, HashMap<Integer, Statement> repairedTest) {
 		this.hostInterface = hostInterfaceImpl;
 		this.testBroken = testBroken;
 		this.testCorrect = testCorrect;
 		this.brokenStep = brokenStep;
-		this.appliedRepairs = appliedRepairs;
+		this.repairedTest = repairedTest;
 		Settings.aspectActive = false;
 	}
 
@@ -133,27 +134,14 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 		Statement oldst = testCorrect.getStatements().get(brokenStep);
 		WebDriver driver = context.getBrowser().getWebDriver();
 
-		/* get the visual locator of the statement in the correct test case. */
-		String template = oldst.getVisualLocator().toString();
-		System.out.println(template);
-
-		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
-		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
-
-		// List<Point>
-		Point matches = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, template); 
-				//UtilsComputerVision.findBestMatchCenter(currentScreenshot, template);
-		// returnAllMatches(currentScreenshot, template);
-
-		System.out.println(matches);
-		// ((JavascriptExecutor)driver).executeScript("alert('hello world')");
-		String xpathForMatches = UtilsXPath.getXPathFromLocation(matches, driver);
-		if (xpathForMatches.startsWith("BODY") || xpathForMatches.startsWith("body")) {
-			xpathForMatches = "/HTML[1]/" + xpathForMatches;
-		}
-
-		System.out.println("Xpath for match : " + xpathForMatches);
-		WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
+		
+		// get the best match the same way visual repair works
+		WebElement fromVisual = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, oldst);
+		
+		// Element is not found visually
+		if(fromVisual==null)
+			return ;
+		
 		if (!UtilsXPath.isLeaf(fromVisual)) {
 			fromVisual = null;
 
@@ -220,50 +208,22 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 				break;
 			}
 
-			String repairedXpath = null;
-
 			WebElement element = null;
 
 			Statement statement = statementMap.get(I);
 			// System.out.println(statement);
 			SeleniumLocator domSelector = statement.getDomLocator();
-			String strategy = domSelector.getStrategy();
-			String action = statement.getAction();
-			String locator = domSelector.getValue();
-			String value = statement.getValue();
-			if (value.startsWith("\""))
-				value = value.substring(1);
-			if (value.endsWith("\""))
-				value = value.substring(0, value.length() - 1);
+			
+			
+			if (this.repairedTest != null && this.repairedTest.containsKey(I)) {
 
-			System.out.println("locator: " + locator + ": strategy :" + strategy);
-			System.out.println("action : " + action + " : value : " + value);
+				Statement repairedStatement = this.repairedTest.get(I);
+				domSelector = repairedStatement.getDomLocator();
 
-			if (this.appliedRepairs != null && this.appliedRepairs.containsKey(I)) {
-
-				repairedXpath = this.appliedRepairs.get(I);
-				element = driver.findElement(By.xpath(repairedXpath));
-
-			} else {
-
-				// For getting webelement
-				try {
-					if (strategy.equalsIgnoreCase("xpath")) {
-						element = driver.findElement(By.xpath(locator));
-					} else if (strategy.equalsIgnoreCase("name")) {
-						element = driver.findElement(By.name(locator));
-					} else if (strategy.equalsIgnoreCase("id")) {
-						element = driver.findElement(By.id(locator));
-					} else if (strategy.equalsIgnoreCase("linkText")) {
-						element = driver.findElement(By.linkText(locator));
-					} else if (strategy.equalsIgnoreCase("cssSelector")) {
-						element = driver.findElement(By.cssSelector(locator));
-					}
-				} catch (Exception Ex) {
-					Ex.printStackTrace();
-
-				}
-			}
+			} 
+			
+			element = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver, domSelector);
+			
 			if (element != null) {
 				String xpathForElement = UtilsXPath.generateXPathForWebElement(element, "");
 
@@ -272,36 +232,39 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 				// do visual search with previous screenshot on new page.
 
 				try {
-					// after ascertaining the right element, perform the action
-					if (action.equalsIgnoreCase("click")) {
+					/* after ascertaining the right element, perform the action. */
+					if (statement.getAction().equalsIgnoreCase("click")) {
+
 						element.click();
-					}
-					if (action.equalsIgnoreCase("sendkeys")) {
-						System.out.println(value);
-						element.sendKeys(value);
-					}
-					if (action.equalsIgnoreCase("selectByVisibleText")) {
-						new Select(element).selectByVisibleText(value);
+
+					} else if (statement.getAction().equalsIgnoreCase("sendkeys")) {
+
+						element.sendKeys(statement.getValue());
+
+					} else if (statement.getAction().equalsIgnoreCase("selectByVisibleText")) {
+
+						new Select(element).selectByVisibleText(statement.getValue());
+
+					} else if (statement.getAction().equalsIgnoreCase("getText")) {
+
+						if (element.getText() == statement.getValue()) {
+
+							System.out.println("[LOG]\tAssertion value correct");
+							System.out.println(statement.toString());
+
+						} 
+
 					}
 
-				} catch (Exception Ex) {
-					Ex.printStackTrace();
-					// Apply repair strategies
+					
+				} catch (Exception ex) {
+					ex.printStackTrace();
 					break;
 				}
 			}
 
 		}
-		/*
-		 * arg = arg0; //driver = firstConsumer.getContext().getBrowser().; try {
-		 * driver.findElement(By.name("user")).sendKeys("admin"); // username
-		 * driver.findElement(By.name("pass")).sendKeys("admin"); // password
-		 * driver.findElement(By.cssSelector("input[type='submit']")).click(); } //
-		 * confirmLogin catch(Exception Ex) { System.out.println(" NO need of login x");
-		 * } //WebElement webElement =
-		 * driver.findElement(By.cssSelector("input[type='submit']"));
-		 * driver.findElement(By.xpath("html/body/div[1]/div[3]/ul/li[2]/a")).click();
-		 */
+		
 		System.out.println("Changed initial path URL : " + arg0.getBrowser().getCurrentUrl());
 	}
 
