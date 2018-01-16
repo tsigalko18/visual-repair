@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +128,9 @@ public class VisualAssertionTestRunnerWithCrawler {
 		/* map of the repaired statements. */
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 		Map<Integer, Statement> addedSteps = new LinkedHashMap<Integer, Statement>();
+		List<Integer> deletedSteps = new ArrayList<Integer>();
 		int numStepsAdded = 0 ;
+		int numStepsDeleted = 0;
 		boolean noSuchElementException = false;
 
 		/* for each statement. */
@@ -236,6 +239,9 @@ public class VisualAssertionTestRunnerWithCrawler {
 						}
 						else {
 							// Delete the step 
+							deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
+							numStepsDeleted +=1;
+							
 						}
 					}
 				}
@@ -378,6 +384,10 @@ public class VisualAssertionTestRunnerWithCrawler {
 			temp.addStatementAtPosition(addedStatement, addedSteps.get(addedStatement));
 		}
 		
+		/* For each deleted statement, delete it from the positioin in test case*/
+		for(Integer deletedStatement: deletedSteps) {
+			temp.removeStatementAtPosition(deletedStatement);
+		}
 
 		System.out.println("[LOG]\trepaired test case");
 		UtilsRepair.printTestCaseWithLineNumbers(temp);
