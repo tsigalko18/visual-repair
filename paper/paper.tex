@@ -24,6 +24,9 @@
 %\renewcommand{\algorithmcfname}{ALGORITHM}
 \def\HiLi{\leavevmode\rlap{\hbox to \hsize{\color{gray!35}\leaders\hrule height .8\baselineskip depth .5ex\hfill}}}
 
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
 \renewcommand*{\figureautorefname}{Figure}
 \renewcommand*{\sectionautorefname}{Section}

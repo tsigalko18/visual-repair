@@ -1,4 +1,4 @@
-\begin{algorithm}[t]
+\begin{algorithm}[b]
 \scriptsize
 \DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
 \KwIn{$T$: A test case developed for web application $V$ and its subsequent version $V'$}
@@ -16,11 +16,11 @@
    \uIf{webElement == null} { 
      \textit{webElemVisual} $\gets$ \textsc{visualSearch}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
      \uIf{\textit{webElemVisual} == null} {
-       \textit{webElemVisual} $\gets$ \textsc{crawlingSearch}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
+       \textit{webElemVisual} $\gets$ \textsc{localCrawling}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
        \uIf{\textit{webElemVisual} == null} {
        \textit{verifiedStatements}.remove($st_i$)\;
        } \Else{
-       \textit{newStmt} $\gets$ <\textsc{synthetizeLocator}(\textit{webElemVisual}), "click", ""> \;
+       \textit{newStmt} $\gets$ <\textsc{synthetizeLocator}(\textit{webElemVisual}), ``click'', ``''> \;
        \textit{verifiedStatements}.addBefore($st_i$, \textit{newStmt}) \;
         }
      } \Else{
@@ -33,7 +33,7 @@
      \textit{webElement} $\gets$ \textsc{verify}(\textit{webElement}, \textit{webElemVisual})\;
       \textit{verifiedStatements}.update($st_i$, \textit{webElement}) \;
       \If { webElement.getText() $\neq$ getTextualContent($st_i$) } {
-         \textit{newStmt} $\gets$ <\textit{webElement}, "getText", webElement.getText()> \;
+         \textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
       	\textit{verifiedStatements}.replace($st_i$,  \textit{newStmt}) \;
       }
    }
