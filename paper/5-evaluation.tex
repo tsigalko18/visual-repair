@@ -1,0 +1,91 @@
+% !TEX root =  paper.tex
+
+\section{Empirical Evaluation}\label{sec:evaluation}
+
+We consider the following research questions:
+
+\noindent
+\textbf{RQ\textsubscript{1} (detection):} How effective is our proposed visual-aided approach in visually verifying test statements?
+
+\noindent
+\textbf{RQ\textsubscript{2} (repair):} How do visual-aided and DOM-based test repair approaches compare in terms of effectiveness?
+
+\noindent
+\textbf{RQ\textsubscript{3} (running time):} What is the running time of executing our visual-aided approach as compared to a DOM-based one?
+
+\noindent
+\textbf{RQ\textsubscript{4} (duration):} Does \tool decrease the duration of web test repair tasks?
+
+\noindent
+\textbf{RQ\textsubscript{5} (accuracy):} Does \tool increase the accuracy of web test repair tasks? \\
+
+\noindent
+In our study, the visual-aided approach is represented by \tool, and the DOM-based approach is represented by \water. RQ\textsubscript{1} aims at evaluating how effective the detection algorithm of \tool is at verifying the correctness of the test statements or signalling the occurrence of a breakage, and how its effectiveness varies across breakage classes. RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing our proposal against the state of the art web testing repair solution under different effectiveness and efficiency measures. Finally, we aim at evaluating whether the tool can effectively aid humans in detecting and repairing test breakages, as compared to a manual fashion.
+
+\begin{table}%[h]
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.9}
+\centering
+\caption{Subject systems and their characteristics  \andrea{to modify}}
+\begin{tabular}{lSSrSr}
+\toprule
+
+& \multicolumn{2}{c}{\sc Lines of Code (K)} 
+& \multicolumn{3}{c}{\sc Test Cases} \\
+
+\cmidrule(r){2-3} \cmidrule(r){4-6}
+
+& {Prod.} & {Test} & \# & {Par. Redundant} & \% \\
+ 
+\midrule
+Addressbook  & 12.3      & 20.3      & 459          & 110              & 24 \\
+Claroline        & 45.2      & 59.1      & 3,990        & 1354            & 34 \\
+App3             & 26.6      & 41.6      & 2,344        & 604              & 26 \\
+App4 		  & 2.7       & 3.0       & 141          & 21               & 15 \\
+\midrule
+Total/Average & 642.0     & 319.6     & 19,350       & 4639            & 24 \\
+
+\bottomrule
+\end{tabular}
+\label{table:subjectSystems}
+\end{table}
+
+\subsection{Subjects}\label{sec:subjects}
+
+In the intention of supporting a real-world test regression scenario, we selected open source web applications for which (1)~multiple versions and (2)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{}, and thus, we could obtain four working Selenium test suites from the authors of those papers. This limits the bias of having produced test suites ourselves, that could constitute a threat to the internal validity of our work, and ensures to some extent that the chosen object of analysis are non-trivial, therefore representative of a test suites that a junior tester would implement.
+
+\subsection{Study 1}
+
+\subsubsection{Procedure and Metrics}\label{sec:procedure}
+
+For each considered application: 
+
+\begin{itemize}
+\item we executed each test suite $T_k$ created for a version $V_k$ by means of the Visual Trace Generator, which collected information about the tests execution (e.g., DOMs, screenshots, etc);
+\item we ran each $T_k$ on the next version $V_{k+1}$ with the Visual Test Suite Runner and collected information about each detection, breakage, automatic as well as manual repair triggered.
+\end{itemize}
+
+\noindent
+To answer RQ\textsubscript{1} (\textbf{detection}), we counted the number of statements that were correct, and that our technique was able to visually verify. Those cases represent the true positives (TP\textsubscript{detection}). On the other hand, if our tool deemed those cases as incorrect (i.e., was not able to verify them), then they represent the false negative FN\textsubscript{detection}. Conversely, if the statements were broken, and our technique detected the breakages, we counted them as true negative TN\textsubscript{detection}, whereas if the tool deemed them as correct, then is a false positive FP\textsubscript{detection}.
+%
+In the case of FN and TN, \tool attempts a repair. We also counted the number of correct (REP\textsubscript{correct}) and wrong repairs (REP\textsubscript{wrong}). (Note that in the FN cases, repairs were unnecessary (REP\textsubscript{unnecessary})). Moreover, to fully evaluate the limitations of our technique, we counted the statements that were repaired manually (REP\textsubscript{manual}) and the statements that were found to be unrepairable both by manually and automatically (REP\textsubscript{unrepairable}).
+
+\noindent
+To answer RQ\textsubscript{2}, we counted the number of tests that \tool and \water were able to repair.
+
+\subsection{Study 2}
+
+We designed a user study to measure how effective the tool is in the identification of the root cause, and how much time it allows to save.
+
+\subsection{Results}\label{sec:results}
+
+
+
+
+
+
+
+
+
+
+
