@@ -1,12 +1,12 @@
 \begin{algorithm}[b]
 \scriptsize
 \DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
-\KwIn{$T$: A test case developed for web application $V$ and its subsequent version $V'$}
+\KwIn{$T$: A test case developed for web application $V$, the URL $U$ of its subsequent version $V'$, $EX$: Execution Trace of $T$ when executed on $V$}
 \KwOut{$T'$: A verified/repaired $T$ working on $V'$}
 %\colorbox{lightgray}{/* Execution Trace collection */} \;
-\textit{trace} $\gets$ getExecutionTrace(T, V) \;
-\textit{driver} $\gets$ loadApp($V'$) \;
-\textit{statements}, \textit{verifiedStatements} $\gets$ getStatements(T) \;
+\textit{trace} $\gets$ loadExecutionTrace($EX$) \;
+\textit{driver} $\gets$ loadApp($U$) \;
+\textit{statements}, \textit{repairedStatements} $\gets$ getStatements(T) \;
  \ForEach{ test statement $st_i \in$ \textit{statements} }{%
   \textit{locator} $\gets$ getLocator($st_i$)\;
   \textit{\textit{visLocator}} $\gets$ getVisualLocator(\textit{trace}, $st_i$) \;
@@ -18,29 +18,29 @@
      \uIf{\textit{webElemVisual} == null} {
        \textit{webElemVisual} $\gets$ \textsc{localCrawling}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
        \uIf{\textit{webElemVisual} == null} {
-       \textit{verifiedStatements}.remove($st_i$)\;
+       \textit{repairedStatements}.remove($st_i$)\;
        } \Else{
        \textit{newStmt} $\gets$ <\textsc{synthetizeLocator}(\textit{webElemVisual}), ``click'', ``''> \;
-       \textit{verifiedStatements}.addBefore($st_i$, \textit{newStmt}) \;
+       \textit{repairedStatements}.addBefore($st_i$, \textit{newStmt}) \;
         }
      } \Else{
      updateLocator($st_i$, \textit{webElemVisual}) \;
-      \textit{verifiedStatements}.update($st_i$) \;
+      \textit{repairedStatements}.update($st_i$) \;
      }
    \HiLi{/* Manage mis-selection of web element. */} \;
    } \ElseIf{webElement $\neq$ null}{
       \textit{webElemVisual} $\gets$ \textsc{visualSearch}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
      \textit{webElement} $\gets$ \textsc{verify}(\textit{webElement}, \textit{webElemVisual})\;
-      \textit{verifiedStatements}.update($st_i$, \textit{webElement}) \;
+      \textit{repairedStatements}.update($st_i$, \textit{webElement}) \;
       \If { webElement.getText() $\neq$ getTextualContent($st_i$) } {
          \textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
-      	\textit{verifiedStatements}.replace($st_i$,  \textit{newStmt}) \;
+      	\textit{repairedStatements}.replace($st_i$,  \textit{newStmt}) \;
       }
    }
          \textit{driver} $\gets$ \textsc{executeStatement}($st_i$, $V'$) \;
       	$T'$.add($st_i$) \;
  }
-\Return{$T'$, \textit{verifiedStatements}}\;
+\Return{$T'$, \textit{repairedStatements}}\;
 \caption{Overall Algorithm}
 \label{algo:alg1}
 \end{algorithm}
