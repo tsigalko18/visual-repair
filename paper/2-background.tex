@@ -52,7 +52,7 @@
 \caption{\emph{Visual test.}}
 \label{fig:ab-back-d} 
 \end{subfigure}
-\caption{AddressBook web application}
+\caption{AddressBook web application, and examples of DOM-based and visual automated test cases. \andrea{sync the web pages}}
 \label{fig:ab-back}
 \end{figure*}
 
@@ -61,10 +61,10 @@ about E2E test automation that are needed
 to understand the remainder of the paper.
 We provide background information on 
 DOM-based and visual web testing approaches.
-To help present these approaches and concepts
+To present these approaches and concepts
 we use the example provided in~\autoref{fig:ab-back}: 
 a simplified version of the AddressBook web application, 
-one of the experiment objects used in our study. 
+one of the experimental objects used in our study. 
 We consider a scenario in which a user 
 inserts a \texttt{username} and \texttt{password} 
 in the AddressBook login form 
@@ -73,34 +73,32 @@ and if these credentials are correct,
 the \texttt{username} (\texttt{`admin'}) is displayed on the top right corner of the homepage 
 (\autoref{fig:ab-back-b}).
 
-\head{Approaches to E2E Test Automation}
+\noindent
+\textbf{Approaches to E2E Web Test Automation.}
 In recent years, two major approaches to E2E web testing have emerged, each of them associated with a diverse way of interacting with the AUT. 
 
 \textit{DOM-based} tools access and inspect properties of the Document Object Model (DOM), the hierarchical structure underlying a web page. 
 %To this category belong capture-replay (C\&R) and programmable tools. \textit{Capture-replay} tools are based on the recording of sequences of inputs and actions performed by the tester on the web application GUI. The recording process creates a test script (see~\autoref{t:seleniumtest}) that can be replayed in a unattended mode. 
 %With \textit{programmable} tools, on the other hand, test cases themselves become software artefacts that developers write resorting to specific testing frameworks (see~\autoref{lst:login-no-abs-back}). 
-Specific testing framework API supports the creation of test scripts that automate the interaction with a web page and its elements, and the sequences of inputs and actions performed by the tester on the web application GUI. A test script can, for instance, automatically fill-in and submit forms or click on hyperlinks (see \autoref{fig:ab-back-c}). There are many C\&R tools for web applications available, e.g., Selenium~\cite{selenium}, Sahi~\cite{sahi}, and Ringer~\cite{ringer}. %A representative of the programmable category is Selenium WebDriver~\cite{selenium}, which is considered the flagship open-source test automation tool for web applications.
+Specific testing framework APIs support the creation of test scripts that automate the interaction with a web page and its elements, and the sequences of inputs and actions performed by the tester on the web application. A test script can, for instance, automatically fill-in and submit forms or click on hyperlinks (see \autoref{fig:ab-back-c}). There are many test automation tools for web applications available, e.g., Selenium~\cite{selenium}, Sahi~\cite{sahi}, and Ringer~\cite{ringer}. %A representative of the programmable category is Selenium WebDriver~\cite{selenium}, which is considered the flagship open-source test automation tool for web applications.
 
 An emerging and relatively new approach is \textit{visual} web testing, in which the AUT is tested through its GUI. Indeed, the emergence of new complex visual components in web pages has required new ways of interfacing with the web applications. Visual tools such as JAutomate~\cite{Alegroth2013jat}, Sikuli~\cite{Sikuli}, and EggPlant Functional~\cite{eggplant} use image recognition techniques to identify the web elements displayed on the web page. Visual web testing tools offer an interesting alternative, promising easier and more intuitive test case creation, and they are increasingly being adopted also in industry~\cite{Alegroth2013jat}. 
 \autoref{fig:ab-back-d} shows the visual version of the DOM-based test of~\autoref{fig:ab-back-c}, developed using Sikuli~\cite{Sikuli}. We can notice how web elements are localised by \textit{visual locators}, i.e., images representing a portion of the GUI.
 
-\head{The Dilemma}
+\noindent
+\textbf{The Dilemma.}
 To date, both approaches coexist and are utilized. Since each category of testing tools come with advantages and disadvantages, it is not clear whether in the future one will eventually prevail over the other. Our insight behind this uncertain scenario is that the choice of the most adequate testing tool depends to a large extent on the characteristics of the AUT. For instance, for highly interactive web applications such as Google Maps, the DOM can be complicated to retrieve, thus it is more convenient to rely on a visual testing tool that is capable of asserting on the correctness of the web page visual content.
-Additionally, existing DOM-based tools do not take into account the visual appearance of the AUT, which is instead important because it is used by the tester as the main oracle against which to evaluate the correctness of the application. Visual tools, on the other hand, completely abstract away the model of the page, and create actions and assertions in a purely visual manner. 
+Additionally, existing DOM-based tools do not take into account the visual appearance of the AUT, which is instead important because it is tipically used by the tester as the main oracle against which to evaluate the correctness of the application. Visual tools, on the other hand, completely abstract away the model of the page, and create actions and assertions in a purely visual manner. 
 %
 Hybrid approaches such as Applitools~\cite{applitools} try to unify the two approaches and allow a tester to manually inject visual checks at specific places of the test execution. This has two drawbacks: (1)~the insertion of the check-points must be performed manually, (2)~this extra-code clutters the initial test code, with statements that do not pertain to the test scenario itself.
 
-\head{The Idea}
+\noindent
+\textbf{The Idea.}
 We believe that the use of visual technologies in web testing can  be especially beneficial for regression testing purposes, rather than for test creation. For example, the GUI can be used to verify the correct execution of the tests as the AUT evolves over time (in a similar way as testers do), or to detect deviations from the correct behaviour.
-Indeed, E2E tests are mostly used in \textit{regression} scenarios, i.e., to verify that the most recent code changes have not adversely affected existing features. To do so, already existing test cases are re-executed to ensure that the current functionalities still work correctly. 
+Indeed, E2E tests are vastly used in \textit{regression} scenarios, i.e., to verify that the most recent code changes have not adversely affected existing features. To do so, already in place test cases are re-executed to ensure that the current functionalities still work correctly. 
 %
 Unfortunately, web tests are well-known to be very fragile in the face of software evolution~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Hammoudi-2016-ICST}. %Indeed, automated test code is usually highly coupled with low-level implementation details such as HTML attributes and thus result fragile and difficult to maintain as the AUT evolves~\cite{2016-leotta-Advances,2016-Leotta-JSEP,Hammoudi-2016-ICST}. 
-Even a minor GUI change might break a previously developed test case, whose script would need to be repaired manually, or re-written to match the new version of the web application, even if conceptually the functionality is unaltered, and no errors are present in the production code.
-
-\subsection{Existing Web Tests Repair Approaches}
-
-Test repair techniques have been proposed in the last years~\cite{Gao:2016:SGT:3046547.3046580,Daniel:2011:AGR:2002931.2002937,Daniel:2009:RSR:1747491.1747538,Daniel:2010:TRU:1831708.1831734,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE}. However, only a few proposals target the web domain. To date, the state of the art web test repair algorithm is \water, by Choudhary et al.~\cite{Choudhary:2011:WWA:2002931.2002935}. \water is based on differential testing, and compares the correct test execution with the failing one in order to find potential fixes for the broken tests. While the repair algorithm of \water has a straightforward design and can manage a good number of cases related to locators or assertions, it has a number of limitations that derive from its  DOM-related narrowness: First, this can lead to a great number of false positives, as recognized by the authors of the paper~\cite{Choudhary:2011:WWA:2002931.2002935}. Second, 
- relying only on the DOM may be insufficient to find candidate repairs. Third, the algorithm does not reflect the way in which testers attempt at repair tests, an activity that often requires to inspect the GUI of the two applications in order to find the root causes of the breakages. Fourth, it relies on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle propagated breakages~\cite{Hammoudi-2016-ICST}, i.e., cases in which a breakage appears in a later point of the test execution. In many of such cases, it is imperative for the tester to inspect the GUI.
+Even a minor GUI change might break a previously developed test case, whose script would need to be repaired manually, or re-written to match the new version of the web application, even if conceptually the functionality is unaltered, and no errors are present in the application code.
 
 %\subsection{Definitions} At a high level, each Selenium command is a tuple \textit{<locator, action, value>}. A locator is a function on a DOM state $D$, as follows, $$l: D \rightarrow e$$ where $e$ is the target element returned by the locator $l$ when applied to $D$. \andrea{to decide if and what to include}
 
