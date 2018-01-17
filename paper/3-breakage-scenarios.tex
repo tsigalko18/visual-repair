@@ -166,15 +166,15 @@ One of our motivations of conducting this research is to use computer vision tec
 \textbf{Template Matching.}\label{sec:tm}
 Identifying web elements \textit{visually} across different versions (i.e., pages) of a web application falls within a common branch of image analysis known as template matching. 
 %
-Template matching aims to detect the occurrence of a specific pattern or object in an image~\cite{Brunelli:2009:TMT:1643435}. This is done by defining a small image of the object -- a template -- and searching for a similar occurrence in a given image. In general, the search is limited to a region of interest inside which we think the object being searched can be found. The template is then slid over this region, and a similarity measure is computed at each pixel location.
+Template matching aims to detect the occurrence of a specific pattern or object in an image~\cite{Brunelli:2009:TMT:1643435}. This is done by defining a small image of the object -- a template -- and searching for a similar occurrence in a given image, by sliding the template over the image, and computing a similarity measure at each pixel location.
 
-Matching images can be challenging as the algorithm must account for factors such as scaling, rotation, and lighting. Fortunately, the images we match in this work are screen captures from web applications rendered by the same browser. Thus, in this context, the above issues are ameliorated, and the main problems are, for instance, the shifting of GUI elements or the fact that some elements are not displayed at all~\cite{}.
+Template matching algorithms must account for factors such as scaling, rotation, and lighting. Fortunately, the images we match in this work are screen captures from web applications rendered by the same browser. Thus, in this context, the above issues are ameliorated, and the main problems are, for instance, the shifting of GUI elements or the fact that some elements are not displayed at all~\cite{}.
 % 
-To this aim, template matching alone does not do a good job of telling us if an object does not appear in an image. Sure, we could set thresholds on the correlation coefficient, but in practice this is not robust. Looking for a more reliable approach, we have to explore keypoint matching.
+However, template matching algorithms are not effective in detecting the presence/absence of a template. Indeed, by design, they always return the pixel location where the best match has been found. One may argue that, in such cases, a more strict threshold value on the similarity coefficient can do the job, but in practice this is not robust or generalizable. Looking for a more reliable approach, we explored key-point matching.
 
 \noindent
 \textbf{Feature Detection.}
-The philosophy of this method is to find certain ``important'' points (keypoints) in the object template and store information about the neighbourhood of those keypoints (keypoint descriptors) as a description of the object. In other test images, one should find keypoint descriptors of keypoints in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
+The philosophy of this method is to find certain ``important'' points (key-points) in the object template and store information about the neighbourhood of those key-points (key-point descriptors) as a description of the object. In other test images, one should find key-point descriptors of key-points in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
 
 
 
