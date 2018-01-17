@@ -46,12 +46,12 @@ Thus, RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing the effective
 
 \midrule
 %Addressbook  & 12.3      & 35.6      & 126.2          & 110              & 24 \\
-Addressbook  & 0          & 0           & 0          & 0               & 0 \\
-Claroline        & 0          & 0           & 0          & 0               & 0 \\
-App3             & 0          & 0           & 0          & 0               & 0 \\
-App4 		  & 0          & 0           & 0          & 0               & 0 \\
+Addressbook & 0 & 0 & 0 & 0 & 0 \\
+Claroline & 0 & 0 & 0 & 0 & 0 \\
+App3 & 0 & 0 & 0 & 0 & 0 \\
+App4 & 0 & 0 & 0 & 0 & 0 \\
 \midrule
-Total/Average & 0     & 0     & 0       & 0            & 0 \\
+Total/Average & 0 & 0 & 0 & 0 & 0 \\
 
 \bottomrule
 \end{tabular}
@@ -60,33 +60,47 @@ Total/Average & 0     & 0     & 0       & 0            & 0 \\
 
 \subsection{Objects of Analysis}\label{sec:subjects}
 
-In the intention of supporting a realistic test regression scenario, we selected open source web applications for which (i)~multiple versions and (ii)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{WCRE}, and for which we were able to obtain from the authors four working Selenium test suites. This limits the bias of having produced test suites ourselves, that could constitute a threat to the internal validity of our work, and ensures to some extent that the chosen object of analysis are non-trivial, therefore representative of a test suites that a junior tester would implement.
+In the intention of supporting a realistic test regression scenario, we selected open source web applications for which (i)~multiple versions and (ii)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{WCRE}, and for which we were able to obtain from the authors four working Selenium test suites.
 
 \autoref{table:subjectSystems} (Web Applications macro-column) shows information about the selected applications, including their names, the numbers of releases we used, the number of lines of code they contained (counted using the tool {\it cloc}\footnote{\url{https://github.com/AlDanial/cloc}} and averaged across the releases), and the numbers of downloads made as of the day we selected them.
 Test Suites macro-column provides data on the test suites, including the total numbers of test cases counted across all versions along with the average number of test cases per version (Column~5), and the total numbers of statements in all of the test cases counted across all versions along with the average number of statements per test case (Column~6).
 
 \subsection{Procedure}\label{sec:procedure}
 
-\textit{Procedure and Metrics.}
+First, we determined the types of test breakages that occur in our objects of analysis. For each considered web application, for each version $V_n$ and its accompanying test suite $T_n$, we executed $T_n$ on the subsequent version $V_{n+1}$, and collected information about each breakage and each failure (e.g., actual bugs). We repeated this process until all the versions were taken into account. 
 
-For each considered application: 
+Table XXX shows the distribution of breakages across the various types and applications. \andrea{complete}
 
-\begin{itemize}
-\item we executed each test suite $T_k$ created for a version $V_k$ by means of the Visual Trace Generator, which collected information about the tests execution (e.g., DOMs, screenshots, etc);
-\item we ran each $T_k$ on the next version $V_{k+1}$ with the Visual Test Suite Runner and collected information about each detection, breakage, automatic as well as manual repair triggered.
-\end{itemize}
+Then, for each subject applications, we applied the three variants of our approach to each $(T_n,V_{n+1})$ pair in which either a breakage or a failure has been observed. For each variant, we ran the repaired test $T_{rep}$ to determined whether the tool was able to detect (and possibly repair) the issues. If $T_{rep}$ executed and passed, we counted the number of breakages that were \textit{corrected} (true positives). If $T_n$ failed because of a bug, and $T_{rep}$ was able to report it, we counted the number of correct \textit{detections} (true negatives). Conversely, the false negatives are represented by \textit{missed} detections or \textit{incorrect} repairs. False positives occur when our approach signalled a breakage or a failure, even if the statement is actually correct.
 
-\noindent
-To answer RQ\textsubscript{1} (\textbf{detection}), we counted the number of statements that were correct, and that our technique was able to visually verify. Those cases represent the true positives (TP\textsubscript{detection}). On the other hand, if our tool deemed those cases as incorrect (i.e., was not able to verify them), then they represent the false negative FN\textsubscript{detection}. Conversely, if the statements were broken, and our technique detected the breakages, we counted them as true negative TN\textsubscript{detection}, whereas if the tool deemed them as correct, then is a false positive FP\textsubscript{detection}.
+
+\subsection{Threats to Validity}\label{sec:ttv}
+
+\head{Internal validity} We limited the bias of having produced test suites ourselves, that could constitute a threat to the internal validity of our work, by choosing existing test suites used in the previous web testing research. This also ensures, to some extent, that the chosen object of analysis are non-trivial, therefore representative of a test suites that a junior tester would implement. 
+
+\head{External validity} Concerning the generalizability of our results, we ran our approach with a limited number of subjects and test suites. However, we believe the approach to be applicable in a general web testing scenario, even though the magnitude of the results might change when considering different test suites and applications. To limit biases in the manual selection of the versions, we considered \textit{all} the available releases after those for which the test suites were developed for.
+ 
+
+%\textit{Procedure and Metrics.}
 %
-In the case of FN and TN, \tool attempts a repair. We also counted the number of correct (REP\textsubscript{correct}) and wrong repairs (REP\textsubscript{wrong}). (Note that in the FN cases, repairs were unnecessary (REP\textsubscript{unnecessary})). Moreover, to fully evaluate the limitations of our technique, we counted the statements that were repaired manually (REP\textsubscript{manual}) and the statements that were found to be unrepairable both by manually and automatically (REP\textsubscript{unrepairable}).
-
-\noindent
-To answer RQ\textsubscript{2}, we counted the number of tests that \tool and \water were able to repair.
-
-\subsection{Study 2}
-
-We designed a user study to measure how effective the tool is in the identification of the root cause, and how much time it allows to save.
+%For each considered application: 
+%
+%\begin{itemize}
+%\item we executed each test suite $T_k$ created for a version $V_k$ by means of the Visual Trace Generator, which collected information about the tests execution (e.g., DOMs, screenshots, etc);
+%\item we ran each $T_k$ on the next version $V_{k+1}$ with the Visual Test Suite Runner and collected information about each detection, breakage, automatic as well as manual repair triggered.
+%\end{itemize}
+%
+%\noindent
+%To answer RQ\textsubscript{1} (\textbf{detection}), we counted the number of statements that were correct, and that our technique was able to visually verify. Those cases represent the true positives (TP\textsubscript{detection}). On the other hand, if our tool deemed those cases as incorrect (i.e., was not able to verify them), then they represent the false negative FN\textsubscript{detection}. Conversely, if the statements were broken, and our technique detected the breakages, we counted them as true negative TN\textsubscript{detection}, whereas if the tool deemed them as correct, then is a false positive FP\textsubscript{detection}.
+%%
+%In the case of FN and TN, \tool attempts a repair. We also counted the number of correct (REP\textsubscript{correct}) and wrong repairs (REP\textsubscript{wrong}). (Note that in the FN cases, repairs were unnecessary (REP\textsubscript{unnecessary})). Moreover, to fully evaluate the limitations of our technique, we counted the statements that were repaired manually (REP\textsubscript{manual}) and the statements that were found to be unrepairable both by manually and automatically (REP\textsubscript{unrepairable}).
+%
+%\noindent
+%To answer RQ\textsubscript{2}, we counted the number of tests that \tool and \water were able to repair.
+%
+%\subsection{Study 2}
+%
+%We designed a user study to measure how effective the tool is in the identification of the root cause, and how much time it allows to save.
 
 \subsection{Results}\label{sec:results}
 
