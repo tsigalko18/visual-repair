@@ -5,58 +5,69 @@
 We consider the following research questions:
 
 \noindent
-\textbf{RQ\textsubscript{1} (detection):} How effective is our proposed visual-aided approach in visually verifying test statements?
+%\textbf{RQ\textsubscript{1} (detection):} How effective is our proposed visual-aided approach in visually verifying test statements?
+%\textbf{RQ\textsubscript{1} (prevalence):} How prevalent are test breakages in practice?
 
 \noindent
-\textbf{RQ\textsubscript{2} (repair):} How do visual-aided and DOM-based test repair approaches compare in terms of effectiveness?
+\textbf{RQ\textsubscript{1} (repair):} How do DOM-based and visual-augmented test repair approaches compare in terms of effectiveness?
 
 \noindent
-\textbf{RQ\textsubscript{3} (running time):} What is the running time of executing our visual-aided approach as compared to a DOM-based one?
+\textbf{RQ\textsubscript{2} (running time):} What is the running time of executing our visual-augmented approach as compared to the DOM-based one? \\
+
+%\noindent
+%\textbf{RQ\textsubscript{4} (duration):} Does \tool decrease the duration of web test repair tasks?
+%
+%\noindent
+%\textbf{RQ\textsubscript{5} (accuracy):} Does \tool increase the accuracy of web test repair tasks? \\
 
 \noindent
-\textbf{RQ\textsubscript{4} (duration):} Does \tool decrease the duration of web test repair tasks?
+The repair strategy of \tool can be customized so as to utilize: (i)~only DOM-based information, (ii)~only visual-based information,  (iii)~both DOM-based and visual information. We refer to these three variants as \tool-DOM, \tool-Vis, and \tool-Hybrid, respectively.
+%In our study, the visual-augmented approach is represented by \tool, and the DOM-based approach is represented by \water. 
+%RQ\textsubscript{1} aims at evaluating how effective the three variants of \tool are at detecting and repairing test breakages. 
+% the correctness of the test statements or signalling the occurrence of a breakage, and how its effectiveness varies across breakage classes. 
+%RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing our proposal against the state of the art web testing repair solution under different effectiveness and efficiency measures. Finally, we aim at evaluating whether the tool can effectively aid humans in detecting and repairing test breakages, as compared to a manual fashion.
+Thus, RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing the effectiveness and efficiency of the three variants of our approach.
 
-\noindent
-\textbf{RQ\textsubscript{5} (accuracy):} Does \tool increase the accuracy of web test repair tasks? \\
-
-\noindent
-In our study, the visual-aided approach is represented by \tool, and the DOM-based approach is represented by \water. RQ\textsubscript{1} aims at evaluating how effective the detection algorithm of \tool is at verifying the correctness of the test statements or signalling the occurrence of a breakage, and how its effectiveness varies across breakage classes. RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing our proposal against the state of the art web testing repair solution under different effectiveness and efficiency measures. Finally, we aim at evaluating whether the tool can effectively aid humans in detecting and repairing test breakages, as compared to a manual fashion.
-
-\begin{table}%[h]
-\setlength{\tabcolsep}{3pt}
+\begin{table}[t]
+\setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{0.9}
 \centering
-\caption{Subject systems and their characteristics  \andrea{to modify}}
-\begin{tabular}{lSSrSr}
+\caption{Subject systems and their test suites  \andrea{complete}}
+\begin{tabular}{lSSSrr}
 \toprule
 
-& \multicolumn{2}{c}{\sc Lines of Code (K)} 
-& \multicolumn{3}{c}{\sc Test Cases} \\
+& \multicolumn{3}{c}{\sc Web applications} 
+& \multicolumn{2}{c}{\sc Test Suites} \\
 
-\cmidrule(r){2-3} \cmidrule(r){4-6}
+\cmidrule(r){2-4} \cmidrule(r){5-6}
 
-& {Prod.} & {Test} & \# & {Par. Redundant} & \% \\
- 
+& {\textbf{Rel.}} & {\textbf{LOCs (K)}} & {\textbf{Downloads}} & {\textbf{\#}} & {\textbf{LOCs (K)}}   \\
+
+
 \midrule
-Addressbook  & 12.3      & 20.3      & 459          & 110              & 24 \\
-Claroline        & 45.2      & 59.1      & 3,990        & 1354            & 34 \\
-App3             & 26.6      & 41.6      & 2,344        & 604              & 26 \\
-App4 		  & 2.7       & 3.0       & 141          & 21               & 15 \\
+%Addressbook  & 12.3      & 35.6      & 126.2          & 110              & 24 \\
+Addressbook  & 0          & 0           & 0          & 0               & 0 \\
+Claroline        & 0          & 0           & 0          & 0               & 0 \\
+App3             & 0          & 0           & 0          & 0               & 0 \\
+App4 		  & 0          & 0           & 0          & 0               & 0 \\
 \midrule
-Total/Average & 642.0     & 319.6     & 19,350       & 4639            & 24 \\
+Total/Average & 0     & 0     & 0       & 0            & 0 \\
 
 \bottomrule
 \end{tabular}
 \label{table:subjectSystems}
 \end{table}
 
-\subsection{Subjects}\label{sec:subjects}
+\subsection{Objects of Analysis}\label{sec:subjects}
 
-In the intention of supporting a real-world test regression scenario, we selected open source web applications for which (1)~multiple versions and (2)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{}, and thus, we could obtain four working Selenium test suites from the authors of those papers. This limits the bias of having produced test suites ourselves, that could constitute a threat to the internal validity of our work, and ensures to some extent that the chosen object of analysis are non-trivial, therefore representative of a test suites that a junior tester would implement.
+In the intention of supporting a realistic test regression scenario, we selected open source web applications for which (i)~multiple versions and (ii)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{WCRE}, and for which we were able to obtain from the authors four working Selenium test suites. This limits the bias of having produced test suites ourselves, that could constitute a threat to the internal validity of our work, and ensures to some extent that the chosen object of analysis are non-trivial, therefore representative of a test suites that a junior tester would implement.
 
-\subsection{Study 1}
+\autoref{table:subjectSystems} (Web Applications macro-column) shows information about the selected applications, including their names, the numbers of releases we used, the number of lines of code they contained (counted using the tool {\it cloc}\footnote{\url{https://github.com/AlDanial/cloc}} and averaged across the releases), and the numbers of downloads made as of the day we selected them.
+Test Suites macro-column provides data on the test suites, including the total numbers of test cases counted across all versions along with the average number of test cases per version (Column~5), and the total numbers of statements in all of the test cases counted across all versions along with the average number of statements per test case (Column~6).
 
-\subsubsection{Procedure and Metrics}\label{sec:procedure}
+\subsection{Procedure}\label{sec:procedure}
+
+\textit{Procedure and Metrics.}
 
 For each considered application: 
 
