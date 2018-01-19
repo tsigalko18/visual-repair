@@ -34,7 +34,7 @@
       \textit{repairedStatements}.update($st_i$, \textit{webElement}) \;
    }
    \HiLi{/* Suggest potential fix to assertions value. */} \;
-    \If { webElement.getText() $\neq$ getTextualContent($st_i$) } {
+    \If { getAction($st_i$) == ``assertion'' and getText($st_i$) $\neq$ webElement.getText() } {
          \textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
       	\textit{repairedStatements}.replace($st_i$,  \textit{newStmt}) \;
       }
