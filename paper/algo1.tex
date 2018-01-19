@@ -32,11 +32,12 @@
       \textit{webElemVisual} $\gets$ \textsc{visualSearch}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
      \textit{webElement} $\gets$ \textsc{verify}(\textit{webElement}, \textit{webElemVisual})\;
       \textit{repairedStatements}.update($st_i$, \textit{webElement}) \;
-      \If { webElement.getText() $\neq$ getTextualContent($st_i$) } {
+   }
+   \HiLi{/* Suggest potential fix to assertions value. */} \;
+    \If { webElement.getText() $\neq$ getTextualContent($st_i$) } {
          \textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
       	\textit{repairedStatements}.replace($st_i$,  \textit{newStmt}) \;
       }
-   }
          \textit{driver} $\gets$ \textsc{executeStatement}($st_i$, $V'$) \;
       	$T'$.add($st_i$) \;
  }
