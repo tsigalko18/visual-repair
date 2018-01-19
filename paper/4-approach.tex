@@ -1,11 +1,28 @@
 %% !TEX root =  paper.tex
 \section{Approach}\label{sec:approach}
 
-The goal of our approach is to find potential fixes that can repair a broken web test that used to work correctly on a version $V$ of the AUT, and that now breaks when applied on a subsequent version $V+n$ (with usually $n=1$).
+The goal of our approach is to
+detect and find potential fixes to locator problems that pertain to the breakage scenarios described in \autoref{sec:breakage-scenarios}.
+%
+%that can repair a broken web test that used to work correctly on a version $V$ of the AUT, and that now breaks when applied on a subsequent version $V+n$ (with usually $n=1$).
+%
+%The focus of our technique is to repair \textit{locators}, that represent the main source of breakage.
+%Our technique can detect and correct locator problems that pertain to the breakage scenarios described in \autoref{sec:breakage-scenarios}.
+In a nutshell, we capture the execution trace of each test statement for a version $V$ and use it to assert its correctness (or repair it) when executed on a subsequent version $V+n$ ($n \geq 1$). 
+%Whenever possible, our technique attempts to repair breakages automatically, but also logs each encountered breakage or in inconsistency. 
+% However, a detailed log of the encountered breakages is kept, so as to warn the developer of potential inconsistencies or breakages, and create potential candidate repairs to fix them. 
 
-The focus of our technique is to repair \textit{locators}, that represent the main source of breakage.
-Our technique can detect and correct locator problems that pertain to the breakage scenarios described in \autoref{sec:breakage-scenarios}.
-In a nutshell, we capture the execution trace of each test statement for a version $V$ and use it to assert the correctness of the test execution and repair it for a subsequent version $V+n$. While for certain breakages, we automatically repair them, we also warn the developer of potential inconsistencies or breakages, and creates potential candidate repairs that fix them. \andrea{suggest vs repair}
+\autoref{approach} illustrates the usage scenario for our approach. % in a real-world testing environment. 
+First, given a stable version of the web application $V$ along with its working test suite $TS$ (i.e., in which all tests pass)~\ding{182}, a tester would run $TS$ by means of the first module of the presented approach~\ding{183}. Such a module collects, for each test, a variety of information (e.g., screenshots, DOMs)~\ding{184}. 
+Then, as the application $V$ evolves into a new version $V'$ ~\ding{185}, a tester may wish to use $TS$ to check if regressions have occurred. The tester would use the second module of our approach~\ding{186} which runs each test case of $TS$ against the new version $V'$, and makes use of the information about the previous execution traces to ``visually'' validate the correctness of each test statement, and eventually attempt to repair locator breakages at runtime in an \textit{online mode}. At the end of the process, the approach outputs the new ``visually'' validated (and eventually repaired) test suite $TS'$ that works on $V'$, together with report information. 
+The tester can then manually analyze the report along with the repaired test cases. $TS'$ now represents a working test suite for the version $V'$ which can be used as a baseline for our approach when $V'$ will evolve. 
+The manual effort required is potentially significantly reduced in comparison to a user carefully verifying each executing test and manually searching for fixes as breakages occur. %
+We now detail each step of our approach. 
+
+\subsection{Execution Trace Collection}
+%
+In the first part of our approach, we capture a model of the  runtime execution of the test cases. 
+Such a test model comprises a sequence of test states, where each test state captures the DOM and visual information associated with each test statement of each test case. 
 
 \begin{figure}[t]
 \centering
@@ -16,18 +33,6 @@ In a nutshell, we capture the execution trace of each test statement for a versi
 \label{approach}
 \end{figure}
 
-\autoref{approach} illustrates the usage scenario for our approach in a real-world testing environment. 
-First, given a stable version of the web application $V$ along with its working test suite $TS$ (i.e., in which all tests pass)~\ding{182}, a tester would run $TS$ by means of the first module of the presented approach~\ding{183}. Such a module collects, for each test, a variety of information (e.g., screenshots, DOMs)~\ding{184}. 
-Then, as the application $V$ evolves into a new version $V'$ ~\ding{185}, a tester may wish to use $TS$ to check if regressions have occurred. Here, the tester uses the second module of our approach~\ding{186} which runs each test case of the the test suite $TS$ against the new version $V'$, and makes use of the information about the previous execution traces to ``visually'' validate the correctness of each test statement, and eventually attempt to repair locator breakages at runtime in an \textit{online mode}. At the end of the process, the approach outputs the new ``visually'' validated (and eventually repaired) test suite $TS'$ that works on $V'$, together with report information. 
-The developer/tester can then manually analyze the report along with repairs that were automatically performed as well as suggested repairs to create an evolved test suite $TS'$. The test suite $TS'$ represents a working test suite for the version $V'$ which can be used in the same way when $V'$ evolves. 
-The manual effort required is potentially significantly reduced in comparison to a user carefully verifying each executing test and manually searching for fixes as breakages occur. %
-We now detail each step of our approach. 
-
-\subsection{Execution Trace Collection}
-%
-In the first part of our approach, we capture a model of the  runtime execution of the test cases. 
-The test model is a sequence of test states, where each test state captures the DOM and visual information associated with each test statement of each test case. 
-
 %While most of the DOM information could be collected statically, the visual appearance of the rendered elements may change during the application execution and some elements may be not visible until specific events occur. For this reason, we need to capture the visual information at runtime, while the test suite is executing. 
 
 %To this aim, the first module of \tool takes as input a web application along with its accompanying test suite, and runs each test case to collect both DOM and visual information associated to each test statement, hence creating a test model.  %\andrea{I haven't detailed this part by means of an algorithm as references are provided}
@@ -36,6 +41,32 @@ The test model is a sequence of test states, where each test state captures the 
 
 %We use aspect-oriented programming~\cite{aop} to intercept all Selenium WebDriver method calls (e.g., \texttt{click()}, \texttt{sendKeys()}, etc) using properly defined join-points. When a given join-point matches, advice methods store the test state \textit{before} and \textit{after} the statement's execution. 
 
+More in detail, the test state encompasses the following DOM-related information: \textit{(d1)}~the complete HTML page, \textit{(d2)}~the DOM, \textit{(d3)}~the XPath of the web element the test statement interacted with and \textit{(d4)}~all its HTML attributes. The collected visual information concern: \textit{(v1)}~the screenshot, \textit{(v2)}~the coordinates and size of the web element's bounding box, and \textit{(v3)}~a visual locator for it. A visual locator is the portion of the rendered web page that uniquely identifies such web element on the screen. (Note that, as explained in~\cite{2014-Stocco-SCAM,2015-Leotta-SAC}, a visual locator is not always the precise crop of the web element's bounding box. There are cases in which a larger crop -- taking into account the web element's visual context --  is necessary in order to visually differentiate it from other visually similar web elements appearing on the page, as the case of a list of input text fields in a form).
+%
+We refer to this model of the runtime execution of the tests as \textit{dynamic visual execution trace}.
+
+\subsection{Visual-Augmented Test Suite Runner}
+
+\autoref{algo:alg1} illustrates the main procedure of our algorithm for the visual-augmented execution of test cases. The procedure takes as input a test case $T$, 
+the execution trace $EX$ of $T$ on a version $V$ of the web application, and the URL $U$ of the web application $V'$. The outputs are a test $T'$, validated or corrected to work on $V'$, and the list of verified/repaired statements. 
+
+\noindent
+\textbf{Initialization.} 
+The initial part involves loading the previously saved trace execution information of the test $T$ on the reference version $V$, and loading the new version $V'$ by means of Selenium WebDriver (Lines~1--2). 
+
+\noindent
+\textbf{Visual-Augmented Execution.}
+Such information is used to ``visually'' validate each statement $st_i$ of $T$, when executed on $V'$ (main loop Lines~4--37). The validation proceeds as follows. First, the DOM-based locator utilized by the test statement is extracted from $st_i$, along with the visual locator (e.g., an image) and the DOM information associated to the trace of $st_i$ in $V$  (Lines~5--7). Then, the \texttt{driver} instance is used to query the DOM of $V'$ to observe if the locator returns a web element (Line~8). 
+
+\input{algo1}
+
+\noindent
+\textbf{Detecting and Repairing non-selection problems.}
+If no elements are returned, we treat it as a non-selection, and $st_i$ will break in $V'$, which we attempt to repair through a series of countermeasures. The first heuristic tries to search for the web element \textit{visually} on the same state. The \texttt{visualSearch} function (Line~11) uses advanced computer vision algorithms to retrieve the target web element visually by matching the visual locator captured in $V$ on the current screenshot of $V'$ (see details in \autoref{sec:vis}). The DOM information is also used to guide the search, and filter out potential outliers or visual false positives (such as visual duplicates). If a result is found, the locator of $st_i$ is updated, and the corrected statement saved in the list of repairs (Line~21--22). Then, $st_i$ is executed, and saved as a statement of the new test case $T'$ (Lines~35--36), before proceeding to the next statement.
+
+If the visual search on the same state fails, then our approach assumes that the element no longer exists on the current state. We consider this a broken workflow and trigger a local exploration of the application state space (procedure \textsc{localCrawling} of Line~13) in order to find the element in the neighbouring states. In each new state discovered by the exploration, we attempt the \textsc{visualSearch} procedure to locate the element. If a match is found in at least one of those states, a new statement to reach that state (i.e, page) is created, with the corresponding DOM locator and a default \texttt{click} action, and added before $st_i$ in the the list of repairs (Lines~17--18). (We currently do not support the creation of general purpose statements, such as the ones that need input data).
+
+On the contrary, if a match is \textit{not} found, i.e., we cannot locate the element through local crawl, we attempt to repair the broken workflow by deleting the $st_i$ and proceeding to the next test statement (Line~15).
 
 \begin{figure*}[t]
 \centering
@@ -46,37 +77,15 @@ The test model is a sequence of test states, where each test state captures the 
 \label{fig:cv}
 \end{figure*}
 
-The test state encompasses the following DOM-related information: \textit{(d1)}~the complete HTML page, \textit{(d2)}~the DOM, \textit{(d3)}~the XPath of the web element the test statement interacted with and \textit{(d4)}~all its HTML attributes. The collected visual information concern: \textit{(v1)}~the screenshots, \textit{(v2)}~the coordinates and size of the web element's bounding box, and \textit{(v3)}~a visual locator for it. A visual locator is the portion of the rendered web page that uniquely identifies such web element on the screen. (Note that, as explained in~\cite{2014-Stocco-SCAM,2015-Leotta-SAC}, a visual locator is not always the precise crop of the web element's bounding box. There are cases in which a larger crop -- taking into account the web element's visual context --  is necessary in order to visually differentiate it from other visually similar web elements appearing on the page, as the case of a list of input text fields in a form).
-%
-We refer to this model of the runtime execution of the tests as \textit{dynamic visual execution trace}.
-
-\subsection{Visual-Augmented Test Suite Runner}
-
-\autoref{algo:alg1} illustrates the main procedure of our algorithm for the visual-augmented execution of test cases. The procedure takes as input the execution trace $EX$ of a test case $T$ on version $V$ of the web application, the test case $T$, and the URL $U$ of the web application $V'$. The outputs are a test $T'$, and a list of verified/repaired statements. 
-
-\noindent
-\textbf{Initialization.} 
-The initial part involves loading the previously saved trace execution information of the test $T$ on the reference version $V$, and loading the new version $V'$ by means of Selenium WebDriver (Lines~1--2). 
-
-\noindent
-\textbf{Visual-Augmented Execution.}
-Such information is used to ``visually'' validate each statement $st_i$ of $T$, when executed on $V'$ (main loop Lines~4--36). The validation proceeds as follows. First, the DOM-based locator utilized by the test statement is extracted from $st_i$, along with the visual locator (e.g., an image) and the DOM information associated to the trace of $st_i$ in $V$  (Lines~5--7). Then, the \texttt{driver} instance is used to query the DOM of $V'$ to observe if the locator returns a web element (Line~8). 
-
-\input{algo1}
-
-\noindent
-\textbf{Detecting and Repairing non-selection problems.}
-If no elements are returned, we treat it as a non-selection, and $st_i$ will break in $V'$, which we attempt to repair through a series of countermeasures. The first heuristic tries to search for the web element \textit{visually} on the same state. The \texttt{visualSearch} function (Line~11) uses advanced computer vision algorithms to retrieve the target web element visually by  matching the visual locator captured in $V$ on the current screenshot of $V'$. The DOM information is also used to guide the search, and filter out potential outliers or visual false positives (such as visual duplicates). If a result is found, the locator of $st_i$ is updated, and the corrected statement saved in the list of repairs (Line~21--22). Then, $st_i$ is executed, and saved as a statement of the new test case $T'$ (Lines~34--35), before proceeding to the next statement.
-
-If the visual search on the same state fails, then our approach assumes that the element no longer exists on the current state. We consider this a broken workflow and trigger a local exploration of the application state space (procedure \textsc{localCrawling} of Line~13) in order to find the element in the neighbouring states. In each new state discovered by the exploration, we attempt the \textsc{visualSearch} procedure to locate the element. If a match is found in at least one of those states, a new statement to reach that state (i.e, page) is created, with the corresponding DOM locator, and a default \texttt{click} action, and added before $st_i$ in the the list of repairs (Lines~17--18). (We currently do not support the creation of general purpose statements, such as the ones that need input data).
-
-On the contrary, if a match is not found, i.e. we cannot locate the element through local crawl, we attempt to repair the broken workflow by deleting the $st_i$ and proceeding to the next test statement (Line~15).
-
 \noindent
 \textbf{Detecting and Repairing mis-selection problems.}
-If a web element was returned by the initial DOM-based locator, our approach asserts the correctness of the selection by using the previously collected visual and DOM information (Lines~25--33). Additionally, in case of assertions, if the GUI textual information of the web element has changed, a new statement with the potentially corrected assertion is created and saved in the list of repairs (Lines~29--33). \andrea{suggestion?}
-Note that we only suggest a repair to the assertion statements but do not attempt to repair them automatically since only a human tester upon manual inspection can ascertain whether a new value in GUI reflects the intended application behaviour.
-Thus, the execution of $st_i$ will likely raise an \texttt{AssertionError} for the tester to inspect, for which a candidate repair has been automatically created.
+If a web element was returned by the initial DOM-based locator, our approach asserts the correctness of the selection by using the previously collected visual and DOM information (Lines~25--29). 
+The \texttt{verify} function checks the equivalence of the web elements found by the DOM-based and the visual locator. If they do differ, we consider it as a possible case of propagated breakage, and the procedure returns the web element retrieved by the \texttt{visualSearch} function.
+
+\noindent
+\textbf{Suggesting repairs to assertion values.}
+Additionally, in case of assertions, if the GUI textual information of the web element has changed, a new statement with the potentially corrected assertion is created and saved in the list of repairs (Lines~31--34). As a conservative choice, we do not update $st_i$ with the new statement because we might miss actual bugs.
+Indeed, only a human tester can ascertain whether the new GUI value reflects the intended application behaviour. Thus, the execution of $st_i$ will likely raise an \texttt{AssertionError} for the tester to inspect, for which a candidate repair has been automatically created. Upon manual inspection, the tester can then either discard or accept our suggested repair.
 
 \noindent
 \textbf{Outputs.}
@@ -87,15 +96,16 @@ If \autoref{algo:alg1} stops prematurely, then one of the statements executed by
 
 In the following sections we describe the core components of our algorithm, that is the \textsc{visualSearch} and \textsc{localCrawling} procedures that underlie at the functioning of our approach.
 
-\subsection{Visual Search of Web Elements}
+\subsection{Visual Search of Web Elements}\label{sec:vis}
 
-As described in \autoref{sec:cv}, matching specific portions of images across different versions of a web application is a challenging task, for which existing computer vision (CV) algorithms perform poorly. 
+As described in \autoref{sec:cv}, matching specific portions of images across different versions of a web application is a challenging task, for which existing computer vision algorithms perform poorly. 
 
-Thus, the \textsc{visualSearch} adopts a pipeline of CV algorithms, each one devoted to a specific task. The pipeline is graphically illustrated in \autoref{fig:cv}. In the first step, we need to robustly detect the absence/presence of the template image in the screenshot. As anticipated in \autoref{sec:tm}, pure template matching is not adequate. % for this problem. 
+Thus, the \textsc{visualSearch} adopts a pipeline of CV algorithms, each one devoted to a specific task. The pipeline is graphically illustrated in \autoref{fig:cv}. 
 
 \noindent
 \textbf{Feature Detection for Template Absence/Presence.}
-We adopted two famous feature detection algorithms from the CV literature, SIFT~\cite{Lowe1999,Lowe2004} and FAST~\cite{rosten2005tracking,rosten2008faster}, to detect the key-points from the template image~\textcircled{\raisebox{-0.6pt}{a}}. Through experimentation, we found that these two approaches complement each other well and applying both of them together is beneficial. SIFT performs well mostly for text-based templates whereas FAST can handle the cases where the template represents an ``empty'' text field, as it is specifically designed for corner detection. In our pictorial example~\textcircled{\raisebox{-0.6pt}{a}}, most of the key-points detected by SIFT are in fact nearby the ``Login'' label, whereas FAST detected key-points also in proximity of the corners.
+In the first step, we need to robustly detect the absence/presence of the template image in the screenshot.
+We adopted two famous feature detection algorithms from the CV literature, SIFT~\cite{Lowe1999,Lowe2004} and FAST~\cite{rosten2005tracking,rosten2008faster}, to detect the key-points from the template image~\textcircled{\raisebox{-0.6pt}{a}}. Through experimentation, we found that these two approaches complement each other. As such, SIFT performs well mostly for text-based templates whereas FAST can handle the cases where the template represents an ``empty'' text field, as it is specifically designed for corner detection. In our pictorial example~\textcircled{\raisebox{-0.6pt}{a}}, most of the key-points detected by SIFT are in fact nearby the ``Login'' label, whereas FAST detected key-points also in proximity of the corners.
  
 Then, descriptors are calculated for each key-point, and the algorithms try to match them onto the new screenshot~\textcircled{\raisebox{-0.6pt}{b}}.
 If at least 70\% of key-points are matched across the two images, we can have a certain degree of confidence that the template is present in the image. 

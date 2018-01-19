@@ -8,61 +8,76 @@ In modern software development the ability to react fast to ever-changing requir
 
 % the problem
 
-Despite their wide adoption, E2E test automation tools bring the problem of \textit{maintaining test scripts during software evolution}. Changes as simple as repositioning GUI elements on the page or altering the selections in a drop-down list can cause the test to halt or behave improperly. 
+Despite their wide adoption, E2E test automation tools bring the problem of \textit{maintaining test scripts as software evolves}. Changes as simple as repositioning GUI elements on the page or altering the selections in a drop-down list can cause the test to halt or behave improperly. 
 In the literature, instances of these problems are known as \textit{test breakages}: a test breakage is defined as the event that occur when the test raises exceptions or errors that do not pertain to the presence of a bug or a malfunction of the application under test~\cite{Daniel:2011:AGR:2002931.2002937,Daniel:2009:RSR:1747491.1747538,Daniel:2010:TRU:1831708.1831734,Hammoudi-2016-ICST}. 
-This is different from cases in which test cases \textit{fail}, i.e., raise exceptions which signal the presence of one or more bugs in the production code. In this latter case, the developer is required to correct the application. In the former case, instead, the tester is required to fix the tests, that are no longer synchronized with the AUT.
+This is different from cases in which test cases \textit{fail}, i.e., raise exceptions which signal the presence of one or more bugs in the production code. In this latter case, the developer is required to correct the application. Whereas in the former case, the tester is required to fix the tests. %, that are no longer synchronized with the AUT.
 
 % existing work
 
-While there are interesting research contributions that try to address the testware evolution problem \cite{2016-leotta-Advances,2014-leotta-WoSAR,2015-leotta-ICST,Thummalapenta:2013:ECT:2486788.2486926,Yandrapally:2014:RTA:2610384.2610390,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE}, we are far from a consolidated solution. 
-The problem of \textit{detecting breakages} in web tests is largely unexplored and no automatic solution have been proposed yet. Even though web test repair techniques have been proposed~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE,2015-leotta-ICST}, they have drawbacks. 
-First, in many cases, such techniques are either unable to correct breakages, or produce a great number of false positives. 
-This is due to the DOM-narrowness of those techniques, all of which do not consider visual aspects of the AUT. In fact, repairing tests is an activity that often requires testers to inspect the GUI of the AUT, or replay a portion of test scenario, in order to find the root cause of the breakage.
-Second, breakages does not always occur at the precise point in which the test execution's stops, but rather at some later point (e.g., statement). Existing repair algorithms do not target detection and rely on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle such propagated breakages~\cite{Hammoudi-2016-ICST}.
+Repairing tests is an activity that typically requires testers to inspect the GUI, or replay a portion of test scenario, in order to \textit{detect} the root cause behind the breakage. The situation is complicated by the fact that breakages do not always occur at the precise point in which the test execution's stops, but rather at some later point (e.g., statement).
+% and handle the breakages that propagate throughout the test's execution~\cite{Hammoudi-2016-ICST}.
+
+%Current techniques rely on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle such propagated breakages~\cite{Hammoudi-2016-ICST}.
+
+While prior work has investigated the testware evolution problem~\cite{2016-leotta-Advances,2014-leotta-WoSAR,2015-leotta-ICST,Thummalapenta:2013:ECT:2486788.2486926,Yandrapally:2014:RTA:2610384.2610390,Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE}, 
+none comprehensively focuses on the specific difficulties of \textit{detection and repair of breakages} in web tests. 
+Existing web test repair techniques~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE,2015-leotta-ICST}, in many cases, are either unable to correct breakages, or do so by producing a great number of false positives. 
+%
+Also because of DOM-narrowness of existing techniques, none of which are designed to consider visual aspects of the AUT, they fail to enable testers to perform effective root cause analysis for a given breakage. 
 
 % our proposal
 
 For the scope of this paper, we present a new holistic approach to  web applications testing that considers both DOM-based and visual characteristics of the AUT in order to support \textit{automatic breakage detection and repair of E2E web test cases}. 
-To overcome the aforementioned limitations, we propose \tool, a new generation web test breakage detection and repair algorithm. \tool is based on differential testing, but it leverages the knowledge given by the visual execution of the tests and computer vision techniques to support a large variety of breakage scenarios and minimize the undesirable effects of the false positives. The key idea behind the development of \tool is that the manual actions and reasoning that a tester does while searching for possible repairs can be automated to a large extent by using differential testing and computer vision. 
-\tool maintains the visual temporal snapshots of the executing test cases in order to support comprehensibility of the test, and automatic test case repair.
+To overcome the aforementioned limitations, we propose \tool, a new generation algorithm that leverages the information given by the visual execution of the tests, along with computer vision and crawling techniques, to support the detection of a large variety of breakage scenarios, while minimizing the false positives. 
+
+\begin{figure*}[t]
+\centering
+\begin{subfigure}{.20\linewidth}
+\centering
+\includegraphics[trim=0cm 5.3cm 0.1cm 0.1cm, clip=true, scale=0.107]{images/ab1.pdf}
+\caption{\emph{Login page.}}
+\label{fig:ab-back-a} 
+\end{subfigure}
+\quad
+\begin{subfigure}{.25\linewidth}
+\centering
+\includegraphics[trim=0cm 10.5cm 0cm 0cm, clip=true, scale=0.141]{images/ab2.pdf}
+\caption{\emph{Home page.}}
+\label{fig:ab-back-b} 
+\end{subfigure}
+\qquad
+\begin{subfigure}{.25\linewidth}
+\centering
+\includegraphics[trim=0cm 0cm 2cm 0cm, clip=true, scale=0.22]{images/test.png}
+\caption{\emph{DOM-based test.}}
+\label{fig:ab-back-c} 
+\end{subfigure}
+\quad
+\begin{subfigure}{.20\linewidth}
+\centering
+\fbox{
+{\includegraphics[trim=0.1cm 13cm 19cm 0.1cm, clip=true, scale=0.15]{images/sikuli-s.pdf}}
+}
+\caption{\emph{Visual test.}}
+\label{fig:ab-back-d} 
+\end{subfigure}
+\caption{AddressBook web application, and examples of DOM-based and visual automated test cases. \andrea{sync the web pages images with the other figures}}
+\label{fig:ab-back}
+\end{figure*}
 
 
-%\begin{itemize}
-%\item proximal causes $\rightarrow$ use DOM; distal causes $\rightarrow$ use visual; 
-%\item one of the most challenging problem in test case repair is related to the automatic repair of a broken workflow scenario. 
-%\item our tool maintain the visual temporal snapshots of the executing test cases in order to support comprehensibility of the test, and automatic test case repair.
-%\end{itemize}
+The key idea behind the development of \tool is that the manual actions and reasoning that a tester does while searching for possible repairs can be automated to a large extent by using differential testing and computer vision. 
+\tool maintains the visual snapshots of the correct execution of the test cases, along with their DOM information. When such tests are replayed on the new version of the AUT, \tool uses snapshots of the web elements visual appearance and their DOM properties to validate the feasibility of each statement prior to their execution (runtime detection). If \tool detects that a breakage will occur, then a series of repair techniques are triggered on the fly, to correct the breakage before executing it (self-repair).
 
-%\noindent
-%\textbf{Considerations.}
-%
-%\begin{itemize}
-%\item DOM-based test automation tools are popular but do not consider the visual appearance of the SUT, which is instead important and can be used as a further oracle. Visual test automation tools, on the other hand, completely abstract away the DOM of the page, limiting the applicability of existing techniques for generate/repair test cases. Timid approaches as Applitools~\cite{} try to unify the two approaches, allowing the tester to manually inject visual checks at specific points of the tests. This has two drawbacks: (1)~the insertion must be performed manually, (2)~this extra-code clutters the initial test code, with statements that do not pertain to the test scenario itself.
-%\item repairing a GUI test script is more challenging than repairing a broken workflow~\cite{Zhang:2013:ARB:2483760.2483775}; 
-%\item according to~\cite{Zhang:2013:ARB:2483760.2483775}, only comparing GUIs is insufficient to repair broken workflows. For that, we aim at joining DOM and visual aspects of the tests.
-%\item DOM-based repair techniques are based on limited heuristics: (1)~they only consider direct breakages, but are unable to target and suggest repairs for propagate breakages, (2)~for similar reasons, they cannot effectively repair broken workflows \andrea{to be verified}.
-%\end{itemize}
+\tool is also able to handle complex breakage scenarios, such as those that break the test's workflow (e.g., when elements are removed from the web pages, or a page is added), using an automatic local visual-based crawl exploration.
 
-%\noindent
-%\textbf{Approach.}
-%
-%\begin{itemize}
-%\item dynamic workflow profiling by instrumenting the test code. Differently from~\cite{Zhang:2013:ARB:2483760.2483775}, we do not ask the user to demonstrate a scenario on the web app, we use existing test cases. 
-%\item for each web element, we save its DOM properties, as well as its graphical representation on the GUI.
-%\item \cite{Zhang:2013:ARB:2483760.2483775} uses random testing (i.e., action execution) to find a potential candidate element for repairing the workflow. The candidate actions are ranked according to a weight; we might use a metaheuristic algorithm, and a fitness function.
-%\item we \textbf{must} preserve the semantics of the test, i.e., the assertions.
-%\end{itemize}
-
-We evaluated \tool \andrea{Complete}
+We evaluated the capabilities of \tool in catching regressions on XXX test suites for YYY real-world web applications. \tool was able to repair TOT \% of the total number of breakages. 
 
 This paper makes the following contributions.
-
 \begin{itemize}
 \item 
 \item
 \end{itemize}
-
-
 
 
 
