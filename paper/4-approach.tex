@@ -80,7 +80,7 @@ On the contrary, if a match is \textit{not} found, i.e., we cannot locate the el
 \noindent
 \textbf{Detecting and Repairing mis-selection problems.}
 If a web element was returned by the initial DOM-based locator, our approach asserts the correctness of the selection by using the previously collected visual and DOM information (Lines~25--29). 
-The \texttt{verify} function checks the equivalence of the web elements found by the DOM-based and the visual locator, respectively. If they do differ, we consider it as a possible case of propagated breakage, and the procedure returns the web element retrieved by the \texttt{visualSearch} function.
+The \texttt{verify} function checks the equivalence of the web elements found by the DOM-based and the visual locator. If they do differ, we consider it as a possible case of propagated breakage, and the procedure returns the web element retrieved by the \texttt{visualSearch} function.
 
 \noindent
 \textbf{Suggesting repairs to assertion values.}
@@ -100,11 +100,12 @@ In the following sections we describe the core components of our algorithm, that
 
 As described in \autoref{sec:cv}, matching specific portions of images across different versions of a web application is a challenging task, for which existing computer vision algorithms perform poorly. 
 
-Thus, the \textsc{visualSearch} adopts a pipeline of CV algorithms, each one devoted to a specific task. The pipeline is graphically illustrated in \autoref{fig:cv}. In the first step, we need to robustly detect the absence/presence of the template image in the screenshot. As anticipated in \autoref{sec:tm}, pure template matching is not adequate. % for this problem. 
+Thus, the \textsc{visualSearch} adopts a pipeline of CV algorithms, each one devoted to a specific task. The pipeline is graphically illustrated in \autoref{fig:cv}. 
 
 \noindent
 \textbf{Feature Detection for Template Absence/Presence.}
-We adopted two famous feature detection algorithms from the CV literature, SIFT~\cite{Lowe1999,Lowe2004} and FAST~\cite{rosten2005tracking,rosten2008faster}, to detect the key-points from the template image~\textcircled{\raisebox{-0.6pt}{a}}. Through experimentation, we found that these two approaches complement each other well and applying both of them together is beneficial. SIFT performs well mostly for text-based templates whereas FAST can handle the cases where the template represents an ``empty'' text field, as it is specifically designed for corner detection. In our pictorial example~\textcircled{\raisebox{-0.6pt}{a}}, most of the key-points detected by SIFT are in fact nearby the ``Login'' label, whereas FAST detected key-points also in proximity of the corners.
+In the first step, we need to robustly detect the absence/presence of the template image in the screenshot.
+We adopted two famous feature detection algorithms from the CV literature, SIFT~\cite{Lowe1999,Lowe2004} and FAST~\cite{rosten2005tracking,rosten2008faster}, to detect the key-points from the template image~\textcircled{\raisebox{-0.6pt}{a}}. Through experimentation, we found that these two approaches complement each other. As such, SIFT performs well mostly for text-based templates whereas FAST can handle the cases where the template represents an ``empty'' text field, as it is specifically designed for corner detection. In our pictorial example~\textcircled{\raisebox{-0.6pt}{a}}, most of the key-points detected by SIFT are in fact nearby the ``Login'' label, whereas FAST detected key-points also in proximity of the corners.
  
 Then, descriptors are calculated for each key-point, and the algorithms try to match them onto the new screenshot~\textcircled{\raisebox{-0.6pt}{b}}.
 If at least 70\% of key-points are matched across the two images, we can have a certain degree of confidence that the template is present in the image. 
