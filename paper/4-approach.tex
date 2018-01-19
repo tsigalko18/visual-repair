@@ -5,7 +5,7 @@ The goal of our approach is to find potential fixes that can repair a broken web
 
 The focus of our technique is to repair \textit{locators}, that represent the main source of breakage.
 Our technique can detect and correct locator problems that pertain to the breakage scenarios described in \autoref{sec:breakage-scenarios}.
-In a nutshell, we capture the execution trace of each test statement for a version $V$ and use it to assert the correctness of the test execution and repair it for a subsequent version $V+n$. While for certain breakages, we automatically repair them, we also warn the developer of potential inconsistencies or breakages, and creates potential candidate repairs that fix them. \andrea{suggest vs repair}
+In a nutshell, we capture the execution trace of each test statement for a version $V$ and use it to assert the correctness of the test execution and repair it for a subsequent version $V+n$. While for certain breakages, we automatically repair them, we also warn the developer of potential inconsistencies or breakages, and create potential candidate repairs to fix them. 
 
 \begin{figure}[t]
 \centering
@@ -74,9 +74,12 @@ On the contrary, if a match is not found, i.e. we cannot locate the element thro
 
 \noindent
 \textbf{Detecting and Repairing mis-selection problems.}
-If a web element was returned by the initial DOM-based locator, our approach asserts the correctness of the selection by using the previously collected visual and DOM information (Lines~25--33). Additionally, in case of assertions, if the GUI textual information of the web element has changed, a new statement with the potentially corrected assertion is created and saved in the list of repairs (Lines~29--33). \andrea{suggestion?}
-Note that we only suggest a repair to the assertion statements but do not attempt to repair them automatically since only a human tester upon manual inspection can ascertain whether a new value in GUI reflects the intended application behaviour.
-Thus, the execution of $st_i$ will likely raise an \texttt{AssertionError} for the tester to inspect, for which a candidate repair has been automatically created.
+If a web element was returned by the initial DOM-based locator, our approach asserts the correctness of the selection by using the previously collected visual and DOM information (Lines~25--29). 
+
+\noindent
+\textbf{Suggesting repairs to assertion values.}
+Additionally, in case of assertions, if the GUI textual information of the web element has changed, a new statement with the potentially corrected assertion is created and saved in the list of repairs (Lines~31--34). As a conservative choice, we do not update $st_i$ with the new statement because we might miss actual bugs.
+Indeed, only a human tester can ascertain whether the new GUI value reflects the intended application behaviour. Thus, the execution of $st_i$ will likely raise an \texttt{AssertionError} for the tester to inspect, for which a candidate repair has been automatically created. Upon manual inspection, the tester can then either discard or accept our suggested repair.
 
 \noindent
 \textbf{Outputs.}
