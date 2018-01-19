@@ -103,26 +103,26 @@ A possible solution would require to (1)~visually validate that the web element 
 \textbf{Summary.}
 We have presented four (4) test breakage scenarios and we have discussed how the visual appearance of the SUT can be utilized to overcome the existing test repair approaches and give an important contribution to the tester. We do not claim, however, that such a list represents all the possible scenarios. It is worth remarking that the context is further complicated by the fact that the presented scenarios can occur together (i.e., leading to \textit{multiple} breakages in the same test), which complicates detecting and repair activities even further.
 
-\head{How Testers Repair}
+%\head{How Testers Repair}
+%%
+%%When a test $t$ that was used to function on a version $V$  breaks on a successive version $V'$, a tester needs to understand the root cause behind the breakage and a possible repair for it. 
+%%
+%When a test $t$ breaks, at least four steps are involved. 
+%(1)~The tester inspects the error stack trace or the console, which may contain information about the origin of breakage (e.g., ``\texttt{NoSuchElementException} occurred. Unable to locate element with \mbox{\texttt{name=password}}''). 
+%(2)~The tester uses the message to inspects $t$ looking for the statement $st$ responsible for the failure. %which is also likely to be the one that needs to be corrected (note that this is not always true).
+%(3)~The tester navigates the GUI of $V'$, trying to identify the portion of the GUI related to $st$. 
+%(4)~The tester inspects either the DOM, or the GUI, or both the DOM and the GUI of $V'$ to find candidate repair solutions. In doing so, the tester may possibly need to exercise manually the same broken scenario of $t$ (i.e., all the actions in the statements preceding $st$), in order to replicate the breakage occurred at $st$ and gather insights on possible repair actions.
 %
-%When a test $t$ that was used to function on a version $V$  breaks on a successive version $V'$, a tester needs to understand the root cause behind the breakage and a possible repair for it. 
+%To wrap up, a \textbf{first challenge} in repairing web tests derives from the fact that  
+%%Thus, in E2E web tests such as Selenium's 
+%the tester often needs to inspect and link the behaviour of the test code execution, to the modification perpetrated to the GUI and the DOM of the application. 
+%In other words, breakages are often repaired by finding candidate solutions through the inspection of the DOM and the GUI \textit{at the same time}.
+%For this reason, it is arguably more difficult to repair Selenium's tests than standard JUnit tests for desktop applications (for which the error messages are typically more informative and IDE features make the debugging activities easier).
+%%
+%A \textbf{second challenge} is related to the time needed to find and correct the breakages, which may be significantly high~\cite{Leotta-TAIC-2013,JAMAICA2013}. One of the main reasons is due to the low support by the existing test automation tools in understanding the root causes behind test breakages and how they do relate with the changes made in the web applications. 
 %
-When a test $t$ breaks, at least four steps are involved. 
-(1)~The tester inspects the error stack trace or the console, which may contain information about the origin of breakage (e.g., ``\texttt{NoSuchElementException} occurred. Unable to locate element with \mbox{\texttt{name=password}}''). 
-(2)~The tester uses the message to inspects $t$ looking for the statement $st$ responsible for the failure. %which is also likely to be the one that needs to be corrected (note that this is not always true).
-(3)~The tester navigates the GUI of $V'$, trying to identify the portion of the GUI related to $st$. 
-(4)~The tester inspects either the DOM, or the GUI, or both the DOM and the GUI of $V'$ to find candidate repair solutions. In doing so, the tester may possibly need to exercise manually the same broken scenario of $t$ (i.e., all the actions in the statements preceding $st$), in order to replicate the breakage occurred at $st$ and gather insights on possible repair actions.
-
-To wrap up, a \textbf{first challenge} in repairing web tests derives from the fact that  
-%Thus, in E2E web tests such as Selenium's 
-the tester often needs to inspect and link the behaviour of the test code execution, to the modification perpetrated to the GUI and the DOM of the application. 
-In other words, breakages are often repaired by finding candidate solutions through the inspection of the DOM and the GUI \textit{at the same time}.
-For this reason, it is arguably more difficult to repair Selenium's tests than standard JUnit tests for desktop applications (for which the error messages are typically more informative and IDE features make the debugging activities easier).
-%
-A \textbf{second challenge} is related to the time needed to find and correct the breakages, which may be significantly high~\cite{Leotta-TAIC-2013,JAMAICA2013}. One of the main reasons is due to the low support by the existing test automation tools in understanding the root causes behind test breakages and how they do relate with the changes made in the web applications. 
-
-In this paper we wish to make step ahead to provide such understanding. 
-Our aim is to combine the knowledge present in the DOM of the application with its visual appearance, so as to effectively aid the tester in detecting and repairing test breakages or in validating their correctness. %Our approach aims at automating the mental model the testers create when a test case is executed against a web application GUI. In our belief, such a model is a viable means for automating test case repair.
+%In this paper we wish to make step ahead to provide such understanding. 
+%Our aim is to combine the knowledge present in the DOM of the application with its visual appearance, so as to effectively aid the tester in detecting and repairing test breakages or in validating their correctness. %Our approach aims at automating the mental model the testers create when a test case is executed against a web application GUI. In our belief, such a model is a viable means for automating test case repair.
 
 %Existing locator repair techniques are indeed limited when the web application undergoes drastic structural changes because they only consider the DOM as source where to find possible repairs.
 %However, we argue that visual image recognition can help verify each test step (i.e., locator), signalling and fixing the breakages that pertain to locators.
