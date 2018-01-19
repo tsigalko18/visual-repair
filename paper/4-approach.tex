@@ -41,6 +41,33 @@ Such a test model comprises a sequence of test states, where each test state cap
 
 %We use aspect-oriented programming~\cite{aop} to intercept all Selenium WebDriver method calls (e.g., \texttt{click()}, \texttt{sendKeys()}, etc) using properly defined join-points. When a given join-point matches, advice methods store the test state \textit{before} and \textit{after} the statement's execution. 
 
+More in detail, the test state encompasses the following DOM-related information: \textit{(d1)}~the complete HTML page, \textit{(d2)}~the DOM, \textit{(d3)}~the XPath of the web element the test statement interacted with and \textit{(d4)}~all its HTML attributes. The collected visual information concern: \textit{(v1)}~the screenshot, \textit{(v2)}~the coordinates and size of the web element's bounding box, and \textit{(v3)}~a visual locator for it. A visual locator is the portion of the rendered web page that uniquely identifies such web element on the screen. (Note that, as explained in~\cite{2014-Stocco-SCAM,2015-Leotta-SAC}, a visual locator is not always the precise crop of the web element's bounding box. There are cases in which a larger crop -- taking into account the web element's visual context --  is necessary in order to visually differentiate it from other visually similar web elements appearing on the page, as the case of a list of input text fields in a form).
+%
+We refer to this model of the runtime execution of the tests as \textit{dynamic visual execution trace}.
+
+\subsection{Visual-Augmented Test Suite Runner}
+
+\autoref{algo:alg1} illustrates the main procedure of our algorithm for the visual-augmented execution of test cases. The procedure takes as input a test case $T$, 
+the execution trace $EX$ of $T$ on a version $V$ of the web application, and the URL $U$ of the web application $V'$. The outputs are a test $T'$, validated or corrected to work on $V'$, and the list of verified/repaired statements. 
+
+\noindent
+\textbf{Initialization.} 
+The initial part involves loading the previously saved trace execution information of the test $T$ on the reference version $V$, and loading the new version $V'$ by means of Selenium WebDriver (Lines~1--2). 
+
+\noindent
+\textbf{Visual-Augmented Execution.}
+Such information is used to ``visually'' validate each statement $st_i$ of $T$, when executed on $V'$ (main loop Lines~4--37). The validation proceeds as follows. First, the DOM-based locator utilized by the test statement is extracted from $st_i$, along with the visual locator (e.g., an image) and the DOM information associated to the trace of $st_i$ in $V$  (Lines~5--7). Then, the \texttt{driver} instance is used to query the DOM of $V'$ to observe if the locator returns a web element (Line~8). 
+
+\input{algo1}
+
+\noindent
+\textbf{Detecting and Repairing non-selection problems.}
+If no elements are returned, we treat it as a non-selection, and $st_i$ will break in $V'$, which we attempt to repair through a series of countermeasures. The first heuristic tries to search for the web element \textit{visually} on the same state. The \texttt{visualSearch} function (Line~11) uses advanced computer vision algorithms to retrieve the target web element visually by matching the visual locator captured in $V$ on the current screenshot of $V'$ (see details in \autoref{sec:vis}). The DOM information is also used to guide the search, and filter out potential outliers or visual false positives (such as visual duplicates). If a result is found, the locator of $st_i$ is updated, and the corrected statement saved in the list of repairs (Line~21--22). Then, $st_i$ is executed, and saved as a statement of the new test case $T'$ (Lines~35--36), before proceeding to the next statement.
+
+If the visual search on the same state fails, then our approach assumes that the element no longer exists on the current state. We consider this a broken workflow and trigger a local exploration of the application state space (procedure \textsc{localCrawling} of Line~13) in order to find the element in the neighbouring states. In each new state discovered by the exploration, we attempt the \textsc{visualSearch} procedure to locate the element. If a match is found in at least one of those states, a new statement to reach that state (i.e, page) is created, with the corresponding DOM locator and a default \texttt{click} action, and added before $st_i$ in the the list of repairs (Lines~17--18). (We currently do not support the creation of general purpose statements, such as the ones that need input data).
+
+On the contrary, if a match is \textit{not} found, i.e., we cannot locate the element through local crawl, we attempt to repair the broken workflow by deleting the $st_i$ and proceeding to the next test statement (Line~15).
+
 \begin{figure*}[t]
 \centering
 %\fbox{
@@ -50,35 +77,10 @@ Such a test model comprises a sequence of test states, where each test state cap
 \label{fig:cv}
 \end{figure*}
 
-More in detail, the test state encompasses the following DOM-related information: \textit{(d1)}~the complete HTML page, \textit{(d2)}~the DOM, \textit{(d3)}~the XPath of the web element the test statement interacted with and \textit{(d4)}~all its HTML attributes. The collected visual information concern: \textit{(v1)}~the screenshot, \textit{(v2)}~the coordinates and size of the web element's bounding box, and \textit{(v3)}~a visual locator for it. A visual locator is the portion of the rendered web page that uniquely identifies such web element on the screen. (Note that, as explained in~\cite{2014-Stocco-SCAM,2015-Leotta-SAC}, a visual locator is not always the precise crop of the web element's bounding box. There are cases in which a larger crop -- taking into account the web element's visual context --  is necessary in order to visually differentiate it from other visually similar web elements appearing on the page, as the case of a list of input text fields in a form).
-%
-We refer to this model of the runtime execution of the tests as \textit{dynamic visual execution trace}.
-
-\subsection{Visual-Augmented Test Suite Runner}
-
-\autoref{algo:alg1} illustrates the main procedure of our algorithm for the visual-augmented execution of test cases. The procedure takes as input the execution trace $EX$ of a test case $T$ on version $V$ of the web application, the test case $T$, and the URL $U$ of the web application $V'$. The outputs are a test $T'$, and a list of verified/repaired statements. 
-
-\noindent
-\textbf{Initialization.} 
-The initial part involves loading the previously saved trace execution information of the test $T$ on the reference version $V$, and loading the new version $V'$ by means of Selenium WebDriver (Lines~1--2). 
-
-\noindent
-\textbf{Visual-Augmented Execution.}
-Such information is used to ``visually'' validate each statement $st_i$ of $T$, when executed on $V'$ (main loop Lines~4--36). The validation proceeds as follows. First, the DOM-based locator utilized by the test statement is extracted from $st_i$, along with the visual locator (e.g., an image) and the DOM information associated to the trace of $st_i$ in $V$  (Lines~5--7). Then, the \texttt{driver} instance is used to query the DOM of $V'$ to observe if the locator returns a web element (Line~8). 
-
-\input{algo1}
-
-\noindent
-\textbf{Detecting and Repairing non-selection problems.}
-If no elements are returned, we treat it as a non-selection, and $st_i$ will break in $V'$, which we attempt to repair through a series of countermeasures. The first heuristic tries to search for the web element \textit{visually} on the same state. The \texttt{visualSearch} function (Line~11) uses advanced computer vision algorithms to retrieve the target web element visually by  matching the visual locator captured in $V$ on the current screenshot of $V'$. The DOM information is also used to guide the search, and filter out potential outliers or visual false positives (such as visual duplicates). If a result is found, the locator of $st_i$ is updated, and the corrected statement saved in the list of repairs (Line~21--22). Then, $st_i$ is executed, and saved as a statement of the new test case $T'$ (Lines~34--35), before proceeding to the next statement.
-
-If the visual search on the same state fails, then our approach assumes that the element no longer exists on the current state. We consider this a broken workflow and trigger a local exploration of the application state space (procedure \textsc{localCrawling} of Line~13) in order to find the element in the neighbouring states. In each new state discovered by the exploration, we attempt the \textsc{visualSearch} procedure to locate the element. If a match is found in at least one of those states, a new statement to reach that state (i.e, page) is created, with the corresponding DOM locator, and a default \texttt{click} action, and added before $st_i$ in the the list of repairs (Lines~17--18). (We currently do not support the creation of general purpose statements, such as the ones that need input data).
-
-On the contrary, if a match is not found, i.e. we cannot locate the element through local crawl, we attempt to repair the broken workflow by deleting the $st_i$ and proceeding to the next test statement (Line~15).
-
 \noindent
 \textbf{Detecting and Repairing mis-selection problems.}
 If a web element was returned by the initial DOM-based locator, our approach asserts the correctness of the selection by using the previously collected visual and DOM information (Lines~25--29). 
+The \texttt{verify} function checks the equivalence of the web elements found by the DOM-based and the visual locator, respectively. If they do differ, we consider it as a possible case of propagated breakage, and the procedure returns the web element retrieved by the \texttt{visualSearch} function.
 
 \noindent
 \textbf{Suggesting repairs to assertion values.}
@@ -94,7 +96,7 @@ If \autoref{algo:alg1} stops prematurely, then one of the statements executed by
 
 In the following sections we describe the core components of our algorithm, that is the \textsc{visualSearch} and \textsc{localCrawling} procedures that underlie at the functioning of our approach.
 
-\subsection{Visual Search of Web Elements}
+\subsection{Visual Search of Web Elements}\label{sec:vis}
 
 As described in \autoref{sec:cv}, matching specific portions of images across different versions of a web application is a challenging task, for which existing computer vision algorithms perform poorly. 
 
