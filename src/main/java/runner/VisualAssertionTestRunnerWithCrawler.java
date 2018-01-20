@@ -20,6 +20,7 @@ import org.openqa.selenium.support.ui.Select;
 import com.google.gson.Gson;
 
 import config.Settings;
+import config.Settings.RepairMode;
 import crawler.CrawlPathExport;
 import crawler.Crawler;
 import crawler.EventableExport;
@@ -44,12 +45,15 @@ import utils.UtilsVisualRepair;
  */
 public class VisualAssertionTestRunnerWithCrawler {
 
+	RepairMode repairStrategy;
+	
 	public VisualAssertionTestRunnerWithCrawler() {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
 		 * re-create the new visual execution trace
 		 */
 		Settings.aspectActive = false;
+		repairStrategy = Settings.RepairMode.HYBRID;
 	}
 
 	public static void main(String[] args)
@@ -172,7 +176,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 
 				/* strategy 1. search web element visually on the same state. */
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-						testCorrect, statementNumber);
+						testCorrect, statementNumber, repairStrategy);
 
 				/*
 				 * actually the local crawling step might also check whether the step is no
@@ -186,7 +190,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 					}catch(Exception Ex2) {
 						System.out.println("Couldn't delete matching states file");
 					}
-					new Crawler(url, etc, testCorrect, statementNumber, repairedTest).runLocalCrawling();
+					new Crawler(url, etc, testCorrect, statementNumber, repairedTest, repairStrategy).runLocalCrawling();
 					if(resultFile.exists()) {
 						List<CrawlPathExport> matchingStates = UtilsCrawler.getCrawledStates();
 						if(!matchingStates.isEmpty()) {
@@ -235,7 +239,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 							/* After all steps are added, rerun the find element on the web page for the current statement*/
 							
 							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-									testCorrect, statementNumber);
+									testCorrect, statementNumber, repairStrategy);
 						}
 						else {
 							// Delete the step 
@@ -293,7 +297,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 	
 					/* check the web element visually. */
 					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-							testCorrect, statementNumber);
+							testCorrect, statementNumber, repairStrategy);
 	
 					if (webElementVisual != null) {
 	

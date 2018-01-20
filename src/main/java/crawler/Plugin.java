@@ -47,6 +47,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import config.Settings;
+import config.Settings.RepairMode;
 import datatype.EnhancedTestCase;
 import datatype.SeleniumLocator;
 import datatype.Statement;
@@ -81,14 +82,17 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	private EnhancedTestCase testCorrect;
 
+	private RepairMode repairStrategy;
+
 	public Plugin(HostInterfaceImpl hostInterfaceImpl, EnhancedTestCase testBroken, EnhancedTestCase testCorrect,
-			int brokenStep, HashMap<Integer, Statement> repairedTest) {
+			int brokenStep, HashMap<Integer, Statement> repairedTest, RepairMode repairStrategy) {
 		this.hostInterface = hostInterfaceImpl;
 		this.testBroken = testBroken;
 		this.testCorrect = testCorrect;
 		this.brokenStep = brokenStep;
 		this.repairedTest = repairedTest;
 		Settings.aspectActive = false;
+		this.repairStrategy = repairStrategy;
 	}
 
 	@Override
@@ -134,14 +138,13 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 		Statement oldst = testCorrect.getStatements().get(brokenStep);
 		WebDriver driver = context.getBrowser().getWebDriver();
 
-		
 		// get the best match the same way visual repair works
-		WebElement fromVisual = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, oldst);
-		
+		WebElement fromVisual = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, oldst, repairStrategy);
+
 		// Element is not found visually
-		if(fromVisual==null)
-			return ;
-		
+		if (fromVisual == null)
+			return;
+
 		if (!UtilsXPath.isLeaf(fromVisual)) {
 			fromVisual = null;
 
@@ -200,7 +203,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			return;
 		if (brokenStep == -1)
 			return;
-		
+
 		Map<Integer, Statement> statementMap = testBroken.getStatements();
 
 		for (Integer I : statementMap.keySet()) {
@@ -213,17 +216,16 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			Statement statement = statementMap.get(I);
 			// System.out.println(statement);
 			SeleniumLocator domSelector = statement.getDomLocator();
-			
-			
+
 			if (this.repairedTest != null && this.repairedTest.containsKey(I)) {
 
 				Statement repairedStatement = this.repairedTest.get(I);
 				domSelector = repairedStatement.getDomLocator();
 
-			} 
-			
+			}
+
 			element = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver, domSelector);
-			
+
 			if (element != null) {
 				String xpathForElement = UtilsXPath.generateXPathForWebElement(element, "");
 
@@ -252,11 +254,10 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 							System.out.println("[LOG]\tAssertion value correct");
 							System.out.println(statement.toString());
 
-						} 
+						}
 
 					}
 
-					
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					break;
@@ -264,7 +265,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			}
 
 		}
-		
+
 		System.out.println("Changed initial path URL : " + arg0.getBrowser().getCurrentUrl());
 	}
 
@@ -309,7 +310,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	private CandidateElement getCorrespondingCandidateElement(WebElement webElement, Identification identification,
 			EmbeddedBrowser browser) {
-		
+
 		Document dom;
 		try {
 			dom = DomUtils.asDocument(browser.getStrippedDomWithoutIframeContent());

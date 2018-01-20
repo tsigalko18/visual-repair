@@ -19,6 +19,7 @@ import org.openqa.selenium.support.ui.Select;
 import com.google.gson.Gson;
 
 import config.Settings;
+import config.Settings.RepairMode;
 import crawler.CrawlPathExport;
 import crawler.Crawler;
 import crawler.EventableExport;
@@ -43,12 +44,17 @@ import utils.UtilsVisualRepair;
  */
 public class VisualAssertionTestRunner {
 
+	RepairMode repairStrategy;
+
 	public VisualAssertionTestRunner() {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
 		 * re-create the new visual execution trace
 		 */
 		Settings.aspectActive = false;
+
+		/* repair heuristic utilized by the tool. */
+		repairStrategy = Settings.RepairMode.HYBRID;
 	}
 
 	public static void main(String[] args)
@@ -58,10 +64,9 @@ public class VisualAssertionTestRunner {
 		String prefix = "addressbook825.";
 
 		/* class name. */
-		//String className = "TestUserAdded";
+		// String className = "TestUserAdded";
 		String className = "TestAddGroup";
 
-		
 		VisualAssertionTestRunner var = new VisualAssertionTestRunner();
 
 		long startTime = System.currentTimeMillis();
@@ -166,39 +171,30 @@ public class VisualAssertionTestRunner {
 
 				/* strategy 1. search web element visually on the same state. */
 				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-						testCorrect, statementNumber);
+						testCorrect, statementNumber, repairStrategy);
 
 				/*
 				 * actually the local crawling step might also check whether the step is no
 				 * longer possible.
 				 */
-				/*if (webElementFromDomLocator == null) {
-					
-					File resultFile = new File(System.getProperty("user.dir") + Settings.separator + "matchingStates.txt");
-					try {
-						resultFile.delete();
-					}catch(Exception Ex2) {
-						System.out.println("Couldn't delete matching states file");
-					}
-					new Crawler(url, etc, testCorrect, statementNumber, repairedTest).runLocalCrawling();
-					if(resultFile.exists()) {
-						List<CrawlPathExport> matchingStates = UtilsCrawler.getCrawledStates();
-						if(!matchingStates.isEmpty()) {
-							// Add a test step here
-							CrawlPathExport matchingState = matchingStates.get(0);
-							List<EventableExport> eventList =  matchingState.eventableExportList;
-							for(EventableExport event : eventList) {
-								//How getHow = event.getHow;
-								String xpath = event.getValue;
-								WebElement elementFromCrawl = driver.findElement(By.xpath(xpath));
-							}
-						}
-						else {
-							// Delete the step 
-						}
-					}
-				}*/
-				 
+				/*
+				 * if (webElementFromDomLocator == null) {
+				 * 
+				 * File resultFile = new File(System.getProperty("user.dir") +
+				 * Settings.separator + "matchingStates.txt"); try { resultFile.delete();
+				 * }catch(Exception Ex2) {
+				 * System.out.println("Couldn't delete matching states file"); } new
+				 * Crawler(url, etc, testCorrect, statementNumber,
+				 * repairedTest).runLocalCrawling(); if(resultFile.exists()) {
+				 * List<CrawlPathExport> matchingStates = UtilsCrawler.getCrawledStates();
+				 * if(!matchingStates.isEmpty()) { // Add a test step here CrawlPathExport
+				 * matchingState = matchingStates.get(0); List<EventableExport> eventList =
+				 * matchingState.eventableExportList; for(EventableExport event : eventList) {
+				 * //How getHow = event.getHow; String xpath = event.getValue; WebElement
+				 * elementFromCrawl = driver.findElement(By.xpath(xpath)); } } else { // Delete
+				 * the step } } }
+				 */
+
 				// if (webElementFromDomLocator == null) {
 				// webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub
 				// method
@@ -246,7 +242,7 @@ public class VisualAssertionTestRunner {
 
 				/* check the web element visually. */
 				webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-						testCorrect, statementNumber);
+						testCorrect, statementNumber, repairStrategy);
 
 				if (webElementVisual != null) {
 

@@ -2,6 +2,7 @@ package utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import config.Settings;
+import config.Settings.RepairMode;
 import datatype.EnhancedTestCase;
 import datatype.SeleniumLocator;
 import datatype.Statement;
@@ -22,9 +24,11 @@ public class UtilsVisualRepair {
 
 	/**
 	 * Procedure to verify a DOM element locator by means of a visual locator.
+	 * 
+	 * @param repairStrategy
 	 */
 	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator,
-			EnhancedTestCase testCorrect, Integer i) {
+			EnhancedTestCase testCorrect, Integer i, RepairMode repairStrategy) {
 
 		Statement statement = null;
 		WebElement webElementFromVisualLocator = null;
@@ -47,13 +51,14 @@ public class UtilsVisualRepair {
 		}
 
 		/* retrieve the web element visually. */
-		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, statement);
+		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, statement,
+				repairStrategy);
 
 		if (webElementFromVisualLocator == null && webElementFromDomLocator == null) {
 
 			System.err.println(
 					"[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Stopping execution");
-			//System.exit(1);
+			// System.exit(1);
 
 		} else if (webElementFromVisualLocator == null) {
 
@@ -106,7 +111,8 @@ public class UtilsVisualRepair {
 		return element;
 	}
 
-	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, Statement statement) {
+	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, Statement statement,
+			RepairMode repairStrategy) {
 
 		String visualLocator = statement.getVisualLocator().toString();
 		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
@@ -114,7 +120,7 @@ public class UtilsVisualRepair {
 
 		Point bestMatch = null;
 
-		if (Settings.HYBRID) {
+		if (repairStrategy == RepairMode.HYBRID) {
 
 			Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
 					visualLocator);
@@ -122,28 +128,71 @@ public class UtilsVisualRepair {
 			WebElement res = getBestMatch(allMatches, driver, statement);
 			return res;
 
-		} else {
+		} else if (repairStrategy == RepairMode.VISUAL) {
 
 			bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
 
+			if (bestMatch == null) {
+
+				FileUtils.deleteQuietly(new File(currentScreenshot));
+				return null;
+
+			} else {
+
+				String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
+				System.out.println("XPath for match: " + xpathForMatches);
+				WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
+
+				FileUtils.deleteQuietly(new File(currentScreenshot));
+
+				return fromVisual;
+			}
+
+		} else if (repairStrategy == RepairMode.DOM) {
+			return retrieveWebElementFromDOMInfo(driver, statement);
 		}
 
-		if (bestMatch == null) {
+		return null;
 
-			FileUtils.deleteQuietly(new File(currentScreenshot));
-			return null;
+	}
 
-		} else {
+	public static WebElement retrieveWebElementFromDOMInfo(WebDriver driver, Statement statement) {
 
-			String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
-			System.out.println("XPath for match: " + xpathForMatches);
-			WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
+		String id = statement.getId();
+		String classAttr = statement.getClassAttribute();
+		String nameAttr = statement.getNameAttribute();
+		String tagName = statement.getTagName();
+		String text = statement.getText();
+		String xpath = statement.getXpath();
 
-			FileUtils.deleteQuietly(new File(currentScreenshot));
+		List<WebElement> domElements = new LinkedList<WebElement>();
 
-			return fromVisual;
+		domElements.add(driver.findElement(By.id(id)));
+		if (!domElements.isEmpty()) {
+			return domElements.get(0);
 		}
 
+		domElements.add(driver.findElement(By.xpath(xpath)));
+		if (!domElements.isEmpty()) {
+			return domElements.get(0);
+		}
+
+		domElements.add(driver.findElement(By.xpath("//*[text()='" + text + "']")));
+		if (!domElements.isEmpty()) {
+			return domElements.get(0);
+		}
+
+		domElements.add(driver.findElement(By.name(nameAttr)));
+		if (!domElements.isEmpty()) {
+			return domElements.get(0);
+		}
+
+		domElements.add(driver.findElement(By.className(classAttr)));
+		if (!domElements.isEmpty()) {
+			return domElements.get(0);
+		}
+
+		return null;
 	}
 
 	private static boolean insideSeenRectangles(Point p, List<Rect> rects) {
@@ -176,16 +225,16 @@ public class UtilsVisualRepair {
 				continue;
 
 			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
-			//System.out.println(xpathForMatch);
+			// System.out.println(xpathForMatch);
 			WebElement webElementForMatch = driver.findElement(By.xpath(xpathForMatch));
-			
+
 			// Consider only the leaf elements
-			if(UtilsXPath.isLeaf(webElementForMatch)) {
+			if (UtilsXPath.isLeaf(webElementForMatch)) {
 				// check if other points belong to this rectangle
 				Rectangle rect = webElementForMatch.getRect();
-	
+
 				Rect r = new Rect(rect.x, rect.y, rect.width, rect.height);
-	
+
 				seenRectangles.add(r);
 				distinctWebElements.add(webElementForMatch);
 			}
@@ -199,10 +248,10 @@ public class UtilsVisualRepair {
 		/* filter by id. */
 		List<WebElement> filtered_id = new ArrayList<WebElement>();
 		String idattr = statement.getId();
-		if(!idattr.isEmpty()) {
+		if (!idattr.isEmpty()) {
 			for (WebElement distinct : distinctWebElements) {
 				String id = distinct.getAttribute("id");
-				if(id != null) {
+				if (id != null) {
 					if (id.equalsIgnoreCase(idattr))
 						filtered_id.add(distinct);
 				}
@@ -210,7 +259,6 @@ public class UtilsVisualRepair {
 			if (filtered_id.size() == 1)
 				return filtered_id.get(0);
 		}
-		
 
 		/* filter by textual content. */
 		String textContent = statement.getText();
@@ -223,16 +271,14 @@ public class UtilsVisualRepair {
 			if (filtered_text.size() == 1)
 				return filtered_text.get(0);
 		}
-		
-
 
 		/* filter by name. */
 		List<WebElement> filtered_name = new ArrayList<WebElement>();
 		String nameattr = statement.getName();
-		if(!nameattr.isEmpty()) {
+		if (!nameattr.isEmpty()) {
 			for (WebElement distinct : distinctWebElements) {
 				String name = distinct.getAttribute("name");
-				if(name!=null) {
+				if (name != null) {
 					if (name.equalsIgnoreCase(nameattr))
 						filtered_name.add(distinct);
 				}
@@ -240,15 +286,14 @@ public class UtilsVisualRepair {
 			if (filtered_name.size() == 1)
 				return filtered_name.get(0);
 		}
-		
-		
+
 		/* filter by class. */
 		List<WebElement> filtered_class = new ArrayList<WebElement>();
 		String classattr = statement.getClassAttribute();
-		if(!classattr.isEmpty()) {
+		if (!classattr.isEmpty()) {
 			for (WebElement distinct : distinctWebElements) {
-				String clazz= distinct.getAttribute("class");
-				if(clazz != null) {
+				String clazz = distinct.getAttribute("class");
+				if (clazz != null) {
 					if (clazz.equalsIgnoreCase(classattr))
 						filtered_class.add(distinct);
 				}
@@ -277,7 +322,7 @@ public class UtilsVisualRepair {
 		}
 		if (filtered_tagName.size() == 1)
 			return filtered_tagName.get(0);
-		
+
 		/* if none of the filters has been applied, null is returned. */
 		return null;
 	}
