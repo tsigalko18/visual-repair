@@ -230,6 +230,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 								}
 								added.setAction("click");
 								added.setValue("");
+								System.out.println("Statement added : " + added.toString());
 								addedSteps.put(new Integer(statementNumber + numStepsAdded), added);
 								numStepsAdded += 1;
 								
@@ -245,6 +246,8 @@ public class VisualAssertionTestRunnerWithCrawler {
 						}
 						else {
 							// Delete the step 
+							
+							System.out.println("Statement "+ statementNumber + "deleted : " + statement.toString());
 							deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
 							numStepsDeleted +=1;
 							
