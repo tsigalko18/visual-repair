@@ -244,6 +244,14 @@ public class UtilsVisualRepair {
 		 * Filter results obtained by the visual locators with DOM information. An
 		 * alternative might be calculate a similarity score.
 		 */
+		List<WebElement> filtered_tagName = new ArrayList<WebElement>();
+		String tagName = statement.getTagName();
+		for (WebElement distinct : distinctWebElements) {
+			if (distinct.getTagName().equalsIgnoreCase(tagName))
+				filtered_tagName.add(distinct);
+		}
+		
+		distinctWebElements = filtered_tagName;
 
 		/* filter by id. */
 		List<WebElement> filtered_id = new ArrayList<WebElement>();
@@ -314,15 +322,7 @@ public class UtilsVisualRepair {
 			return filtered_xpath.get(0);
 
 		/* filter by tag name. */
-		List<WebElement> filtered_tagName = new ArrayList<WebElement>();
-		String tagName = statement.getTagName();
-		for (WebElement distinct : distinctWebElements) {
-			if (distinct.getTagName().equalsIgnoreCase(tagName))
-				filtered_tagName.add(distinct);
-		}
-		if (filtered_tagName.size() == 1)
-			return filtered_tagName.get(0);
-
+		
 		/* if none of the filters has been applied, null is returned. */
 		return null;
 	}

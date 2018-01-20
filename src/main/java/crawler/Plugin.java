@@ -98,11 +98,11 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 	@Override
 	public void onNewState(CrawlerContext context, StateVertex newState) {
 
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 
 		CrawlPath path = context.getCrawlPath();
 		CrawlPathExport crawlPathExport = new CrawlPathExport(path);

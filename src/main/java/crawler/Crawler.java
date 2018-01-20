@@ -65,12 +65,13 @@ public class Crawler {
 		 * builder.crawlRules().dontClick("a").withText("export");
 		 */
 		builder.crawlRules().dontClick("a").withAttribute("href", "v8.2.5");
+		builder.crawlRules().dontClick("a").withAttribute("href", "notes.htm");
 		builder.crawlRules().setFormFillMode(FormFillMode.NORMAL);
 
 		/* limit the crawling scope. */
 		builder.setUnlimitedStates();
 		builder.setMaximumDepth(MAX_DEPTH);
-		builder.setMaximumRunTime(5, TimeUnit.MINUTES);
+		builder.setMaximumRunTime(1, TimeUnit.MINUTES);
 		// builder.setMaximumRunTime(300, TimeUnit.SECONDS);
 		builder.addPlugin(new Plugin(new HostInterfaceImpl(new File("out"), null), this.testBroken, this.testCorrect,
 				this.brokenStep, this.repairedTest, repairStrategy));
