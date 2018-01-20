@@ -228,6 +228,8 @@ public class VisualAssertionTestRunnerWithCrawler {
 									added.setDomLocator(fixedLocator);
 
 								}
+								added.setAction("click");
+								added.setValue("");
 								addedSteps.put(new Integer(statementNumber + numStepsAdded), added);
 								numStepsAdded += 1;
 								

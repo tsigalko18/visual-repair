@@ -166,30 +166,66 @@ public class UtilsVisualRepair {
 		String xpath = statement.getXpath();
 
 		List<WebElement> domElements = new LinkedList<WebElement>();
-
-		domElements.add(driver.findElement(By.id(id)));
-		if (!domElements.isEmpty()) {
-			return domElements.get(0);
+		
+		if( id!=null && !id.isEmpty()) {
+			WebElement elem_id = null;
+			try {
+				elem_id = driver.findElement(By.id(id));
+			}
+			catch(Exception Ex) {
+				
+			}
+			if(elem_id!=null)
+				return elem_id;
 		}
 
-		domElements.add(driver.findElement(By.xpath(xpath)));
-		if (!domElements.isEmpty()) {
-			return domElements.get(0);
+		if(xpath!=null && !xpath.isEmpty()) {
+			WebElement elem_xpath = null;
+			try {
+				elem_xpath = driver.findElement(By.xpath(xpath));
+			}
+			catch(Exception Ex) {
+				
+			}
+			if(elem_xpath!=null)
+				return elem_xpath;
 		}
 
-		domElements.add(driver.findElement(By.xpath("//*[text()='" + text + "']")));
-		if (!domElements.isEmpty()) {
-			return domElements.get(0);
+		if(text!=null && !text.isEmpty()) {
+			WebElement elem_text = null;
+			try {
+				elem_text = driver.findElement(By.xpath("//*[text()='" + text + "']"));
+			}
+			catch(Exception Ex) {
+				
+			}
+			if(elem_text!=null)
+				return elem_text;
 		}
 
-		domElements.add(driver.findElement(By.name(nameAttr)));
-		if (!domElements.isEmpty()) {
-			return domElements.get(0);
+		if(nameAttr!=null && !nameAttr.isEmpty()) {
+			WebElement elem_name = null;
+			try {
+				elem_name = driver.findElement(By.name(nameAttr));
+			}
+			catch(Exception Ex) {
+				
+			}
+			if(elem_name!=null)
+				return elem_name;
 		}
-
-		domElements.add(driver.findElement(By.className(classAttr)));
-		if (!domElements.isEmpty()) {
-			return domElements.get(0);
+		
+		if(classAttr!=null && !classAttr.isEmpty()) {
+			WebElement elem_class = null;
+			try {
+				elem_class = driver.findElement(By.className(classAttr));
+			}
+			catch(Exception Ex) {
+				
+			}
+			if (elem_class !=null) {
+				return elem_class;
+			}
 		}
 
 		return null;
