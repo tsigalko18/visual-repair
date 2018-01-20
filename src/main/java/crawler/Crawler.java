@@ -32,6 +32,7 @@ public class Crawler {
 	private EnhancedTestCase testBroken;
 	private EnhancedTestCase testCorrect;
 	private static final int MAX_DEPTH = 1;
+	private static final int MAX_STATES = 3;
 	private RepairMode repairStrategy;
 
 	public Crawler(String url, EnhancedTestCase testBroken, EnhancedTestCase testCorrect, int brokenStep,
@@ -69,28 +70,20 @@ public class Crawler {
 		builder.crawlRules().setFormFillMode(FormFillMode.NORMAL);
 
 		/* limit the crawling scope. */
-		builder.setUnlimitedStates();
+		builder.setMaximumStates(MAX_STATES);
 		builder.setMaximumDepth(MAX_DEPTH);
 		builder.setMaximumRunTime(1, TimeUnit.MINUTES);
-		// builder.setMaximumRunTime(300, TimeUnit.SECONDS);
 		builder.addPlugin(new Plugin(new HostInterfaceImpl(new File("out"), null), this.testBroken, this.testCorrect,
 				this.brokenStep, this.repairedTest, repairStrategy));
-//		builder.addPlugin(new CrawlOverview());
 
 		CrawljaxRunner crawljax = new CrawljaxRunner(builder.build());
 		crawljax.call();
 
 	}
 
-	public static void main(String[] args) {
-		new Crawler("http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/index.php", null, null, -1, null,
-				null).runLocalCrawling();
-	}
-
-	// private static InputSpecification getInputSpecification() {
-	// InputSpecification input = new InputSpecification();
-	// input.field("gbqfq").setValue("Crawljax");
-	// return input;
-	// }
+//	public static void main(String[] args) {
+//		new Crawler("http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/index.php", null, null, -1, null,
+//				null).runLocalCrawling();
+//	}
 
 }
