@@ -30,7 +30,10 @@ public class TestSuiteRunner {
 		//UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
 		
 		/* AddressBook example */
-		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestAddGroup");
+//		Settings.aspectActive = true;
+//		UtilsRunner.runTest(Settings.testSuiteCorrect, "AddressBookSearchAddressBookNameTest");
+		
+//		UtilsRunner.runTest(Settings.testSuiteBroken, "AddressBookSearchAddressBookNameTest");
 
 	}
 

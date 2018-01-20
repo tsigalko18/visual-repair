@@ -55,6 +55,9 @@ public class Settings {
 	public static enum RepairMode {
 		DOM, VISUAL, HYBRID
 	}
+	
+	/* debugMode: pause the tool's execution after each statement. */
+	public static boolean debugMode = true;
 
 	public static boolean VERBOSE = true;
 	public static double SIMILARITY_THRESHOLD = 0.5;

@@ -166,64 +166,59 @@ public class UtilsVisualRepair {
 		String xpath = statement.getXpath();
 
 		List<WebElement> domElements = new LinkedList<WebElement>();
-		
-		if( id!=null && !id.isEmpty()) {
+
+		if (id != null && !id.isEmpty()) {
 			WebElement elem_id = null;
 			try {
 				elem_id = driver.findElement(By.id(id));
+			} catch (Exception Ex) {
+
 			}
-			catch(Exception Ex) {
-				
-			}
-			if(elem_id!=null)
+			if (elem_id != null)
 				return elem_id;
 		}
 
-		if(xpath!=null && !xpath.isEmpty()) {
+		if (xpath != null && !xpath.isEmpty()) {
 			WebElement elem_xpath = null;
 			try {
 				elem_xpath = driver.findElement(By.xpath(xpath));
+			} catch (Exception Ex) {
+
 			}
-			catch(Exception Ex) {
-				
-			}
-			if(elem_xpath!=null)
+			if (elem_xpath != null)
 				return elem_xpath;
 		}
 
-		if(text!=null && !text.isEmpty()) {
+		if (text != null && !text.isEmpty()) {
 			WebElement elem_text = null;
 			try {
 				elem_text = driver.findElement(By.xpath("//*[text()='" + text + "']"));
+			} catch (Exception Ex) {
+
 			}
-			catch(Exception Ex) {
-				
-			}
-			if(elem_text!=null)
+			if (elem_text != null)
 				return elem_text;
 		}
 
-		if(nameAttr!=null && !nameAttr.isEmpty()) {
+		if (nameAttr != null && !nameAttr.isEmpty()) {
 			WebElement elem_name = null;
 			try {
 				elem_name = driver.findElement(By.name(nameAttr));
+			} catch (Exception Ex) {
+
 			}
-			catch(Exception Ex) {
-				
-			}
-			if(elem_name!=null)
+			if (elem_name != null)
 				return elem_name;
 		}
-		
-		if(classAttr!=null && !classAttr.isEmpty()) {
+
+		if (classAttr != null && !classAttr.isEmpty()) {
 			WebElement elem_class = null;
 			try {
 				elem_class = driver.findElement(By.className(classAttr));
+			} catch (Exception Ex) {
+
 			}
-			catch(Exception Ex) {
-				
-			}
-			if (elem_class !=null) {
+			if (elem_class != null) {
 				return elem_class;
 			}
 		}
@@ -286,7 +281,7 @@ public class UtilsVisualRepair {
 			if (distinct.getTagName().equalsIgnoreCase(tagName))
 				filtered_tagName.add(distinct);
 		}
-		
+
 		distinctWebElements = filtered_tagName;
 
 		/* filter by id. */
@@ -319,7 +314,7 @@ public class UtilsVisualRepair {
 		/* filter by name. */
 		List<WebElement> filtered_name = new ArrayList<WebElement>();
 		String nameattr = statement.getName();
-		if (!nameattr.isEmpty()) {
+		if (nameattr != null && !nameattr.isEmpty()) {
 			for (WebElement distinct : distinctWebElements) {
 				String name = distinct.getAttribute("name");
 				if (name != null) {
@@ -358,7 +353,7 @@ public class UtilsVisualRepair {
 			return filtered_xpath.get(0);
 
 		/* filter by tag name. */
-		
+
 		/* if none of the filters has been applied, null is returned. */
 		return null;
 	}
