@@ -1,14 +1,12 @@
 package runner;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -16,8 +14,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import com.google.gson.Gson;
 
 import config.Settings;
 import config.Settings.RepairMode;
@@ -41,12 +37,14 @@ import utils.UtilsVisualRepair;
  * of mismatches, automatic repair techniques are triggered.
  * 
  * @author astocco
+ * @author yrahulkr
  *
  */
 public class VisualAssertionTestRunnerWithCrawler {
 
 	RepairMode repairStrategy;
-	
+	private static Scanner scanner = new Scanner(System.in);
+
 	public VisualAssertionTestRunnerWithCrawler() {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
@@ -56,30 +54,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 		repairStrategy = Settings.RepairMode.HYBRID;
 	}
 
-	public static void main(String[] args)
-			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-
-		/* package name. */
-		String prefix = "addressbook825.";
-
-		/* class name. */
-		//String className = "TestUserAdded";
-		String className = "TestAddGroup";
-
-		
-		VisualAssertionTestRunnerWithCrawler var = new VisualAssertionTestRunnerWithCrawler();
-
-		long startTime = System.currentTimeMillis();
-
-		var.runTestWithVisualAssertion(prefix, className);
-
-		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
-		System.out.println("\nelapsedTime (s): " + elapsedTime / 1000);
-
-	}
-
-	private void runTestWithVisualAssertion(String prefix, String className) throws IOException {
+	void runTestWithVisualAssertion(String prefix, String className) throws IOException {
 
 		/* get the path to the test that needs to be verified. */
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
@@ -133,7 +108,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 		Map<Integer, Statement> addedSteps = new LinkedHashMap<Integer, Statement>();
 		List<Integer> deletedSteps = new ArrayList<Integer>();
-		int numStepsAdded = 0 ;
+		int numStepsAdded = 0;
 		int numStepsDeleted = 0;
 		boolean noSuchElementException = false;
 
@@ -183,39 +158,43 @@ public class VisualAssertionTestRunnerWithCrawler {
 				 * longer possible.
 				 */
 				if (webElementFromDomLocator == null) {
-					
-					File resultFile = new File(System.getProperty("user.dir") + Settings.separator + "matchingStates.txt");
+
+					File resultFile = new File(
+							System.getProperty("user.dir") + Settings.separator + "matchingStates.txt");
 					try {
 						resultFile.delete();
-					}catch(Exception Ex2) {
+					} catch (Exception Ex2) {
 						System.out.println("Couldn't delete matching states file");
 					}
-					new Crawler(url, etc, testCorrect, statementNumber, repairedTest, repairStrategy).runLocalCrawling();
-					if(resultFile.exists()) {
+					
+					new Crawler(url, etc, testCorrect, statementNumber, repairedTest, repairStrategy)
+							.runLocalCrawling();
+					
+					if (resultFile.exists()) {
 						List<CrawlPathExport> matchingStates = UtilsCrawler.getCrawledStates();
-						if(!matchingStates.isEmpty()) {
+						if (!matchingStates.isEmpty()) {
 							// Add a test step here
 							CrawlPathExport matchingState = matchingStates.get(0);
-							List<EventableExport> eventList =  matchingState.eventableExportList;
-							
+							List<EventableExport> eventList = matchingState.eventableExportList;
+
 							/* For each event in crawl, add a statement to added steps */
-							for(EventableExport event : eventList) {
-								//How getHow = event.getHow;
+							for (EventableExport event : eventList) {
+								// How getHow = event.getHow;
 								String xpath = event.getValue;
 								WebElement elementFromCrawl = driver.findElement(By.xpath(xpath));
-								
-								/* Create a new statement and add it to added steps*/
+
+								/* Create a new statement and add it to added steps */
 								Statement added = (Statement) UtilsRepair.deepClone(statement);
-								
+
 								String source = elementFromCrawl.getAttribute("outerHTML");
 								if (source == null || source.length() == 0) {
-									source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
-											elementFromCrawl);
+									source = (String) ((JavascriptExecutor) driver)
+											.executeScript("return arguments[0].outerHTML;", elementFromCrawl);
 								}
 
 								if (source == null || source.length() == 0) {
-									System.out.println(
-											"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+									System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement "
+											+ webElementFromDomLocator);
 
 									/* repaired locator is an XPath. */
 									added.setDomLocator(elementFromCrawl);
@@ -233,37 +212,38 @@ public class VisualAssertionTestRunnerWithCrawler {
 								System.out.println("Statement added : " + added.toString());
 								addedSteps.put(new Integer(statementNumber + numStepsAdded), added);
 								numStepsAdded += 1;
-								
+
 								/* Click on the element from the crawl to navigate to the page */
 								elementFromCrawl.click();
-								
+
 							}
-							
-							/* After all steps are added, rerun the find element on the web page for the current statement*/
-							
-							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-									testCorrect, statementNumber, repairStrategy);
-						}
-						else {
-							// Delete the step 
-							
-							System.out.println("Statement "+ statementNumber + "deleted : " + statement.toString());
+
+							/*
+							 * After all steps are added, rerun the find element on the web page for the
+							 * current statement
+							 */
+
+							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver,
+									webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
+						} else {
+							// Delete the step
+
+							System.out.println("Statement " + statementNumber + "deleted : " + statement.toString());
 							deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
-							numStepsDeleted +=1;
-							
+							numStepsDeleted += 1;
+
 						}
 					}
 				}
-				 
-				// if (webElementFromDomLocator == null) {
-				// webElementFromDomLocator = UtilsVisualRepair.removeStatement(); // stub
-				// method
-				// }
 
 				if (webElementFromDomLocator == null) {
 
 					/* the visual check has failed. */
-					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
+//					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
+					
+					System.out.println("Statement " + statementNumber + "deleted : " + statement.toString());
+					deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
+					numStepsDeleted += 1;
 
 				} else {
 
@@ -297,40 +277,42 @@ public class VisualAssertionTestRunnerWithCrawler {
 			}
 
 			if (webElementFromDomLocator != null) {
-				if(!noSuchElementException) {
+				
+				if (!noSuchElementException) {
 					WebElement webElementVisual = null;
-	
+
 					/* check the web element visually. */
 					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 							testCorrect, statementNumber, repairStrategy);
-	
-					if (webElementVisual != null) {
-	
-						webElementFromDomLocator = webElementVisual;
-	
-						String source = webElementFromDomLocator.getAttribute("outerHTML");
-						if (source == null || source.length() == 0) {
-							source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
-									webElementFromDomLocator);
-						}
-	
-						if (source == null || source.length() == 0) {
-							System.out.println(
-									"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
-	
-							/* repaired locator is an XPath. */
-							repairedStatement.setDomLocator(webElementFromDomLocator);
-						} else {
-	
-							/* generate a smartest locator based on the attributes of the element. */
-	
-							SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
-	
-							repairedStatement.setDomLocator(fixedLocator);
-	
-						}
-	
-					}
+
+//					if (webElementVisual != null) {
+//
+//						webElementFromDomLocator = webElementVisual;
+//
+//						String source = webElementFromDomLocator.getAttribute("outerHTML");
+//						if (source == null || source.length() == 0) {
+//							source = (String) ((JavascriptExecutor) driver)
+//									.executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+//						}
+//
+//						if (source == null || source.length() == 0) {
+//							System.out.println(
+//									"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+//
+//							/* repaired locator is an XPath. */
+//							repairedStatement.setDomLocator(webElementFromDomLocator);
+//						} else {
+//
+//							/* generate a smartest locator based on the attributes of the element. */
+//
+//							SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
+//
+//							repairedStatement.setDomLocator(fixedLocator);
+//
+//						}
+//
+//					}
+					
 				}
 
 				try {
@@ -378,6 +360,12 @@ public class VisualAssertionTestRunnerWithCrawler {
 				}
 			}
 
+			if (Settings.debugMode) {
+				System.out.println("Do you want to continue to the next statement? [type Y and Enter key to proceed]");
+				while (!scanner.next().equals("Y")) {
+				}
+			}
+
 			System.out.print("\n");
 
 		}
@@ -387,14 +375,14 @@ public class VisualAssertionTestRunnerWithCrawler {
 
 		EnhancedTestCase temp = (EnhancedTestCase) UtilsRepair.deepClone(etc);
 		temp.replaceStatements(repairedTest);
-		
+
 		/* For each added statement, add it to the test case */
-		for(Integer addedStatement : addedSteps.keySet()) {
+		for (Integer addedStatement : addedSteps.keySet()) {
 			temp.addStatementAtPosition(addedStatement, addedSteps.get(addedStatement));
 		}
-		
-		/* For each deleted statement, delete it from the positioin in test case*/
-		for(Integer deletedStatement: deletedSteps) {
+
+		/* For each deleted statement, delete it from the position in test case */
+		for (Integer deletedStatement : deletedSteps) {
 			temp.removeStatementAtPosition(deletedStatement);
 		}
 
