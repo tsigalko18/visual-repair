@@ -57,7 +57,7 @@ public class UtilsVisualRepair {
 		if (webElementFromVisualLocator == null && webElementFromDomLocator == null) {
 
 			System.err.println(
-					"[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Stopping execution");
+					"[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Element might be deleted?");
 			// System.exit(1);
 
 		} else if (webElementFromVisualLocator == null) {
@@ -122,11 +122,20 @@ public class UtilsVisualRepair {
 
 		if (repairStrategy == RepairMode.HYBRID) {
 
-			Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
-					visualLocator);
+			WebElement fromDom = null;
+			fromDom = retrieveWebElementFromDOMInfo(driver, statement);
 
-			WebElement res = getBestMatch(allMatches, driver, statement);
-			return res;
+			if (fromDom == null) {
+
+				Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
+						visualLocator);
+
+				WebElement res = getBestMatch(allMatches, driver, statement);
+				return res;
+
+			} else {
+				return fromDom;
+			}
 
 		} else if (repairStrategy == RepairMode.VISUAL) {
 
