@@ -169,6 +169,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				context.stop();	
 			}
 		}
 
