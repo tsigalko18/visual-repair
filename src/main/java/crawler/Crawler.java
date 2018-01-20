@@ -74,7 +74,7 @@ public class Crawler {
 		// builder.setMaximumRunTime(300, TimeUnit.SECONDS);
 		builder.addPlugin(new Plugin(new HostInterfaceImpl(new File("out"), null), this.testBroken, this.testCorrect,
 				this.brokenStep, this.repairedTest, repairStrategy));
-		builder.addPlugin(new CrawlOverview());
+//		builder.addPlugin(new CrawlOverview());
 
 		CrawljaxRunner crawljax = new CrawljaxRunner(builder.build());
 		crawljax.call();
