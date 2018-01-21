@@ -166,12 +166,14 @@ public class VisualAssertionTestRunnerWithCrawler {
 					} catch (Exception Ex2) {
 						System.out.println("Couldn't delete matching states file");
 					}
-					
+
 					new Crawler(url, etc, testCorrect, statementNumber, repairedTest, repairStrategy)
 							.runLocalCrawling();
-					
+
 					if (resultFile.exists()) {
+
 						List<CrawlPathExport> matchingStates = UtilsCrawler.getCrawledStates();
+
 						if (!matchingStates.isEmpty()) {
 							// Add a test step here
 							CrawlPathExport matchingState = matchingStates.get(0);
@@ -222,28 +224,23 @@ public class VisualAssertionTestRunnerWithCrawler {
 							 * After all steps are added, rerun the find element on the web page for the
 							 * current statement
 							 */
-
 							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver,
 									webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
-						} else {
-							// Delete the step
-
-							System.out.println("Statement " + statementNumber + "deleted : " + statement.toString());
-							deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
-							numStepsDeleted += 1;
-
 						}
+					} else {
+						// Delete the step
+
+						System.out.println("Statement " + statementNumber + "deleted : " + statement.toString());
+						deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
+						numStepsDeleted += 1;
+						continue;
 					}
 				}
 
 				if (webElementFromDomLocator == null) {
 
 					/* the visual check has failed. */
-//					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
-					
-					System.out.println("Statement " + statementNumber + "deleted : " + statement.toString());
-					deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
-					numStepsDeleted += 1;
+					System.err.println("[LOG]\tStatement " + statementNumber + " still broken.");
 
 				} else {
 
@@ -277,7 +274,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 			}
 
 			if (webElementFromDomLocator != null) {
-				
+
 				if (!noSuchElementException) {
 					WebElement webElementVisual = null;
 
@@ -285,34 +282,35 @@ public class VisualAssertionTestRunnerWithCrawler {
 					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 							testCorrect, statementNumber, repairStrategy);
 
-//					if (webElementVisual != null) {
-//
-//						webElementFromDomLocator = webElementVisual;
-//
-//						String source = webElementFromDomLocator.getAttribute("outerHTML");
-//						if (source == null || source.length() == 0) {
-//							source = (String) ((JavascriptExecutor) driver)
-//									.executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
-//						}
-//
-//						if (source == null || source.length() == 0) {
-//							System.out.println(
-//									"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
-//
-//							/* repaired locator is an XPath. */
-//							repairedStatement.setDomLocator(webElementFromDomLocator);
-//						} else {
-//
-//							/* generate a smartest locator based on the attributes of the element. */
-//
-//							SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
-//
-//							repairedStatement.setDomLocator(fixedLocator);
-//
-//						}
-//
-//					}
-					
+					// if (webElementVisual != null) {
+					//
+					// webElementFromDomLocator = webElementVisual;
+					//
+					// String source = webElementFromDomLocator.getAttribute("outerHTML");
+					// if (source == null || source.length() == 0) {
+					// source = (String) ((JavascriptExecutor) driver)
+					// .executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+					// }
+					//
+					// if (source == null || source.length() == 0) {
+					// System.out.println(
+					// "[ERROR]\tCannot retrieve outerHTML for webElement " +
+					// webElementFromDomLocator);
+					//
+					// /* repaired locator is an XPath. */
+					// repairedStatement.setDomLocator(webElementFromDomLocator);
+					// } else {
+					//
+					// /* generate a smartest locator based on the attributes of the element. */
+					//
+					// SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
+					//
+					// repairedStatement.setDomLocator(fixedLocator);
+					//
+					// }
+					//
+					// }
+
 				}
 
 				try {
