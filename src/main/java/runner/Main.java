@@ -36,6 +36,7 @@ public class Main {
 
 		stopTime = System.currentTimeMillis();
 		elapsedTime = stopTime - startTime;
-		System.out.println("\nelapsedTime (s): " + elapsedTime / 1000);
+		System.out.format("\nelapsedTime (s): %.3f", elapsedTime / 1000.0f);
+		
 	}
 }

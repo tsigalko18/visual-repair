@@ -12,9 +12,14 @@ import utils.UtilsRunner;
  * VisualAssertionTestRunner class contained in this package
  * 
  * @author astocco
+ * @author yrahulkr
  *
  */
 public class TestSuiteRunner {
+	
+	static long startTime;
+	static long stopTime;
+	static long elapsedTime;
 	
 	public TestSuiteRunner() {
 		if(Settings.aspectActive == false) {
@@ -26,6 +31,8 @@ public class TestSuiteRunner {
 
 		/* specify the test suite and test name or runner. */
 		
+		startTime = System.currentTimeMillis();
+		
 		/* Claroline example */
 		//UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
 		
@@ -34,6 +41,13 @@ public class TestSuiteRunner {
 //		UtilsRunner.runTest(Settings.testSuiteCorrect, "AddressBookSearchAddressBookNameTest");
 		
 //		UtilsRunner.runTest(Settings.testSuiteBroken, "AddressBookSearchAddressBookNameTest");
+		
+//		Settings.aspectActive = false;
+//		UtilsRunner.runTest("addressbook411Repaired", "AddressBookSearchAddressBookNameTest");
+		
+		stopTime = System.currentTimeMillis();
+		elapsedTime = stopTime - startTime;
+		System.out.format("\nelapsedTime (s): %.3f", elapsedTime / 1000.0f);
 
 	}
 
