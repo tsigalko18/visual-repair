@@ -51,7 +51,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 		 * re-create the new visual execution trace
 		 */
 		Settings.aspectActive = false;
-		repairStrategy = Settings.RepairMode.HYBRID;
+		repairStrategy = Settings.RepairMode.DOM;
 	}
 
 	void runTestWithVisualAssertion(String prefix, String className) throws IOException {
@@ -60,6 +60,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
 
 		System.out.println("[LOG]\tVerifying test " + prefix + className);
+		System.out.println("[LOG]\tRepair strategy is " + repairStrategy);
 
 		Class<?> clazz = null;
 		Object inst = null;
@@ -81,7 +82,13 @@ public class VisualAssertionTestRunnerWithCrawler {
 		/* retrieve the WebDriver instance. */
 		WebDriver driver = (WebDriver) UtilsRunner.runMethod(clazz, inst, "getDriver");
 
-		String url = driver.getCurrentUrl();
+		String url = "";
+		try {
+			url = driver.getCurrentUrl();
+		} catch (NullPointerException e) {
+			System.err.println("[ERR]\tInsert getDriver() method in the test");
+			System.exit(1);
+		}
 
 		/* parse the tests and create the abstractions. */
 		ParseTest pt = null;
@@ -329,7 +336,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 
 					} else if (statement.getAction().equalsIgnoreCase("getText")) {
 
-						if (webElementFromDomLocator.getText() == statement.getValue()) {
+						if (webElementFromDomLocator.getText().equals(statement.getValue())) {
 
 							System.out.println("[LOG]\tAssertion value correct");
 							System.out.println(statement.toString());
