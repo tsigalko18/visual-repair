@@ -141,73 +141,73 @@ public class VisualTraceGenerator {
 		}
 	}
 
-	@After("logSeleniumCommands(JoinPoint)")
-	public void afterEvent(JoinPoint joinPoint) {
-
-		if (Settings.aspectActive) {
-
-			/* for each statement, get a unique name and the line number. */
-			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
-			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
-
-			if (Settings.VERBOSE)
-				System.out.println("[LOG]\t@After " + statementName);
-
-			/* save the screenshot before the execution of the event. */
-			String screenshotBefore = testFolderName + Settings.separator + line + "-2after-" + statementName
-					+ Settings.PNG_EXTENSION;
-
-			/* save the HTML page. */
-			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
-
-			if (UtilsComputerVision.isAlertPresent(d)) {
-				return;
-			} else {
-
-				try {
-					UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				UtilsComputerVision.saveScreenshot(d, screenshotBefore);
-			}
-
-		}
-
-	}
-
-	@AfterThrowing(pointcut = "logFindElementCalls(JoinPoint)", throwing = "exception")
-	public void logAfterThrowing(Exception exception, JoinPoint joinPoint) {
-
-		if (Settings.aspectActive) {
-
-			/* for each statement, get a unique name. */
-			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
-
-			/* for each statement, get the line number. */
-			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
-
-			/*
-			 * get screenshot of the page before the action is executed, but after the
-			 * exception has been raised.
-			 */
-			String screenshotBefore = testFolderName + Settings.separator + line + "-Annotated-" + statementName
-					+ Settings.PNG_EXTENSION;
-			UtilsComputerVision.saveScreenshot(d, screenshotBefore);
-
-			/* save the HTML page. */
-			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
-			try {
-				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (Settings.VERBOSE)
-				System.out.println("[LOG]\t@AfterThrowing " + statementName);
-
-		}
-	}
+//	@After("logSeleniumCommands(JoinPoint)")
+//	public void afterEvent(JoinPoint joinPoint) {
+//
+//		if (Settings.aspectActive) {
+//
+//			/* for each statement, get a unique name and the line number. */
+//			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
+//			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
+//
+//			if (Settings.VERBOSE)
+//				System.out.println("[LOG]\t@After " + statementName);
+//
+//			/* save the screenshot before the execution of the event. */
+//			String screenshotBefore = testFolderName + Settings.separator + line + "-2after-" + statementName
+//					+ Settings.PNG_EXTENSION;
+//
+//			/* save the HTML page. */
+//			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
+//
+//			if (UtilsComputerVision.isAlertPresent(d)) {
+//				return;
+//			} else {
+//
+//				try {
+//					UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//
+//				UtilsComputerVision.saveScreenshot(d, screenshotBefore);
+//			}
+//
+//		}
+//
+//	}
+//
+//	@AfterThrowing(pointcut = "logFindElementCalls(JoinPoint)", throwing = "exception")
+//	public void logAfterThrowing(Exception exception, JoinPoint joinPoint) {
+//
+//		if (Settings.aspectActive) {
+//
+//			/* for each statement, get a unique name. */
+//			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
+//
+//			/* for each statement, get the line number. */
+//			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
+//
+//			/*
+//			 * get screenshot of the page before the action is executed, but after the
+//			 * exception has been raised.
+//			 */
+//			String screenshotBefore = testFolderName + Settings.separator + line + "-Annotated-" + statementName
+//					+ Settings.PNG_EXTENSION;
+//			UtilsComputerVision.saveScreenshot(d, screenshotBefore);
+//
+//			/* save the HTML page. */
+//			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
+//			try {
+//				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//
+//			if (Settings.VERBOSE)
+//				System.out.println("[LOG]\t@AfterThrowing " + statementName);
+//
+//		}
+//	}
 
 }
