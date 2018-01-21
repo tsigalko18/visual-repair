@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -134,7 +135,19 @@ public class UtilsVisualRepair {
 				return res;
 
 			} else {
-				return fromDom;
+
+				try {
+					// UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
+					// fromDom, "currentCrop.png");
+					UtilsComputerVision.getPreciseElementVisualCrop(driver, currentScreenshot, fromDom, "preciseCrop.png");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				if (UtilsTemplateMatching.runFeatureDetection(visualLocator, "currentCrop.png", null)) {
+					return fromDom;
+				}
+
 			}
 
 		} else if (repairStrategy == RepairMode.VISUAL) {
@@ -265,7 +278,6 @@ public class UtilsVisualRepair {
 				continue;
 
 			String xpathForMatch = UtilsXPath.getXPathFromLocation(match, driver);
-			// System.out.println(xpathForMatch);
 			WebElement webElementForMatch = driver.findElement(By.xpath(xpathForMatch));
 
 			// Consider only the leaf elements
@@ -360,8 +372,6 @@ public class UtilsVisualRepair {
 		}
 		if (filtered_xpath.size() == 1)
 			return filtered_xpath.get(0);
-
-		/* filter by tag name. */
 
 		/* if none of the filters has been applied, null is returned. */
 		return null;

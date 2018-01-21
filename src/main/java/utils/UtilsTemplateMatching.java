@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +61,6 @@ public class UtilsTemplateMatching {
 		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
 
 		if (isPresent) {
-//			Set<Point> templateMatches = templateMatchingAllResults(templateFile, imageFile);
 			Set<Point> templateMatches = new HashSet<Point>();
 			templateMatches.add(templateMatchingBestResult(templateFile, imageFile));
 			allMatches.addAll(templateMatches);
@@ -152,7 +150,7 @@ public class UtilsTemplateMatching {
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
-//		System.out.println("Min matches (FAST): " + min_accepted_matches);
+		// System.out.println("Min matches (FAST): " + min_accepted_matches);
 
 		if (goodMatchesList.size() > min_accepted_matches) {
 
@@ -169,9 +167,11 @@ public class UtilsTemplateMatching {
 				scenePoints.addLast(scnKeypointlist.get(goodMatchesList.get(i).trainIdx).pt);
 			}
 
-			// Add good matches to the list of all matches
-			allMatches.addAll(scenePoints);
-			System.out.println(scenePoints);
+			// add the scenepoints to list of all matching points
+			if (allMatches != null) {
+				allMatches.addAll(scenePoints);
+				// System.out.println(scenePoints);
+			}
 
 			MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
 			objMatOfPoint2f.fromList(objectPoints);
@@ -299,7 +299,7 @@ public class UtilsTemplateMatching {
 			return false;
 		}
 
-		 System.out.println("Good matches (SIFT): " + goodMatchesList.size());
+		System.out.println("Good matches (SIFT): " + goodMatchesList.size());
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
@@ -321,8 +321,10 @@ public class UtilsTemplateMatching {
 			}
 
 			// add the scenepoints to list of all matching points
-			allMatches.addAll(scenePoints);
-			System.out.println(scenePoints);
+			if (allMatches != null) {
+				allMatches.addAll(scenePoints);
+				// System.out.println(scenePoints);
+			}
 
 			MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
 			objMatOfPoint2f.fromList(objectPoints);
