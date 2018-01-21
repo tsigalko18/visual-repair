@@ -45,13 +45,13 @@ public class VisualAssertionTestRunnerWithCrawler {
 	RepairMode repairStrategy;
 	private static Scanner scanner = new Scanner(System.in);
 
-	public VisualAssertionTestRunnerWithCrawler() {
+	public VisualAssertionTestRunnerWithCrawler(RepairMode rm) {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
 		 * re-create the new visual execution trace
 		 */
 		Settings.aspectActive = false;
-		repairStrategy = Settings.RepairMode.DOM;
+		repairStrategy = rm;
 	}
 
 	void runTestWithVisualAssertion(String prefix, String className) throws IOException {

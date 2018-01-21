@@ -2,6 +2,8 @@ package runner;
 
 import java.io.IOException;
 
+import config.Settings.RepairMode;
+
 public class Main {
 
 	String prefix;
@@ -17,16 +19,18 @@ public class Main {
 		String prefix = "addressbook411" + ".";
 
 		/* class name. */
-		String className = "AddressBookSearchAddressBookNameTest";
+		String className = "AddressBookSearchMultipleAddressBookNameTest";
 
-		visualRunner(prefix, className);
+		RepairMode rm = RepairMode.DOM;
+
+		visualRunner(prefix, className, rm);
 	}
 
-	public static void visualRunner(String prefix, String className) {
+	public static void visualRunner(String prefix, String className, RepairMode rm) {
 
 		startTime = System.currentTimeMillis();
 
-		VisualAssertionTestRunnerWithCrawler var = new VisualAssertionTestRunnerWithCrawler();
+		VisualAssertionTestRunnerWithCrawler var = new VisualAssertionTestRunnerWithCrawler(rm);
 
 		try {
 			var.runTestWithVisualAssertion(prefix, className);
@@ -37,6 +41,6 @@ public class Main {
 		stopTime = System.currentTimeMillis();
 		elapsedTime = stopTime - startTime;
 		System.out.format("\nelapsedTime (s): %.3f", elapsedTime / 1000.0f);
-		
+
 	}
 }
