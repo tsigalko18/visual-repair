@@ -119,6 +119,7 @@ public class UtilsComputerVision {
 			scale--;
 			if (scale == 0) {
 				saveVisualCrop(d, filename, element, webElementImageName);
+				return;
 			} else {
 				getScaledSubImage(d, img, element, visualLocator, scale);
 			}
