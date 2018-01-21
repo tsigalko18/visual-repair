@@ -58,7 +58,6 @@ public class UtilsRunner {
 			System.out.println("[LOG]\tTest " + classRunner + " passed");
 		}
 
-		System.exit(0);
 	}
 
 	public static Object runMethod(Class<?> clazz, Object inst, String methodName) {
