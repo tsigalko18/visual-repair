@@ -74,7 +74,7 @@ public class MisSelection {
 		}
 
 		// screenshot here
-		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
+		String currentScreenshot = System.getProperty("user.dir") + Settings.sep + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
 		// find best visual match
@@ -142,7 +142,7 @@ public class MisSelection {
 		File[] brokenVisualLocators = UtilsGetters.getVisualLocators(test);
 
 		int brokenStateFromExeception = Integer.parseInt(e.getInvolvedLine());
-		String path = System.getProperty("user.dir") + Settings.separator;
+		String path = System.getProperty("user.dir") + Settings.sep;
 		ImageProcessing ip = new ImageProcessing();
 
 		int min = Math.min(brokenVisualLocators.length, brokenVisualTrace.length);

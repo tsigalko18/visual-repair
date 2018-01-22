@@ -49,7 +49,7 @@ public class UtilsRunner {
 				EnhancedException ea = UtilsRepair.saveExceptionFromFailure(fail);
 
 				String path = Settings.testingTestSuiteVisualTraceExecutionFolder
-						+ UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXTENSION;
+						+ UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXT;
 				String jsonPath = UtilsParser.toJsonPath(path);
 
 				UtilsParser.serializeException(ea, jsonPath);

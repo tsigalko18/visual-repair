@@ -65,7 +65,7 @@ public class UtilsAspect {
 				System.exit(1);
 			}
 		}
-		
+
 	}
 
 	/**
@@ -112,8 +112,6 @@ public class UtilsAspect {
 	public static void createHTMLDomTree(WebDriver d, String domFile, String domTreeFile)
 			throws SAXException, IOException {
 
-		// System.out.println("STARTED BUILDING RTREE");
-
 		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(d, domFile);
 		rt.buildHtmlDomTree();
 		rt.preOrderTraversalRTree();
@@ -121,8 +119,6 @@ public class UtilsAspect {
 		if (domTreeFile != "" || domTreeFile != null) {
 			UtilsParser.serializeHtmlDomTree(rt, domTreeFile);
 		}
-
-		// System.out.println("ENDED BUILDING RTREE");
 
 	}
 

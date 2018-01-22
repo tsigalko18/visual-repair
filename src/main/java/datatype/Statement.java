@@ -29,14 +29,12 @@ public abstract class Statement implements Serializable {
 	private String classAttribute;
 	private String nameAttribute;
 	private String text;
-	
+
 	// visual-based information
 	private File screenshotBefore;
 	private File screenshotAfter;
 	private File annotatedScreenshot;
 	private File visualLocator; // on screenshotBefore
-
-	private VisualState visualState;
 
 	// DOM-based information
 	private File htmlPage;
@@ -97,7 +95,7 @@ public abstract class Statement implements Serializable {
 	public void setDomLocator(SeleniumLocator domLocator) {
 		this.domLocator = domLocator;
 	}
-	
+
 	public void setDomLocator(WebElement domLocator) {
 		this.domLocator = UtilsParser.getSeleniumLocatorFromWebElement(domLocator);
 	}
@@ -140,14 +138,6 @@ public abstract class Statement implements Serializable {
 
 	public void setAnnotatedScreenshot(File annotatedScreenshot) {
 		this.annotatedScreenshot = annotatedScreenshot;
-	}
-
-	public VisualState getVisualState() {
-		return visualState;
-	}
-
-	public void setVisualState(VisualState visualState) {
-		this.visualState = visualState;
 	}
 
 	public Point getCoordinates() {

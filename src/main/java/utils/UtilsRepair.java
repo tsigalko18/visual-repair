@@ -211,9 +211,9 @@ public class UtilsRepair {
 	 */
 	public static void saveTest(String prefix, String className, EnhancedTestCase temp) {
 
-		String oldPath = Settings.resourcesFolder + prefix.replace(".", "/") + className + Settings.JAVA_EXTENSION;
+		String oldPath = Settings.resourcesFolder + prefix.replace(".", "/") + className + Settings.JAVA_EXT;
 		String newPath = Settings.resourcesFolder + prefix.replace(".", "Repaired/") + className
-				+ Settings.JAVA_EXTENSION;
+				+ Settings.JAVA_EXT;
 
 		try {
 			temp = ParseTest.parseAndSaveToJava(temp, oldPath, newPath);

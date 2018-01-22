@@ -127,7 +127,7 @@ public class ElementMovedNewState {
 				beforeBrokenTrace);
 
 		int brokenStateFromExeception = Integer.parseInt(e.getInvolvedLine());
-		String path = System.getProperty("user.dir") + Settings.separator;
+		String path = System.getProperty("user.dir") + Settings.sep;
 		ImageProcessing ip = new ImageProcessing();
 
 		Map<String, Double> beforeStatesSimilarityMap = new HashMap<String, Double>();

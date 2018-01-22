@@ -81,14 +81,14 @@ public class UtilsParser {
 	 */
 	public static File getScreenshot(String name, int beginLine, String type, String folder) throws Exception {
 
-		String p = folder + name + Settings.separator;
+		String p = folder + name + Settings.sep;
 
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.PNG_EXTENSION)
+				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.PNG_EXT)
 						&& n.contains(name) && n.contains(type));
 			}
 		});
@@ -113,14 +113,14 @@ public class UtilsParser {
 	public static DOMInformation getDOMInformationFromJsonFile(String name, int beginLine, String type, String folder)
 			throws Exception {
 
-		String p = folder + name + Settings.separator;
+		String p = folder + name + Settings.sep;
 
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.JSON_EXTENSION)
+				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.JSON_EXT)
 						&& n.contains(name) && n.contains(type));
 			}
 			
@@ -153,14 +153,14 @@ public class UtilsParser {
 	public static File getHTMLDOMfile(String name, int beginLine, String type, String useExtension, String folder)
 			throws Exception {
 
-		String p = folder + name + Settings.separator + beginLine + "-" + type + "-" + name + "-" + beginLine;
+		String p = folder + name + Settings.sep + beginLine + "-" + type + "-" + name + "-" + beginLine;
 
 		File dir = new File(p);
 		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.endsWith(Settings.HTML_EXTENSION));
+				return (n.endsWith(Settings.HTML_EXT));
 			}
 		});
 
@@ -180,7 +180,7 @@ public class UtilsParser {
 	 * @return
 	 */
 	public static String getClassNameFromPath(String arg) {
-		return arg.substring(arg.lastIndexOf("/") + 1).replace(Settings.JAVA_EXTENSION, "");
+		return arg.substring(arg.lastIndexOf("/") + 1).replace(Settings.JAVA_EXT, "");
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = folder + testName + Settings.separator + testName + Settings.JSON_EXTENSION;
+		String newPath = folder + testName + Settings.sep + testName + Settings.JSON_EXT;
 
 		try {
 			FileUtils.write(new File(newPath), gson.toJson(tc));
@@ -370,8 +370,8 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.separator
-				+ "exception" + Settings.JSON_EXTENSION;
+		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.sep
+				+ "exception" + Settings.JSON_EXT;
 		return newPath;
 	}
 
@@ -385,7 +385,7 @@ public class UtilsParser {
 	 */
 	public static EnhancedException readException(String path) throws JsonSyntaxException, IOException {
 
-		if (!path.endsWith(Settings.JSON_EXTENSION)) {
+		if (!path.endsWith(Settings.JSON_EXT)) {
 			throw new InvalidFileFormatException("[ERROR]\tInvalid file extension");
 		} else if (!path.contains("exception")) {
 			throw new InvalidFileFormatException("[ERROR]\tInvalid exception file");

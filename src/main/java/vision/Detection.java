@@ -122,7 +122,7 @@ public class Detection
 		if (differenceImageFullPath != null)
 		{
 			int extIndex = differenceImageFullPath.lastIndexOf('.');
-			String formatName = (extIndex != -1) ? differenceImageFullPath.substring(extIndex + 1) : Settings.PNG_EXTENSION;
+			String formatName = (extIndex != -1) ? differenceImageFullPath.substring(extIndex + 1) : Settings.PNG_EXT;
 			ImageIO.write(imgDiff, formatName, new File(differenceImageFullPath));
 		}
 		

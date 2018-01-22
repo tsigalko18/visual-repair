@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -23,6 +24,8 @@ import datatype.Statement;
 
 public class UtilsVisualRepair {
 
+	private static Scanner scanner = new Scanner(System.in);
+	
 	/**
 	 * Procedure to verify a DOM element locator by means of a visual locator.
 	 * 
@@ -64,6 +67,7 @@ public class UtilsVisualRepair {
 		} else if (webElementFromVisualLocator == null) {
 
 			System.err.println("[LOG]\tElement not found (visually) in the state. Visual assertion failed.");
+			return null;
 
 		} else if (webElementFromDomLocator == null) {
 
@@ -116,8 +120,14 @@ public class UtilsVisualRepair {
 			RepairMode repairStrategy) {
 
 		String visualLocator = statement.getVisualLocator().toString();
-		String currentScreenshot = System.getProperty("user.dir") + Settings.separator + "currentScreenshot.png";
+		String currentScreenshot = System.getProperty("user.dir") + Settings.sep + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
+		
+//		if (Settings.debugMode) {
+//			System.out.println("Do you want to continue to the next statement? [type Y and Enter key to proceed]");
+//			while (!scanner.next().equals("Y")) {
+//			}
+//		}
 
 		Point bestMatch = null;
 
@@ -125,7 +135,7 @@ public class UtilsVisualRepair {
 
 			WebElement fromDom = null;
 			fromDom = retrieveWebElementFromDOMInfo(driver, statement);
-
+			
 			if (fromDom == null) {
 
 				Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
@@ -136,17 +146,19 @@ public class UtilsVisualRepair {
 
 			} else {
 
-				try {
-					// UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
-					// fromDom, "currentCrop.png");
-					UtilsComputerVision.getPreciseElementVisualCrop(driver, currentScreenshot, fromDom, "preciseCrop.png");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				if (UtilsTemplateMatching.runFeatureDetection(visualLocator, "currentCrop.png", null)) {
-					return fromDom;
-				}
+				return fromDom;
+				
+//				try {
+//					// UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
+//					// fromDom, "currentCrop.png");
+//					UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot, fromDom, "preciseCrop.png");
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//
+//				if (UtilsTemplateMatching.runFeatureDetection(visualLocator, "currentCrop.png", null)) {
+//					return fromDom;
+//				}
 
 			}
 
@@ -199,18 +211,7 @@ public class UtilsVisualRepair {
 			if (elem_id != null)
 				return elem_id;
 		}
-
-		if (xpath != null && !xpath.isEmpty()) {
-			WebElement elem_xpath = null;
-			try {
-				elem_xpath = driver.findElement(By.xpath(xpath));
-			} catch (Exception Ex) {
-
-			}
-			if (elem_xpath != null)
-				return elem_xpath;
-		}
-
+		
 		if (text != null && !text.isEmpty()) {
 			WebElement elem_text = null;
 			try {
@@ -243,6 +244,17 @@ public class UtilsVisualRepair {
 			if (elem_class != null) {
 				return elem_class;
 			}
+		}
+		
+		if (xpath != null && !xpath.isEmpty()) {
+			WebElement elem_xpath = null;
+			try {
+				elem_xpath = driver.findElement(By.xpath(xpath));
+			} catch (Exception Ex) {
+
+			}
+			if (elem_xpath != null)
+				return elem_xpath;
 		}
 
 		return null;

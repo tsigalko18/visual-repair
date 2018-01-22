@@ -137,7 +137,9 @@ public class VisualAssertionTestRunnerWithCrawler {
 				webElementFromDomLocator = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver,
 						statement.getDomLocator());
 				noSuchElementException = false;
+				
 			} catch (NoSuchElementException Ex) {
+				
 				noSuchElementException = true;
 				/*
 				 * if NoSuchElementException is captured, it means that I'm incurred into a
@@ -167,7 +169,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 				if (webElementFromDomLocator == null) {
 
 					File resultFile = new File(
-							System.getProperty("user.dir") + Settings.separator + "matchingStates.txt");
+							System.getProperty("user.dir") + Settings.sep + "matchingStates.txt");
 					try {
 						resultFile.delete();
 					} catch (Exception Ex2) {
@@ -293,7 +295,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 
 					if (webElementVisual != null) {
 
-						webElementFromDomLocator = webElementVisual;
+						//webElementFromDomLocator = webElementVisual;
 
 						String source = webElementFromDomLocator.getAttribute("outerHTML");
 						if (source == null || source.length() == 0) {
