@@ -3,8 +3,6 @@ package aspects;
 import java.io.IOException;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -21,9 +19,23 @@ import utils.UtilsParser;
 public class VisualTraceGenerator {
 
 	static WebDriver d;
-	static String testFolderName;
+	static String testFolder;
 	static String mainPage;
 
+	/* statement information. */
+	static String statementName;
+	static int line;
+
+	/* visual information. */
+	static String screenshotBefore;
+	static String annotatedScreenshot;
+	static String visualLocator;
+
+	/* DOM information. */
+	static String htmlPath;
+	static String domInfoJsonFile;
+
+	/* OpenCV bindings. */
 	static {
 		nu.pattern.OpenCV.loadShared();
 		nu.pattern.OpenCV.loadLocally();
@@ -31,17 +43,17 @@ public class VisualTraceGenerator {
 
 	/* Pointcuts definition. */
 
-	/* catch the findElement calls. */
+	/* intercept the calls to findElement methods. */
 	@Pointcut("call(* org.openqa.selenium.WebDriver.findElement(..))")
 	public void logFindElementCalls(JoinPoint jp) {
 	}
 
-	/* catch the findElement execution. */
+	/* intercept the executions of findElement methods. */
 	@Pointcut("execution(* org.openqa.selenium.WebDriver.findElement(..))")
 	public void catchFindElementExecutions(JoinPoint jp) {
 	}
 
-	/* catch the event calls. */
+	/* intercept the calls to WebElement methods. */
 	@Pointcut("call(* org.openqa.selenium.WebElement.click()) || "
 			+ "call(* org.openqa.selenium.WebElement.sendKeys(..)) || "
 			+ "call(* org.openqa.selenium.WebElement.getText()) || "
@@ -50,7 +62,7 @@ public class VisualTraceGenerator {
 	public void logSeleniumCommands(JoinPoint jp) {
 	}
 
-	/* advice definition. */
+	/* create output folders before calling the method. */
 	@Before("logFindElementCalls(JoinPoint)")
 	public void loggingAdvice(JoinPoint jp) {
 
@@ -66,17 +78,18 @@ public class VisualTraceGenerator {
 			String withinType = jp.getStaticPart().getSourceLocation().getWithinType().toString();
 			String testSuiteName = UtilsParser.getTestSuiteNameFromWithinType(withinType);
 
-			UtilsAspect.createTestFolder(Settings.outputFolder + testSuiteName);
+			UtilsAspect.createTestFolder(Settings.outputDir + testSuiteName);
 
-			testFolderName = Settings.outputFolder + testSuiteName + Settings.separator
+			testFolder = Settings.outputDir + testSuiteName + Settings.sep
 					+ jp.getStaticPart().getSourceLocation().getFileName().replace(Settings.JAVA_EXTENSION, "");
 
-			UtilsAspect.createTestFolder(testFolderName);
+			UtilsAspect.createTestFolder(testFolder);
 
 		}
 
 	}
 
+	/* save DOM and visual information before executing the method. */
 	@Before("logSeleniumCommands(JoinPoint)")
 	public void beforeEvent(JoinPoint joinPoint) {
 
@@ -92,43 +105,32 @@ public class VisualTraceGenerator {
 				we = (WebElement) sel.getOptions().get(0);
 			}
 
-			/* for each statement, get a unique name. */
-			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
+			statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
 
-			/* for each statement, get the line number. */
-			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
+			line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
 
-			String screenshotBefore = testFolderName + Settings.separator + line + "-1before-" + statementName
-					+ Settings.PNG_EXTENSION;
-			
-			String annotatedScreenshot = testFolderName + Settings.separator + line + "-Annotated-" + statementName
-					+ Settings.PNG_EXTENSION;
-			
-			String visualLocator = testFolderName + Settings.separator + line + "-visualLocator-" + statementName
-					+ Settings.PNG_EXTENSION;
-			
-			String htmlPath = testFolderName + Settings.separator + line + "-1before-" + statementName;
-			
-			String domInfoJsonFile = testFolderName + Settings.separator + line + "-domInfo-" + statementName
-					+ Settings.JSON_EXTENSION;
-			
+			screenshotBefore = testFolder + Settings.sep + line + "-1before-" + statementName + Settings.PNG_EXT;
+
+			annotatedScreenshot = testFolder + Settings.sep + line + "-Annotated-" + statementName + Settings.PNG_EXT;
+
+			visualLocator = testFolder + Settings.sep + line + "-visualLocator-" + statementName + Settings.PNG_EXT;
+
+			htmlPath = testFolder + Settings.sep + line + "-1before-" + statementName;
+
+			domInfoJsonFile = testFolder + Settings.sep + line + "-domInfo-" + statementName + Settings.JSON_EXT;
+
 			mainPage = d.getWindowHandle();
 
-			/* save the screenshot before the execution of the event. */
 			UtilsComputerVision.saveScreenshot(d, screenshotBefore);
 
 			try {
 
-				/* save contextual based visual locator. */
 				UtilsComputerVision.saveVisualLocator(d, screenshotBefore, we, visualLocator);
 
-				/* save the annotated screenshot as well. */
 				UtilsComputerVision.saveAnnotatedScreenshot(screenshotBefore, visualLocator, annotatedScreenshot);
 
-				/* save the HTML page. */
 				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
-				
-				/* save DOM-related information for the web element. */
+
 				UtilsParser.saveDOMInformation(d, we, domInfoJsonFile);
 
 			} catch (IOException e) {
@@ -141,73 +143,78 @@ public class VisualTraceGenerator {
 		}
 	}
 
-//	@After("logSeleniumCommands(JoinPoint)")
-//	public void afterEvent(JoinPoint joinPoint) {
-//
-//		if (Settings.aspectActive) {
-//
-//			/* for each statement, get a unique name and the line number. */
-//			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
-//			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
-//
-//			if (Settings.VERBOSE)
-//				System.out.println("[LOG]\t@After " + statementName);
-//
-//			/* save the screenshot before the execution of the event. */
-//			String screenshotBefore = testFolderName + Settings.separator + line + "-2after-" + statementName
-//					+ Settings.PNG_EXTENSION;
-//
-//			/* save the HTML page. */
-//			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
-//
-//			if (UtilsComputerVision.isAlertPresent(d)) {
-//				return;
-//			} else {
-//
-//				try {
-//					UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//
-//				UtilsComputerVision.saveScreenshot(d, screenshotBefore);
-//			}
-//
-//		}
-//
-//	}
-//
-//	@AfterThrowing(pointcut = "logFindElementCalls(JoinPoint)", throwing = "exception")
-//	public void logAfterThrowing(Exception exception, JoinPoint joinPoint) {
-//
-//		if (Settings.aspectActive) {
-//
-//			/* for each statement, get a unique name. */
-//			String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
-//
-//			/* for each statement, get the line number. */
-//			int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
-//
-//			/*
-//			 * get screenshot of the page before the action is executed, but after the
-//			 * exception has been raised.
-//			 */
-//			String screenshotBefore = testFolderName + Settings.separator + line + "-Annotated-" + statementName
-//					+ Settings.PNG_EXTENSION;
-//			UtilsComputerVision.saveScreenshot(d, screenshotBefore);
-//
-//			/* save the HTML page. */
-//			String htmlPath = testFolderName + Settings.separator + line + "-2after-" + statementName;
-//			try {
-//				UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//
-//			if (Settings.VERBOSE)
-//				System.out.println("[LOG]\t@AfterThrowing " + statementName);
-//
-//		}
-//	}
+	// @After("logSeleniumCommands(JoinPoint)")
+	// public void afterEvent(JoinPoint joinPoint) {
+	//
+	// if (Settings.aspectActive) {
+	//
+	// /* for each statement, get a unique name and the line number. */
+	// String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
+	// int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
+	//
+	// if (Settings.VERBOSE)
+	// System.out.println("[LOG]\t@After " + statementName);
+	//
+	// /* save the screenshot before the execution of the event. */
+	// String screenshotBefore = testFolderName + Settings.separator + line +
+	// "-2after-" + statementName
+	// + Settings.PNG_EXTENSION;
+	//
+	// /* save the HTML page. */
+	// String htmlPath = testFolderName + Settings.separator + line + "-2after-" +
+	// statementName;
+	//
+	// if (UtilsComputerVision.isAlertPresent(d)) {
+	// return;
+	// } else {
+	//
+	// try {
+	// UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// UtilsComputerVision.saveScreenshot(d, screenshotBefore);
+	// }
+	//
+	// }
+	//
+	// }
+	//
+	// @AfterThrowing(pointcut = "logFindElementCalls(JoinPoint)", throwing =
+	// "exception")
+	// public void logAfterThrowing(Exception exception, JoinPoint joinPoint) {
+	//
+	// if (Settings.aspectActive) {
+	//
+	// /* for each statement, get a unique name. */
+	// String statementName = UtilsAspect.getStatementNameFromJoinPoint(joinPoint);
+	//
+	// /* for each statement, get the line number. */
+	// int line = UtilsAspect.getStatementLineFromJoinPoint(joinPoint);
+	//
+	// /*
+	// * get screenshot of the page before the action is executed, but after the
+	// * exception has been raised.
+	// */
+	// String screenshotBefore = testFolderName + Settings.separator + line +
+	// "-Annotated-" + statementName
+	// + Settings.PNG_EXTENSION;
+	// UtilsComputerVision.saveScreenshot(d, screenshotBefore);
+	//
+	// /* save the HTML page. */
+	// String htmlPath = testFolderName + Settings.separator + line + "-2after-" +
+	// statementName;
+	// try {
+	// UtilsAspect.saveHTMLPage(d.getCurrentUrl(), htmlPath);
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// if (Settings.VERBOSE)
+	// System.out.println("[LOG]\t@AfterThrowing " + statementName);
+	//
+	// }
+	// }
 
 }
