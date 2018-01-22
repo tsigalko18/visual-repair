@@ -216,6 +216,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 									added.setDomLocator(fixedLocator);
 
 								}
+
 								added.setAction("click");
 								added.setValue("");
 								System.out.println("Statement added : " + added.toString());
@@ -237,8 +238,8 @@ public class VisualAssertionTestRunnerWithCrawler {
 					} else {
 						// Delete the step
 
-						System.out.println("Statement " + statementNumber + "deleted : " + statement.toString());
-						deletedSteps.add(statementNumber + numStepsAdded - numStepsDeleted);
+						System.out.println("Statement " + statementNumber + " deleted : " + statement.toString());
+						deletedSteps.add(statementNumber);
 						numStepsDeleted += 1;
 						continue;
 					}
@@ -283,86 +284,90 @@ public class VisualAssertionTestRunnerWithCrawler {
 			if (webElementFromDomLocator != null) {
 
 				if (!noSuchElementException) {
+
 					WebElement webElementVisual = null;
 
 					/* check the web element visually. */
 					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
 							testCorrect, statementNumber, repairStrategy);
 
-					// if (webElementVisual != null) {
-					//
-					// webElementFromDomLocator = webElementVisual;
-					//
-					// String source = webElementFromDomLocator.getAttribute("outerHTML");
-					// if (source == null || source.length() == 0) {
-					// source = (String) ((JavascriptExecutor) driver)
-					// .executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
-					// }
-					//
-					// if (source == null || source.length() == 0) {
-					// System.out.println(
-					// "[ERROR]\tCannot retrieve outerHTML for webElement " +
-					// webElementFromDomLocator);
-					//
-					// /* repaired locator is an XPath. */
-					// repairedStatement.setDomLocator(webElementFromDomLocator);
-					// } else {
-					//
-					// /* generate a smartest locator based on the attributes of the element. */
-					//
-					// SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
-					//
-					// repairedStatement.setDomLocator(fixedLocator);
-					//
-					// }
-					//
-					// }
+					if (webElementVisual != null) {
 
-				}
+						webElementFromDomLocator = webElementVisual;
 
-				try {
-					/* after ascertaining the right element, perform the action. */
-					if (statement.getAction().equalsIgnoreCase("click")) {
+						String source = webElementFromDomLocator.getAttribute("outerHTML");
+						if (source == null || source.length() == 0) {
+							source = (String) ((JavascriptExecutor) driver)
+									.executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+						}
 
-						webElementFromDomLocator.click();
+						if (source == null || source.length() == 0) {
+							System.out.println(
+									"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
 
-					} else if (statement.getAction().equalsIgnoreCase("sendkeys")) {
-
-						webElementFromDomLocator.sendKeys(statement.getValue());
-
-					} else if (statement.getAction().equalsIgnoreCase("selectByVisibleText")) {
-
-						new Select(webElementFromDomLocator).selectByVisibleText(statement.getValue());
-
-					} else if (statement.getAction().equalsIgnoreCase("getText")) {
-
-						if (webElementFromDomLocator.getText().equals(statement.getValue())) {
-
-							System.out.println("[LOG]\tAssertion value correct");
-							System.out.println(statement.toString());
-
+							/* repaired locator is an XPath. */
+							repairedStatement.setDomLocator(webElementFromDomLocator);
 						} else {
 
-							System.out.println(
-									"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText()
-											+ "\"" + " <> " + "\"" + statement.getValue() + "\"");
+							/* generate a smartest locator based on the attributes of the element. */
 
-							System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
-									+ webElementFromDomLocator.getText() + "\"");
+							SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
 
-							/* repair assertion value. */
-							repairedStatement.setValue(webElementFromDomLocator.getText());
+							repairedStatement.setDomLocator(fixedLocator);
+
 						}
 
 					}
 
-					/* add the repaired statement to the test. */
-					repairedTest.put(statementNumber, repairedStatement);
-
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					break;
 				}
+			}
+
+			try {
+				/* after ascertaining the right element, perform the action. */
+				if (statement.getAction().equalsIgnoreCase("click")) {
+
+					webElementFromDomLocator.click();
+
+				} else if (statement.getAction().equalsIgnoreCase("clear")) {
+
+					webElementFromDomLocator.clear();
+
+				} else if (statement.getAction().equalsIgnoreCase("sendkeys")) {
+
+					webElementFromDomLocator.sendKeys(statement.getValue());
+
+				} else if (statement.getAction().equalsIgnoreCase("selectByVisibleText")) {
+
+					new Select(webElementFromDomLocator).selectByVisibleText(statement.getValue());
+
+				} else if (statement.getAction().equalsIgnoreCase("getText")) {
+
+					if (webElementFromDomLocator.getText().equals(statement.getValue())) {
+
+						System.out.println("[LOG]\tAssertion value correct");
+						System.out.println(statement.toString());
+
+					} else {
+
+						System.out.println(
+								"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText() + "\""
+										+ " <> " + "\"" + statement.getValue() + "\"");
+
+						System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
+								+ webElementFromDomLocator.getText() + "\"");
+
+						/* repair assertion value. */
+						repairedStatement.setValue(webElementFromDomLocator.getText());
+					}
+
+				}
+
+				/* add the repaired statement to the test. */
+				repairedTest.put(statementNumber, repairedStatement);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				break;
 			}
 
 			if (Settings.debugMode) {

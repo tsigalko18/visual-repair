@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.Failure;
 import org.openqa.selenium.WebElement;
 
@@ -120,7 +121,7 @@ public class UtilsRepair {
 	/*
 	 * Get the minimum of three arrays of integers
 	 * 
-	 * */
+	 */
 	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace,
 			File[] beforeBrokenTrace) {
 
@@ -151,7 +152,7 @@ public class UtilsRepair {
 	/*
 	 * Old stuff (probably will be used by WATER).
 	 * 
-	 * */
+	 */
 	public static SeleniumLocator generateLocator(HtmlElement htmlElement) {
 
 		SeleniumLocator loc = null;
@@ -169,11 +170,10 @@ public class UtilsRepair {
 		return loc;
 	}
 
-
 	/*
 	 * Old stuff (probably will be used by WATER).
 	 * 
-	 * */
+	 */
 	public static List<SeleniumLocator> generateAllLocators(HtmlElement htmlElement) {
 
 		List<SeleniumLocator> locs = new LinkedList<SeleniumLocator>();
@@ -196,7 +196,7 @@ public class UtilsRepair {
 	/*
 	 * Old stuff (probably will be used by WATER).
 	 * 
-	 * */
+	 */
 	public static SeleniumLocator getLocators(HtmlDomTree page, WebElement webElementFromDomLocator) {
 
 		String xpath = "/" + UtilsXPath.generateXPathForWebElement(webElementFromDomLocator, "");
@@ -231,55 +231,100 @@ public class UtilsRepair {
 	 */
 	public static SeleniumLocator getLocatorsFromOuterHtml(String source) {
 
-		// <input value="Enter" name="submitAuth" tabindex="3" type="submit">
-		String tag = source.substring(1, source.indexOf(" "));
+		int tags = StringUtils.countMatches(source, "<") / 2;
 
-		if (tag.equals("a")) {
+		if (tags > 1) {
 
-			/* retrieve the text of the link. */
-			String text = source.substring(source.indexOf(">") + 1, source.length());
-			text = text.substring(0, text.indexOf("<")).trim();
+			String tag;
 
-			/* build a text-based locator. */
-			return new SeleniumLocator("linkText", text);
+			if (StringUtils.countMatches(source, " ") > 0) {
+				// <input value="Enter" name="submitAuth" tabindex="3" type="submit">
+				tag = source.substring(source.indexOf("<") + 1, source.indexOf(">"));
+				if (StringUtils.countMatches(tag, " ") > 0) {
+					tag = source.substring(0, source.indexOf(" "));
+				}
+			} else {
+				tag = source.substring(source.indexOf("<") + 1, source.indexOf(">"));
+			}
+
+			if (tag.equals("a")) {
+
+				/* retrieve the text of the link. */
+				String text = source.substring(source.indexOf(">") + 1, source.length());
+				text = text.substring(0, text.indexOf("<")).trim();
+
+				/* build a text-based locator. */
+				return new SeleniumLocator("linkText", text);
+
+			} else {
+
+				String text = "//" + tag;
+				return new SeleniumLocator("xpath", text);
+			}
 
 		} else {
 
-			String attributes = source.substring(source.indexOf(" "));
-			attributes = attributes.replace(">", "").trim();
+			String tag;
 
-			/* manage the case in which the tag is still open. */
-			if (attributes.contains("<")) {
-				/* retain the attributes and discard the rest. */
-				attributes = attributes.substring(0, attributes.lastIndexOf("\"") + 1);
+			if (StringUtils.countMatches(source, " ") > 0) {
+				// <input value="Enter" name="submitAuth" tabindex="3" type="submit">
+				tag = source.substring(1, source.indexOf(" "));
+			} else {
+				tag = source.substring(1, source.indexOf(">"));
 			}
 
-			/* separate each key=value pair. */
-			String[] splitted = attributes.split(" ");
+			if (tag.equals("a")) {
 
-			/* build the map of attributes. */
-			Map<String, String> attributesMap = new HashMap<>();
-			for (String string : splitted) {
+				/* retrieve the text of the link. */
+				String text = source.substring(source.indexOf(">") + 1, source.length());
+				text = text.substring(0, text.indexOf("<")).trim();
 
-				String[] keyvalue = string.split("=");
+				/* build a text-based locator. */
+				return new SeleniumLocator("linkText", text);
 
-				/* retain only the attributes that are white-listed. */
-				if (Arrays.asList(Settings.ATTRIBUTES_WHITELIST).contains(keyvalue[0]))
-					attributesMap.put(keyvalue[0], keyvalue[1]);
+			} else {
 
+				if (StringUtils.countMatches(source, " ") == 0) {
+					String text = source.substring(source.indexOf(">") + 1, source.lastIndexOf("<"));
+					return new SeleniumLocator("xpath", "//*[text()='" + text + "']");
+				} else {
+
+					String attributes = source.substring(source.indexOf(" "));
+					attributes = attributes.replace(">", "").trim();
+
+					/* manage the case in which the tag is still open. */
+					if (attributes.contains("<")) {
+						/* retain the attributes and discard the rest. */
+						attributes = attributes.substring(0, attributes.lastIndexOf("\"") + 1);
+					}
+
+					/* separate each key=value pair. */
+					String[] splitted = attributes.split(" ");
+
+					/* build the map of attributes. */
+					Map<String, String> attributesMap = new HashMap<>();
+					for (String string : splitted) {
+
+						String[] keyvalue = string.split("=");
+
+						/* retain only the attributes that are white-listed. */
+						if (Arrays.asList(Settings.ATTRIBUTES_WHITELIST).contains(keyvalue[0]))
+							attributesMap.put(keyvalue[0], keyvalue[1]);
+
+					}
+
+					/*
+					 * sort the map according to the heuristic used in Leotta et al.
+					 * (http://dx.doi.org/10.1002/smr.1771).
+					 */
+					AttributesComparator comparator = new AttributesComparator();
+					SortedMap<String, String> sorted = new TreeMap<String, String>(comparator);
+					sorted.putAll(attributesMap);
+
+					/* create SeleniumLocator object. */
+					return getLocatorFromTreeMap(sorted);
+				}
 			}
-
-			/*
-			 * sort the map according to the heuristic used in Leotta et al.
-			 * (http://dx.doi.org/10.1002/smr.1771).
-			 */
-			AttributesComparator comparator = new AttributesComparator();
-			SortedMap<String, String> sorted = new TreeMap<String, String>(comparator);
-			sorted.putAll(attributesMap);
-
-			/* create SeleniumLocator object. */
-			return getLocatorFromTreeMap(sorted);
-
 		}
 
 	}
