@@ -98,12 +98,6 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 	@Override
 	public void onNewState(CrawlerContext context, StateVertex newState) {
 
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-
 		CrawlPath path = context.getCrawlPath();
 		CrawlPathExport crawlPathExport = new CrawlPathExport(path);
 
@@ -133,7 +127,8 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			}
 		}
 
-		System.out.println("Found a new dom! Here it is: " + context.getBrowser().getCurrentUrl());
+		// System.out.println("Found a new dom! Here it is: " +
+		// context.getBrowser().getCurrentUrl());
 		// Get old template and current screenshot for visual assertion
 		Statement oldst = testCorrect.getStatements().get(brokenStep);
 		WebDriver driver = context.getBrowser().getWebDriver();
@@ -149,6 +144,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			fromVisual = null;
 
 		} else {
+
 			System.out.println("Found a matching element for old template in this state");
 
 			FileWriter resultFile = null;
@@ -169,7 +165,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				context.stop();	
+				context.stop();
 			}
 		}
 
@@ -230,7 +226,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			if (element != null) {
 				String xpathForElement = UtilsXPath.generateXPathForWebElement(element, "");
 
-				System.out.println("Found a web element");
+				// System.out.println("Found a web element");
 				// Insert visual assertion here.
 				// do visual search with previous screenshot on new page.
 

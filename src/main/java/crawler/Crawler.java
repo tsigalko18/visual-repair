@@ -12,7 +12,6 @@ import com.crawljax.core.CrawljaxRunner;
 import com.crawljax.core.configuration.CrawlRules.FormFillMode;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.plugin.HostInterfaceImpl;
-import com.crawljax.plugins.crawloverview.CrawlOverview;
 
 import config.Settings;
 import config.Settings.RepairMode;
@@ -68,7 +67,7 @@ public class Crawler {
 		builder.crawlRules().dontClick("a").withAttribute("href", "v8.2.5");
 		builder.crawlRules().dontClick("a").withAttribute("href", "notes.htm");
 		builder.crawlRules().setFormFillMode(FormFillMode.NORMAL);
-
+		
 		/* limit the crawling scope. */
 		builder.setMaximumStates(MAX_STATES);
 		builder.setMaximumDepth(MAX_DEPTH);
@@ -80,10 +79,5 @@ public class Crawler {
 		crawljax.call();
 
 	}
-
-//	public static void main(String[] args) {
-//		new Crawler("http://localhost:8888/addressbook/addressbookv8.2.5/addressbook/index.php", null, null, -1, null,
-//				null).runLocalCrawling();
-//	}
 
 }
