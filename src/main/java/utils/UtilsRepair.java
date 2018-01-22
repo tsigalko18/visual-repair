@@ -257,9 +257,7 @@ public class UtilsRepair {
 				return new SeleniumLocator("linkText", text);
 
 			} else {
-
-				String text = "//" + tag;
-				return new SeleniumLocator("xpath", text);
+				return null;
 			}
 
 		} else {
@@ -289,40 +287,46 @@ public class UtilsRepair {
 					return new SeleniumLocator("xpath", "//*[text()='" + text + "']");
 				} else {
 
-					String attributes = source.substring(source.indexOf(" "));
-					attributes = attributes.replace(">", "").trim();
+					try {
 
-					/* manage the case in which the tag is still open. */
-					if (attributes.contains("<")) {
-						/* retain the attributes and discard the rest. */
-						attributes = attributes.substring(0, attributes.lastIndexOf("\"") + 1);
+						String attributes = source.substring(source.indexOf(" "));
+						attributes = attributes.replace(">", "").trim();
+
+						/* manage the case in which the tag is still open. */
+						if (attributes.contains("<")) {
+							/* retain the attributes and discard the rest. */
+							attributes = attributes.substring(0, attributes.lastIndexOf("\"") + 1);
+						}
+
+						/* separate each key=value pair. */
+						String[] splitted = attributes.split(" ");
+
+						/* build the map of attributes. */
+						Map<String, String> attributesMap = new HashMap<>();
+						for (String string : splitted) {
+
+							String[] keyvalue = string.split("=");
+
+							/* retain only the attributes that are white-listed. */
+							if (Arrays.asList(Settings.ATTRIBUTES_WHITELIST).contains(keyvalue[0]))
+								attributesMap.put(keyvalue[0], keyvalue[1]);
+
+						}
+
+						/*
+						 * sort the map according to the heuristic used in Leotta et al.
+						 * (http://dx.doi.org/10.1002/smr.1771).
+						 */
+						AttributesComparator comparator = new AttributesComparator();
+						SortedMap<String, String> sorted = new TreeMap<String, String>(comparator);
+						sorted.putAll(attributesMap);
+
+						/* create SeleniumLocator object. */
+						return getLocatorFromTreeMap(sorted);
+
+					} catch (Exception e) {
+						return null;
 					}
-
-					/* separate each key=value pair. */
-					String[] splitted = attributes.split(" ");
-
-					/* build the map of attributes. */
-					Map<String, String> attributesMap = new HashMap<>();
-					for (String string : splitted) {
-
-						String[] keyvalue = string.split("=");
-
-						/* retain only the attributes that are white-listed. */
-						if (Arrays.asList(Settings.ATTRIBUTES_WHITELIST).contains(keyvalue[0]))
-							attributesMap.put(keyvalue[0], keyvalue[1]);
-
-					}
-
-					/*
-					 * sort the map according to the heuristic used in Leotta et al.
-					 * (http://dx.doi.org/10.1002/smr.1771).
-					 */
-					AttributesComparator comparator = new AttributesComparator();
-					SortedMap<String, String> sorted = new TreeMap<String, String>(comparator);
-					sorted.putAll(attributesMap);
-
-					/* create SeleniumLocator object. */
-					return getLocatorFromTreeMap(sorted);
 				}
 			}
 		}

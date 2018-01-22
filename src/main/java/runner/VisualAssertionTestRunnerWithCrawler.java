@@ -313,7 +313,11 @@ public class VisualAssertionTestRunnerWithCrawler {
 
 							SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
 
-							repairedStatement.setDomLocator(fixedLocator);
+							if (fixedLocator == null) {
+								repairedStatement.setDomLocator(webElementFromDomLocator);
+							} else {
+								repairedStatement.setDomLocator(fixedLocator);
+							}
 
 						}
 
