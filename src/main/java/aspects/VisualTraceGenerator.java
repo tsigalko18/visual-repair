@@ -81,7 +81,7 @@ public class VisualTraceGenerator {
 			UtilsAspect.createTestFolder(Settings.outputDir + testSuiteName);
 
 			testFolder = Settings.outputDir + testSuiteName + Settings.sep
-					+ jp.getStaticPart().getSourceLocation().getFileName().replace(Settings.JAVA_EXTENSION, "");
+					+ jp.getStaticPart().getSourceLocation().getFileName().replace(Settings.JAVA_EXT, "");
 
 			UtilsAspect.createTestFolder(testFolder);
 

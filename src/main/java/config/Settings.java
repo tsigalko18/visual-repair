@@ -39,8 +39,8 @@ public class Settings {
 
 	/* file extensions. */
 	public static String PNG_EXT = ".png";
-	public static String HTML_EXTENSION = ".html";
-	public static String JAVA_EXTENSION = ".java";
+	public static String HTML_EXT = ".html";
+	public static String JAVA_EXT = ".java";
 	public static String JSON_EXT = ".json";
 
 	/* regexp. */

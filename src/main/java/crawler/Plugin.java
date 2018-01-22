@@ -84,15 +84,19 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	private RepairMode repairStrategy;
 
+	private boolean onlyFirstMatch;
+
 	public Plugin(HostInterfaceImpl hostInterfaceImpl, EnhancedTestCase testBroken, EnhancedTestCase testCorrect,
 			int brokenStep, HashMap<Integer, Statement> repairedTest, RepairMode repairStrategy) {
+
+		Settings.aspectActive = false;
 		this.hostInterface = hostInterfaceImpl;
 		this.testBroken = testBroken;
 		this.testCorrect = testCorrect;
 		this.brokenStep = brokenStep;
 		this.repairedTest = repairedTest;
-		Settings.aspectActive = false;
 		this.repairStrategy = repairStrategy;
+		this.onlyFirstMatch = true;
 	}
 
 	@Override
@@ -107,12 +111,13 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 		Type type = new TypeToken<CrawlPathExport>() {
 		}.getType();
 		String jsonToWrite = gson.toJson(crawlPathExport, type);
+
 		System.out.println(jsonToWrite);
 		System.out.println(path.size());
 		FileWriter outputFile = null;
 
 		try {
-			outputFile = new FileWriter(System.getProperty("user.dir") + Settings.separator + "crawloutput.txt", true);
+			outputFile = new FileWriter(System.getProperty("user.dir") + Settings.sep + "crawloutput.txt", true);
 			outputFile.write(String.valueOf(path.size()) + " : ");
 			outputFile.write(path.toString() + '\n');
 			outputFile.flush();
@@ -127,46 +132,44 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			}
 		}
 
-		// System.out.println("Found a new dom! Here it is: " +
-		// context.getBrowser().getCurrentUrl());
-		// Get old template and current screenshot for visual assertion
+		/* get old statement info. */
 		Statement oldst = testCorrect.getStatements().get(brokenStep);
+
+		/* get current WebDriver instance. */
 		WebDriver driver = context.getBrowser().getWebDriver();
 
-		// get the best match the same way visual repair works
+		/* try to get a match (repair) on the new found state. */
 		WebElement fromVisual = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, oldst, repairStrategy);
 
-		// Element is not found visually
-		if (fromVisual == null)
+		/* no element found or it is not a leaf. */
+		if (fromVisual == null || !UtilsXPath.isLeaf(fromVisual))
+
 			return;
 
-		if (!UtilsXPath.isLeaf(fromVisual)) {
-			fromVisual = null;
+		else {
 
-		} else {
-
-			System.out.println("Found a matching element for old template in this state");
+			System.out.println("[LOG]\tFound a match for old template in the state: " + newState.getName());
 
 			FileWriter resultFile = null;
+
 			try {
-				resultFile = new FileWriter(System.getProperty("user.dir") + Settings.separator + "matchingStates.txt",
-						true);
-				// resultFile.write(String.valueOf(path.size())+ " : ");
+				resultFile = new FileWriter(System.getProperty("user.dir") + Settings.sep + "matchingStates.txt", true);
 				resultFile.write(jsonToWrite + '\n');
 				resultFile.flush();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 
 				try {
 					resultFile.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				context.stop();
+
+				if (onlyFirstMatch)
+					context.stop();
 			}
+
 		}
 
 	}
@@ -174,49 +177,52 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 	@Override
 	public void postCrawling(CrawlSession arg0, ExitStatus arg1) {
 
-		System.out.println("The number of states is: " + arg0.getStateFlowGraph().getNumberOfStates());
-
-		StateFlowGraph sfg = arg0.getStateFlowGraph();
-		ImmutableSet<StateVertex> sfg_states = sfg.getAllStates();
-		for (StateVertex sv : sfg_states) {
-			ImmutableList<CandidateElement> candidateElements = sv.getCandidateElements();
-			if (candidateElements != null) {
-				for (CandidateElement ce : candidateElements)
-					System.out.println(ce.getGeneralString());
-			}
-		}
-		System.out.println("The number of edges is: " + arg0.getStateFlowGraph().getAllEdges().size());
+		// System.out.println("The number of states is: " +
+		// arg0.getStateFlowGraph().getNumberOfStates());
+		//
+		// StateFlowGraph sfg = arg0.getStateFlowGraph();
+		// ImmutableSet<StateVertex> sfg_states = sfg.getAllStates();
+		// for (StateVertex sv : sfg_states) {
+		// ImmutableList<CandidateElement> candidateElements =
+		// sv.getCandidateElements();
+		// if (candidateElements != null) {
+		// for (CandidateElement ce : candidateElements)
+		// System.out.println(ce.getGeneralString());
+		// }
+		// }
+		//
+		// System.out.println("The number of edges is: " +
+		// arg0.getStateFlowGraph().getAllEdges().size());
 
 	}
 
 	@Override
 	public void onUrlLoad(CrawlerContext arg0) {
-		System.out.println("onURL");
-		System.out.println("Initial URL: " + arg0.getBrowser().getCurrentUrl());
+
+		System.out.println("[LOG]\tLoading test case into Crawljax");
+		// System.out.println("Initial URL: " + arg0.getBrowser().getCurrentUrl());
 
 		WebDriver driver = arg0.getBrowser().getWebDriver();
 
-		if (testBroken == null)
-			return;
-		if (brokenStep == -1)
+		if (testBroken == null || brokenStep == -1)
 			return;
 
 		Map<Integer, Statement> statementMap = testBroken.getStatements();
 
-		for (Integer I : statementMap.keySet()) {
-			if (I == this.brokenStep) {
+		for (Integer testStep : statementMap.keySet()) {
+
+			if (testStep == this.brokenStep) {
 				break;
 			}
 
 			WebElement element = null;
 
-			Statement statement = statementMap.get(I);
-			// System.out.println(statement);
+			Statement statement = statementMap.get(testStep);
 			SeleniumLocator domSelector = statement.getDomLocator();
 
-			if (this.repairedTest != null && this.repairedTest.containsKey(I)) {
+			if (this.repairedTest != null && this.repairedTest.containsKey(testStep)) {
 
-				Statement repairedStatement = this.repairedTest.get(I);
+				Statement repairedStatement = this.repairedTest.get(testStep);
 				domSelector = repairedStatement.getDomLocator();
 
 			}
@@ -224,17 +230,16 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			element = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver, domSelector);
 
 			if (element != null) {
-				String xpathForElement = UtilsXPath.generateXPathForWebElement(element, "");
-
-				// System.out.println("Found a web element");
-				// Insert visual assertion here.
-				// do visual search with previous screenshot on new page.
 
 				try {
 					/* after ascertaining the right element, perform the action. */
 					if (statement.getAction().equalsIgnoreCase("click")) {
 
 						element.click();
+
+					} else if (statement.getAction().equalsIgnoreCase("clear")) {
+
+						element.clear();
 
 					} else if (statement.getAction().equalsIgnoreCase("sendkeys")) {
 
@@ -263,18 +268,20 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 		}
 
-		System.out.println("Changed initial path URL : " + arg0.getBrowser().getCurrentUrl());
+		// System.out.println("Changed initial path URL : " +
+		// arg0.getBrowser().getCurrentUrl());
 	}
 
 	@Override
 	public void preCrawling(CrawljaxConfiguration config) throws RuntimeException {
 
-		System.out.println("PreCrawl");
+		// System.out.println("PreCrawl");
 
 	}
 
 	private Eventable getCorrespondingEventable(WebElement webElement, Identification identification,
 			EventType eventType, EmbeddedBrowser browser) {
+
 		CandidateElement candidateElement = getCorrespondingCandidateElement(webElement, identification, browser);
 		Eventable event = new Eventable(candidateElement, eventType);
 		System.out.println(event);
@@ -283,6 +290,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	public org.w3c.dom.Element getElementFromXpath(String xpathToRetrieve, EmbeddedBrowser browser)
 			throws XPathExpressionException {
+
 		Document dom;
 		org.w3c.dom.Element element = null;
 		try {

@@ -67,11 +67,13 @@ public class Crawler {
 		builder.crawlRules().dontClick("a").withAttribute("href", "v8.2.5");
 		builder.crawlRules().dontClick("a").withAttribute("href", "notes.htm");
 		builder.crawlRules().setFormFillMode(FormFillMode.NORMAL);
-		
+
 		/* limit the crawling scope. */
 		builder.setMaximumStates(MAX_STATES);
 		builder.setMaximumDepth(MAX_DEPTH);
 		builder.setMaximumRunTime(1, TimeUnit.MINUTES);
+
+		/* plugin to start the crawling from a given test step. */
 		builder.addPlugin(new Plugin(new HostInterfaceImpl(new File("out"), null), this.testBroken, this.testCorrect,
 				this.brokenStep, this.repairedTest, repairStrategy));
 
