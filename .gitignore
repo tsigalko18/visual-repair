@@ -1,6 +1,6 @@
-/currentScreenshot.png
-/target/
-/output/*
+currentScreenshot.png
+target
+output
 /src/main/resources/*
 .setting
 .project
@@ -8,8 +8,8 @@
 out
 crawljax.log
 crawloutput.txt
-/output/
-/.classpath
 .~lock.issta2018-breakages-addressbook.ods#
 traceLog.txt
 preciseCrop.png
+.classpath
+
