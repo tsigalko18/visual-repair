@@ -2,7 +2,7 @@ package utils;
 
 import java.io.File;
 
-public class UtilsGetters {
+public class UtilsFileGetters {
 
 	public static File getExceptionFile(File file) {
 		File[] exception = file.listFiles(FileFilters.exceptionFilter);

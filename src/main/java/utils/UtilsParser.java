@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ini4j.InvalidFileFormatException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,24 +36,33 @@ import datatype.HtmlDomTreeWithRTree;
 import datatype.HtmlElement;
 import datatype.Node;
 import datatype.SeleniumLocator;
-import datatype.DOMInformation;
 import japa.parser.ast.stmt.Statement;
+import datatype.DOMInformation;
 
 public class UtilsParser {
 
 	private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	/**
-	 * Auxiliary method to get the value for the get statement
+	 * Auxiliary method to get the value for the get statement (i.e., the URL)
 	 * 
-	 * @param st
+	 * @param string
 	 * @return
+	 * @throws Exception
 	 */
-	public static String getUrlFromDriverGet(Statement st) {
-		String s = st.toString();
-		s = s.substring(10); // remove driver.get(
-		s = s.substring(1, s.length() - 2); // remove );
-		return s;
+	public static String getUrlFromDriverGet(String s) throws Exception {
+
+		if (s.length() == 0 || s.isEmpty() || !s.contains("\"")) {
+			throw new Exception("[ERR]\tdriver get statement malformed");
+		}
+
+		String[] valuesInQuotes = StringUtils.substringsBetween(s, "\"", "\"");
+
+		if (valuesInQuotes.length != 1) {
+			throw new Exception("[ERR]\tdriver get statement malformed");
+		}
+
+		return valuesInQuotes[0];
 	}
 
 	/**
@@ -61,15 +71,19 @@ public class UtilsParser {
 	 * @param st
 	 * @return
 	 */
-	public static String getValueFromSendKeys(Statement st) {
+	public static String getValueFromSendKeys(String s) throws Exception {
 
-		String s = st.toString();
-		int begin = s.indexOf("sendKeys(");
-		s = s.substring(begin, s.length()); // leave only sendKeys("admin");
-		s = s.substring(9, s.length() - 2); // leave only "admin"
-		s = s.replaceAll("\"", ""); // leave only admin
-		return s;
+		if (s.length() == 0 || s.isEmpty() || !s.contains("sendKeys")) {
+			throw new Exception("[ERR]\tsendKeys statement malformed");
+		}
 
+		String[] valuesInQuotes = StringUtils.substringsBetween(s, "sendKeys(\"", "\"");
+
+		if (valuesInQuotes.length != 1) {
+			throw new Exception("[ERR]\\tsendKeys statement malformed");
+		}
+
+		return valuesInQuotes[0];
 	}
 
 	/**
@@ -88,8 +102,8 @@ public class UtilsParser {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.PNG_EXT)
-						&& n.contains(name) && n.contains(type));
+				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.PNG_EXT) && n.contains(name)
+						&& n.contains(type));
 			}
 		});
 
@@ -120,21 +134,21 @@ public class UtilsParser {
 
 			@Override
 			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.JSON_EXT)
-						&& n.contains(name) && n.contains(type));
+				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.JSON_EXT) && n.contains(name)
+						&& n.contains(type));
 			}
-			
+
 		});
 
 		if (listOfFiles.length == 0) {
-			
+
 			throw new Exception("[LOG]\tNo JSON file retrieved");
-			
+
 		} else if (listOfFiles.length == 1) {
 
 			DOMInformation obj = gson.fromJson(new BufferedReader(new FileReader(listOfFiles[0])),
 					DOMInformation.class);
-			
+
 			return obj;
 
 		} else {
@@ -188,16 +202,24 @@ public class UtilsParser {
 	 * 
 	 * @param webElement
 	 * @return
+	 * @throws Exception 
 	 */
-	public static SeleniumLocator getDomLocator(Statement st) {
+	public static SeleniumLocator getDomLocator(String s) throws Exception {
+		
+		if (s.length() == 0 || s.isEmpty() || !s.contains("driver.findElement")) {
+			throw new Exception("[ERR]\tdriver findElement statement malformed");
+		}
 
-		String domLocator = st.toString(); // driver.findElement(By.xpath(".//*[@id='loginBox']/form/fieldset/input[4]")).click();
-		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.length()); // By.id("login")).sendKeys("admin");
-		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.indexOf(")") + 1); // By.id("login")
-		domLocator = domLocator.replace("By.", ""); // id("login")
-		String strategy = domLocator.split("\\(")[0].trim();
-		String value = domLocator.split("\\(")[1];
-		value = value.substring(0, value.length() - 1).replaceAll("\"", "").trim();
+		String[] valuesInQuotes = StringUtils.substringsBetween(s, "By.", ")");
+		
+		if (valuesInQuotes.length != 1) {
+			throw new Exception("[ERR]\tdriver findElement statement malformed");
+		}
+		
+		String[] splitted = StringUtils.split(valuesInQuotes[0], "(");
+		
+		String strategy = splitted[0].trim();
+		String value = splitted[1].replaceAll("\"", "").trim();
 
 		return new SeleniumLocator(strategy, value);
 	}
@@ -370,8 +392,8 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.sep
-				+ "exception" + Settings.JSON_EXT;
+		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.sep + "exception"
+				+ Settings.JSON_EXT;
 		return newPath;
 	}
 

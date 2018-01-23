@@ -25,7 +25,7 @@ import datatype.SeleniumLocator;
 import datatype.Statement;
 import parser.ParseTest;
 import utils.UtilsCrawler;
-import utils.UtilsGetters;
+import utils.UtilsFileGetters;
 import utils.UtilsRepair;
 import utils.UtilsRunner;
 import utils.UtilsVisualRepair;
@@ -57,7 +57,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 	void runTestWithVisualAssertion(String prefix, String className) throws IOException {
 
 		/* get the path to the test that needs to be verified. */
-		String testBroken = UtilsGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
+		String testBroken = UtilsFileGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
 
 		System.out.println("[LOG]\tVerifying test " + prefix + className);
 		System.out.println("[LOG]\tRepair strategy is " + repairStrategy);
@@ -100,7 +100,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 			etc = pt.parseAndSerialize(testBroken);
 
 			pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-			testCorrect = pt.parseAndSerialize(UtilsGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
+			testCorrect = pt.parseAndSerialize(UtilsFileGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
 		} catch (NullPointerException e) {
 			System.out.println("[ERROR]\tTest folder not found. Verify the Settings.");

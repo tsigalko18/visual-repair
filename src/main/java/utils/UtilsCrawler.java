@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import crawler.CrawlPathExport;
 
 public class UtilsCrawler {
+
 	public static List<CrawlPathExport> getCrawledStates() {
 		// TODO Auto-generated method stub
 		List<CrawlPathExport> crawlPaths = new ArrayList<CrawlPathExport>();
@@ -22,25 +23,24 @@ public class UtilsCrawler {
 		try {
 			reader = new BufferedReader(new FileReader("MatchingStates.txt"));
 			String line = reader.readLine();
-			
-			GsonBuilder builder = new GsonBuilder();
-			Gson gson  = builder.create();
-			Type type = new  TypeToken<CrawlPathExport>() {}.getType();
 
-			while(line!=null) {
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			Type type = new TypeToken<CrawlPathExport>() {
+			}.getType();
+
+			while (line != null) {
 				line = line.trim();
-				if(!line.isEmpty()) {
+				if (!line.isEmpty()) {
 					CrawlPathExport crawlPathExport = gson.fromJson(line, type);
 					crawlPaths.add(crawlPathExport);
 				}
 				line = reader.readLine();
 			}
-			
+
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return crawlPaths;

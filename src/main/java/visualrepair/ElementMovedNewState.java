@@ -25,7 +25,7 @@ import datatype.Node;
 import datatype.SeleniumLocator;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
-import utils.UtilsGetters;
+import utils.UtilsFileGetters;
 import utils.UtilsParser;
 import utils.UtilsRepair;
 import vision.ImageProcessing;
@@ -112,16 +112,16 @@ public class ElementMovedNewState {
 		// get the visual information for the correct test
 		String test = Settings.referenceTestSuiteVisualTraceExecutionFolder
 				+ UtilsRepair.capitalizeFirstLetter(correct.getName());
-		File[] afterCorrectTrace = UtilsGetters.getAfterScreenshots(test);
-		File[] beforeCorrectTrace = UtilsGetters.getBeforeScreenshots(test);
+		File[] afterCorrectTrace = UtilsFileGetters.getAfterScreenshots(test);
+		File[] beforeCorrectTrace = UtilsFileGetters.getBeforeScreenshots(test);
 
 		Map<String, File> m = UtilsParser.convertToHashMap(afterCorrectTrace);
 
 		// get the visual information for the broken test
 		test = Settings.testingTestSuiteVisualTraceExecutionFolder
 				+ UtilsRepair.capitalizeFirstLetter(broken.getName());
-		File[] afterBrokenTrace = UtilsGetters.getAfterScreenshots(test);
-		File[] beforeBrokenTrace = UtilsGetters.getBeforeScreenshots(test);
+		File[] afterBrokenTrace = UtilsFileGetters.getAfterScreenshots(test);
+		File[] beforeBrokenTrace = UtilsFileGetters.getBeforeScreenshots(test);
 
 		int min = UtilsRepair.getMinimumValue(afterCorrectTrace, beforeCorrectTrace, afterBrokenTrace,
 				beforeBrokenTrace);

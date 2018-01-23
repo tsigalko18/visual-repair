@@ -159,7 +159,12 @@ public class ParseTest {
 						DriverGet dg = new DriverGet();
 						dg.setAction("get");
 						dg.setLine(st.getBeginLine());
-						dg.setValue(UtilsParser.getUrlFromDriverGet(st));
+
+						try {
+							dg.setValue(UtilsParser.getUrlFromDriverGet(st.toString()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
 						tc.addStatementAtPosition(dg.getLine(), dg);
 
@@ -170,14 +175,22 @@ public class ParseTest {
 						EnhancedWebElement ewe = new EnhancedWebElement();
 						int line = st.getBeginLine();
 						ewe.setLine(line);
-						ewe.setDomLocator(UtilsParser.getDomLocator(st));
+						try {
+							ewe.setDomLocator(UtilsParser.getDomLocator(st.toString()));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 
 						if (st.toString().contains("click()")) {
 							ewe.setAction("click");
 							ewe.setValue("");
 						} else if (st.toString().contains("sendKeys")) {
 							ewe.setAction("sendKeys");
-							ewe.setValue(UtilsParser.getValueFromSendKeys(st));
+							try {
+								ewe.setValue(UtilsParser.getValueFromSendKeys(st.toString()));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						} else if (st.toString().contains("getText")) {
 							ewe.setAction("getText");
 							ewe.setValue("");
@@ -224,7 +237,11 @@ public class ParseTest {
 						EnhancedSelect esl = new EnhancedSelect();
 						int line = st.getBeginLine();
 						esl.setLine(line);
-						esl.setDomLocator(UtilsParser.getDomLocator(st));
+						try {
+							esl.setDomLocator(UtilsParser.getDomLocator(st.toString()));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 
 						if (st.toString().contains("selectByVisibleText")) {
 							esl.setAction("selectByVisibleText");
@@ -283,7 +300,11 @@ public class ParseTest {
 						}
 
 						ea.setLine(line);
-						ea.setDomLocator(UtilsParser.getDomLocator(st));
+						try {
+							ea.setDomLocator(UtilsParser.getDomLocator(st.toString()));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 
 						try {
 							// get the screenshots

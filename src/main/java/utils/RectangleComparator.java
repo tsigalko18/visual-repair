@@ -1,8 +1,6 @@
 package utils;
 
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 

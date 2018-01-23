@@ -26,7 +26,7 @@ import datatype.SeleniumLocator;
 import datatype.Statement;
 import datatype.WebDriverSingleton;
 import utils.PHash;
-import utils.UtilsGetters;
+import utils.UtilsFileGetters;
 import utils.UtilsRepair;
 import utils.UtilsComputerVision;
 import vision.ImageProcessing;
@@ -132,14 +132,14 @@ public class MisSelection {
 		String test = Settings.referenceTestSuiteVisualTraceExecutionFolder
 				+ UtilsRepair.capitalizeFirstLetter(correct.getName());
 
-		File[] correctVisualTrace = UtilsGetters.getAnnotatedScreenshots(test);
-		File[] correctVisualLocators = UtilsGetters.getVisualLocators(test);
+		File[] correctVisualTrace = UtilsFileGetters.getAnnotatedScreenshots(test);
+		File[] correctVisualLocators = UtilsFileGetters.getVisualLocators(test);
 
 		// get the visual information for the broken test
 		test = Settings.testingTestSuiteVisualTraceExecutionFolder
 				+ UtilsRepair.capitalizeFirstLetter(broken.getName());
-		File[] brokenVisualTrace = UtilsGetters.getAnnotatedScreenshots(test);
-		File[] brokenVisualLocators = UtilsGetters.getVisualLocators(test);
+		File[] brokenVisualTrace = UtilsFileGetters.getAnnotatedScreenshots(test);
+		File[] brokenVisualLocators = UtilsFileGetters.getVisualLocators(test);
 
 		int brokenStateFromExeception = Integer.parseInt(e.getInvolvedLine());
 		String path = System.getProperty("user.dir") + Settings.sep;
