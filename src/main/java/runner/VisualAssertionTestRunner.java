@@ -40,12 +40,12 @@ import utils.UtilsVisualRepair;
  * @author yrahulkr
  *
  */
-public class VisualAssertionTestRunnerWithCrawler {
+public class VisualAssertionTestRunner {
 
 	RepairMode repairStrategy;
 	private static Scanner scanner = new Scanner(System.in);
 
-	public VisualAssertionTestRunnerWithCrawler(RepairMode rm) {
+	public VisualAssertionTestRunner(RepairMode rm) {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
 		 * re-create the new visual execution trace
@@ -86,7 +86,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 		try {
 			url = driver.getCurrentUrl();
 		} catch (NullPointerException e) {
-			System.err.println("[ERR]\tInsert getDriver() method in the test");
+			System.err.println("[ERR]\tInsert getDriver() method in the test " + className);
 			System.exit(1);
 		}
 
@@ -100,7 +100,8 @@ public class VisualAssertionTestRunnerWithCrawler {
 			etc = pt.parseAndSerialize(testBroken);
 
 			pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-			testCorrect = pt.parseAndSerialize(UtilsFileGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
+			testCorrect = pt
+					.parseAndSerialize(UtilsFileGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
 		} catch (NullPointerException e) {
 			System.out.println("[ERROR]\tTest folder not found. Verify the Settings.");
@@ -115,6 +116,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 		Map<Integer, Statement> addedSteps = new LinkedHashMap<Integer, Statement>();
 		List<Integer> deletedSteps = new ArrayList<Integer>();
+		
 		int numStepsAdded = 0;
 		int numStepsDeleted = 0;
 		boolean noSuchElementException = false;
@@ -137,9 +139,9 @@ public class VisualAssertionTestRunnerWithCrawler {
 				webElementFromDomLocator = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver,
 						statement.getDomLocator());
 				noSuchElementException = false;
-				
+
 			} catch (NoSuchElementException Ex) {
-				
+
 				noSuchElementException = true;
 				/*
 				 * if NoSuchElementException is captured, it means that I'm incurred into a
@@ -168,8 +170,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 				 */
 				if (webElementFromDomLocator == null) {
 
-					File resultFile = new File(
-							System.getProperty("user.dir") + Settings.sep + "matchingStates.txt");
+					File resultFile = new File(System.getProperty("user.dir") + Settings.sep + "matchingStates.txt");
 					try {
 						resultFile.delete();
 					} catch (Exception Ex2) {
@@ -295,7 +296,7 @@ public class VisualAssertionTestRunnerWithCrawler {
 
 					if (webElementVisual != null) {
 
-						//webElementFromDomLocator = webElementVisual;
+						// webElementFromDomLocator = webElementVisual;
 
 						String source = webElementFromDomLocator.getAttribute("outerHTML");
 						if (source == null || source.length() == 0) {

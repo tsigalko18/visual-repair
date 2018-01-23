@@ -5,7 +5,7 @@ import java.util.Map;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
-import utils.UtilsParser;
+import utils.UtilsXPath;
 
 /**
  * Adapted from WebSee
@@ -36,7 +36,7 @@ public class HtmlElement {
 	}
 
 	public HtmlElement(JavascriptExecutor js, WebElement e) {
-		this.xpath = UtilsParser.getElementXPath(js, e);
+		this.xpath = UtilsXPath.getElementXPath(js, e);
 		this.tagName = e.getTagName();
 		this.id = e.getAttribute("id");
 		this.seleniumWebElement = e;

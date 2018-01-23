@@ -22,6 +22,7 @@ import japa.parser.ast.expr.NameExpr;
 import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.stmt.Statement;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
+import utils.UtilsFileGetters;
 import utils.UtilsParser;
 import utils.UtilsRunner;
 
@@ -142,7 +143,13 @@ public class ParseTest {
 
 			if (m.getAnnotations() != null && m.getAnnotations().get(0).getName().getName().equals("Test")) {
 
-				String className = UtilsParser.getClassNameFromPath((String) arg);
+				String className = "";
+				
+				try {
+					className = UtilsParser.getClassNameFromPath((String) arg);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
 				String fullPath = arg.toString();
 
 				tc = new EnhancedTestCase(m.getName(), fullPath);
@@ -201,20 +208,20 @@ public class ParseTest {
 
 						try {
 							/* get the screenshots. */
-							ewe.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
-							ewe.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
+							ewe.setScreenshotBefore(UtilsFileGetters.getScreenshot(className, line, "1before", getFolder()));
+							ewe.setScreenshotAfter(UtilsFileGetters.getScreenshot(className, line, "2after", getFolder()));
 							ewe.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
+									UtilsFileGetters.getScreenshot(className, line, "visualLocator", getFolder()));
 
 							ewe.setAnnotatedScreenshot(
-									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
+									UtilsFileGetters.getScreenshot(className, line, "Annotated", getFolder()));
 
 							/* get the DOMs. */
-							ewe.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
-							ewe.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
+							ewe.setDomBefore(UtilsFileGetters.getHTMLDOMfile(className, line, "1before", "", getFolder()));
+							ewe.setDomAfter(UtilsFileGetters.getHTMLDOMfile(className, line, "2after", "", getFolder()));
 
 							/* get the other DOM information. */
-							DOMInformation info = UtilsParser.getDOMInformationFromJsonFile(className, line, "domInfo",
+							DOMInformation info = UtilsFileGetters.getDOMInformationFromJsonFile(className, line, "domInfo",
 									getFolder());
 							ewe.setTagName(info.getTagName());
 							ewe.setXpath(info.getXPath());
@@ -256,20 +263,20 @@ public class ParseTest {
 
 						try {
 							// get the screenshots
-							esl.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
-							esl.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
+							esl.setScreenshotBefore(UtilsFileGetters.getScreenshot(className, line, "1before", getFolder()));
+							esl.setScreenshotAfter(UtilsFileGetters.getScreenshot(className, line, "2after", getFolder()));
 							esl.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
+									UtilsFileGetters.getScreenshot(className, line, "visualLocator", getFolder()));
 
 							esl.setAnnotatedScreenshot(
-									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
+									UtilsFileGetters.getScreenshot(className, line, "Annotated", getFolder()));
 
 							// get the DOMs
-							esl.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
-							esl.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
+							esl.setDomBefore(UtilsFileGetters.getHTMLDOMfile(className, line, "1before", "", getFolder()));
+							esl.setDomAfter(UtilsFileGetters.getHTMLDOMfile(className, line, "2after", "", getFolder()));
 
 							/* get the other DOM information. */
-							DOMInformation info = UtilsParser.getDOMInformationFromJsonFile(className, line, "domInfo",
+							DOMInformation info = UtilsFileGetters.getDOMInformationFromJsonFile(className, line, "domInfo",
 									getFolder());
 							esl.setTagName(info.getTagName());
 							esl.setXpath(info.getXPath());
@@ -308,20 +315,20 @@ public class ParseTest {
 
 						try {
 							// get the screenshots
-							ea.setScreenshotBefore(UtilsParser.getScreenshot(className, line, "1before", getFolder()));
-							ea.setScreenshotAfter(UtilsParser.getScreenshot(className, line, "2after", getFolder()));
+							ea.setScreenshotBefore(UtilsFileGetters.getScreenshot(className, line, "1before", getFolder()));
+							ea.setScreenshotAfter(UtilsFileGetters.getScreenshot(className, line, "2after", getFolder()));
 							ea.setVisualLocator(
-									UtilsParser.getScreenshot(className, line, "visualLocator", getFolder()));
+									UtilsFileGetters.getScreenshot(className, line, "visualLocator", getFolder()));
 
 							ea.setAnnotatedScreenshot(
-									UtilsParser.getScreenshot(className, line, "Annotated", getFolder()));
+									UtilsFileGetters.getScreenshot(className, line, "Annotated", getFolder()));
 
 							// get the DOMs
-							ea.setDomBefore(UtilsParser.getHTMLDOMfile(className, line, "1before", "", getFolder()));
-							ea.setDomAfter(UtilsParser.getHTMLDOMfile(className, line, "2after", "", getFolder()));
+							ea.setDomBefore(UtilsFileGetters.getHTMLDOMfile(className, line, "1before", "", getFolder()));
+							ea.setDomAfter(UtilsFileGetters.getHTMLDOMfile(className, line, "2after", "", getFolder()));
 
 							/* get the other DOM information. */
-							DOMInformation info = UtilsParser.getDOMInformationFromJsonFile(className, line, "domInfo",
+							DOMInformation info = UtilsFileGetters.getDOMInformationFromJsonFile(className, line, "domInfo",
 									getFolder());
 							ea.setTagName(info.getTagName());
 							ea.setXpath(info.getXPath());

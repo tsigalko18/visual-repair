@@ -1,11 +1,7 @@
 package utils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,9 +12,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ini4j.InvalidFileFormatException;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.runner.notification.Failure;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -41,7 +34,7 @@ import datatype.DOMInformation;
 
 public class UtilsParser {
 
-	private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	/**
 	 * Auxiliary method to get the value for the get statement (i.e., the URL)
@@ -87,113 +80,19 @@ public class UtilsParser {
 	}
 
 	/**
-	 * Auxiliary method to get the screenshot file
-	 * 
-	 * @param st
-	 * @return
-	 * @throws Exception
-	 */
-	public static File getScreenshot(String name, int beginLine, String type, String folder) throws Exception {
-
-		String p = folder + name + Settings.sep;
-
-		File dir = new File(p);
-		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.PNG_EXT) && n.contains(name)
-						&& n.contains(type));
-			}
-		});
-
-		if (listOfFiles.length == 0) {
-			return null;
-		} else if (listOfFiles.length == 1) {
-			return listOfFiles[0];
-		} else {
-			throw new Exception("[LOG]\tToo many files retrieved");
-		}
-
-	}
-
-	/**
-	 * Auxiliary method to get the JSON file with the DOM information
-	 * 
-	 * @param st
-	 * @return
-	 * @throws Exception
-	 */
-	public static DOMInformation getDOMInformationFromJsonFile(String name, int beginLine, String type, String folder)
-			throws Exception {
-
-		String p = folder + name + Settings.sep;
-
-		File dir = new File(p);
-		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String n) {
-				return (n.startsWith(Integer.toString(beginLine)) && n.endsWith(Settings.JSON_EXT) && n.contains(name)
-						&& n.contains(type));
-			}
-
-		});
-
-		if (listOfFiles.length == 0) {
-
-			throw new Exception("[LOG]\tNo JSON file retrieved");
-
-		} else if (listOfFiles.length == 1) {
-
-			DOMInformation obj = gson.fromJson(new BufferedReader(new FileReader(listOfFiles[0])),
-					DOMInformation.class);
-
-			return obj;
-
-		} else {
-			throw new Exception("[LOG]\tToo many files retrieved");
-		}
-
-	}
-
-	/**
-	 * Auxiliary method to get the HTML file
-	 * 
-	 * @param st
-	 * @return
-	 * @throws Exception
-	 */
-	public static File getHTMLDOMfile(String name, int beginLine, String type, String useExtension, String folder)
-			throws Exception {
-
-		String p = folder + name + Settings.sep + beginLine + "-" + type + "-" + name + "-" + beginLine;
-
-		File dir = new File(p);
-		File[] listOfFiles = dir.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String n) {
-				return (n.endsWith(Settings.HTML_EXT));
-			}
-		});
-
-		if (listOfFiles == null || listOfFiles.length == 0) {
-			return null;
-		} else {
-			return listOfFiles[0];
-		}
-
-	}
-
-	/**
 	 * get class name from path e.g. src/clarolineDirectBreakage/DirectBreakage.java
 	 * => DirectBreakage
 	 * 
 	 * @param arg
 	 * @return
+	 * @throws Exception
 	 */
-	public static String getClassNameFromPath(String arg) {
+	public static String getClassNameFromPath(String arg) throws Exception {
+
+		if (arg.length() == 0 || arg.isEmpty() || !arg.contains(Settings.JAVA_EXT) || !arg.startsWith("src/")) {
+			throw new Exception("[ERR]\tmalformed classname path");
+		}
+
 		return arg.substring(arg.lastIndexOf("/") + 1).replace(Settings.JAVA_EXT, "");
 	}
 
@@ -202,22 +101,22 @@ public class UtilsParser {
 	 * 
 	 * @param webElement
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static SeleniumLocator getDomLocator(String s) throws Exception {
-		
+
 		if (s.length() == 0 || s.isEmpty() || !s.contains("driver.findElement")) {
 			throw new Exception("[ERR]\tdriver findElement statement malformed");
 		}
 
 		String[] valuesInQuotes = StringUtils.substringsBetween(s, "By.", ")");
-		
+
 		if (valuesInQuotes.length != 1) {
 			throw new Exception("[ERR]\tdriver findElement statement malformed");
 		}
-		
+
 		String[] splitted = StringUtils.split(valuesInQuotes[0], "(");
-		
+
 		String strategy = splitted[0].trim();
 		String value = splitted[1].replaceAll("\"", "").trim();
 
@@ -229,18 +128,24 @@ public class UtilsParser {
 	 * 
 	 * @param webElement
 	 * @return
+	 * @throws Exception
 	 */
-	public static SeleniumLocator getDomLocator(WebElement st) {
+	public static SeleniumLocator getDomLocator(WebElement st) throws Exception {
 
 		String domLocator = st.toString();
-		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.length()); // By.id("login")).sendKeys("admin");
-		domLocator = domLocator.substring(domLocator.indexOf("By"), domLocator.indexOf(")") + 1); // By.id("login")
-		domLocator = domLocator.replace("By.", ""); // id("login")
-		String strategy = domLocator.split("\\(")[0].trim();
-		String value = domLocator.split("\\(")[1];
-		value = value.substring(0, value.length() - 1).replaceAll("\"", "").trim();
 
-		return new SeleniumLocator(strategy, value);
+		return getDomLocator(domLocator);
+
+		// domLocator = domLocator.substring(domLocator.indexOf("By"),
+		// domLocator.length()); // By.id("login")).sendKeys("admin");
+		// domLocator = domLocator.substring(domLocator.indexOf("By"),
+		// domLocator.indexOf(")") + 1); // By.id("login")
+		// domLocator = domLocator.replace("By.", ""); // id("login")
+		// String strategy = domLocator.split("\\(")[0].trim();
+		// String value = domLocator.split("\\(")[1];
+		// value = value.substring(0, value.length() - 1).replaceAll("\"", "").trim();
+		//
+		// return new SeleniumLocator(strategy, value);
 	}
 
 	public static SeleniumLocator getSeleniumLocatorFromWebElement(WebElement webElement) {
@@ -418,108 +323,14 @@ public class UtilsParser {
 		return ea;
 	}
 
-	/**
-	 * Given an HTML element, retrieve its XPath
-	 * 
-	 * @param js
-	 *            Selenium JavascriptExecutor object to execute javascript
-	 * @param element
-	 *            Selenium WebElement corresponding to the HTML element
-	 * @return XPath of the given element
-	 */
-	public static String getElementXPath(JavascriptExecutor js, WebElement element) {
-		return (String) js
-				.executeScript("var getElementXPath = function(element) {" + "return getElementTreeXPath(element);"
-						+ "};" + "var getElementTreeXPath = function(element) {" + "var paths = [];"
-						+ "for (; element && element.nodeType == 1; element = element.parentNode)  {" + "var index = 0;"
-						+ "for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {"
-						+ "if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE) {" + "continue;" + "}"
-						+ "if (sibling.nodeName == element.nodeName) {" + "++index;" + "}" + "}"
-						+ "var tagName = element.nodeName.toLowerCase();"
-						+ "var pathIndex = (\"[\" + (index+1) + \"]\");" + "paths.splice(0, 0, tagName + pathIndex);"
-						+ "}" + "return paths.length ? \"/\" + paths.join(\"/\") : null;" + "};"
-						+ "return getElementXPath(arguments[0]);", element);
-	}
-
-	public static Element getElementFromXPathJava(String xPath, Document doc) throws IOException {
-
-		String xPathArray[] = xPath.split("/");
-		ArrayList<String> xPathList = new ArrayList<String>();
-
-		for (int i = 0; i < xPathArray.length; i++) {
-			if (!xPathArray[i].isEmpty()) {
-				xPathList.add(xPathArray[i]);
-			}
-		}
-
-		Element foundElement = null;
-		Elements elements;
-		int startIndex = 0;
-
-		String id = getElementId(xPathList.get(0));
-		if (id != null && !id.isEmpty()) {
-			foundElement = doc.getElementById(id);
-			if (foundElement == null)
-				return null;
-			elements = foundElement.children();
-			startIndex = 1;
-		} else {
-			elements = doc.select(xPathList.get(0).replaceFirst(Settings.REGEX_FOR_GETTING_INDEX, ""));
-		}
-		for (int i = startIndex; i < xPathList.size(); i++) {
-			String xPathFragment = xPathList.get(i);
-			int index = getSiblingIndex(xPathFragment);
-			boolean found = false;
-
-			// strip off sibling index in square brackets
-			xPathFragment = xPathFragment.replaceFirst(Settings.REGEX_FOR_GETTING_INDEX, "");
-
-			for (Element element : elements) {
-				if (found == false && xPathFragment.equalsIgnoreCase(element.tagName())) {
-					// check if sibling index present
-					if (index > 1) {
-						int siblingCount = 0;
-						for (Element siblingElement = element
-								.firstElementSibling(); siblingElement != null; siblingElement = siblingElement
-										.nextElementSibling()) {
-							if ((siblingElement.tagName().equalsIgnoreCase(xPathFragment))) {
-								siblingCount++;
-								if (index == siblingCount) {
-									foundElement = siblingElement;
-									found = true;
-									break;
-								}
-							}
-						}
-						// invalid element (sibling index does not exist)
-						if (found == false)
-							return null;
-					} else {
-						foundElement = element;
-						found = true;
-					}
-					break;
-				}
-			}
-
-			// element not found
-			if (found == false) {
-				return null;
-			}
-
-			elements = foundElement.children();
-		}
-		return foundElement;
-	}
-
-	private static int getSiblingIndex(String xPathElement) {
+	static int getSiblingIndex(String xPathElement) {
 		String value = getValueFromRegex(Settings.REGEX_FOR_GETTING_INDEX, xPathElement);
 		if (value == null)
 			return -1;
 		return Integer.parseInt(value);
 	}
 
-	private static String getElementId(String xPathElement) {
+	static String getElementId(String xPathElement) {
 		return getValueFromRegex(Settings.REGEX_FOR_GETTING_ID, xPathElement);
 	}
 

@@ -25,7 +25,7 @@ public class HtmlAttributesParser {
 	public Map<String, String> getHTMLAttributesForElement(String xpath) throws IOException {
 
 		Map<String, String> htmlAttributes = new HashMap<String, String>();
-		Element e = UtilsParser.getElementFromXPathJava(xpath, document);
+		Element e = UtilsXPath.getElementFromXPathJava(xpath, document);
 		if (e != null) {
 
 			for (Attribute attribute : e.attributes()) {

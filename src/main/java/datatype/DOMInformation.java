@@ -3,7 +3,7 @@ package datatype;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
-import utils.UtilsParser;
+import utils.UtilsXPath;
 
 public class DOMInformation {
 
@@ -23,7 +23,7 @@ public class DOMInformation {
 	private int height;
 
 	public DOMInformation(JavascriptExecutor js, WebElement e) {
-		this.xpath = UtilsParser.getElementXPath(js, e).substring(1);
+		this.xpath = UtilsXPath.getElementXPath(js, e).substring(1);
 		this.tagName = e.getTagName();
 		this.id = e.getAttribute("id");
 		this.x = e.getLocation().x;

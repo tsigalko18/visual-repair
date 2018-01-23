@@ -72,26 +72,26 @@ public class TestUtilsParser {
 		assertTrue(loc.getValue().equals("submitEvent"));
 
 		st = "assertTrue(driver.findElement(By.xpath(\"//*[@id='claroBody']/div[2]/div\")).getText().contains(\"You have just created the course website : 003\"));";
-		
+
 		loc = UtilsParser.getDomLocator(st);
 
 		assertTrue(loc.getStrategy().equals("xpath"));
 		assertTrue(loc.getValue().equals("//*[@id='claroBody']/div[2]/div"));
-		
+
 		st = "driver.findElement(By.cssSelector(\"img[alt='Edit']\")).click();";
-		
+
 		loc = UtilsParser.getDomLocator(st);
 
 		assertTrue(loc.getStrategy().equals("cssSelector"));
 		assertTrue(loc.getValue().equals("img[alt='Edit']"));
-		
+
 		st = "driver.findElement(By.cssSelector(\"a.msremove > img\")).click();";
-		
+
 		loc = UtilsParser.getDomLocator(st);
 
 		assertTrue(loc.getStrategy().equals("cssSelector"));
 		assertTrue(loc.getValue().equals("a.msremove > img"));
-		
+
 		st = "";
 
 		try {
@@ -109,129 +109,173 @@ public class TestUtilsParser {
 		}
 	}
 
-	// @Test
-	// public void testGetDomLocatorWebElement() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetSeleniumLocatorFromWebElement() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetValueFromSelect() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetAssertion() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetPredicate() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetValueFromAssertion() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testSerializeTestCase() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testSerializeException() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testSerializeHtmlDomTree() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testToJsonPath() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testReadException() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetElementXPath() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetElementFromXPathJava() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetValueFromRegex() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testIsPointInRectangle() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetFailedTestFromFailure() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetExceptionFromFailure() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetMessageFromFailure() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetLineFromFailure() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testConvertToHashMap() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testPrintResults() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testExtractClickablesFromHtmlPage() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetTestSuiteNameFromWithinType() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testGetPackageName() {
-	// fail("Not yet implemented");
-	// }
-	//
-	// @Test
-	// public void testSaveDOMInformation() {
-	// fail("Not yet implemented");
-	// }
+	@Test
+	public void testGetClassNameFromPath() throws Exception {
+
+		String st = "src/clarolineDirectBreakage/DirectBreakage.java";
+
+		assertTrue(UtilsParser.getClassNameFromPath(st).equals("DirectBreakage"));
+
+		st = "";
+
+		try {
+			UtilsParser.getClassNameFromPath(st);
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+
+		st = "afhjhasjd";
+
+		try {
+			UtilsParser.getClassNameFromPath(st);
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+
+		st = "clarolineDirectBreakage/DirectBreakage.java";
+
+		try {
+			UtilsParser.getClassNameFromPath(st);
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+
+		st = "DirectBreakage.java";
+
+		try {
+			UtilsParser.getClassNameFromPath(st);
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+
+		st = "src/clarolineDirectBreakage/DirectBreakage.json";
+
+		try {
+			UtilsParser.getClassNameFromPath(st);
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+
+	}
+
+	@Test
+	public void testGetSeleniumLocatorFromWebElement() {
+
+	}
+
+	@Test
+	public void testGetValueFromSelect() {
+
+	}
+
+	@Test
+	public void testGetAssertion() {
+
+	}
+
+	@Test
+	public void testGetPredicate() {
+
+	}
+
+	@Test
+	public void testGetValueFromAssertion() {
+
+	}
+
+	@Test
+	public void testSerializeTestCase() {
+
+	}
+
+	@Test
+	public void testSerializeException() {
+
+	}
+
+	@Test
+	public void testSerializeHtmlDomTree() {
+
+	}
+
+	@Test
+	public void testToJsonPath() {
+
+	}
+
+	@Test
+	public void testReadException() {
+
+	}
+
+	@Test
+	public void testGetElementXPath() {
+
+	}
+
+	@Test
+	public void testGetElementFromXPathJava() {
+
+	}
+
+	@Test
+	public void testGetValueFromRegex() {
+
+	}
+
+	@Test
+	public void testIsPointInRectangle() {
+
+	}
+
+	@Test
+	public void testGetFailedTestFromFailure() {
+
+	}
+
+	@Test
+	public void testGetExceptionFromFailure() {
+
+	}
+
+	@Test
+	public void testGetMessageFromFailure() {
+
+	}
+
+	@Test
+	public void testGetLineFromFailure() {
+
+	}
+
+	@Test
+	public void testConvertToHashMap() {
+
+	}
+
+	@Test
+	public void testPrintResults() {
+
+	}
+
+	@Test
+	public void testExtractClickablesFromHtmlPage() {
+
+	}
+
+	@Test
+	public void testGetTestSuiteNameFromWithinType() {
+
+	}
+
+	@Test
+	public void testGetPackageName() {
+
+	}
+
+	@Test
+	public void testSaveDOMInformation() {
+
+	}
 
 }
