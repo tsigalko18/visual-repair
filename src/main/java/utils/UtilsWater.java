@@ -8,15 +8,23 @@ import java.util.Queue;
 import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.runner.Result;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.xml.sax.SAXException;
 
+import config.Settings;
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTree;
 import datatype.HtmlElement;
 import datatype.Node;
 import datatype.SeleniumLocator;
+import datatype.Statement;
 import datatype.WebDriverSingleton;
 import parser.ParseTest;
 
@@ -56,10 +64,10 @@ public class UtilsWater {
 
 		} else if (l.getStrategy().equals("linkText")) {
 			return tree.searchHtmlDomTreeByAttribute("text", l.getValue());
-			
-//			System.out.println(tree.containsAttributeValue);	
-//			return tree.searchHtmlDomTreeByText(l.getValue());
-			
+
+			// System.out.println(tree.containsAttributeValue);
+			// return tree.searchHtmlDomTreeByText(l.getValue());
+
 		} else if (l.getStrategy().equals("name")) {
 			return tree.searchHtmlDomTreeByAttribute("name", l.getValue());
 
@@ -109,13 +117,14 @@ public class UtilsWater {
 
 	public static List<HtmlElement> searchHtmlDomTreeByNode(HtmlElement searchNode, Node<HtmlElement> newTree,
 			double similarityThreshold, List<HtmlElement> similarNodes) {
+
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(newTree);
 
 		while (!q.isEmpty()) {
 			Node<HtmlElement> node = q.remove();
 			if (getSimilarityScore(node.getData(), searchNode) > similarityThreshold) {
-				if(!similarNodes.contains(node.getData())) {
+				if (!similarNodes.contains(node.getData())) {
 					similarNodes.add(node.getData());
 				}
 			}
@@ -140,34 +149,34 @@ public class UtilsWater {
 
 		/* html page to be cleaned. */
 		String theHtmlPage = tc.getStatements().get(line).getDomAfter().getName();
-		
+
 		String htmlFileCleaned = domPath.toString();
 		/* encode URL. */
 		theHtmlPage = java.net.URLEncoder.encode(theHtmlPage, "UTF-8");
-		
+
 		htmlFileCleaned = htmlFileCleaned.substring(0, domPath.lastIndexOf("/") + 1);
 		htmlFileCleaned = htmlFileCleaned.concat(theHtmlPage);
-		
+
 		WebDriverSingleton instance = WebDriverSingleton.getInstance();
 		instance.loadPage("file:///" + htmlFileCleaned);
 		WebDriver driver = instance.getDriver();
 
 		HtmlDomTree domTree;
-		
+
 		if (check) {
 			/* extra check for the cases when the authentication is needed. */
 			System.out.println("Is the web page correctly displayed? [type Y and Enter key to proceed]");
 			while (!scanner.next().equals("Y")) {
 			}
-			
+
 			String newFileName = domPath.replace(".html", "-temp.html");
-			
+
 			File newPageSource = new File(newFileName);
 			FileUtils.write(newPageSource, driver.getPageSource());
-		
+
 			domTree = new HtmlDomTree(driver, newFileName);
 			domTree.buildHtmlDomTree();
-			
+
 			FileUtils.deleteQuietly(newPageSource);
 		} else {
 			domTree = new HtmlDomTree(driver, domPath);
@@ -217,6 +226,54 @@ public class UtilsWater {
 			return rho;
 		}
 		return 0;
+	}
+
+	public static List<WebElement> getSimilarNodesBySimilarityScore(WebDriver driver, Statement statement)
+			throws IOException {
+
+		List<WebElement> similar = new LinkedList<WebElement>();
+		UtilsAspect.saveDOM(driver, "tempPage" + Settings.HTML_EXT);
+
+		File input = new File("tempPage" + Settings.HTML_EXT);
+		Document doc = Jsoup.parse(input, "UTF-8");
+
+		Elements content = doc.getElementsByTag(statement.getTagName());
+
+		for (Element e : content) {
+
+			if (e.tagName().equals(statement.getTagName())) {
+				String xp1 = e.xpathSelector(e, "");
+				String xp2 = statement.getXpath();
+
+				if (getSimilarityScore(xp1, xp2) > Settings.SIMILARITY_THRESHOLD) {
+					WebElement webelem = driver.findElement(By.xpath(xp1)); 
+					similar.add(webelem);
+				}
+			}
+
+		}
+
+		return similar;
+	}
+
+	private static double getSimilarityScore(String xpath1, String xpath2) {
+		double alpha = 0.9;
+		double rho, rho1, rho2 = 0;
+
+		double levDist = computeLevenshteinDistance(xpath1, xpath2);
+		rho1 = 1 - levDist / Math.max(xpath1.length(), xpath2.length());
+
+		// if (Math.abs(a.getX() - b.getX()) <= 5 && Math.abs((a.getX() + a.getWidth())
+		// - (b.getY() - b.getHeight())) <= 5
+		// && Math.abs(a.getY() - b.getY()) <= 5
+		// && Math.abs((a.getY() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5) {
+		// rho2 = rho2 + 1;
+		// }
+		// rho2 = rho2 / 2;
+		rho = (rho1 * alpha + rho2 * (1 - alpha));
+
+		return rho;
+
 	}
 
 }

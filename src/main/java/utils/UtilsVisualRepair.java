@@ -25,7 +25,7 @@ import datatype.Statement;
 public class UtilsVisualRepair {
 
 	private static Scanner scanner = new Scanner(System.in);
-	
+
 	/**
 	 * Procedure to verify a DOM element locator by means of a visual locator.
 	 * 
@@ -122,12 +122,13 @@ public class UtilsVisualRepair {
 		String visualLocator = statement.getVisualLocator().toString();
 		String currentScreenshot = System.getProperty("user.dir") + Settings.sep + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
-		
-//		if (Settings.debugMode) {
-//			System.out.println("Do you want to continue to the next statement? [type Y and Enter key to proceed]");
-//			while (!scanner.next().equals("Y")) {
-//			}
-//		}
+
+		// if (Settings.debugMode) {
+		// System.out.println("Do you want to continue to the next statement? [type Y
+		// and Enter key to proceed]");
+		// while (!scanner.next().equals("Y")) {
+		// }
+		// }
 
 		Point bestMatch = null;
 
@@ -135,7 +136,7 @@ public class UtilsVisualRepair {
 
 			WebElement fromDom = null;
 			fromDom = retrieveWebElementFromDOMInfo(driver, statement);
-			
+
 			if (fromDom == null) {
 
 				Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
@@ -147,18 +148,20 @@ public class UtilsVisualRepair {
 			} else {
 
 				return fromDom;
-				
-//				try {
-//					// UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
-//					// fromDom, "currentCrop.png");
-//					UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot, fromDom, "preciseCrop.png");
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//
-//				if (UtilsTemplateMatching.runFeatureDetection(visualLocator, "currentCrop.png", null)) {
-//					return fromDom;
-//				}
+
+				// try {
+				// // UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
+				// // fromDom, "currentCrop.png");
+				// UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
+				// fromDom, "preciseCrop.png");
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
+				//
+				// if (UtilsTemplateMatching.runFeatureDetection(visualLocator,
+				// "currentCrop.png", null)) {
+				// return fromDom;
+				// }
 
 			}
 
@@ -190,6 +193,63 @@ public class UtilsVisualRepair {
 
 	}
 
+	public static List<WebElement> waterRepairLocators(WebDriver driver, Statement statement) throws IOException {
+
+		String id = statement.getId();
+		String classAttr = statement.getClassAttribute();
+		String nameAttr = statement.getNameAttribute();
+		String tagName = statement.getTagName();
+		String text = statement.getText();
+		String xpath = statement.getXpath();
+
+		List<WebElement> matches = new LinkedList<WebElement>();
+
+		if (id != null && !id.isEmpty()) {
+			try {
+				matches.addAll(driver.findElements(By.id(id)));
+			} catch (Exception Ex) {
+			}
+		}
+
+		if (xpath != null && !xpath.isEmpty()) {
+			try {
+				matches.add(driver.findElement(By.xpath(xpath)));
+			} catch (Exception Ex) {
+			}
+		}
+
+		if (classAttr != null && !classAttr.isEmpty()) {
+			try {
+				matches.addAll(driver.findElements(By.className(classAttr)));
+			} catch (Exception Ex) {
+			}
+		}
+
+		if (text != null && !text.isEmpty()) {
+			try {
+				matches.addAll(driver.findElements(By.xpath("//*[text()='" + text + "']")));
+			} catch (Exception Ex) {
+			}
+
+		}
+
+		if (nameAttr != null && !nameAttr.isEmpty()) {
+			try {
+				matches.addAll(driver.findElements(By.name(nameAttr)));
+			} catch (Exception Ex) {
+			}
+		}
+
+		if (!matches.isEmpty())
+			return matches;
+		else {
+			matches.addAll(UtilsWater.getSimilarNodesBySimilarityScore(driver, statement));
+		}
+
+		return matches;
+
+	}
+
 	public static WebElement retrieveWebElementFromDOMInfo(WebDriver driver, Statement statement) {
 
 		String id = statement.getId();
@@ -211,7 +271,7 @@ public class UtilsVisualRepair {
 			if (elem_id != null)
 				return elem_id;
 		}
-		
+
 		if (text != null && !text.isEmpty()) {
 			WebElement elem_text = null;
 			try {
@@ -245,7 +305,7 @@ public class UtilsVisualRepair {
 				return elem_class;
 			}
 		}
-		
+
 		if (xpath != null && !xpath.isEmpty()) {
 			WebElement elem_xpath = null;
 			try {
@@ -394,14 +454,6 @@ public class UtilsVisualRepair {
 
 		return webElementFromDomLocator.equals(webElementFromVisualLocator);
 
-	}
-
-	public static WebElement removeStatement() {
-		return null;
-	}
-
-	public static WebElement localCrawling() {
-		return null;
 	}
 
 }
