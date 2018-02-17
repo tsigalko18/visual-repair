@@ -30,7 +30,7 @@ public class Main {
 
 		startTime = System.currentTimeMillis();
 
-		VisualAssertionTestRunnerWithCrawler var = new VisualAssertionTestRunnerWithCrawler(rm);
+		VisualAssertionTestRunner var = new VisualAssertionTestRunner(rm);
 
 		try {
 			var.runTestWithVisualAssertion(prefix, className);
