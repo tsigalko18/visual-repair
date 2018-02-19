@@ -29,7 +29,21 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>aspectj-maven-plugin</artifactId>
-					<version>1.10</version>
+					<version>1.11</version>
+					<!-- new configuration is here -->
+					<configuration>
+						<complianceLevel>1.8</complianceLevel>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<goal>test-compile</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -39,7 +53,12 @@
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>1.8.9</version>
+			<version>1.8.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.13</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.javaparser</groupId>
@@ -87,37 +106,6 @@
 			<version>1.8.0-beta0</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.trove4j</groupId>
-			<artifactId>trove4j</artifactId>
-			<version>3.0.3</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.jsi</groupId>
-			<artifactId>jsi</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/jsi-1.1.0-SNAPSHOT.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.jsi</groupId>
-			<artifactId>jsi</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/jsi-1.1.0-SNAPSHOT.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.github.davidmoten</groupId>
-			<artifactId>rtree</artifactId>
-			<version>0.8-RC10</version>
-		</dependency>
-		<dependency>
-			<groupId>jpHash</groupId>
-			<artifactId>jpHash</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/jpHash-1.0-SNAPSHOT.jar</systemPath>
-		</dependency>
-		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.8</version>
@@ -143,11 +131,6 @@
 			<groupId>org.ini4j</groupId>
 			<artifactId>ini4j</artifactId>
 			<version>0.5.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jgrapht</groupId>
-			<artifactId>jgrapht-core</artifactId>
-			<version>1.0.1</version>
 		</dependency>
 
 		<!-- Crawljax with dependencies -->
