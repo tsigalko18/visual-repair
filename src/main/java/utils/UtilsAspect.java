@@ -6,10 +6,8 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.aspectj.lang.JoinPoint;
 import org.openqa.selenium.WebDriver;
-import org.xml.sax.SAXException;
 
 import config.Settings;
-import datatype.HtmlDomTreeWithRTree;
 
 public class UtilsAspect {
 
@@ -107,19 +105,6 @@ public class UtilsAspect {
 		}
 
 		return savedHTML;
-	}
-
-	public static void createHTMLDomTree(WebDriver d, String domFile, String domTreeFile)
-			throws SAXException, IOException {
-
-		HtmlDomTreeWithRTree rt = new HtmlDomTreeWithRTree(d, domFile);
-		rt.buildHtmlDomTree();
-		rt.preOrderTraversalRTree();
-
-		if (domTreeFile != "" || domTreeFile != null) {
-			UtilsParser.serializeHtmlDomTree(rt, domTreeFile);
-		}
-
 	}
 
 }

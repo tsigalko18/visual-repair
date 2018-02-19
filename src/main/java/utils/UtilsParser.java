@@ -22,15 +22,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import config.Settings;
+import datatype.DOMInformation;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
 import datatype.HtmlDomTree;
-import datatype.HtmlDomTreeWithRTree;
 import datatype.HtmlElement;
 import datatype.Node;
 import datatype.SeleniumLocator;
 import japa.parser.ast.stmt.Statement;
-import datatype.DOMInformation;
 
 public class UtilsParser {
 
@@ -89,7 +88,7 @@ public class UtilsParser {
 	 */
 	public static String getClassNameFromPath(String arg) throws Exception {
 
-		if (arg.length() == 0 || arg.isEmpty() || !arg.contains(Settings.JAVA_EXT) || !arg.startsWith("src/")) {
+		if (arg.length() == 0 || arg.isEmpty() || !arg.contains(Settings.JAVA_EXT)) {
 			throw new Exception("[ERR]\tmalformed classname path");
 		}
 
@@ -274,22 +273,6 @@ public class UtilsParser {
 			System.out.println("[LOG]\tException saved: " + path);
 	}
 
-	/**
-	 * 
-	 * 
-	 * @param tc
-	 * @param path
-	 */
-	public static void serializeHtmlDomTree(HtmlDomTreeWithRTree h, String path) {
-
-		try {
-			FileUtils.write(new File(path), gson.toJson(h, HtmlDomTreeWithRTree.class));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	public static String toJsonPath(String path) {
 		// src/clarolineDirectBreakage/DirectBreakage.java
 		// testSuite/DirectBreakage/exception.json
@@ -297,8 +280,7 @@ public class UtilsParser {
 		int lastSlash = path.lastIndexOf("/");
 		int end = path.indexOf(".java");
 		String testName = path.substring(lastSlash + 1, end);
-		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.sep + "exception"
-				+ Settings.JSON_EXT;
+		String newPath = Settings.testingTestSuiteVisualTraceExecutionFolder + testName + Settings.sep + "exception" + Settings.JSON_EXT;
 		return newPath;
 	}
 
@@ -343,8 +325,7 @@ public class UtilsParser {
 		return null;
 	}
 
-	public static boolean isPointInRectangle(int x, int y, int left, int top, int width, int height,
-			boolean isBorderIncluded) {
+	public static boolean isPointInRectangle(int x, int y, int left, int top, int width, int height, boolean isBorderIncluded) {
 
 		if (isBorderIncluded) {
 			if (x >= left && y >= top && x <= (left + width) && y <= (top + height))
@@ -408,19 +389,6 @@ public class UtilsParser {
 		return m;
 	}
 
-	public static void printResults(List<Node<HtmlElement>> result, HtmlDomTreeWithRTree rt) {
-
-		String s = "***** candidate list *****";
-		System.out.println(s);
-		for (Node<HtmlElement> node : result) {
-			System.out.println(node.getData().getXPath());
-			System.out.println(rt.getRects().get(node.getData().getRectId()));
-		}
-		for (int i = 0; i < s.length(); i++)
-			System.out.print("*");
-		System.out.print("\n");
-	}
-
 	/**
 	 * retrieve the HTML elements
 	 * 
@@ -471,8 +439,7 @@ public class UtilsParser {
 		DOMInformation webElementWithDomInfo = new DOMInformation(js, we);
 
 		try {
-			FileUtils.writeStringToFile(new File(domInfoJsonFile),
-					gson.toJson(webElementWithDomInfo, DOMInformation.class));
+			FileUtils.writeStringToFile(new File(domInfoJsonFile), gson.toJson(webElementWithDomInfo, DOMInformation.class));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
