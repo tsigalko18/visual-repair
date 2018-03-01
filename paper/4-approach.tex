@@ -98,7 +98,23 @@ In the following sections we describe the core components of our algorithm, that
 
 \subsection{Visual Search of Web Elements}\label{sec:vis}
 
-As described in \autoref{sec:cv}, matching specific portions of images across different versions of a web application is a challenging task, for which existing computer vision algorithms perform poorly. 
+One of our motivations of conducting this research is to use computer vision (CV) techniques to assist software-engineering tasks. 
+Thereby, we provide a short background of the CV solutions that are useful in our setting.
+
+\noindent
+\textbf{Template Matching.}\label{sec:tm}
+Identifying web elements \textit{visually} across different versions (i.e., pages) of a web application falls within a common branch of image analysis known as template matching. 
+%
+Template matching aims to detect the occurrence of a specific  object image (template) in another image~\cite{Brunelli:2009:TMT:1643435}. The template is slid over the image, and a a similarity measure is computed at each pixel location
+%This is done by defining a small image of the object, a template, and searching for a similar occurrence in a given image, by sliding the template over the image, and computing a similarity measure at each pixel location.
+%
+Template matching algorithms must account for factors such as scaling, rotation, and lighting. Fortunately, the images we aim to match in this work are screen captures from web applications rendered by the same browser. In this context, the above issues are ameliorated, and the main problems are, for instance, the shifting of GUI elements or the fact that some elements are not displayed at all~\cite{}.
+% 
+However, standard template matching algorithms are not effective in detecting the presence/absence of a template. Indeed, by design, they always return the pixel location where the best match has been found. Even if a stricter threshold value on the similarity coefficient might be used, in practice this is not robust or generalizable, thus we explored key-point matching.
+
+\noindent
+\textbf{Feature Detection.}
+The philosophy of this method is to find certain ``important'' points (key-points) in the object template and store information about the neighbourhood of those key-points (key-point descriptors) as a description of the object. In other test images, one should find key-point descriptors of key-points in the whole image and try to `match' the two descriptor sets (one from the object template and one from the test image) using some notion of similarity, and see how many descriptors match.
 
 Thus, the \textsc{visualSearch} adopts a pipeline of CV algorithms, each one devoted to a specific task. The pipeline is graphically illustrated in \autoref{fig:cv}. 
 

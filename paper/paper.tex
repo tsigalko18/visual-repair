@@ -69,7 +69,7 @@
 %\makeatother
 
 %ORIGINAL TOOL NAME ANONOMYZED FOR REVIEWS ONLY
-\newcommand{\tool}{\textsc{Visor}\xspace} %  
+\newcommand{\tool}{\textsc{Tool}\xspace} %  
 \newcommand{\water}{\textsc{Water}\xspace} %  
 \newcommand{\waterfall}{\textsc{WaterFall}\xspace} % 
 
@@ -85,6 +85,7 @@
 }
 \newcommand\andrea[1]{\nb{Andrea}{\hl{#1}}}
 \newcommand\ali[1]{\nb{Ali}{\hl{#1}}}
+\newcommand\rahul[1]{\nb{Rahul}{\hl{#1}}}
 
 \newcommand{\head}[1]{\par\smallskip\noindent\textbf{#1.}}
 
@@ -121,33 +122,33 @@
 \widowpenalty = 10000
 \displaywidowpenalty = 10000
 
-\definecolor{lightgray}{gray}{0.95}
-\lstset{
-	%backgroundcolor=\color{lbcolor},
-	tabsize=2,
-	rulecolor=,
-	language=Java,
-        	basicstyle=\scriptsize\ttfamily,
-        	upquote=true,
-        	aboveskip={0.5\baselineskip},
-        	columns=fixed,
-        	showstringspaces=false,
-        	extendedchars=true,
-        	numberstyle=\tiny,
-        	breaklines=true,
-        	prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-        	frame=single,
-        	showtabs=false,
-        	showspaces=false,
-        	showstringspaces=false,
-        	identifierstyle=\ttfamily,
-        	keywordstyle=\color[rgb]{0,0,1},
-        	commentstyle=\color[rgb]{0.133,0.545,0.133},
-        	stringstyle=\color[rgb]{0.627,0.126,0.941},
-       	%emphstyle=\color[rgb]{0.827,0.126,0.941},
-        	backgroundcolor=\color{lightgray},
-        	linewidth=8.5cm
-}
+%\definecolor{lightgray}{gray}{0.95}
+%\lstset{
+%%backgroundcolor=\color{lbcolor},
+%tabsize=2,
+%rulecolor=,
+%language=Java,
+%basicstyle=\scriptsize\ttfamily,
+%upquote=true,
+%boveskip={0.5\baselineskip},
+%columns=fixed,
+%showstringspaces=false,
+%extendedchars=true,
+%numberstyle=\tiny,
+%breaklines=true,
+%prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+%frame=single,
+%showtabs=false,
+%showspaces=false,
+%showstringspaces=false,
+%identifierstyle=\ttfamily,
+%keywordstyle=\color[rgb]{0,0,1},
+%commentstyle=\color[rgb]{0.133,0.545,0.133},
+%stringstyle=\color[rgb]{0.627,0.126,0.941},
+%%emphstyle=\color[rgb]{0.827,0.126,0.941},
+%backgroundcolor=\color{lightgray},
+%linewidth=8.5cm
+%}
 
 % Copyright
 %\setcopyright{none}
@@ -169,6 +170,7 @@
 
 %Conference
 \acmConference[Conference 2018]{}{2018}{}
+%\acmConference[ESEC/FSE 2018]{The 26th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering}{4-9 November, 2018}{Lake Buena Vista, Florida, United States}
 \acmYear{2018}
 \copyrightyear{2018}
 
@@ -176,8 +178,8 @@
 
 
 \begin{document}
-%\title{Automated Repair of Web Test Cases Using Computer Vision}
-\title{Runtime Detection and Repair of Test Breakages in Web Applications Using Computer Vision}
+\title{Automated Repair of Web Test Cases Using Computer Vision}
+%\title{Automated Repair of Test Breakages in Web Applications Using Computer Vision}
 %\titlenote{Produces the permission block, and
 %  copyright information}
 %\subtitle{Extended Abstract}
@@ -253,7 +255,7 @@
 
 \input{1-introduction}
 \input{2-background}
-\input{3-breakage-scenarios}
+\input{3-study}
 \input{4-approach}
 \input{5-evaluation}
 \input{6-discussion}
