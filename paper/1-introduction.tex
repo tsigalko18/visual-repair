@@ -3,18 +3,17 @@
 
 % introduction to E2E test automation
 Test automation techniques are used to enable the end-to-end (E2E) functional testing of web applications~\cite{DBLP:journals/ac/TonellaRM14}. 
-In this setting, the tester assumes the role of the end user and verifies the correct functioning of the application under test (AUT) by means of automated test cases. Such tests aim at automating the set of manual operations that the end user  performs on the web application GUI (e.g., delivering events with clicks, or filling in forms). 
-In modern software development the ability to react fast to ever-changing requirements is essential. For this reason, test automation techniques are often used in agile or continuous integration (CI) environments where new test cases are being developed and added to existing test suites in parallel with the development of the software itself, and across a wide range of testing tasks such as regression, system and UI testing~\cite{STVR:STVR121,Fewster,Ramler:2006:EPT:1138929.1138946,Nguyen2014,7381848}.
+In this context, the tester assumes the role of the end user and verifies the correct functioning of the application under test (AUT) by means of automated test scripts. Such scripts automate the set of manual operations that the end user performs on the web application GUI (e.g., delivering events with clicks, or filling in forms), and can run fast in a unattended mode. This makes them appealing in modern software development, where the ability to react fast to ever-changing requirements is essential. For this reason, test automation techniques are often used in agile or continuous integration (CI) environments where new test cases are being developed and added to existing test suites in parallel with the development of the software itself, and across a wide range of testing tasks such as regression, system and UI testing~\cite{STVR:STVR121,Fewster,Ramler:2006:EPT:1138929.1138946,Nguyen2014,7381848}.
 
 % the problem
 
-Despite their wide adoption, E2E test automation tools bring the problem of \textit{maintaining test scripts as software evolves}. Changes as simple as repositioning GUI elements on the page or altering the selections in a drop-down list can cause the test to halt or behave improperly. 
+Despite their wide adoption, E2E test automation tools bring the problem of maintaining test scripts as software evolves. Changes as simple as repositioning GUI elements on the page or altering the selections in a drop-down list can cause the test to halt or behave improperly. 
 In the literature, instances of these problems are known as \textit{test breakages}: a test breakage is defined as the event that occur when the test raises exceptions or errors that do not pertain to the presence of a bug or a malfunction of the application under test~\cite{Daniel:2011:AGR:2002931.2002937,Daniel:2009:RSR:1747491.1747538,Daniel:2010:TRU:1831708.1831734,Hammoudi-2016-ICST}. 
-This is different from cases in which test cases \textit{fail}, i.e., raise exceptions which signal the presence of one or more bugs in the production code. In this latter case, the developer is required to correct the application whereas in the former case, the tester is required to fix the tests. %, that are no longer synchronized with the AUT.
+This is different from cases in which test cases \textit{fail}, that is, raise exceptions which signal the presence of one or more bugs in the production code. In this latter case, the developer is required to correct the application whereas in the former case, the tester is required to fix the tests. %, that are no longer synchronized with the AUT.
 
 % existing work
 
-Repairing tests is an activity that typically requires testers to inspect the GUI, or replay a portion of test scenario, in order to \textit{detect} the root cause behind the breakage. The situation is complicated by the fact that breakages do not always occur at the precise point in which the test execution's stops, but rather at some later point (e.g., statement).
+Repairing tests is an activity that typically requires testers to inspect the GUI, or replay a portion of test scenario, in order to detect the root cause behind the breakage. The situation is complicated by the fact that breakages do not always occur at the precise point in which the test execution's stops, but rather at some later point.
 % and handle the breakages that propagate throughout the test's execution~\cite{Hammoudi-2016-ICST}.
 
 %Current techniques rely on the assumption that the repair has always to be triggered at the point in which the test stops, which makes it impossible to handle such propagated breakages~\cite{Hammoudi-2016-ICST}.
@@ -23,12 +22,12 @@ Repairing tests is an activity that typically requires testers to inspect the GU
 %Existing web test repair techniques~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE,2015-leotta-ICST} are, in many cases, either unable to correct breakages, or do so by producing a great number of false positives. 
 %%
 %Moreover, due to their DOM-narrowness, none of which is designed to consider visual aspects of the AUT, they fail to enable testers to perform effective root cause analysis for a given breakage. 
-None of the existing web test repair techniques~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE,2015-leotta-ICST} is designed to consider visual aspects of the AUT. As a result of this DOM-narrowness, they are, in many cases, either unable to correct breakages, or do so by producing a great number of false positives. 
+None of the existing web test repair techniques~\cite{Choudhary:2011:WWA:2002931.2002935,Hammoudi-2016-FSE,2015-leotta-ICST} is designed to consider visual aspects of the AUT. Thereby such solutions are, in many cases, either unable to correct breakages, or do so by producing a great number of false positives. 
 
 % our proposal
 
-For the scope of this paper, we present a new holistic approach to  web applications testing that considers both DOM-based and visual characteristics of the AUT in order to support \textit{automatic breakage repair of E2E web test cases}. 
-To overcome the aforementioned limitations, we propose \tool, a new generation algorithm that leverages the information given by the visual execution of the tests, along with computer vision and crawling techniques, to support the detection of a large variety of breakage scenarios, while minimizing the false positives. 
+%For the scope of this paper, we present a new holistic approach to  web applications testing that considers both DOM-based and visual characteristics of the AUT in order to support \textit{automated repair of breakages in E2E web test cases}. 
+For the scope of this paper, we propose \tool, a new generation algorithm that leverages the information given by the visual execution of the tests, along with computer vision and crawling techniques, to support \textit{automated repair of breakages in E2E web test cases}. 
 
 %\begin{figure*}[t]
 %\centering
@@ -66,8 +65,8 @@ To overcome the aforementioned limitations, we propose \tool, a new generation a
 %\end{figure*}
 
 
-The key idea behind the development of \tool is that the manual actions and reasoning that a tester does while searching for candidate repairs can be automated to a large extent by using differential testing and computer vision. 
-\tool maintains the visual snapshots of the correct execution of the test cases, along with their DOM information. When such tests are replayed on the new version of the AUT, \tool uses snapshots of the web elements visual appearance and their DOM properties to validate the feasibility of each statement prior to their execution (\textit{runtime monitoring}). If \tool detects that a breakage will occur, then a series of repair techniques are triggered on the fly, to correct the breakage before executing it (\textit{self-repair}).
+The key idea behind the development of \tool is that the manual actions and reasoning that a tester does while searching for candidate repairs can be automated to a large extent by using differential testing, crawling, and computer vision. 
+\tool maintains the visual snapshots of the correct execution of the test cases. When such tests are replayed on the new version of the AUT, \tool uses snapshots of the web elements visual appearance to validate the feasibility of each statement prior to their execution (\textit{online monitoring}). If \tool detects that a breakage will occur, then a series of repair techniques are triggered on the fly, to correct the breakage before executing it (\textit{self-repair}).
 
 \tool is also able to handle complex breakage scenarios, such as those that break the test's workflow (e.g., when elements are removed from the web pages, or a page is added), using an automatic local visual-based crawl exploration.
 

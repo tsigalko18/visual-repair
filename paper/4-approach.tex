@@ -1,14 +1,13 @@
 %% !TEX root =  paper.tex
 \section{Approach}\label{sec:approach}
 
-The goal of our approach is to
-detect and find potential fixes to locator problems that pertain to the breakage scenarios described in \autoref{sec:breakage-scenarios}.
+The goal of our approach is to detect the occurrence of locator breakages and find potential fixes for them. Our focus is on the  breakage scenarios described in \autoref{sec:breakage-scenarios}.
 %
 %that can repair a broken web test that used to work correctly on a version $V$ of the AUT, and that now breaks when applied on a subsequent version $V+n$ (with usually $n=1$).
 %
 %The focus of our technique is to repair \textit{locators}, that represent the main source of breakage.
 %Our technique can detect and correct locator problems that pertain to the breakage scenarios described in \autoref{sec:breakage-scenarios}.
-In a nutshell, we capture the execution trace of each test statement for a version $V$ and use it to assert its correctness (or repair it) when executed on a subsequent version $V+n$ ($n \geq 1$). 
+In a nutshell, we capture the execution trace of each test statement for a version $V$ and use it to validate their correctness (or repair them) when executed on a subsequent version $V+n$ ($n \geq 1$). 
 %Whenever possible, our technique attempts to repair breakages automatically, but also logs each encountered breakage or in inconsistency. 
 % However, a detailed log of the encountered breakages is kept, so as to warn the developer of potential inconsistencies or breakages, and create potential candidate repairs to fix them. 
 
