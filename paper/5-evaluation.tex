@@ -28,48 +28,7 @@ The repair strategy of \tool can be customized so as to utilize: (i)~only DOM-ba
 %RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing our proposal against the state of the art web testing repair solution under different effectiveness and efficiency measures. Finally, we aim at evaluating whether the tool can effectively aid humans in detecting and repairing test breakages, as compared to a manual fashion.
 Thus, RQ\textsubscript{1} and RQ\textsubscript{2} aim at comparing the effectiveness and efficiency of the three variants of our approach.
 
-\begin{table}[t]
-\setlength{\tabcolsep}{1pt}
-\renewcommand{\arraystretch}{0.9}
-\centering
-\caption{Subject systems and their test suites  \andrea{complete}}
-\begin{tabular}{lSSSrr}
-\toprule
-
-& \multicolumn{3}{c}{\sc Web applications} 
-& \multicolumn{2}{c}{\sc Test Suites} \\
-
-\cmidrule(r){2-4} \cmidrule(r){5-6}
-
-& {\textbf{Rel.}} & {\textbf{LOCs (K)}} & {\textbf{Downloads}} & {\textbf{\#}} & {\textbf{LOCs (K)}}   \\
-
-
-\midrule
-%Addressbook  & 12.3      & 35.6      & 126.2          & 110              & 24 \\
-Addressbook & 0 & 0 & 0 & 0 & 0 \\
-Claroline & 0 & 0 & 0 & 0 & 0 \\
-App3 & 0 & 0 & 0 & 0 & 0 \\
-App4 & 0 & 0 & 0 & 0 & 0 \\
-\midrule
-Total/Average & 0 & 0 & 0 & 0 & 0 \\
-
-\bottomrule
-\end{tabular}
-\label{table:subjectSystems}
-\end{table}
-
-\subsection{Objects of Analysis}\label{sec:subjects}
-
-In the intention of supporting a realistic test regression scenario, we selected open source web applications for which (i)~multiple versions and (ii)~Selenium test cases were available. Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{WCRE}, and for which we were able to obtain from the authors four working Selenium test suites.
-
-\autoref{table:subjectSystems} (Web Applications macro-column) shows information about the selected applications, including their names, the numbers of releases we used, the number of lines of code they contained (counted using the tool {\it cloc}\footnote{\url{https://github.com/AlDanial/cloc}} and averaged across the releases), and the numbers of downloads made as of the day we selected them.
-Test Suites macro-column provides data on the test suites, including the total numbers of test cases counted across all versions along with the average number of test cases per version (Column~5), and the total numbers of statements in all of the test cases counted across all versions along with the average number of statements per test case (Column~6).
-
 \subsection{Procedure}\label{sec:procedure}
-
-First, we determined the types of test breakages that occur in our objects of analysis. For each considered web application, for each version $V_n$ and its accompanying test suite $T_n$, we executed $T_n$ on the subsequent version $V_{n+1}$, and collected information about each breakage and each failure (e.g., actual bugs). We repeated this process until all the versions were taken into account. 
-
-Table XXX shows the distribution of breakages across the various types and applications. \andrea{complete}
 
 Then, for each subject applications, we applied the three variants of our approach to each $(T_n,V_{n+1})$ pair in which either a breakage or a failure has been observed. For each variant, we ran the repaired test $T_{rep}$ to determined whether the tool was able to detect (and possibly repair) the issues. If $T_{rep}$ executed and passed, we counted the number of breakages that were \textit{corrected} (true positives). If $T_n$ failed because of a bug, and $T_{rep}$ was able to report it, we counted the number of correct \textit{detections} (true negatives). Conversely, the false negatives are represented by \textit{missed} detections or \textit{incorrect} repairs. False positives occur when our approach signalled a breakage or a failure, even if the statement is actually correct.
 

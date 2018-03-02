@@ -20,7 +20,7 @@
        \uIf{\textit{webElemVisual} == null} {
        \textit{repairedStatements}.remove($st_i$)\;
        } \Else{
-       \textit{newStmt} $\gets$ <\textsc{synthetizeLocator}(\textit{webElemVisual}), ``click'', ``''> \;
+       \textit{newStmt} $\gets$ <\textit{webElemVisual}, ``click'', ``''> \;
        \textit{repairedStatements}.addBefore($st_i$, \textit{newStmt}) \;
         }
      } \Else{
@@ -38,8 +38,8 @@
          \textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
       	\textit{repairedStatements}.replace($st_i$,  \textit{newStmt}) \;
       }
-         \textit{driver} $\gets$ \textsc{executeStatement}($st_i$, $V'$) \;
       	$T'$.add($st_i$) \;
+	\textit{driver} $\gets$ \textsc{executeStatement}($st_i$, $V'$) \;
  }
 \Return{$T'$, \textit{repairedStatements}}\;
 \caption{Visual-Augmented Test Execution}
