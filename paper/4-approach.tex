@@ -18,7 +18,7 @@ The tester can then manually analyze the report along with the repaired test cas
 The manual effort required is potentially significantly reduced in comparison to a user carefully verifying each executing test and manually searching for fixes as breakages occur. %
 We now detail each step of our approach. 
 
-\subsection{Execution Trace Collection}
+\subsection{Visual Execution Trace Collection}
 %
 In the first part of our approach, we capture a model of the runtime execution of the test cases, which we refer to as \textit{dynamic visual execution trace}.
 Such a model comprises a sequence of test states, where each test state captures the DOM and visual information associated with each test statement of each test case. 
@@ -44,7 +44,7 @@ More in detail, the test state encompasses the following DOM-related information
 %(Note that, as explained in~\cite{2014-Stocco-SCAM,2015-Leotta-SAC}, a visual locator is not always the precise crop of the web element's bounding box. There are cases in which a larger crop---taking into account the web element's visual context---is necessary in order to visually differentiate it from other visually similar web elements appearing on the page, as the case of a list of input text fields in a form).
 %
 
-\subsection{Visual-Augmented Execution}
+\subsection{Visual-Augmented Test Execution}
 
 \autoref{algo:alg1} illustrates the main procedure of our algorithm for the visual-augmented execution of test cases. The procedure takes as input a test case $T$, 
 the dynamic visual execution trace $EX$ of $T$ on a version $V$ of the web application, and the URL $U$ of the web application $V'$. The outputs are a test $T'$, validated or corrected to work on $V'$, and the list of repairs. 
