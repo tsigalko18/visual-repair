@@ -59,6 +59,15 @@ First, we determined the types of test breakages that occur in our objects of an
 \label{donut}
 \end{figure}
 
+\begin{figure}[b]
+\centering
+%\fbox{
+\includegraphics[trim={0cm 0cm 0cm 0cm}, clip,width=0.8\columnwidth]{images/distribution.pdf}
+%}
+\caption{Distribution of test breakages per test case in each subject system.}
+\label{fig:distribution}
+\end{figure} 
+
 \begin{figure*}[h!]
 \centering
 \begin{subfigure}{\columnwidth}
@@ -87,7 +96,11 @@ We collected 733 individual test breakages, distributed as follows: 50 for Addre
 The second main category consists of \textit{Mis-Selection} of web elements (38/733), of which $\approx$68\% led to \textit{direct} breakages, and $\approx$32\% to \textit{propagated} breakages. 
 Additionally, we collected 94 test \textit{failures}---meaning the tests exposing actual bugs---and 22 failures due to obsolete \textit{assertion} values.
 %
-That said, in the context of this paper, we focus on repairing the regression breakages. In the following of this section, we detail the test breakage scenarios by means of a running example. 
+That said, in the context of this paper, we focus on repairing the regression breakages. 
+
+\autoref{fig:distribution} shows box-plots about the distribution of breakages per test cases in each subject system. We observe that on average between 1--4 breakages are present per test. 
+In short, (1)~test suites tend to break frequently as the web application evolves, and (2)~breakages may pertain occur multiple times within the same test. 
+In the following of this section, we detail the test breakage scenarios by means of a running example.
 
 \subsection{Breakage Scenarios}\label{sec:breakage-scenarios}
 

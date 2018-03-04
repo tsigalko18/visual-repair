@@ -2,7 +2,7 @@
 
 \section{Empirical Evaluation}\label{sec:evaluation}
 
-\subsection{Research Questions}
+%\subsection{Research Questions}
 
 We consider the following research questions: \\
 \noindent
@@ -16,55 +16,51 @@ How effective is the proposed visual-aided approach at repairing test breakages 
 RQ\textsubscript{1} aims at evaluating how effective \tool is at detecting and repairing test breakages, and how its effectiveness varies across the breakage classes. 
 RQ\textsubscript{2} aims at evaluating the overhead and running time imposed by the two main modules of \tool: the Visual Execution Tracer and the Visual-Augmented Test Runner.
 
-\subsection{Variables and Measures}
-
-\subsubsection{Object of Analysis}
-
-As objects of analysis we chose four (4) web applications and their test suites utilized in earlier study on web testing. For each application, we manually applied each test suite across all the available releases, collecting information about the breakages. At the end of the task, we identified 733 individual breakages (see details in \autoref{sec:taxonomy}).
-
-\subsubsection{Independent Variables}
-
-In our study, the visual-aided approach is represented by \tool. As a DOM-based approach we chose \water. However, we have not adopted the implementation described in the original paper~\cite{Choudhary:2011:WWA:2002931.2002935}. In fact, there are fundamental design differences between the algorithms: \water is an offline technique that runs a test, collects information about the breakages, and runs the repair as a \textit{post-processing} technique. Our algorithm, instead, is designed to analyze the test suite at runtime, and attempt repairs in \textit{online} mode. %Thus, a straightforward comparison is not possible, as it would bias either of the two competing techniques.
-
-Given that the scope of this paper is to gain insights on the benefits of using the GUI to find repairs, we injected \water's DOM-based repair strategy within our main algorithm. Specifically, we customized the \textsc{visualSearch} procedure so as to utilize: (i)~only DOM-based information, (ii)~only visual-based information. We refer to these two variants as \tool-DOM, and \tool-Vis, respectively.
-
-\subsubsection{Dependent Variables}
-
-We aim to gain insights on the effectiveness and efficiency of the test repair approaches.
-
-\head{Effectiveness}
-We evaluated our approach at repairing the 733 breakages found in the study presented in this paper in \autoref{sec:taxonomy}.
-To this aim, we counted the \textit{number of correct repairs} triggered by the \andrea{complete}
-
-\head{Efficiency}
-We utilize two metrics of efficiency.
-First, we measure the overhead imposed by the Visual Execution Tracer on the test suite to create the dynamic visual execution traces that underlie at the functioning of our approach.
-As a second metric, we counted the time spent by each competing technique in attempting at repairing breakages. 
-
-\subsection{Procedure}\label{sec:procedure}
-
-For each subject applications, we applied the two variants of our approach (\tool-DOM and \tool-Vis) to each $(T_n,V_{n+1})$ pair in which a breakage was observed. For each variant, and for each breakage, we manually examined the proposed repaired $rep$ to determined whether the tool was able to detect (and possibly repair) the issues. If $rep$ was correct upon manual inspection, we incremented the number of correct repairs (that represent our true positives). Conversely, the false negatives are represented by \textit{missed} detections or \textit{incorrect} repairs.
-In the case the tool was unable to gather a repair at all, we counted the number of manual repairs.
-
-We adopted this counting strategy and manual inspection because the examined tests do have dependencies, and they often exhibit \textit{multiple} breakages.
+%\subsection{Variables and Measures}
 
 \input{results-table}
 
+\head{Object of Analysis}
+%
+As objects of analysis we chose four (4) web applications and their test suites utilized in earlier study on web testing~\cite{WCRE}. For each application, we manually applied each test suite across all the available releases, collecting information about the breakages. At the end of the task, we identified 733 individual breakages (see details in \autoref{sec:taxonomy}).
+
+\head{Independent Variables}
+In our study, the visual-aided approach is represented by \tool. As a DOM-based approach we chose \water. However, we have not adopted the implementation described in the original paper~\cite{Choudhary:2011:WWA:2002931.2002935}. In fact, there are fundamental design differences between the algorithms: \water is an offline technique that runs a test, collects information about the breakages, and runs the repair as a \textit{post-processing} technique. Our algorithm, instead, is designed to analyze the test suite at runtime, and attempt repairs in a \textit{online} mode. %Thus, a straightforward comparison is not possible, as it would bias either of the two competing techniques.
+Given that the scope of this paper is to compare the effectiveness in repairing breakages, we injected \water's DOM-based repair strategy within our main algorithm. Specifically, we customized the \textsc{visualSearch} procedure so as to utilize: (i)~only DOM-based information, (ii)~only visual-based information. For simplicity, in the rest of the evaluation section, we refer to the two competing tools as \water and \tool, respectively.
+
+\head{Dependent Variables}
+We aim to gain insights on the effectiveness and efficiency of the test repair approaches.
+
+\noindent
+\emph{Effectiveness}.
+We evaluated our approach at repairing the 733 breakages found in the study presented in this paper in \autoref{sec:taxonomy}.
+To this aim, we counted the number of \textit{correct repairs} and triggered by the two techniques, as well as, the amount of \textit{manual repairs}.
+
+\noindent
+\emph{Efficiency}.
+We utilize two metrics of efficiency.
+First, we measured the overhead imposed by the Visual Execution Tracer on the test suite to create the traces that underlie at the functioning of our approach.
+As a second metric, we counted the time spent by each competing technique in attempting at repairing breakages. 
+
+\head{Procedure}\label{sec:procedure}
+For each subject applications, we applied \water and \tool to each $(T_n,V_{n+1})$ pair in which a breakage was observed. For each tool, and for each breakage, we manually examined the proposed repaired $rep$ to determined its correctness. If $rep$ was found correct upon manual inspection, we incremented the number of correct repairs (that represent our true positives). Conversely, the false negatives are represented by \textit{missed} detections or \textit{incorrect} repairs.
+In the cases where both tools were unable to repair, we counted the number of \textit{manual} repairs.
+
+%The manual inspection was necessary because the examined tests do have dependencies, and they often exhibit \textit{multiple} breakages.
+
 \subsection{Results}\label{sec:results}
 
-\subsubsection{Effectiveness (RQ\textsubscript{1})}
-
+\head{Effectiveness (RQ\textsubscript{1})}
 \autoref{table:results} presents the effectiveness results. 
-
-For each web application, the table reports the number of breakages, and the amount of correct repairs triggered by \tool-DOM and \tool-VIS both numerically that percentage-wise. 
+For each web application, the table reports the number of breakages, and the amount of correct repairs triggered by \water and \tool both numerically and percentage-wise. 
 The results are further divided among the various breakage classes. Totals across all applications are also provided.
 
-Overall, we can notice that \tool-DOM was able to repair 420/733 (57\%), whereas \tool-VIS found correct repairs for 592/733 (81\%) breakages. \tool-VIS was hence able to correct 172 breakages more than \tool-DOM, a 41\% increment.
+Overall, we can notice that \water was able to repair 420/733 (57\%), whereas \tool found correct repairs for 592/733 (81\%) breakages. \tool was hence able to correct 172 breakages more than \water, a 41\% increment.
 
-Looking at the specific breakage classes, each variant performed well with respect to \textit{Scenario~1}: \tool-DOM repaired correctly 63\% of the times, whereas \tool-VIS 84\%. Concerning \textit{Scenario~2}, no (correct) repairs were found by \tool-DOM, while \tool-VIS was successful 33\% of the times.
-About elements being removed (\textit{Scenario~3}) both the variants of our approach performed equally, detecting 14/21 cases (67\%). Most of the differences between the two variants emerge when considering Mis-Selection cases (\textit{Scenarios~4 and~5}): the \tool-DOM variant was never able to detect any mis-selection of elements, whereas \tool-VIS detected and repaired correctly on average 80\% of them. Of those, \tool-VIS repaired correctly almost all (94\%) of the mis-selection that led to direct breakages, and correctly anticipated propagated breakages in the 67\% of the cases.
+Looking at the specific breakage classes, each tool performed well with respect to \textit{Scenario~1}: \water repaired correctly 63\% of the times, whereas \tool 84\%. Concerning \textit{Scenario~2}, no correct repairs were found by \water, while \tool was successful 33\% of the times.
+About elements being removed (\textit{Scenario~3}) both tools performed equally, detecting 14/21 cases (67\%). The main difference between the two approaches emerges when considering \textit{Mis-Selection} cases (\textit{Scenarios~4 and~5}): \water was never able to detect any mis-selection of elements, whereas \tool detected and repaired correctly on average 80\% of them (avoiding 94\% of direct breakages due to mis-selections and  preventing 67\% of propagated breakages).
 
-\begin{table}[b]
+\begin{table}[t]
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{0.9}
 \centering
@@ -74,27 +70,25 @@ About elements being removed (\textit{Scenario~3}) both the variants of our appr
 \toprule
 & {\sc \small AddressBook} & {\sc \small Claroline} & {\sc \small Collabtive} & {\sc \small PPMA} & {\sc \small All Apps} \\
 \midrule
-Dom 	& 0           & 3         & 0          & 0    & 3        \\
-Vis 	& 28          & 72        & 43         & 32   & 175      \\
+\water\textsubscript{wins}	& 0           & 3         & 0          & 0    & 3        \\
+\tool\textsubscript{wins} 	& 28          & 72        & 43         & 32   & 175      \\
 Tie 	& 17          & 47        & 166        & 187  & 417      \\
-Man 	& 5           & 43        & 9          & 81   & 138      \\
+Manual 	& 5           & 43        & 9          & 81   & 138      \\
 \midrule
 		& 50     & 165  & 218   & 300 & 733   \\
 \bottomrule  
 \end{tabular}
 \end{table}
 
-Another thing that emerged from these results is that \tool-VIS was constantly superior to \tool-DOM, no matter the application being considered. The biggest improvement was for Claroline, with 69 (119-50) more repairs, whereas the lowest occurred for AddressBook, with ``only'' 32 repairs more. 
+Overall, the proposed visual approach by \tool was constantly superior to \water, no matter the application being considered. The biggest improvement was for Claroline, with 69 (119-50) repairs more, whereas the lowest occurred for AddressBook, with ``only'' 32 (45-17) repairs more. 
 
-\autoref{table:comparison} compares the two variants further. We classified the repairs pertaining to each individual breakage in four categories: (1)~\textit{Dom}, meaning that \tool-DOM was able to repair correctly whereas \tool-VIS failed; (2)~\textit{Vis}, meaning that \tool-VIS prevailed; (3)~\textit{Tie}, when both variants were able to correct the breakage, and (4)~\textit{Man}, when none of the variants were able to correct the breakage, and thus we had to manually fix the test to continue the experimental work. As a further note, no breakages were found to be unrepairable, or tests needed to be discarded. 
+\autoref{table:comparison} compares the two approaches further. We classified the repairs pertaining to each individual breakage in four categories: (1)~\water\textsubscript{wins}, meaning that \water was able to repair correctly whereas \tool failed; (2)~\tool\textsubscript{wins}, meaning that \tool prevailed; (3)~\textit{Tie}, when both variants were able to correct the breakage, and (4)~\textit{Manual}, when none of the variants were able to correct the breakage, and thus we had to manually fix the test to continue the experimental work. As a further note, no breakages were found to be unrepairable, or tests needed to be discarded. 
 
-As evident from \autoref{table:comparison}, in most cases, both techniques found the correct repair (56\%). However, there are 175 cases in which the \tool-Vis repaired a breakage that the DOM-based version (i.e., \water) could not fix. Conversely, only in a few cases (3) the \tool-DOM prevailed over the visual approach. Finally, 138/733 (19\%) of breakages were repaired \textit{manually}, because none of the techniques were able to fix them.
+As evident from \autoref{table:comparison}, in most cases, both techniques found the correct repair (56\%). However, there are 175 cases in which the \tool repaired a breakage that \water could not fix. Conversely, only in a few cases (3) \water prevailed over the visual approach. Finally, 138/733 (19\%) of breakages were repaired \textit{manually}, because none of the technique were able to fix them.
 We will discuss on those cases in \autoref{sec:discussion}.
 
 
-\subsubsection{Performance (RQ\textsubscript{2})}\label{sec:performance}
-
-\begin{table}[b]
+\begin{table}[t]
 \setlength{\tabcolsep}{0.9pt}
 \renewcommand{\arraystretch}{0.9}
 \centering
@@ -107,32 +101,33 @@ We will discuss on those cases in \autoref{sec:discussion}.
 
 \cmidrule(r){2-4} \cmidrule(r){5-6}
 
-& \rot{{Original}} 
-& \rot{{With}}
-& \rot{Overhead} 
-& \rot{{\tool-DOM}} 
-& \rot{{\tool-VIS}}    \\
+& \rot{{Original (s)}} 
+& \rot{{With VET (s)}}
+& \rot{Slowdown} 
+& \rot{{\water (s)}} 
+& \rot{{\tool (s)}}    \\
 
 \midrule
-\sc AddressBook & 49.65            & 207.03  & 4.170    & 959    & 447  \\
-\sc Claroline   & 154.93           & 860.55  & 5.555    & 6,492  & 1,359 \\
-\sc Collabtive  & 621.89           & 1780.20 & 2.863    & 2,551  & 1,995 \\
-\sc PPMA        & 227.45           & 457.80  & 2.013    & 3,762  & 1,293 \\
+\sc AddressBook & 49.65            & 207.03  & 4.2X    & 959    & 447  \\
+\sc Claroline   & 154.93           & 860.55  & 5.6X    & 6,492  & 1,359 \\
+\sc Collabtive  & 621.89           & 1780.20 & 2.9X    & 2,551  & 1,995 \\
+\sc PPMA        & 227.45           & 457.80  & 2.0X    & 3,762  & 1,293 \\
 \midrule
-Total & 1053.91 & 3305.59 & 3.650 & 13,763 & 5,094 \\
+Total & 1053.91 & 3305.59 & 3.7X & 13,763 & 5,094 \\
 %Average & 263.48 & 826.40 & 3.650 & 3441 & 1273 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\head{Performance (RQ\textsubscript{2})}\label{sec:performance}
 To assess the performance of running our approach, we measured the execution time on a macOS machine, equipped with a 2.3GHz Intel Core i7 and 16 GB of memory.
-\autoref{table:performance} (Trace Generation) shows the total execution time, in seconds, of the correct version of all tests for which a breakage occurred, first disabling (Column~2) and then enabling (Column~3) the Visual Execution Tracer module. Column~4 shows the overhead on the test suite.
-Overall, our technique imposes on average a 3.6X overhead on the tests execution ($\approx$38 min more than the original tests running time). The biggest overhead occurs for Collabtive ($\approx$19 min), whereas the lowest occurs for AddressBook ($\approx$3 min). 
+\autoref{table:performance} (Trace Generation) shows the total execution time, in seconds, of the correct version of all tests for which a breakage occurred, first disabling (Column~2) and then enabling (Column~3) the Visual Execution Tracer (VET) module. Column~4 shows the overhead on the test suite.
+Overall, our technique imposed on average a 3.7X overhead on the tests execution ($\approx$38 min more than the original tests running time). The biggest overhead occurs for Collabtive ($\approx$19 min), whereas the lowest occurs for AddressBook ($\approx$3 min). 
 
-Concerning the execution time of our repair technique, \autoref{table:performance} (Repair Time) shows the total running time, in seconds, for each variant. Overall, it is evident that \tool-VIS was almost three times faster than \tool-DOM. The best case occurs for Claroline, where \tool-VIS employed 86 minutes less than \tool-DOM to perform its analysis. The most marginal gain occurred for AddressBook and Collabtive, with `only' 9 minutes less. 
-On average, across all systems \tool-VIS employed 6.95 s to verify and attempt to repair each of the 733 breakages, whereas \tool-DOM employed 18.78.
+Concerning the execution time of our repair technique, \autoref{table:performance} (Repair Time) shows the total running time, in seconds, for each tool. Overall, it is evident that \tool was almost three times faster than \water. The best case occurs for Claroline, where \tool employed 86 minutes less than \water to perform its analysis. The most marginal gain occurred for AddressBook and Collabtive, with `only' 9 minutes less. 
+On average, across all systems \tool employed 6.95~s/breakage, whereas \water employed 18.78~s/breakage.
 
-Although these results seems counterintuitive (i.e., a search on the DOM \textit{should} be faster than an image processing pipeline), we will explain some of the reasons of such poor performance of the DOM-based version of the algorithm in \autoref{sec:discussion}.
+At a first sight, these results could seems counterintuitive (i.e., a search on the DOM \textit{should} be faster than an image processing pipeline). However, we will explain some of the reasons of such poor performance of the DOM-based version of the algorithm in the Discussion section.
 
 
 
