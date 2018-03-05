@@ -26,20 +26,22 @@ As objects of analysis we chose four (4) web applications and their test suites 
 
 \head{Independent Variables}
 In our study, the visual-aided approach is represented by \tool. As a DOM-based approach we chose \water. However, we have not adopted the implementation described in the original paper~\cite{Choudhary:2011:WWA:2002931.2002935}. In fact, there are fundamental design differences between the algorithms: \water is an offline technique that runs a test, collects information about the breakages, and runs the repair as a \textit{post-processing} technique. Our algorithm, instead, is designed to analyze the test suite at runtime, and attempt repairs in a \textit{online} mode. %Thus, a straightforward comparison is not possible, as it would bias either of the two competing techniques.
-Given that the scope of this paper is to compare the effectiveness in repairing breakages, we injected \water's DOM-based repair strategy within our main algorithm. Specifically, we customized the \textsc{visualSearch} procedure so as to utilize: (i)~only DOM-based information, (ii)~only visual-based information. For simplicity, in the rest of the evaluation section, we refer to the two competing tools as \water and \tool, respectively.
+Given that the scope of this paper is to compare the effectiveness in repairing breakages, we injected \water's DOM-based repair strategy within our main algorithm. Specifically, we customized the Visual Execution Tracer to store the DOM information necessary to the algorithm and implemented an alternative version of the \textsc{visualSearch} procedure so as to incorporate \water's repair heuristics.
+ %(i)~only DOM-based information, (ii)~only visual-based information. 
+ For simplicity, in the rest of the evaluation section, we refer to the two competing tools as \water and \tool, respectively.
 
 \head{Dependent Variables}
 We aim to gain insights on the effectiveness and efficiency of the test repair approaches.
 
 \noindent
 \emph{Effectiveness}.
-We evaluated our approach at repairing the 733 breakages found in the study presented in this paper in \autoref{sec:taxonomy}.
+We evaluated our approach on collected a data set of breakages (\autoref{sec:taxonomy}).
 To this aim, we counted the number of \textit{correct repairs} and triggered by the two techniques, as well as, the amount of \textit{manual repairs}.
 
 \noindent
 \emph{Efficiency}.
 We utilize two metrics of efficiency.
-First, we measured the overhead imposed by the Visual Execution Tracer on the test suite to create the traces that underlie at the functioning of our approach.
+First, we measured the overhead imposed by the Visual Execution Tracer on the test suite to create the traces. % that underlie at the functioning of our approach.
 As a second metric, we counted the time spent by each competing technique in attempting at repairing breakages. 
 
 \head{Procedure}\label{sec:procedure}
@@ -87,6 +89,16 @@ Overall, the proposed visual approach by \tool was constantly superior to \water
 As evident from \autoref{table:comparison}, in most cases, both techniques found the correct repair (56\%). However, there are 175 cases in which the \tool repaired a breakage that \water could not fix. Conversely, only in a few cases (3) \water prevailed over the visual approach. Finally, 138/733 (19\%) of breakages were repaired \textit{manually}, because none of the technique were able to fix them.
 We will discuss on those cases in \autoref{sec:discussion}.
 
+\head{Performance (RQ\textsubscript{2})}\label{sec:performance}
+To assess the performance of running our approach, we measured the execution time on a macOS machine, equipped with a 2.3GHz Intel Core i7 and 16 GB of memory.
+\autoref{table:performance} (Trace Generation) shows the total execution time, in seconds, of the correct version of all tests for which a breakage occurred, first disabling (Column~2) and then enabling (Column~3) the Visual Execution Tracer (VET) module. Column~4 shows the overhead on the test suite.
+Overall, our technique imposed on average a 3.7X overhead on the tests execution (on average, $\approx$38 min more than the original tests running time). The biggest overhead occurs for Collabtive ($\approx$19 min), whereas the lowest occurs for AddressBook ($\approx$3 min). 
+
+Concerning the execution time of our repair technique, \autoref{table:performance} (Repair Time) shows the total running time, in seconds, for each tool. Overall, it is evident that \tool was almost three times faster than \water. The best case occurs for Claroline, where \tool employed 86 minutes less than \water to perform its analysis. The most marginal gain occurred for AddressBook and Collabtive, with `only' 9 minutes less. 
+On average, across all systems \tool employed 6.95~s/breakage, whereas \water employed 18.78~s/breakage.
+
+At a first sight, these results could seems counterintuitive (i.e., a search on the DOM \textit{should} be faster than an image processing pipeline). However, we will explain some of the reasons of such poor performance of the DOM-based version of the algorithm in the Discussion section.
+
 
 \begin{table}[t]
 \setlength{\tabcolsep}{0.9pt}
@@ -118,19 +130,6 @@ Total & 1053.91 & 3305.59 & 3.7X & 13,763 & 5,094 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\head{Performance (RQ\textsubscript{2})}\label{sec:performance}
-To assess the performance of running our approach, we measured the execution time on a macOS machine, equipped with a 2.3GHz Intel Core i7 and 16 GB of memory.
-\autoref{table:performance} (Trace Generation) shows the total execution time, in seconds, of the correct version of all tests for which a breakage occurred, first disabling (Column~2) and then enabling (Column~3) the Visual Execution Tracer (VET) module. Column~4 shows the overhead on the test suite.
-Overall, our technique imposed on average a 3.7X overhead on the tests execution ($\approx$38 min more than the original tests running time). The biggest overhead occurs for Collabtive ($\approx$19 min), whereas the lowest occurs for AddressBook ($\approx$3 min). 
-
-Concerning the execution time of our repair technique, \autoref{table:performance} (Repair Time) shows the total running time, in seconds, for each tool. Overall, it is evident that \tool was almost three times faster than \water. The best case occurs for Claroline, where \tool employed 86 minutes less than \water to perform its analysis. The most marginal gain occurred for AddressBook and Collabtive, with `only' 9 minutes less. 
-On average, across all systems \tool employed 6.95~s/breakage, whereas \water employed 18.78~s/breakage.
-
-At a first sight, these results could seems counterintuitive (i.e., a search on the DOM \textit{should} be faster than an image processing pipeline). However, we will explain some of the reasons of such poor performance of the DOM-based version of the algorithm in the Discussion section.
-
-
-
 
 
 

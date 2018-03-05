@@ -6,7 +6,7 @@
 %\colorbox{lightgray}{/* Execution Trace collection */} \;
 \textit{trace} $\gets$ loadExecutionTrace($EX$) \;
 \textit{driver} $\gets$ loadApp($U$) \;
-\textit{statements}, \textit{repairedStatements} $\gets$ getStatements(T) \;
+\textit{statements}, \textit{repairList} $\gets$ getStatements(T) \;
  \ForEach{ test statement $st_i \in$ \textit{statements} }{%
   \textit{locator} $\gets$ getLocator($st_i$)\;
   \textit{\textit{visLocator}} $\gets$ getVisualLocator(\textit{trace}, $st_i$) \;
@@ -18,30 +18,30 @@
      \uIf{\textit{webElemVisual} == null} {
        \textit{webElemVisual} $\gets$ \textsc{localCrawling}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
        \uIf{\textit{webElemVisual} == null} {
-       \textit{repairedStatements}.remove($st_i$)\;
+       \textit{repairList}.remove($st_i$)\;
        } \Else{
        \textit{newStmt} $\gets$ <\textit{webElemVisual}, ``click'', ``''> \;
-       \textit{repairedStatements}.addBefore($st_i$, \textit{newStmt}) \;
+       \textit{repairList}.addBefore($st_i$, \textit{newStmt}) \;
         }
      } \Else{
-     updateLocator($st_i$, \textit{webElemVisual}) \;
-      \textit{repairedStatements}.update($st_i$) \;
+     %updateLocator($st_i$, \textit{webElemVisual}) \;
+      \textit{repairList}.update($st_i$.setLocator(\textit{webElemVisual})) \;
      }
    \HiLi{/* Manage mis-selection of web element. */} \;
    } \ElseIf{webElement $\neq$ null}{
       \textit{webElemVisual} $\gets$ \textsc{visualSearch}(\textit{driver}, $st_i$, \textit{visLocator}, \textit{DOMInfo})\;
      \textit{webElement} $\gets$ \textsc{verify}(\textit{webElement}, \textit{webElemVisual})\;
-      \textit{repairedStatements}.update($st_i$, \textit{webElement}) \;
+      \textit{repairList}.update($st_i$, \textit{webElement}) \;
    }
    \HiLi{/* Suggest potential fix to assertions value. */} \;
     \If { getAction($st_i$) == ``assertion'' and getText($st_i$) $\neq$ webElement.getText() } {
-         \textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
-      	\textit{repairedStatements}.replace($st_i$,  \textit{newStmt}) \;
+         %\textit{newStmt} $\gets$ <\textit{webElement}, ``getText'', webElement.getText()> \;
+      	\textit{repairList}.update($st_i$.setText(\textit{webElement}.getText())) \;
       }
+     \textit{driver} $\gets$ \textsc{executeStatement}($st_i$, $V'$) \;
       	$T'$.add($st_i$) \;
-	\textit{driver} $\gets$ \textsc{executeStatement}($st_i$, $V'$) \;
  }
-\Return{$T'$, \textit{repairedStatements}}\;
+\Return{$T'$, \textit{repairList}}\;
 \caption{Visual-Augmented Test Execution}
 \label{algo:alg1}
 \end{algorithm}

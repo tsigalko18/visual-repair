@@ -11,6 +11,9 @@ The findings from this study highlight the complexity and the variety of the bre
 \head{Study Setting}\label{sec:study}
 In the intention of supporting a realistic test regression scenario, we selected open source web applications for which (i)~multiple versions and (ii)~Selenium test cases were available from previous research on web testing~\cite{WCRE}. %Especially the latter requirement was challenging, because non-trivial web test suites are rarely made publicly available, and in fact we found no open-source test suite of reasonable size for our study. Fortunately, we could select four web applications that have been used extensively in the context of previous research on web testing~\cite{WCRE}, and for which we were able to obtain four working Selenium test suites.
 
+\autoref{table:subjectSystems} (Web Applications) shows information about the selected applications, including their names, the initial release for which the test suites were developed, the numbers of releases available after the initial release, and the number of lines of code (counted using \texttt{cloc}~\cite{cloc} and averaged across the releases).
+\autoref{table:subjectSystems} (Test Suites) provides data on the test suites, including the total numbers of test cases counted across all versions along with the average number of test cases per version, and the total numbers of statements in all of the test cases counted across all versions along with the average number of statements per test case.
+
 \begin{table}[h]
 \setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{0.9}
@@ -44,9 +47,6 @@ Total/Average &           & 82       & 263,436 & 2,672/33        & 121,555/43 \\
 \label{table:subjectSystems}
 \end{table}
 
-\autoref{table:subjectSystems} (Web Applications macro-column) shows information about the selected applications, including their names, the initial release for which the test suites were developed, the numbers of releases available after the initial release, and the number of lines of code (counted using \texttt{cloc}~\cite{cloc} and averaged across the releases).
-Test Suites macro-column provides data on the test suites, including the total numbers of test cases counted across all versions along with the average number of test cases per version, and the total numbers of statements in all of the test cases counted across all versions along with the average number of statements per test case.
-
 \head{Procedure}\label{sec:procedure}
 First, we determined the types of test breakages that occur in our objects of analysis. For each considered web application, for each version $V_n$ and its accompanying test suite $T_n$, we executed $T_n$ on the subsequent version $V_{n+1}$, and collected information about each breakage and each failure (e.g., actual bugs). We repeated this process until all the versions were taken into account. 
 
@@ -62,7 +62,7 @@ First, we determined the types of test breakages that occur in our objects of an
 \begin{figure}[b]
 \centering
 %\fbox{
-\includegraphics[trim={0cm 0cm 0cm 0cm}, clip,width=0.8\columnwidth]{images/distribution.pdf}
+\includegraphics[trim={0cm 0cm 0cm 0cm}, clip,width=0.78\columnwidth]{images/distribution.pdf}
 %}
 \caption{Distribution of test breakages per test case in each subject system.}
 \label{fig:distribution}
@@ -107,7 +107,7 @@ In the following of this section, we detail the test breakage scenarios by means
 \noindent
 \textbf{Basic Terminology.}
 At a high level, each web test statement is a tuple \textit{<locator, action, value>}. 
-The locator component specifies the web element the test statement is interacting with. A locator is a function on a DOM state $\mathcal{D}$. Notationally, $l: \mathcal{D} \rightarrow \{e\}$ where $e$ is the web element returned by the locator $l$ when applied to $\mathcal{D}$. 
+The locator component specifies the web element the test statement is interacting with. A locator $l$ is a function on a DOM state $\mathcal{D}$. Notationally, $l: \mathcal{D} \rightarrow \{e\}$ where $e$ is the web element returned by the locator $l$ when applied to $\mathcal{D}$. 
 %
 %Locator breakages are due to one or more DOM-based root causes. A root cause is a tuple $<\mathcal{D}, e, a, v>$ where $\mathcal{D}$ is a DOM tree (e.g., a test state), $e$ is the web element in $\mathcal{D}$ on which the test currently operates, $a$ is a HTML attribute of $e$, and $v$ is the value of $a$. 
 %We define a repair as a tuple $<r, e', a', v', \mathcal{D'}>$, where $r$ is a root cause and $e'$ is the suggested new web element for $\mathcal{D}$ in the root cause $r$, having attribute $a'$ set to $v'$. 
@@ -145,7 +145,7 @@ At a visual inspection of the two GUIs, a tester would expect the test to work, 
 Notationally this can be expressed as $l: \mathcal{D} \rightarrow \emptyset \land \exists \ \mathcal{D'} \mid l: \mathcal{D'} \rightarrow \{e\}$.
 As a concrete example consider \autoref{fig:ab1}~\textcircled{\raisebox{-0.7pt}{1}}, %showing Addressbook web application version 6.2.12, 
 specifically the pages in which the user can insert a new entry. The test~\textcircled{\raisebox{-0.7pt}{2}} clicks on the ``add new'' link on the home page (Line~5), and fills in the ``First name'', ``Last name'' and ``Company'' text fields (Lines~6--8).
-Suppose now to replay the test on the successive version 7.0.0~\textcircled{\raisebox{-0.7pt}{3}}, for regression purposes. The test will raise an exception of kind \texttt{NoSuchElementException} at Line~6, when attempting to locate the ``First name'' text field~\textcircled{\raisebox{-0.7pt}{2}}. 
+Suppose now to replay this test on the successive version 7.0.0~\textcircled{\raisebox{-0.7pt}{3}}, for regression purposes. The test will raise an exception of kind \texttt{NoSuchElementException} at Line~6, when attempting to locate the ``First name'' text field~\textcircled{\raisebox{-0.7pt}{2}}. 
 Indeed, a new intermediate confirmation page has been added~\textcircled{\raisebox{-0.9pt}{3}}, and the navigational workflow of the test must be corrected to reflect that of the new  web application.
 
 From a testing perspective, the ``First name'' text field can no longer be found on the web page (test state) following the execution of the statement at Line~5. However, conceptually, the repair action that needs to be triggered in order to correct the test has nothing to do with the locator at Line~6.
@@ -160,7 +160,7 @@ A possible solution would require to (1)~detect that the web element $e$ no long
 \noindent
 \textbf{Scenario 3 (Non-Selection $\bullet$ Removed).} 
 %
-The third and last \textit{Non-Selection} scenario concerns a web element being deleted from a web page. Formally, $l: \mathcal{D} \rightarrow \emptyset \land \nexists \ \mathcal{D'} \mid l: \mathcal{D'} \rightarrow \{e\}$.
+The third and last \textit{Non-Selection} scenario concerns a web element being removed from a web page. Formally, $l: \mathcal{D} \rightarrow \emptyset \land \nexists \ \mathcal{D'} \mid l: \mathcal{D'} \rightarrow \{e\}$.
 In a way, this can be seen as the opposite scenario of Scenario 2. 
 As a concrete example, consider the example of \autoref{fig:ab2}, with the application being evolved in the reverse order as depicted in the figure (thus considering going from version 7.0.0 to version 6.2.12). The test~\textcircled{\raisebox{-0.7pt}{4}} would stop at Line 6, when trying to select the ``Next'' button, which was on a page that is no longer present. In this case, the only possible fix is to delete the statement.
 
@@ -170,14 +170,14 @@ As a concrete example, consider the example of \autoref{fig:ab2}, with the appli
 
 \noindent
 \textbf{Scenarios 4 and 5 (Mis-Selection $\bullet$ Direct and Propagated).}\label{sec:misselection}
-Problems occur not only when web elements are being deleted, but also when they get modified, either in their position on the DOM tree, or in their position in the application state space. This can cause tests to ``mis-select'' elements.
+In web testing, it is frequent for web elements to get repositioned in the DOM tree. This can cause locators to ``mis-select'' elements.
 Specifically, a mis-selection occurs when a locator selects a different DOM element from the one that was used to target. 
 %Suppose having version $V$ and a test $t$, composed of a statement $st_i$, which uses a locator $l$ (where $l: \mathcal{D} \rightarrow \{e\}$). In the next version $V'$, $l: \mathcal{D}' \rightarrow \{e'\}$ where $e \ne e'$.
 Notationally, $l: \mathcal{D} \rightarrow \{e\}$ in $V$, and $l: \mathcal{D}' \rightarrow \{e'\}$ in $V'$ where $e \ne e'$.
 %A mis-selection of an element can lead to unpredictable misbehaviours of the test, being responsible of either direct or propagated breakages.
 
 Consider \autoref{fig:example} again. 
-Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, as in~\textcircled{\raisebox{-0.9pt}{4}}). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas at Line~8 (which will be Line~9 in the new version) will fill in the field ``Nickname'', instead of the field ``Company''.
+Suppose that the test~\textcircled{\raisebox{-0.9pt}{2}} is repaired so as to reach the edit page on version 7.0.0 (for instance, as in~\textcircled{\raisebox{-0.9pt}{4}}). On the new version 7.0.0, the statements at Lines~6--7 will execute correctly, whereas at Line~8 (which will be Line~9 in the new version) the test will fill in the field ``Nickname'', instead of the field ``Company''.
 
 The mis-selection problem can lead to unpredictable test executions, that diverge from the test's intended behaviour. Depending on the kind of actions, the test execution might result in a \textit{direct}, \textit{propagated} or silent breakage~\cite{Hammoudi-2016-ICST}. Thus, the point in which the repair must be applied varies depending on where the mis-selection originated. (The test may continue its execution until it reaches a point in which an action cannot be performed or an element cannot be found, but the actual repair has to be triggered \textit{in a previous test statement}).
 Repairing mis-selections requires to find another locator $l' \mid l': \mathcal{D'} \rightarrow \{e\}$.
