@@ -12,16 +12,15 @@ public class Main {
 	static long stopTime;
 	static long elapsedTime;
 
-	public static void main(String[] args)
-			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		/* package name. */
-		String prefix = "addressbook411" + ".";
+		String prefix = "clarolineDirectBreakage" + ".";
 
 		/* class name. */
-		String className = "AddressBookSearchMultipleAddressBookNameTest";
+		String className = "TestLoginAdmin";
 
-		RepairMode rm = RepairMode.DOM;
+		RepairMode rm = RepairMode.VISUAL;
 
 		visualRunner(prefix, className, rm);
 	}

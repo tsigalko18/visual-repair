@@ -100,8 +100,7 @@ public class VisualAssertionTestRunner {
 			etc = pt.parseAndSerialize(testBroken);
 
 			pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
-			testCorrect = pt
-					.parseAndSerialize(UtilsFileGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
+			testCorrect = pt.parseAndSerialize(UtilsFileGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
 		} catch (NullPointerException e) {
 			System.out.println("[ERROR]\tTest folder not found. Verify the Settings.");
@@ -116,7 +115,7 @@ public class VisualAssertionTestRunner {
 		Map<Integer, Statement> repairedTest = new LinkedHashMap<Integer, Statement>();
 		Map<Integer, Statement> addedSteps = new LinkedHashMap<Integer, Statement>();
 		List<Integer> deletedSteps = new ArrayList<Integer>();
-		
+
 		int numStepsAdded = 0;
 		int numStepsDeleted = 0;
 		boolean noSuchElementException = false;
@@ -136,8 +135,7 @@ public class VisualAssertionTestRunner {
 			try {
 
 				/* try to poll the DOM looking for the web element. */
-				webElementFromDomLocator = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver,
-						statement.getDomLocator());
+				webElementFromDomLocator = UtilsVisualRepair.retrieveWebElementFromDomLocator(driver, statement.getDomLocator());
 				noSuchElementException = false;
 
 			} catch (NoSuchElementException Ex) {
@@ -149,8 +147,8 @@ public class VisualAssertionTestRunner {
 				 */
 
 				System.out.println("[LOG]\tDirect breakage detected at line " + statement.getLine());
-				System.out.println("[LOG]\tCause: Non-selection of elements by the locator " + statement.getDomLocator()
-						+ " in the current DOM state. Applying visual detection of the web element");
+				System.out.println("[LOG]\tCause: Non-selection of elements by the locator " + statement.getDomLocator() + " in the current DOM state");
+				System.out.println("[LOG]\tApplying visual detection of the element");
 
 				/*
 				 * if the element is not found it can either be:
@@ -161,8 +159,7 @@ public class VisualAssertionTestRunner {
 				 */
 
 				/* strategy 1. search web element visually on the same state. */
-				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-						testCorrect, statementNumber, repairStrategy);
+				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
 
 				/*
 				 * actually the local crawling step might also check whether the step is no
@@ -177,8 +174,7 @@ public class VisualAssertionTestRunner {
 						System.out.println("Couldn't delete matching states file");
 					}
 
-					new Crawler(url, etc, testCorrect, statementNumber, repairedTest, repairStrategy)
-							.runLocalCrawling();
+					new Crawler(url, etc, testCorrect, statementNumber, repairedTest, repairStrategy).runLocalCrawling();
 
 					if (resultFile.exists()) {
 
@@ -200,13 +196,11 @@ public class VisualAssertionTestRunner {
 
 								String source = elementFromCrawl.getAttribute("outerHTML");
 								if (source == null || source.length() == 0) {
-									source = (String) ((JavascriptExecutor) driver)
-											.executeScript("return arguments[0].outerHTML;", elementFromCrawl);
+									source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;", elementFromCrawl);
 								}
 
 								if (source == null || source.length() == 0) {
-									System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement "
-											+ webElementFromDomLocator);
+									System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
 
 									/* repaired locator is an XPath. */
 									added.setDomLocator(elementFromCrawl);
@@ -235,8 +229,7 @@ public class VisualAssertionTestRunner {
 							 * After all steps are added, rerun the find element on the web page for the
 							 * current statement
 							 */
-							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver,
-									webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
+							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
 						}
 					} else {
 						// Delete the step
@@ -257,13 +250,11 @@ public class VisualAssertionTestRunner {
 
 					String source = webElementFromDomLocator.getAttribute("outerHTML");
 					if (source == null || source.length() == 0) {
-						source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;",
-								webElementFromDomLocator);
+						source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
 					}
 
 					if (source == null || source.length() == 0) {
-						System.out.println(
-								"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+						System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
 
 						/* repaired locator is an XPath. */
 						repairedStatement.setDomLocator(webElementFromDomLocator);
@@ -273,7 +264,11 @@ public class VisualAssertionTestRunner {
 
 						SeleniumLocator fixedLocator = UtilsRepair.getLocatorsFromOuterHtml(source);
 
-						repairedStatement.setDomLocator(fixedLocator);
+						if (fixedLocator == null) {
+							repairedStatement.setDomLocator(webElementFromDomLocator);
+						} else {
+							repairedStatement.setDomLocator(fixedLocator);
+						}
 
 					}
 
@@ -291,8 +286,7 @@ public class VisualAssertionTestRunner {
 					WebElement webElementVisual = null;
 
 					/* check the web element visually. */
-					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator,
-							testCorrect, statementNumber, repairStrategy);
+					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
 
 					if (webElementVisual != null) {
 
@@ -300,13 +294,11 @@ public class VisualAssertionTestRunner {
 
 						String source = webElementFromDomLocator.getAttribute("outerHTML");
 						if (source == null || source.length() == 0) {
-							source = (String) ((JavascriptExecutor) driver)
-									.executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
+							source = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].outerHTML;", webElementFromDomLocator);
 						}
 
 						if (source == null || source.length() == 0) {
-							System.out.println(
-									"[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
+							System.out.println("[ERROR]\tCannot retrieve outerHTML for webElement " + webElementFromDomLocator);
 
 							/* repaired locator is an XPath. */
 							repairedStatement.setDomLocator(webElementFromDomLocator);
@@ -351,17 +343,16 @@ public class VisualAssertionTestRunner {
 
 					if (webElementFromDomLocator.getText().equals(statement.getValue())) {
 
-						System.out.println("[LOG]\tAssertion value correct");
-						System.out.println(statement.toString());
+						// System.out.println("[LOG]\tAssertion value correct");
+						// System.out.println(statement.toString());
 
 					} else {
 
-						System.out.println(
-								"[LOG]\tAssertion value incorrect: " + "\"" + webElementFromDomLocator.getText() + "\""
-										+ " <> " + "\"" + statement.getValue() + "\"");
-
-						System.out.println("[LOG]\tSuggested new value for assertion: " + "\""
-								+ webElementFromDomLocator.getText() + "\"");
+						// System.out.println("[LOG]\tAssertion value incorrect: " + "\"" +
+						// webElementFromDomLocator.getText() + "\"" + " <> " + "\"" +
+						// statement.getValue() + "\"");
+						// System.out.println("[LOG]\tSuggested new value for assertion: " + "\"" +
+						// webElementFromDomLocator.getText() + "\"");
 
 						/* repair assertion value. */
 						repairedStatement.setValue(webElementFromDomLocator.getText());

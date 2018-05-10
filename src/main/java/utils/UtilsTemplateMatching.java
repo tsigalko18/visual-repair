@@ -26,14 +26,20 @@ import org.opencv.features2d.KeyPoint;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
+import datatype.Statement;
+
 public class UtilsTemplateMatching {
 
+	/* OpenCV bindings. */
 	static {
 		nu.pattern.OpenCV.loadShared();
 	}
 
+	/* The threshold ratio used for the distance. */
+	static float nndrRatio = 1.0f;
+
 	/* Ad-hoc visual locator detector feature. */
-	public static Point featureDetectorAndTemplateMatching(String imageFile, String templateFile) {
+	public static Point featureDetectorAndTemplateMatching(String imageFile, String templateFile, Statement statement) {
 
 		Point result = null;
 
@@ -43,7 +49,7 @@ public class UtilsTemplateMatching {
 		boolean isPresent = runFeatureDetection(templateFile, imageFile, allMatches);
 
 		if (isPresent) {
-			result = templateMatchingBestResult(templateFile, imageFile);
+			result = templateMatchingBestResult(templateFile, imageFile, statement);
 		}
 
 		return result;
@@ -53,7 +59,7 @@ public class UtilsTemplateMatching {
 	/*
 	 * Get the best point out of all possible points by using dom information
 	 */
-	public static Set<Point> featureDetectorAndTemplateMatching_dom(String imageFile, String templateFile) {
+	public static Set<Point> featureDetectorAndTemplateMatching_dom(String imageFile, String templateFile, Statement statement) {
 
 		Set<Point> allMatches = new HashSet<Point>();
 
@@ -62,7 +68,7 @@ public class UtilsTemplateMatching {
 
 		if (isPresent) {
 			Set<Point> templateMatches = new HashSet<Point>();
-			templateMatches.add(templateMatchingBestResult(templateFile, imageFile));
+			templateMatches.add(templateMatchingBestResult(templateFile, imageFile, null));
 			allMatches.addAll(templateMatches);
 			return allMatches;
 		}
@@ -79,7 +85,13 @@ public class UtilsTemplateMatching {
 	public static boolean runFeatureDetection(String templ, String img, Set<Point> allMatches) {
 		boolean sift = siftDetector(templ, img, allMatches);
 		boolean fast = fastDetector(templ, img, allMatches);
-		return (sift || fast);
+
+		boolean res = sift || fast;
+
+		if (res) {
+			System.out.println("[LOG]\tTemplate Present");
+		}
+		return res;
 	}
 
 	/*
@@ -96,12 +108,12 @@ public class UtilsTemplateMatching {
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
 		featureDetector.detect(objectImage, objectKeyPoints);
-		// System.out.println("Detected key points by FAST: " +
-		// objectKeyPoints.toList().size());
+//		System.out.println("[LOG]\tFAST: Detecting key-points in templage image");
 
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
 		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
 		descriptorExtractor.compute(objectImage, objectKeyPoints, objectDescriptors);
+//		System.out.println("[LOG]\tFAST: Computing descriptors in templage image");
 
 		/* Create output image. */
 		Mat outputImage = new Mat(objectImage.rows(), objectImage.cols(), Highgui.CV_LOAD_IMAGE_COLOR);
@@ -112,9 +124,9 @@ public class UtilsTemplateMatching {
 		/* Match object image with the scene image. */
 		MatOfKeyPoint sceneKeyPoints = new MatOfKeyPoint();
 		MatOfKeyPoint sceneDescriptors = new MatOfKeyPoint();
-		// System.out.println("Detecting key points in background image...");
+//		System.out.println("[LOG]\tFAST: Detecting key-points in reference image");
 		featureDetector.detect(sceneImage, sceneKeyPoints);
-		// System.out.println("Computing descriptors in background image...");
+//		System.out.println("[LOG]\tFAST: Computing descriptors in reference image");
 		descriptorExtractor.compute(sceneImage, sceneKeyPoints, sceneDescriptors);
 
 		Mat matchoutput = new Mat(sceneImage.rows() * 2, sceneImage.cols() * 2, Highgui.CV_LOAD_IMAGE_COLOR);
@@ -122,14 +134,11 @@ public class UtilsTemplateMatching {
 
 		List<MatOfDMatch> matches = new LinkedList<MatOfDMatch>();
 		DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
-		// System.out.println("Matching object and scene images...");
+//		System.out.println("[LOG]\tFAST: Matching descriptors");
 		descriptorMatcher.knnMatch(objectDescriptors, sceneDescriptors, matches, 2);
 
 		// System.out.println("Calculating good match list...");
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
-
-		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.9f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -146,7 +155,7 @@ public class UtilsTemplateMatching {
 			return false;
 		}
 
-		System.out.println("Good matches (FAST): " + goodMatchesList.size());
+		// System.out.println("Good matches (FAST): " + goodMatchesList.size());
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
@@ -203,21 +212,16 @@ public class UtilsTemplateMatching {
 
 				Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
 
-				Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-						new Scalar(255, 0, 0), 2);
-				Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-						new Scalar(255, 0, 0), 2);
-				Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-						new Scalar(255, 0, 0), 2);
-				Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-						new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)), new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)), new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)), new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)), new Scalar(255, 0, 0), 2);
 
 				// System.out.println("Drawing matches image...");
 				MatOfDMatch goodMatches = new MatOfDMatch();
 				goodMatches.fromList(goodMatchesList);
 
-				Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches,
-						matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
+				Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
 
 				/* visualize feature detection. */
 				Highgui.imwrite("output/templateMatching/FAST-" + filename + "-matchoutput.jpg", matchoutput);
@@ -249,12 +253,12 @@ public class UtilsTemplateMatching {
 		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SIFT);
 		featureDetector.detect(objectImage, objectKeyPoints);
-		// System.out.println("Detected key points by SIFT: " +
-		// objectKeyPoints.toList().size());
+		System.out.println("[LOG]\tDetecting key-points in templage image");
 
 		MatOfKeyPoint objectDescriptors = new MatOfKeyPoint();
 		DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
 		descriptorExtractor.compute(objectImage, objectKeyPoints, objectDescriptors);
+		System.out.println("[LOG]\tComputing descriptors in template image");
 
 		/* Create output image. */
 		Mat outputImage = new Mat(objectImage.rows(), objectImage.cols(), Highgui.CV_LOAD_IMAGE_COLOR);
@@ -265,9 +269,9 @@ public class UtilsTemplateMatching {
 		/* Match object image with the scene image. */
 		MatOfKeyPoint sceneKeyPoints = new MatOfKeyPoint();
 		MatOfKeyPoint sceneDescriptors = new MatOfKeyPoint();
-		// System.out.println("Detecting key points in background image...");
+		System.out.println("[LOG]\tDetecting key-points in reference image");
 		featureDetector.detect(sceneImage, sceneKeyPoints);
-		// System.out.println("Computing descriptors in background image...");
+		System.out.println("[LOG]\tComputing descriptors in reference image");
 		descriptorExtractor.compute(sceneImage, sceneKeyPoints, sceneDescriptors);
 
 		Mat matchoutput = new Mat(sceneImage.rows() * 2, sceneImage.cols() * 2, Highgui.CV_LOAD_IMAGE_COLOR);
@@ -275,14 +279,11 @@ public class UtilsTemplateMatching {
 
 		List<MatOfDMatch> matches = new LinkedList<MatOfDMatch>();
 		DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
-		// System.out.println("Matching object and scene images...");
+		System.out.println("[LOG]\tMatching descriptors");
 		descriptorMatcher.knnMatch(objectDescriptors, sceneDescriptors, matches, 2);
 
 		// System.out.println("Calculating good match list...");
 		LinkedList<DMatch> goodMatchesList = new LinkedList<DMatch>();
-
-		/* The threshold ratio used for the distance. */
-		float nndrRatio = 0.9f;
 
 		for (int i = 0; i < matches.size(); i++) {
 			MatOfDMatch matofDMatch = matches.get(i);
@@ -299,7 +300,7 @@ public class UtilsTemplateMatching {
 			return false;
 		}
 
-		System.out.println("Good matches (SIFT): " + goodMatchesList.size());
+		// System.out.println("Good matches (SIFT): " + goodMatchesList.size());
 
 		int min_accepted_matches = (int) (objectKeyPoints.toList().size() * 0.3);
 
@@ -307,7 +308,7 @@ public class UtilsTemplateMatching {
 
 		if (goodMatchesList.size() > min_accepted_matches) {
 
-			// System.out.println("Object Found!");
+			// System.out.println("[LOG]\tTemplate Present!");
 
 			List<KeyPoint> objKeypointlist = objectKeyPoints.toList();
 			List<KeyPoint> scnKeypointlist = sceneKeyPoints.toList();
@@ -357,21 +358,16 @@ public class UtilsTemplateMatching {
 
 				Mat img = Highgui.imread(scene, Highgui.CV_LOAD_IMAGE_COLOR);
 
-				Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)),
-						new Scalar(255, 0, 0), 2);
-				Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)),
-						new Scalar(255, 0, 0), 2);
-				Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)),
-						new Scalar(255, 0, 0), 2);
-				Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)),
-						new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(0, 0)), new Point(scene_corners.get(1, 0)), new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(1, 0)), new Point(scene_corners.get(2, 0)), new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(2, 0)), new Point(scene_corners.get(3, 0)), new Scalar(255, 0, 0), 2);
+				Core.line(img, new Point(scene_corners.get(3, 0)), new Point(scene_corners.get(0, 0)), new Scalar(255, 0, 0), 2);
 
 				// System.out.println("Drawing matches image...");
 				MatOfDMatch goodMatches = new MatOfDMatch();
 				goodMatches.fromList(goodMatchesList);
 
-				Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches,
-						matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
+				Features2d.drawMatches(objectImage, objectKeyPoints, sceneImage, sceneKeyPoints, goodMatches, matchoutput, matchestColor, newKeypointColor, new MatOfByte(), 2);
 
 				filename = object.toString();
 				index = filename.lastIndexOf("/");
@@ -382,7 +378,7 @@ public class UtilsTemplateMatching {
 				Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-img.jpg", img);
 
 			} catch (Exception e) {
-				System.out.println("Homography not found");
+				System.out.println("[LOG]\tHomography not found");
 			}
 
 			return true;
@@ -401,9 +397,12 @@ public class UtilsTemplateMatching {
 	 * 
 	 * @param templateFile
 	 * @param imageFile
+	 * @param statement
 	 * @return
 	 */
-	private static Point templateMatchingBestResult(String templateFile, String imageFile) {
+	private static Point templateMatchingBestResult(String templateFile, String imageFile, Statement statement) {
+
+		System.out.println("[LOG]\tSearching the template position in the reference image");
 
 		/* load the images in grayscale. */
 		// Mat img = Highgui.imread(imageFile, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
@@ -413,11 +412,11 @@ public class UtilsTemplateMatching {
 		Mat img = Highgui.imread(imageFile);
 		Mat templ = Highgui.imread(templateFile);
 
-		File t = new File("output/templateMatching/TM-template.png");
-		Highgui.imwrite(t.getPath(), templ);
-
-		File o = new File("output/templateMatching/TM-imageoriginal.png");
-		Highgui.imwrite(o.getPath(), img);
+		// File t = new File("output/templateMatching/TM-template.png");
+		// Highgui.imwrite(t.getPath(), templ);
+		//
+		// File o = new File("output/templateMatching/TM-imageoriginal.png");
+		// Highgui.imwrite(o.getPath(), img);
 
 		/* Create the result matrix. */
 		int result_cols = img.cols() - templ.cols() + 1;
@@ -428,8 +427,9 @@ public class UtilsTemplateMatching {
 		Imgproc.matchTemplate(img, templ, result, Imgproc.TM_CCOEFF_NORMED);
 		Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
-		File risultato = new File("output/templateMatching/TM-result-normalized.png");
-		Highgui.imwrite(risultato.getPath(), result);
+		// File risultato = new
+		// File("output/templateMatching/TM-result-normalized.png");
+		// Highgui.imwrite(risultato.getPath(), result);
 
 		List<Point> matches = new LinkedList<Point>();
 
@@ -456,22 +456,18 @@ public class UtilsTemplateMatching {
 		// System.out.println("Max point found at: " + matchLoc.x + ", " + matchLoc.y);
 
 		/* Draws a rectangle over the detected area. */
-		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-				new Scalar(0, 255, 0), 2);
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()), new Scalar(0, 255, 0), 2);
 
 		/* Draws a cross mark at the center of the detected area. */
-		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5),
-				new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
-				2);
-		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2),
-				new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2), new Scalar(0, 0, 255),
-				2);
+		Core.line(img, new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) - 5), new Point(matchLoc.x + templ.cols() / 2, (matchLoc.y + templ.rows() / 2) + 5),
+				new Scalar(0, 0, 255), 2);
+		Core.line(img, new Point(((matchLoc.x + templ.cols() / 2) - 5), matchLoc.y + templ.rows() / 2), new Point(((matchLoc.x + templ.cols() / 2) + 5), matchLoc.y + templ.rows() / 2),
+				new Scalar(0, 0, 255), 2);
 
 		/* Draws the others detected matches. */
 		for (Point point : matches) {
 			/* Draws a rectangle over the detected area. */
-			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 0, 255),
-					1);
+			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 0, 255), 1);
 		}
 
 		/* Save the visualized detection. */
@@ -479,7 +475,7 @@ public class UtilsTemplateMatching {
 		int i = filename.lastIndexOf("/");
 		filename = filename.substring(i + 1, filename.length());
 		filename = filename.replace(".png", "");
-		File annotated = new File("output/templateMatching/TM-normalized-" + filename + ".png");
+		File annotated = new File("output/templateMatching/TM-normalized-" + statement.getLine() + ".png");
 		Highgui.imwrite(annotated.getPath(), img);
 
 		/* Return the center. */
@@ -548,16 +544,13 @@ public class UtilsTemplateMatching {
 			allMatchesCenter.add(center);
 
 			/* Draws a rectangle over the detected area. */
-			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 255, 0),
-					2);
+			Core.rectangle(img, point, new Point(point.x + templ.cols(), point.y + templ.rows()), new Scalar(0, 255, 0), 2);
 
 			/* Draws a cross mark at the center of the detected area. */
-			Core.line(img, new Point(center.x + templ.cols() / 2, (center.y + templ.rows() / 2) - 5),
-					new Point(center.x + templ.cols() / 2, (center.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
+			Core.line(img, new Point(center.x + templ.cols() / 2, (center.y + templ.rows() / 2) - 5), new Point(center.x + templ.cols() / 2, (center.y + templ.rows() / 2) + 5), new Scalar(0, 0, 255),
 					2);
-			Core.line(img, new Point(((center.x + templ.cols() / 2) - 5), center.y + templ.rows() / 2),
-					new Point(((center.x + templ.cols() / 2) + 5), center.y + templ.rows() / 2), new Scalar(0, 0, 255),
-					2);
+			Core.line(img, new Point(((center.x + templ.cols() / 2) - 5), center.y + templ.rows() / 2), new Point(((center.x + templ.cols() / 2) + 5), center.y + templ.rows() / 2),
+					new Scalar(0, 0, 255), 2);
 		}
 
 		/* Save the visualized detection. */

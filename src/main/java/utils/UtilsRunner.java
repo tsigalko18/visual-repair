@@ -12,6 +12,10 @@ import datatype.EnhancedException;
 
 public class UtilsRunner {
 
+	static long startTime;
+	static long stopTime;
+	static long elapsedTime;
+
 	public static Result runTestSuite(Class<?> testSuite) {
 		Result result = JUnitCore.runClasses(testSuite);
 		return result;
@@ -32,7 +36,8 @@ public class UtilsRunner {
 		/* run the test programmatically. */
 		Result result = null;
 		try {
-			System.out.println("[LOG]\tRunning Test " + classRunner);
+			System.out.println("[LOG]\tRunning test " + classRunner);
+			startTime = System.currentTimeMillis();
 			result = JUnitCore.runClasses(Class.forName(classRunner));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -48,8 +53,7 @@ public class UtilsRunner {
 
 				EnhancedException ea = UtilsRepair.saveExceptionFromFailure(fail);
 
-				String path = Settings.testingTestSuiteVisualTraceExecutionFolder
-						+ UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXT;
+				String path = Settings.testingTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXT;
 				String jsonPath = UtilsParser.toJsonPath(path);
 
 				UtilsParser.serializeException(ea, jsonPath);
@@ -58,14 +62,18 @@ public class UtilsRunner {
 			System.out.println("[LOG]\tTest " + classRunner + " passed");
 		}
 
+		stopTime = System.currentTimeMillis();
+		elapsedTime = stopTime - startTime;
+		System.out.format("[LOG]\tVisual trace collected in %.3f s", elapsedTime / 1000.0f);
+
 	}
 
 	public static Object runMethod(Class<?> clazz, Object inst, String methodName) {
-	
+
 		Object result = null;
-	
+
 		try {
-	
+
 			Method[] allMethods = clazz.getDeclaredMethods();
 			for (Method m : allMethods) {
 				if (m.getName().equalsIgnoreCase(methodName)) {
@@ -73,7 +81,7 @@ public class UtilsRunner {
 					result = m.invoke(inst, null);
 				}
 			}
-	
+
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

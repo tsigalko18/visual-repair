@@ -1,7 +1,4 @@
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -9,14 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import utils.RectangleComparator;
 import utils.UtilsComputerVision;
-import utils.UtilsTemplateMatching;
 
 public class TestOpenCV {
 
@@ -26,112 +21,12 @@ public class TestOpenCV {
 		nu.pattern.OpenCV.loadLocally();
 	}
 
-	@Ignore
 	@Test
 	public void testOpenCVWorks() {
 		Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
 		System.out.println("mat = " + mat.dump());
 	}
 
-	@Ignore
-	@Test
-	public void testTemplateMatchingTemplateOk() {
-
-		String image = "src/test/resources/index.jpg";
-		String template = "src/test/resources/indexsmall.jpg";
-
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-		UtilsComputerVision.shiTomasi(template);
-		// UtilsComputerVision.shiTomasi(image);
-
-	}
-
-	@Test
-	public void testTemplateMatchingTemplateExampleForPaper() {
-
-		String image = "src/test/resources/29-1before-TestLoginAdmin-29.png";
-		String template = "src/test/resources/29-visualLocatorLarge-TestLoginAdmin-29.png";
-
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-	}
-
-	@Ignore
-	@Test
-	public void testTemplateMatchingTemplateAddressBook() {
-
-		String image = "src/test/resources/addressbook/25-1before-TestUserAdded-25.png";
-		String template = "src/test/resources/addressbook/25-visualLocator-TestUserAdded-25.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-
-		image = "src/test/resources/addressbook/26-1before-TestUserAdded-26.png";
-		template = "src/test/resources/addressbook/26-visualLocator-TestUserAdded-26.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-
-		image = "src/test/resources/addressbook/27-1before-TestUserAdded-27.png";
-		template = "src/test/resources/addressbook/27-visualLocator-TestUserAdded-27.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-
-		image = "src/test/resources/addressbook/28-1before-TestUserAdded-28.png";
-		template = "src/test/resources/addressbook/28-visualLocator-TestUserAdded-28.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-		assertNotNull(UtilsComputerVision.matchUsingCanny(image, template));
-
-		image = "src/test/resources/addressbook/29-Annotated-TestUserAdded-29.png";
-		template = "src/test/resources/addressbook/29-visualLocator-TestUserAdded-29.png";
-		assertNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-	}
-
-	@Ignore
-	@Test
-	public void testTemplateMatchingTemplateAbsent() {
-
-		String image = "src/test/resources/index.jpg";
-		String template = "src/test/resources/visuallocator.png";
-
-		assertNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-	}
-
-//	@Ignore
-//	@Test
-//	public void testTemplateMatchingVisualDuplicates() {
-//
-//		String image = "src/test/resources/index.jpg";
-//		String template = "src/test/resources/indexsmall.jpg";
-//
-//		System.out.println(UtilsComputerVision.returnAllMatches(image, template));
-//
-//	}
-
-	@Ignore
-	@Test
-	public void testTemplateMatchingVisualLocatorPresent() {
-
-		String template = "src/test/resources/27-visualLocatorLarge-TestLoginAdmin-27.png";
-		String image = "src/test/resources/27-1before-TestLoginAdmin-27.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-		template = "src/test/resources/28-visualLocatorLarge-TestLoginAdmin-28.png";
-		image = "src/test/resources/28-1before-TestLoginAdmin-28.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-		template = "src/test/resources/29-visualLocatorLarge-TestLoginAdmin-29.png";
-		image = "src/test/resources/29-1before-TestLoginAdmin-29.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-		template = "src/test/resources/30-visualLocatorLarge-TestLoginAdmin-30.png";
-		image = "src/test/resources/30-1before-TestLoginAdmin-30.png";
-		assertNotNull(UtilsTemplateMatching.featureDetectorAndTemplateMatching(image, template));
-
-	}
-
-	@Ignore
 	@Test
 	public void testNonMaxSuppressionUtilityFunctions() {
 
@@ -155,7 +50,6 @@ public class TestOpenCV {
 		assertEquals("[2500.0, 4050.0]", area.toString());
 	}
 
-	@Ignore
 	@Test
 	public void testRectangleComparator() {
 
@@ -179,7 +73,6 @@ public class TestOpenCV {
 		RectangleComparator.print(idxs);
 	}
 
-	@Ignore
 	@Test
 	public void testNonMaxSuppression() {
 
