@@ -15,7 +15,7 @@ public class Main {
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		/* package name. */
-		String prefix = "clarolineDirectBreakage" + ".";
+		String prefix = "clarolineNew" + ".";
 
 		/* class name. */
 		String className = "TestLoginAdmin";
