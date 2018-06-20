@@ -4,6 +4,8 @@ import org.openqa.selenium.support.ui.Select;
 
 public class EnhancedWebElement extends Statement {
 
+	private static final long serialVersionUID = 1L;
+
 	// web element != select
 	public Select getSelect() {
 		return null;

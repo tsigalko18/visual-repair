@@ -30,6 +30,7 @@ import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -104,15 +105,14 @@ public class UtilsComputerVision {
 	 * @param webElementImageName
 	 * @throws IOException
 	 */
-	public static void getUniqueVisualLocator(WebDriver d, String filename, WebElement element,
-			String webElementImageName) throws IOException {
+	public static void getUniqueVisualLocator(WebDriver d, String filename, WebElement element, String webElementImageName) throws IOException {
 
 		File destFile = new File(filename);
 		BufferedImage img = ImageIO.read(destFile);
 
 		File visualLocator = new File(webElementImageName);
 
-		int scale = 10;
+		int scale = 5;
 		getScaledSubImage(d, img, element, visualLocator, scale);
 
 		while (!isUnique(destFile.getAbsolutePath(), visualLocator.getAbsolutePath())) {
@@ -156,8 +156,7 @@ public class UtilsComputerVision {
 	 * @param webElementImageName
 	 * @throws IOException
 	 */
-	public static void getPreciseElementVisualCrop(WebDriver d, String filename, WebElement element,
-			String webElementImageName) throws IOException {
+	public static void getPreciseElementVisualCrop(WebDriver d, String filename, WebElement element, String webElementImageName) throws IOException {
 
 		File destFile = new File(filename);
 		BufferedImage img = ImageIO.read(destFile);
@@ -213,8 +212,7 @@ public class UtilsComputerVision {
 		Point matchLoc = mmr.maxLoc;
 
 		/* Show me what you got. */
-		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-				new Scalar(0, 255, 0), 2);
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()), new Scalar(0, 255, 0), 2);
 
 		/* Save the visualized detection. */
 		File annotated = new File(outFile);
@@ -230,8 +228,7 @@ public class UtilsComputerVision {
 	 * @param webElementImageName
 	 * @throws IOException
 	 */
-	public static void getScaledSubImage(WebDriver d, BufferedImage img, WebElement element, File visualLocator,
-			int scale) throws IOException {
+	public static void getScaledSubImage(WebDriver d, BufferedImage img, WebElement element, File visualLocator, int scale) throws IOException {
 
 		org.openqa.selenium.Point elementCoordinates = null;
 		driver = d;
@@ -242,6 +239,12 @@ public class UtilsComputerVision {
 			if (Settings.VERBOSE)
 				System.out.println("[LOG]\tTest might have changed its state");
 		}
+		
+		try {
+			highlightElement(element);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}		
 
 		int width = element.getSize().getWidth();
 		int height = element.getSize().getHeight();
@@ -274,11 +277,9 @@ public class UtilsComputerVision {
 				new Actions(driver).moveToElement(thisShouldBeTheSelect).perform();
 
 				elementCoordinates = thisShouldBeTheSelect.getLocation();
-				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset,
-						2 * offset + rect.width, 2 * offset + rect.height);
+				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset, 2 * offset + rect.width, 2 * offset + rect.height);
 			} else {
-				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset,
-						2 * offset + rect.width, 2 * offset + rect.height);
+				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset, 2 * offset + rect.width, 2 * offset + rect.height);
 			}
 		} catch (RasterFormatException e) {
 			System.err.println("[LOG]\tWARNING: " + e.getMessage());
@@ -298,8 +299,7 @@ public class UtilsComputerVision {
 	 * @param webElementImageName
 	 * @throws IOException
 	 */
-	public static void getPreciseSubImage(WebDriver d, BufferedImage img, WebElement element, File visualLocator)
-			throws IOException {
+	public static void getPreciseSubImage(WebDriver d, BufferedImage img, WebElement element, File visualLocator) throws IOException {
 
 		org.openqa.selenium.Point elementCoordinates = null;
 		driver = d;
@@ -325,17 +325,14 @@ public class UtilsComputerVision {
 				new Actions(driver).moveToElement(thisShouldBeTheSelect).perform();
 
 				if (Settings.VERBOSE) {
-					System.err
-							.println("\n\nthisShouldBeTheSelect.getLocation(): " + thisShouldBeTheSelect.getLocation());
+					System.err.println("\n\nthisShouldBeTheSelect.getLocation(): " + thisShouldBeTheSelect.getLocation());
 					System.err.println("element.getLocation(): " + element.getLocation());
 				}
 
 				elementCoordinates = thisShouldBeTheSelect.getLocation();
-				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset,
-						2 * offset + rect.width, 2 * offset + rect.height);
+				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset, 2 * offset + rect.width, 2 * offset + rect.height);
 			} else {
-				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset,
-						2 * offset + rect.width, 2 * offset + rect.height);
+				subImage = img.getSubimage(elementCoordinates.x - offset, elementCoordinates.y - offset, 2 * offset + rect.width, 2 * offset + rect.height);
 			}
 		} catch (RasterFormatException e) {
 			System.err.println("[LOG]\tWARNING: " + e.getMessage());
@@ -343,6 +340,21 @@ public class UtilsComputerVision {
 
 		ImageIO.write(subImage, "png", visualLocator);
 		subImage.flush();
+
+	}
+
+	/**
+	 * This method highlights the web element on which PESTO is currently performing
+	 * 
+	 * @param element
+	 * @throws InterruptedException
+	 */
+	private static void highlightElement(WebElement element) throws InterruptedException {
+
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].setAttribute('style', arguments[1]);", element, "color: yellow; border: 2px solid yellow;");
+		Thread.sleep(100);
+		js.executeScript("arguments[0].setAttribute('style', arguments[1]);", element, "");
 
 	}
 
@@ -421,8 +433,7 @@ public class UtilsComputerVision {
 		Point matchLoc = mmr.maxLoc;
 
 		/* Show me what you got. */
-		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-				new Scalar(0, 255, 0), 2);
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()), new Scalar(0, 255, 0), 2);
 
 		/* Save the visualized detection. */
 		File annotated = new File("annotated.png");
@@ -470,8 +481,7 @@ public class UtilsComputerVision {
 		if (mmr.maxVal > 0.95) {
 
 			/* Show me what you got. */
-			Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-					new Scalar(0, 255, 0), 2);
+			Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()), new Scalar(0, 255, 0), 2);
 
 			/* Save the visualized detection. */
 			File annotated = new File("annotated.png");
@@ -526,8 +536,7 @@ public class UtilsComputerVision {
 		Point matchLoc = mmr.maxLoc;
 
 		/* Show me what you got. */
-		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()),
-				new Scalar(0, 255, 0), 2);
+		Core.rectangle(img, matchLoc, new Point(matchLoc.x + templ.cols(), matchLoc.y + templ.rows()), new Scalar(0, 255, 0), 2);
 
 		/* Save the visualized detection. */
 		File annotated = new File("annotated.png");
@@ -806,8 +815,7 @@ public class UtilsComputerVision {
 	public static List<Point> matchUsingCanny(String inFile, String templateFile) {
 
 		if (Settings.VERBOSE) {
-			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME
-					+ " using image recognition algorithm TM_CCOEFF_NORMED with Canny preprocessing");
+			System.out.println("[LOG]\tLoading library " + Core.NATIVE_LIBRARY_NAME + " using image recognition algorithm TM_CCOEFF_NORMED with Canny preprocessing");
 
 			System.out.println("[LOG]\tSearching matches of " + templateFile + " in " + inFile);
 		}
@@ -933,8 +941,7 @@ public class UtilsComputerVision {
 			bufferedImage = ImageIO.read(new File(imgPath));
 
 			/* create a blank, RGB, same width and height, and a white background.˙ */
-			BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-					BufferedImage.TYPE_INT_RGB);
+			BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 			newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
 
 			/* write to jpeg file. */

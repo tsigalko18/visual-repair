@@ -5,10 +5,10 @@ import java.io.File;
 public class Settings {
 
 	/* package name of the reference correct test suite. */
-	public static String testSuiteCorrect = "addressbook549"; // "claroline" "claroline1811"
+	public static String testSuiteCorrect = "clarolineOld";
 
 	/* package name of the broken/regressed test suite. */
-	public static String testSuiteBroken = "addressbook55"; // "clarolineDirectBreakage"; "claroline190";
+	public static String testSuiteBroken = "clarolineNew";
 
 	/* pause the tool's execution after each statement. */
 	public static boolean debugMode = false;
@@ -50,12 +50,12 @@ public class Settings {
 	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
 	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
 
-	/* different repair strategies. */
+	public static boolean VERBOSE = true;
+	public static double SIMILARITY_THRESHOLD = 0.5;
+
+	/* repair strategies. */
 	public static enum RepairMode {
 		DOM, VISUAL, HYBRID
 	}
-
-	public static boolean VERBOSE = true;
-	public static double SIMILARITY_THRESHOLD = 0.5;
 
 }

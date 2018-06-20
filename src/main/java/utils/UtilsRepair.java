@@ -346,7 +346,7 @@ public class UtilsRepair {
 		} else if (o.equals("name")) {
 			return new SeleniumLocator("name", sorted.get(o).replaceAll("\"", ""));
 		} else {
-			return new SeleniumLocator("xpath", "//*[@" + o + "=" + sorted.get(o) + "]");
+			return new SeleniumLocator("xpath", "//*[@" + o + "=" + sorted.get(o).replaceAll("\"", "'") + "]");
 		}
 
 	}

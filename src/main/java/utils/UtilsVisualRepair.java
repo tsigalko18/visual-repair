@@ -31,8 +31,7 @@ public class UtilsVisualRepair {
 	 * 
 	 * @param repairStrategy
 	 */
-	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator,
-			EnhancedTestCase testCorrect, Integer i, RepairMode repairStrategy) {
+	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator, EnhancedTestCase testCorrect, Integer i, RepairMode repairStrategy) {
 
 		Statement statement = null;
 		WebElement webElementFromVisualLocator = null;
@@ -55,13 +54,11 @@ public class UtilsVisualRepair {
 		}
 
 		/* retrieve the web element visually. */
-		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, statement,
-				repairStrategy);
+		webElementFromVisualLocator = UtilsVisualRepair.retrieveWebElementFromVisualLocator(driver, statement, repairStrategy);
 
 		if (webElementFromVisualLocator == null && webElementFromDomLocator == null) {
 
-			System.err.println(
-					"[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Element might be deleted?");
+			System.err.println("[LOG]\tElement not found by either DOM or visual locators. Visual assertion failed. Element might be deleted?");
 			// System.exit(1);
 
 		} else if (webElementFromVisualLocator == null) {
@@ -71,8 +68,7 @@ public class UtilsVisualRepair {
 
 		} else if (webElementFromDomLocator == null) {
 
-			System.out.println("[LOG]\tApplied visual repair");
-			System.out.println("[LOG]\tNew repaired element is " + webElementFromVisualLocator);
+			System.out.println("[LOG]\tCandidate repair element " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
 
 		} else if (!UtilsVisualRepair.areWebElementsEquals(webElementFromDomLocator, webElementFromVisualLocator)) {
@@ -81,8 +77,7 @@ public class UtilsVisualRepair {
 			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
 
 			/* I trust the element found by the visual locator. Is that correct? */
-			System.out.println("[LOG]\tApplied visual repair");
-			System.out.println("[LOG]\tNew repaired element is " + webElementFromVisualLocator);
+			System.out.println("[LOG]\tCandidate repair element " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
 
 		} else {
@@ -116,8 +111,7 @@ public class UtilsVisualRepair {
 		return element;
 	}
 
-	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, Statement statement,
-			RepairMode repairStrategy) {
+	public static WebElement retrieveWebElementFromVisualLocator(WebDriver driver, Statement statement, RepairMode repairStrategy) {
 
 		String visualLocator = statement.getVisualLocator().toString();
 		String currentScreenshot = System.getProperty("user.dir") + Settings.sep + "currentScreenshot.png";
@@ -139,8 +133,7 @@ public class UtilsVisualRepair {
 
 			if (fromDom == null) {
 
-				Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot,
-						visualLocator);
+				Set<Point> allMatches = UtilsTemplateMatching.featureDetectorAndTemplateMatching_dom(currentScreenshot, visualLocator, statement);
 
 				WebElement res = getBestMatch(allMatches, driver, statement);
 				return res;
@@ -167,7 +160,7 @@ public class UtilsVisualRepair {
 
 		} else if (repairStrategy == RepairMode.VISUAL) {
 
-			bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator);
+			bestMatch = UtilsTemplateMatching.featureDetectorAndTemplateMatching(currentScreenshot, visualLocator, statement);
 
 			if (bestMatch == null) {
 
@@ -177,7 +170,7 @@ public class UtilsVisualRepair {
 			} else {
 
 				String xpathForMatches = UtilsXPath.getXPathFromLocation(bestMatch, driver);
-				System.out.println("XPath for match: " + xpathForMatches);
+				System.out.println("[LOG]\tElement found by visual analysis: " + xpathForMatches);
 				WebElement fromVisual = driver.findElement(By.xpath(xpathForMatches));
 
 				FileUtils.deleteQuietly(new File(currentScreenshot));
@@ -449,8 +442,7 @@ public class UtilsVisualRepair {
 		return null;
 	}
 
-	public static boolean areWebElementsEquals(WebElement webElementFromDomLocator,
-			WebElement webElementFromVisualLocator) {
+	public static boolean areWebElementsEquals(WebElement webElementFromDomLocator, WebElement webElementFromVisualLocator) {
 
 		return webElementFromDomLocator.equals(webElementFromVisualLocator);
 
