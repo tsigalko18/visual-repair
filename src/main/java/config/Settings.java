@@ -47,12 +47,15 @@ public class Settings {
 	public static final String[] TAGS_BLACKLIST = new String[] { "head", "script", "link", "meta", "style", "canvas" };
 	public static final String[] ATTRIBUTES_WHITELIST = new String[] { "id", "name", "class", "title", "alt", "value" };
 	
+	public final static String REGEX_FOR_GETTING_ID = "\\*\\[@id=['|\"]?(.+[^'\"])['|\"]?\\]";
+	public final static String REGEX_FOR_GETTING_INDEX = "\\[(.+)\\]";
+
 	public static boolean VERBOSE = true;
 	public static double SIMILARITY_THRESHOLD = 0.5;
 
 	/* repair strategies. */
 	public static enum RepairMode {
-		DOM, VISUAL
+		DOM, VISUAL, HYBRID
 	}
 	
 }
