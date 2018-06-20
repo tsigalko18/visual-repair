@@ -2,11 +2,8 @@ package datatype;
 
 public class EnhancedAssertion extends EnhancedWebElement {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	// assertTrue(driver.findElement(By.xpath("//*[@class='userName']")).getText().contains("John
 	// Doe"));
 	String assertion; // assertTrue
@@ -37,8 +34,7 @@ public class EnhancedAssertion extends EnhancedWebElement {
 
 	@Override
 	public String toString() {
-		return assertion + "(driver.findElement(" + getDomLocator() + ")" + "." + getAction() + "()." + predicate + "(\"" + getValue()
-				+ "\"))";
+		return assertion + "(driver.findElement(" + getDomLocator() + ")" + "." + getAction() + "()." + predicate + "(\"" + getValue() + "\"))";
 	}
 
 }

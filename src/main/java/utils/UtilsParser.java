@@ -147,7 +147,7 @@ public class UtilsParser {
 		// return new SeleniumLocator(strategy, value);
 	}
 
-	public static SeleniumLocator getSeleniumLocatorFromWebElement(WebElement webElement) {
+	public static SeleniumLocator extractSeleniumLocatorFromWebElement(WebElement webElement) {
 		String res = webElement.toString();
 		res = res.substring(res.indexOf("-> ") + 3, res.length());
 		res = res.substring(0, res.length() - 1);

@@ -5,8 +5,14 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+/**
+ * WebDriver manager class for the visual-augmented test execution
+ * 
+ * @author tsigalko18
+ *
+ */
 public class WebDriverSingleton {
-	
+
 	private static WebDriverSingleton instance = null;
 	private static WebDriver driver = null;
 
@@ -37,10 +43,11 @@ public class WebDriverSingleton {
 	}
 
 	public void loadPage(String htmlFileFullPath) {
-		
+
 		String urlString = htmlFileFullPath;
 
 		try {
+			/* load the browser. */
 			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 			driver.get(urlString);
 		} catch (Exception e) {

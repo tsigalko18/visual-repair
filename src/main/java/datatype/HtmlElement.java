@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import utils.UtilsXPath;
 
 /**
- * Adapted from WebSee
+ * Adapted from WebSee.
  *
  */
 public class HtmlElement {
@@ -18,18 +18,18 @@ public class HtmlElement {
 	private String id;
 	private WebElement seleniumWebElement;
 
-	// location of top left hand corner
+	/* location of top left hand corner. */
 	private int x;
 	private int y;
 
-	// rectangular dimensions
+	/* rectangular dimensions. */
 	private int width;
 	private int height;
 
-	// to be used later to find root cause
+	/* to be used later to find root cause. */
 	private Map<String, String> htmlAttributes;
 
-	// R-tree rectangle id
+	/* R-tree rectangle id. */
 	private int rectId;
 
 	public HtmlElement() {
@@ -128,9 +128,8 @@ public class HtmlElement {
 
 	@Override
 	public String toString() {
-		return "HtmlElement [xpath=" + xpath + ", tagName=" + tagName + ", id=" + id + ", seleniumWebElement="
-				+ seleniumWebElement + ", x=" + x + ", y=" + y + ", width=" + width + ", height=" + height
-				+ ", htmlAttributes=" + htmlAttributes + ", rectId=" + rectId + "]";
+		return "HtmlElement [xpath=" + xpath + ", tagName=" + tagName + ", id=" + id + ", seleniumWebElement=" + seleniumWebElement + ", x=" + x
+				+ ", y=" + y + ", width=" + width + ", height=" + height + ", htmlAttributes=" + htmlAttributes + ", rectId=" + rectId + "]";
 	}
 
 	@Override

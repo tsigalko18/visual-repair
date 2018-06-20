@@ -25,7 +25,7 @@ public class HtmlDomTree {
 
 	public HtmlDomTree(WebDriver driver, String htmlFileFullPath) throws SAXException, IOException {
 
-		// get the root element
+		/* retrieve the root element. */
 		List<WebElement> elements = driver.findElements(By.xpath("//*"));
 		WebElement rootElementFromSelenium = elements.get(0);
 		HtmlElement htmlRootElement = new HtmlElement();
@@ -34,7 +34,7 @@ public class HtmlDomTree {
 		int w = rootElementFromSelenium.getSize().width;
 		int h = rootElementFromSelenium.getSize().height;
 
-		// parse HTML attributes
+		/* parse HTML attributes. */
 		htmlAttributesParser = new HtmlAttributesParser(htmlFileFullPath);
 
 		htmlRootElement.setSeleniumWebElement(rootElementFromSelenium);
@@ -61,7 +61,7 @@ public class HtmlDomTree {
 				int w = child.getSize().width;
 				int h = child.getSize().height;
 
-				// adjust size of option to that of the parent (select)
+				/* adjust size of <option> to that of the parent (<select>). */
 				if (child.getTagName().equals("option")) {
 					if (node.getData().getTagName().equals("select")) {
 						x = node.getData().getX();
@@ -69,31 +69,21 @@ public class HtmlDomTree {
 					}
 				}
 
-				// don't process elements with no visual impact
+				/* discard elements with no visual appearance. */
 				// if(x >= 0 && y >= 0 && w > 0 && h > 0)
 				if (!Arrays.asList(Settings.TAGS_BLACKLIST).contains(child.getTagName())) {
+					
 					HtmlElement newChild = new HtmlElement();
-
-					// set tag name
 					newChild.setTagName(child.getTagName());
-
-					// set id
 					newChild.setId(child.getAttribute("id"));
-
-					// set web element
 					newChild.setSeleniumWebElement(child);
-
-					// set rectangle information
 					newChild.setX(x);
 					newChild.setY(y);
 					newChild.setWidth(w);
 					newChild.setHeight(h);
 
 					Node<HtmlElement> newNode = new Node<HtmlElement>(node, newChild);
-					// set xpath by traversing the built html dom tree
 					newChild.setXPath(computeXPath(newNode));
-
-					// set html attributes
 					newChild.setHtmlAttributes(htmlAttributesParser.getHTMLAttributesForElement(newChild.getXPath()));
 
 					buildHtmlDomTreeFromNode(newNode);
@@ -123,7 +113,7 @@ public class HtmlDomTree {
 	}
 
 	/**
-	 * compute XPath of the invoking element from the root
+	 * compute XPath of the invoking element from the root.
 	 */
 	private String computeXPath(Node<HtmlElement> node) {
 		return getElementTreeXPath(node);

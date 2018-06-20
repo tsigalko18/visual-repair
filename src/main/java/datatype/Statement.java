@@ -14,12 +14,21 @@ import utils.UtilsParser;
 @SuppressWarnings("serial")
 public abstract class Statement implements Serializable {
 
-	// kind of statement
+	/* kind of statement. */
 	WebDriver driverGet;
 	WebElement webElement;
 	Select select;
 
-	// DOM-based information
+	/* statement's information. */
+	private String seleniumAction;
+	private String value;
+	private String name;
+	private int line;
+
+	/* DOM-based information. */
+	private File htmlPage;
+	private Point coordinates;
+	private Dimension dimension;
 	private File domBefore;
 	private File domAfter;
 	private SeleniumLocator domLocator; // on domBefore
@@ -30,23 +39,11 @@ public abstract class Statement implements Serializable {
 	private String nameAttribute;
 	private String text;
 
-	// visual-based information
+	/* visual-based information. */
 	private File screenshotBefore;
 	private File screenshotAfter;
 	private File annotatedScreenshot;
-	private File visualLocator; // on screenshotBefore
-
-	// DOM-based information
-	private File htmlPage;
-
-	private Point coordinates;
-	private Dimension dimension;
-
-	// statement information
-	private String seleniumAction;
-	private String value;
-	private String name;
-	private int line;
+	private File visualLocator; // extracted on screenshotBefore image
 
 	public WebDriver getDriverGet() {
 		return driverGet;
@@ -97,7 +94,7 @@ public abstract class Statement implements Serializable {
 	}
 
 	public void setDomLocator(WebElement domLocator) {
-		this.domLocator = UtilsParser.getSeleniumLocatorFromWebElement(domLocator);
+		this.domLocator = UtilsParser.extractSeleniumLocatorFromWebElement(domLocator);
 	}
 
 	public String getAction() {

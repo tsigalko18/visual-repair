@@ -14,11 +14,11 @@ public class DOMInformation {
 	private String nameAttribute;
 	private String textualcontent;
 
-	// location of top left hand corner
+	/* location of top left hand corner. */
 	private int x;
 	private int y;
 
-	// rectangular dimensions
+	/* rectangular dimensions. */
 	private int width;
 	private int height;
 
@@ -117,9 +117,8 @@ public class DOMInformation {
 
 	@Override
 	public String toString() {
-		return "DOMInformation [xpath=" + xpath + ", tagName=" + tagName + ", id=" + id + ", classAttribute="
-				+ classAttribute + ", nameAttr=" + nameAttribute + ", textualcontent=" + textualcontent + ", x=" + x + ", y="
-				+ y + ", width=" + width + ", height=" + height + "]";
+		return "DOMInformation [xpath=" + xpath + ", tagName=" + tagName + ", id=" + id + ", classAttribute=" + classAttribute + ", nameAttr="
+				+ nameAttribute + ", textualcontent=" + textualcontent + ", x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
 	}
 
 	@Override
