@@ -23,7 +23,7 @@ public class Settings {
 	public static String outputDir = "output" + sep;
 
 	/* specify if AspectJ is active. */
-	public static boolean aspectActive = false;
+	public static boolean aspectActive = true;
 
 	/* folder containing the visual execution trace of the reference test suite. */
 	public static String referenceTestSuiteVisualTraceExecutionFolder = outputDir + testSuiteCorrect + sep;

@@ -20,11 +20,21 @@ public class Main {
 		/* class name. */
 		String className = "TestLoginAdmin";
 
+		/* repair mode. */
 		RepairMode rm = RepairMode.VISUAL;
 
+		/* execute visual-augmented test repair. */
 		visualRunner(prefix, className, rm);
 	}
 
+	/**
+	 * Convenient procedure to launch the visual web test repair function and
+	 * measure the running time.
+	 * 
+	 * @param prefix
+	 * @param className
+	 * @param rm
+	 */
 	public static void visualRunner(String prefix, String className, RepairMode rm) {
 
 		startTime = System.currentTimeMillis();
