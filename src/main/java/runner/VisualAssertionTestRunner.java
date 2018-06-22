@@ -26,6 +26,7 @@ import datatype.Statement;
 import parser.ParseTest;
 import utils.UtilsCrawler;
 import utils.UtilsFileGetters;
+import utils.UtilsParser;
 import utils.UtilsRepair;
 import utils.UtilsRunner;
 import utils.UtilsVisualRepair;
@@ -86,7 +87,8 @@ public class VisualAssertionTestRunner {
 		try {
 			url = driver.getCurrentUrl();
 		} catch (NullPointerException e) {
-			System.err.println("[ERR]\tInsert getDriver() method in the test " + className);
+			System.err.println("[ERROR]\tInsert getDriver() method in the test " + className);
+			UtilsRunner.cleanup(clazz, inst);
 			System.exit(1);
 		}
 
@@ -102,9 +104,12 @@ public class VisualAssertionTestRunner {
 			pt.setFolder(Settings.referenceTestSuiteVisualTraceExecutionFolder);
 			testCorrect = pt.parseAndSerialize(UtilsFileGetters.getTestFile(className, Settings.pathToReferenceTestSuite));
 
+			UtilsParser.sanityCheck(etc, testCorrect);
+
 		} catch (NullPointerException e) {
-			System.out.println("[ERROR]\tTest folder not found. Verify the Settings.");
-			driver.close();
+			System.out.println("[ERROR]\tErrors occurred while initiliazing the tests. "
+					+ "Verify that the settings are correct and that the test classes start with the same line number.");
+			UtilsRunner.cleanup(clazz, inst);
 			System.exit(1);
 		}
 
@@ -147,7 +152,8 @@ public class VisualAssertionTestRunner {
 				 */
 
 				System.out.println("[LOG]\tDirect breakage detected at line " + statement.getLine());
-				System.out.println("[LOG]\tCause: Non-selection of elements by the locator " + statement.getDomLocator() + " in the current DOM state");
+				System.out
+						.println("[LOG]\tCause: Non-selection of elements by the locator " + statement.getDomLocator() + " in the current DOM state");
 				System.out.println("[LOG]\tApplying visual detection of the element");
 
 				/*
@@ -159,7 +165,8 @@ public class VisualAssertionTestRunner {
 				 */
 
 				/* strategy 1. search web element visually on the same state. */
-				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
+				webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber,
+						repairStrategy);
 
 				/*
 				 * actually the local crawling step might also check whether the step is no
@@ -229,7 +236,8 @@ public class VisualAssertionTestRunner {
 							 * After all steps are added, rerun the find element on the web page for the
 							 * current statement
 							 */
-							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
+							webElementFromDomLocator = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect,
+									statementNumber, repairStrategy);
 						}
 					} else {
 						// Delete the step
@@ -286,7 +294,8 @@ public class VisualAssertionTestRunner {
 					WebElement webElementVisual = null;
 
 					/* check the web element visually. */
-					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber, repairStrategy);
+					webElementVisual = UtilsVisualRepair.visualAssertWebElement(driver, webElementFromDomLocator, testCorrect, statementNumber,
+							repairStrategy);
 
 					if (webElementVisual != null) {
 
@@ -401,9 +410,12 @@ public class VisualAssertionTestRunner {
 
 		UtilsRepair.saveTest(prefix, className, temp);
 
+		UtilsRunner.cleanup(clazz, inst);
+		
+		/*
 		Runtime rt = Runtime.getRuntime();
 		rt.exec("killall firefox-bin");
-
+		 */
 	}
 
 }
