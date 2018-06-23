@@ -32,21 +32,22 @@ import utils.UtilsRunner;
 import utils.UtilsVisualRepair;
 
 /**
- * The VisualAssertionTestRunner class runs the new evolved/regressed JUnit
- * Selenium test suites and uses the visual execution traces captured previously
- * to verify the correctness of the statements prior to their execution. In case
- * of mismatches, automatic repair techniques are triggered.
+ * The VisualTestRepair runs a JUnit Selenium test suites on a new version of
+ * the application for which is was developed. It uses the visual execution
+ * traces captured previously to verify the correctness of the statements prior
+ * to their execution. In case of mismatches, automatic repair techniques are
+ * triggered.
  * 
  * @author astocco
  * @author yrahulkr
  *
  */
-public class VisualAssertionTestRunner {
+public class VisualTestRepair {
 
 	RepairMode repairStrategy;
 	private static Scanner scanner = new Scanner(System.in);
 
-	public VisualAssertionTestRunner(RepairMode rm) {
+	public VisualTestRepair(RepairMode rm) {
 		/*
 		 * aspectJ must be disable here. TODO: eventually enable it in the future to
 		 * re-create the new visual execution trace
@@ -55,7 +56,7 @@ public class VisualAssertionTestRunner {
 		repairStrategy = rm;
 	}
 
-	void runTestWithVisualAssertion(String prefix, String className) throws IOException {
+	void runTestWithVisualValidation(String prefix, String className) throws IOException {
 
 		/* get the path to the test that needs to be verified. */
 		String testBroken = UtilsFileGetters.getTestFile(className, Settings.pathToTestSuiteUnderTest);
@@ -411,10 +412,9 @@ public class VisualAssertionTestRunner {
 		UtilsRepair.saveTest(prefix, className, temp);
 
 		UtilsRunner.cleanup(clazz, inst);
-		
+
 		/*
-		Runtime rt = Runtime.getRuntime();
-		rt.exec("killall firefox-bin");
+		 * Runtime rt = Runtime.getRuntime(); rt.exec("killall firefox-bin");
 		 */
 	}
 

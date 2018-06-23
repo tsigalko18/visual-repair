@@ -24,25 +24,25 @@ public class Main {
 		RepairMode rm = RepairMode.VISUAL;
 
 		/* execute visual-augmented test repair. */
-		visualRunner(prefix, className, rm);
+		runWebTestRepair(prefix, className, rm);
 	}
 
 	/**
-	 * Convenient procedure to launch the visual web test repair function and
+	 * Convenience procedure to launch the visual web test repair function and
 	 * measure the running time.
 	 * 
 	 * @param prefix
 	 * @param className
 	 * @param rm
 	 */
-	public static void visualRunner(String prefix, String className, RepairMode rm) {
+	public static void runWebTestRepair(String prefix, String className, RepairMode rm) {
 
 		startTime = System.currentTimeMillis();
 
-		VisualAssertionTestRunner var = new VisualAssertionTestRunner(rm);
+		VisualTestRepair var = new VisualTestRepair(rm);
 
 		try {
-			var.runTestWithVisualAssertion(prefix, className);
+			var.runTestWithVisualValidation(prefix, className);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
