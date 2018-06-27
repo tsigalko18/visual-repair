@@ -15,24 +15,34 @@ public class Main {
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		/* package name. */
-		String prefix = "clarolineDirectBreakage" + ".";
+		String prefix = "clarolineNew" + ".";
 
 		/* class name. */
 		String className = "TestLoginAdmin";
 
+		/* repair mode. */
 		RepairMode rm = RepairMode.VISUAL;
 
-		visualRunner(prefix, className, rm);
+		/* execute visual-augmented test repair. */
+		runWebTestRepair(prefix, className, rm);
 	}
 
-	public static void visualRunner(String prefix, String className, RepairMode rm) {
+	/**
+	 * Convenience procedure to launch the visual web test repair function and
+	 * measure the running time.
+	 * 
+	 * @param prefix
+	 * @param className
+	 * @param rm
+	 */
+	public static void runWebTestRepair(String prefix, String className, RepairMode rm) {
 
 		startTime = System.currentTimeMillis();
 
-		VisualAssertionTestRunner var = new VisualAssertionTestRunner(rm);
+		VisualTestRepair var = new VisualTestRepair(rm);
 
 		try {
-			var.runTestWithVisualAssertion(prefix, className);
+			var.runTestWithVisualValidation(prefix, className);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

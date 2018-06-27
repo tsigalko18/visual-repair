@@ -2,6 +2,7 @@ package utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -442,6 +443,21 @@ public class UtilsParser {
 			FileUtils.writeStringToFile(new File(domInfoJsonFile), gson.toJson(webElementWithDomInfo, DOMInformation.class));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+
+	}
+
+	public static void sanityCheck(EnhancedTestCase etc, EnhancedTestCase testCorrect) {
+
+		Map<Integer, datatype.Statement> a = etc.getStatements();
+		Map<Integer, datatype.Statement> b = testCorrect.getStatements();
+		
+		ArrayList<Integer> list1 = new ArrayList<Integer>(a.keySet());
+		ArrayList<Integer> list2 = new ArrayList<Integer>(b.keySet());
+		
+		if (list1.get(0) != list2.get(0)) {
+			System.out.println("[ERROR]\tTests numbering is not aligned: " + list1.get(0) + "!=" + list2.get(0));
+			throw new NullPointerException();
 		}
 
 	}
