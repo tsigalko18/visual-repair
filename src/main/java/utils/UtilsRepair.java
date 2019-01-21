@@ -20,6 +20,7 @@ import org.junit.runner.notification.Failure;
 import org.openqa.selenium.WebElement;
 
 import config.Settings;
+import config.Settings.RepairMode;
 import datatype.AttributesComparator;
 import datatype.EnhancedException;
 import datatype.EnhancedTestCase;
@@ -122,8 +123,7 @@ public class UtilsRepair {
 	 * Get the minimum of three arrays of integers
 	 * 
 	 */
-	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace,
-			File[] beforeBrokenTrace) {
+	public static int getMinimumValue(File[] afterCorrectTrace, File[] beforeCorrectTrace, File[] afterBrokenTrace, File[] beforeBrokenTrace) {
 
 		int min = Math.min(afterCorrectTrace.length, beforeCorrectTrace.length);
 		min = Math.min(min, afterBrokenTrace.length);
@@ -208,12 +208,21 @@ public class UtilsRepair {
 	/**
 	 * Save the abstract test @temp to file, where @className identifies the name of
 	 * the Java class and @prefix the package name
+	 * 
+	 * @param repairStrategy
 	 */
-	public static void saveTest(String prefix, String className, EnhancedTestCase temp) {
+	public static void saveTest(String prefix, String className, RepairMode repairStrategy, EnhancedTestCase temp) {
 
 		String oldPath = Settings.resourcesFolder + prefix.replace(".", "/") + className + Settings.JAVA_EXT;
-		String newPath = Settings.resourcesFolder + prefix.replace(".", "Repaired/") + className
-				+ Settings.JAVA_EXT;
+		String newPath = "";
+
+		if (repairStrategy == RepairMode.DOM) {
+			newPath = Settings.resourcesFolder + prefix.replace(".", "RepairedDOM/") + className + Settings.JAVA_EXT;
+		} else if (repairStrategy == RepairMode.VISUAL) {
+			newPath = Settings.resourcesFolder + prefix.replace(".", "RepairedVisual/") + className + Settings.JAVA_EXT;
+		} else if (repairStrategy == RepairMode.HYBRID) {
+			newPath = Settings.resourcesFolder + prefix.replace(".", "RepairedHybrid/") + className + Settings.JAVA_EXT;
+		}
 
 		try {
 			temp = ParseTest.parseAndSaveToJava(temp, oldPath, newPath);

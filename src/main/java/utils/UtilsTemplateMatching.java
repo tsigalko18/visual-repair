@@ -84,7 +84,7 @@ public class UtilsTemplateMatching {
 	 */
 	public static boolean runFeatureDetection(String templ, String img, Set<Point> allMatches) {
 		boolean sift = siftDetector(templ, img, allMatches);
-		boolean fast = fastDetector(templ, img, allMatches);
+		boolean fast = true; //fastDetector(templ, img, allMatches);
 
 		boolean res = sift || fast;
 
@@ -194,7 +194,7 @@ public class UtilsTemplateMatching {
 			filename = filename.replace(".png", "");
 
 			/* visualize detected features. */
-			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-outputImage.jpg", outputImage);
+			Highgui.imwrite("output/templateMatching/FAST-" + filename + "-features.jpg", outputImage);
 
 			/* Get the rectangle the the potential match is. */
 			try {
@@ -225,7 +225,7 @@ public class UtilsTemplateMatching {
 
 				/* visualize feature detection. */
 				Highgui.imwrite("output/templateMatching/FAST-" + filename + "-matchoutput.jpg", matchoutput);
-				Highgui.imwrite("output/templateMatching/FAST-" + filename + "-img.jpg", img);
+//				Highgui.imwrite("output/templateMatching/FAST-" + filename + "-img.jpg", img);
 			} catch (Exception e) {
 				System.out.println("Homography not found");
 			}
@@ -339,7 +339,7 @@ public class UtilsTemplateMatching {
 			filename = filename.replace(".png", "");
 
 			/* visualize detected features. */
-			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-outputImage.jpg", outputImage);
+			Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-features.jpg", outputImage);
 
 			try {
 
@@ -375,7 +375,7 @@ public class UtilsTemplateMatching {
 				filename = filename.replace(".png", "");
 
 				Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-matchoutput.jpg", matchoutput);
-				Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-img.jpg", img);
+//				Highgui.imwrite("output/templateMatching/SIFT-" + filename + "-img.jpg", img);
 
 			} catch (Exception e) {
 				System.out.println("[LOG]\tHomography not found");

@@ -9,6 +9,9 @@ public class Settings {
 
 	/* package name of the broken/regressed test suite. */
 	public static String testSuiteBroken = "clarolineNew";
+	
+	/* package name of the repaired test suite. */
+	public static String testSuiteRepaired = "clarolineNewRepairedVisual";
 
 	/* pause the tool's execution after each statement. */
 	public static boolean debugMode = false;

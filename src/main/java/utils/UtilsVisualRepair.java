@@ -31,7 +31,8 @@ public class UtilsVisualRepair {
 	 * 
 	 * @param repairStrategy
 	 */
-	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator, EnhancedTestCase testCorrect, Integer i, RepairMode repairStrategy) {
+	public static WebElement visualAssertWebElement(WebDriver driver, WebElement webElementFromDomLocator, EnhancedTestCase testCorrect, Integer i,
+			RepairMode repairStrategy) {
 
 		Statement statement = null;
 		WebElement webElementFromVisualLocator = null;
@@ -76,7 +77,7 @@ public class UtilsVisualRepair {
 			System.out.println("[LOG]\tChance of propagated breakage at line " + i);
 			System.out.println("[LOG]\tDOM locator and visual locator target two different elements");
 
-			/* I trust the element found by the visual locator. Is that correct? */
+			/* I trust the element found by the visual locator. */
 			System.out.println("[LOG]\tCandidate repair element " + webElementFromVisualLocator);
 			webElementFromDomLocator = webElementFromVisualLocator;
 
@@ -117,12 +118,11 @@ public class UtilsVisualRepair {
 		String currentScreenshot = System.getProperty("user.dir") + Settings.sep + "currentScreenshot.png";
 		UtilsComputerVision.saveScreenshot(driver, currentScreenshot);
 
-		// if (Settings.debugMode) {
-		// System.out.println("Do you want to continue to the next statement? [type Y
-		// and Enter key to proceed]");
-		// while (!scanner.next().equals("Y")) {
-		// }
-		// }
+//		 if (Settings.debugMode) {
+//		 System.out.println("Do you want to continue to the next statement? [type Y and Enter key to proceed]");
+//		 while (!scanner.next().equals("Y")) {
+//		 }
+//		 }
 
 		Point bestMatch = null;
 
@@ -141,20 +141,6 @@ public class UtilsVisualRepair {
 			} else {
 
 				return fromDom;
-
-				// try {
-				// // UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
-				// // fromDom, "currentCrop.png");
-				// UtilsComputerVision.getUniqueVisualLocator(driver, currentScreenshot,
-				// fromDom, "preciseCrop.png");
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-				//
-				// if (UtilsTemplateMatching.runFeatureDetection(visualLocator,
-				// "currentCrop.png", null)) {
-				// return fromDom;
-				// }
 
 			}
 

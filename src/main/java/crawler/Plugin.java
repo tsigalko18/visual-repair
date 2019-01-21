@@ -11,8 +11,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.opencv.core.Point;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -23,7 +21,6 @@ import org.w3c.dom.Document;
 import com.crawljax.browser.EmbeddedBrowser;
 import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawlSession;
-import com.crawljax.core.CrawlTaskConsumer;
 import com.crawljax.core.CrawlerContext;
 import com.crawljax.core.ExitNotifier.ExitStatus;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
@@ -37,11 +34,8 @@ import com.crawljax.core.state.CrawlPath;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.core.state.Identification;
-import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateVertex;
 import com.crawljax.util.DomUtils;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,8 +45,6 @@ import config.Settings.RepairMode;
 import datatype.EnhancedTestCase;
 import datatype.SeleniumLocator;
 import datatype.Statement;
-import utils.UtilsComputerVision;
-import utils.UtilsTemplateMatching;
 import utils.UtilsVisualRepair;
 import utils.UtilsXPath;
 
@@ -86,8 +78,8 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	private boolean onlyFirstMatch;
 
-	public Plugin(HostInterfaceImpl hostInterfaceImpl, EnhancedTestCase testBroken, EnhancedTestCase testCorrect,
-			int brokenStep, HashMap<Integer, Statement> repairedTest, RepairMode repairStrategy) {
+	public Plugin(HostInterfaceImpl hostInterfaceImpl, EnhancedTestCase testBroken, EnhancedTestCase testCorrect, int brokenStep,
+			HashMap<Integer, Statement> repairedTest, RepairMode repairStrategy) {
 
 		Settings.aspectActive = false;
 		this.hostInterface = hostInterfaceImpl;
@@ -279,8 +271,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 
 	}
 
-	private Eventable getCorrespondingEventable(WebElement webElement, Identification identification,
-			EventType eventType, EmbeddedBrowser browser) {
+	private Eventable getCorrespondingEventable(WebElement webElement, Identification identification, EventType eventType, EmbeddedBrowser browser) {
 
 		CandidateElement candidateElement = getCorrespondingCandidateElement(webElement, identification, browser);
 		Eventable event = new Eventable(candidateElement, eventType);
@@ -288,8 +279,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 		return event;
 	}
 
-	public org.w3c.dom.Element getElementFromXpath(String xpathToRetrieve, EmbeddedBrowser browser)
-			throws XPathExpressionException {
+	public org.w3c.dom.Element getElementFromXpath(String xpathToRetrieve, EmbeddedBrowser browser) throws XPathExpressionException {
 
 		Document dom;
 		org.w3c.dom.Element element = null;
@@ -304,8 +294,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			// dom.getDocumentElement(), XPathConstants.NODESET);
 			// System.out.println(nodes.getLength());
 			// element = (Element) nodes.item(0);
-			element = (org.w3c.dom.Element) xPath.evaluate(xpathToRetrieve, dom.getDocumentElement(),
-					XPathConstants.NODE);
+			element = (org.w3c.dom.Element) xPath.evaluate(xpathToRetrieve, dom.getDocumentElement(), XPathConstants.NODE);
 			// System.out.println("element.getNodeName(): " + element.getNodeName());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -313,8 +302,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 		return element;
 	}
 
-	private CandidateElement getCorrespondingCandidateElement(WebElement webElement, Identification identification,
-			EmbeddedBrowser browser) {
+	private CandidateElement getCorrespondingCandidateElement(WebElement webElement, Identification identification, EmbeddedBrowser browser) {
 
 		Document dom;
 		try {
@@ -327,8 +315,7 @@ public class Plugin implements OnNewStatePlugin, OnUrlLoadPlugin, PostCrawlingPl
 			// CandidateElement candidateElement = new CandidateElement(sourceElement, new
 			// Identification(Identification.How.xpath, xpath), "");
 			CandidateElement candidateElement = new CandidateElement(sourceElement, identification, "");
-			LOG.debug("Found new candidate element: {} with eventableCondition {}", candidateElement.getUniqueString(),
-					null);
+			LOG.debug("Found new candidate element: {} with eventableCondition {}", candidateElement.getUniqueString(), null);
 			candidateElement.setEventableCondition(null);
 			return candidateElement;
 
