@@ -53,7 +53,8 @@ public class UtilsRunner {
 
 				EnhancedException ea = UtilsRepair.saveExceptionFromFailure(fail);
 
-				String path = Settings.testingTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(ea.getFailedTest()) + Settings.JAVA_EXT;
+				String path = Settings.testingTestSuiteVisualTraceExecutionFolder + UtilsRepair.capitalizeFirstLetter(ea.getFailedTest())
+						+ Settings.JAVA_EXT;
 				String jsonPath = UtilsParser.toJsonPath(path);
 
 				UtilsParser.serializeException(ea, jsonPath);
@@ -64,7 +65,9 @@ public class UtilsRunner {
 
 		stopTime = System.currentTimeMillis();
 		elapsedTime = stopTime - startTime;
-		System.out.format("[LOG]\tVisual trace collected in %.3f s", elapsedTime / 1000.0f);
+		if (Settings.aspectActive == true) {
+			System.out.format("[LOG]\tVisual trace collected in %.3f s", elapsedTime / 1000.0f);
+		}
 
 	}
 

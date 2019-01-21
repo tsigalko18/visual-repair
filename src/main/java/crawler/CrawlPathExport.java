@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.crawljax.core.state.CrawlPath;
 import com.crawljax.core.state.Eventable;
-import com.crawljax.core.state.Identification.How;
 
 public class CrawlPathExport {
 
@@ -19,4 +18,3 @@ public class CrawlPathExport {
 	}
 
 }
-

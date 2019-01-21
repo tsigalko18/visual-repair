@@ -42,8 +42,7 @@ public class UtilsWater {
 	 * @param similarityThreshold
 	 * @return
 	 */
-	public static List<HtmlElement> getSimilarNodes(HtmlElement oldNode, HtmlDomTree newTree,
-			double similarityThreshold) {
+	public static List<HtmlElement> getSimilarNodes(HtmlElement oldNode, HtmlDomTree newTree, double similarityThreshold) {
 
 		List<HtmlElement> results = new LinkedList<HtmlElement>();
 		return searchHtmlDomTreeByNode(oldNode, newTree.getRoot(), similarityThreshold, results);
@@ -65,9 +64,6 @@ public class UtilsWater {
 		} else if (l.getStrategy().equals("linkText")) {
 			return tree.searchHtmlDomTreeByAttribute("text", l.getValue());
 
-			// System.out.println(tree.containsAttributeValue);
-			// return tree.searchHtmlDomTreeByText(l.getValue());
-
 		} else if (l.getStrategy().equals("name")) {
 			return tree.searchHtmlDomTreeByAttribute("name", l.getValue());
 
@@ -75,8 +71,6 @@ public class UtilsWater {
 			return tree.searchHtmlDomTreeByTagName(l.getValue());
 
 		} else if (l.getStrategy().equals("xpath")) {
-			// differentiate further!!!
-			// supports only absolute XPaths and a specific format
 
 			/* workaround for XPath locators that need to be in a specific format. */
 			String loc = UtilsWater.formatXPath(l.getValue());
@@ -115,8 +109,8 @@ public class UtilsWater {
 		return r.wasSuccessful();
 	}
 
-	public static List<HtmlElement> searchHtmlDomTreeByNode(HtmlElement searchNode, Node<HtmlElement> newTree,
-			double similarityThreshold, List<HtmlElement> similarNodes) {
+	public static List<HtmlElement> searchHtmlDomTreeByNode(HtmlElement searchNode, Node<HtmlElement> newTree, double similarityThreshold,
+			List<HtmlElement> similarNodes) {
 
 		Queue<Node<HtmlElement>> q = new LinkedList<Node<HtmlElement>>();
 		q.add(newTree);
@@ -214,10 +208,8 @@ public class UtilsWater {
 			double levDist = computeLevenshteinDistance(a.getXPath(), b.getXPath());
 			rho1 = 1 - levDist / Math.max(a.getXPath().length(), b.getXPath().length());
 
-			if (Math.abs(a.getX() - b.getX()) <= 5
-					&& Math.abs((a.getX() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5
-					&& Math.abs(a.getY() - b.getY()) <= 5
-					&& Math.abs((a.getY() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5) {
+			if (Math.abs(a.getX() - b.getX()) <= 5 && Math.abs((a.getX() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5
+					&& Math.abs(a.getY() - b.getY()) <= 5 && Math.abs((a.getY() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5) {
 				rho2 = rho2 + 1;
 			}
 			rho2 = rho2 / 2;
@@ -228,8 +220,7 @@ public class UtilsWater {
 		return 0;
 	}
 
-	public static List<WebElement> getSimilarNodesBySimilarityScore(WebDriver driver, Statement statement)
-			throws IOException {
+	public static List<WebElement> getSimilarNodesBySimilarityScore(WebDriver driver, Statement statement) throws IOException {
 
 		List<WebElement> similar = new LinkedList<WebElement>();
 		UtilsAspect.saveDOM(driver, "tempPage" + Settings.HTML_EXT);
@@ -246,7 +237,7 @@ public class UtilsWater {
 				String xp2 = statement.getXpath();
 
 				if (getSimilarityScore(xp1, xp2) > Settings.SIMILARITY_THRESHOLD) {
-					WebElement webelem = driver.findElement(By.xpath(xp1)); 
+					WebElement webelem = driver.findElement(By.xpath(xp1));
 					similar.add(webelem);
 				}
 			}
@@ -263,13 +254,6 @@ public class UtilsWater {
 		double levDist = computeLevenshteinDistance(xpath1, xpath2);
 		rho1 = 1 - levDist / Math.max(xpath1.length(), xpath2.length());
 
-		// if (Math.abs(a.getX() - b.getX()) <= 5 && Math.abs((a.getX() + a.getWidth())
-		// - (b.getY() - b.getHeight())) <= 5
-		// && Math.abs(a.getY() - b.getY()) <= 5
-		// && Math.abs((a.getY() + a.getWidth()) - (b.getY() - b.getHeight())) <= 5) {
-		// rho2 = rho2 + 1;
-		// }
-		// rho2 = rho2 / 2;
 		rho = (rho1 * alpha + rho2 * (1 - alpha));
 
 		return rho;

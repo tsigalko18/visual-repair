@@ -34,8 +34,8 @@ public class Crawler {
 	private static final int MAX_STATES = 3;
 	private RepairMode repairStrategy;
 
-	public Crawler(String url, EnhancedTestCase testBroken, EnhancedTestCase testCorrect, int brokenStep,
-			Map<Integer, Statement> appliedRepairs, RepairMode repairStrategy) {
+	public Crawler(String url, EnhancedTestCase testBroken, EnhancedTestCase testCorrect, int brokenStep, Map<Integer, Statement> appliedRepairs,
+			RepairMode repairStrategy) {
 		this.URL = url;
 		this.testBroken = testBroken;
 		this.testCorrect = testCorrect;
@@ -74,8 +74,8 @@ public class Crawler {
 		builder.setMaximumRunTime(1, TimeUnit.MINUTES);
 
 		/* plugin to start the crawling from a given test step. */
-		builder.addPlugin(new Plugin(new HostInterfaceImpl(new File("out"), null), this.testBroken, this.testCorrect,
-				this.brokenStep, this.repairedTest, repairStrategy));
+		builder.addPlugin(new Plugin(new HostInterfaceImpl(new File("out"), null), this.testBroken, this.testCorrect, this.brokenStep,
+				this.repairedTest, repairStrategy));
 
 		CrawljaxRunner crawljax = new CrawljaxRunner(builder.build());
 		crawljax.call();

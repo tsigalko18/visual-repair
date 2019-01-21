@@ -409,7 +409,7 @@ public class VisualTestRepair {
 
 		UtilsRunner.cleanup(clazz, inst);
 
-		UtilsRepair.saveTest(prefix, className, temp);
+		UtilsRepair.saveTest(prefix, className, repairStrategy, temp);
 
 		UtilsRunner.cleanup(clazz, inst);
 

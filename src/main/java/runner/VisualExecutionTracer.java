@@ -1,7 +1,5 @@
 package runner;
 
-import java.io.IOException;
-
 import config.Settings;
 import utils.UtilsRunner;
 
@@ -15,11 +13,10 @@ import utils.UtilsRunner;
  */
 public class VisualExecutionTracer {
 
-	public VisualExecutionTracer() {
-		Settings.aspectActive = true;
-	}
+	public static void main(String[] args) {
 
-	public static void main(String[] args) throws IOException {
+		/* enable the AspectJ module. */
+		Settings.aspectActive = true;
 
 		/* Claroline example. */
 		UtilsRunner.runTest(Settings.testSuiteCorrect, "TestLoginAdmin");
